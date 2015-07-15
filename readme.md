@@ -15,9 +15,7 @@ Dependencies:
 
 Building:
 
-    jekyll build  # compiles site to ._site/
-
-    jekyll serve
+    jekyll serve # compiles site to _site/ and watches for file changes
 
 Deploying:
 
