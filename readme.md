@@ -6,22 +6,31 @@ More on the [Chrome DevTools debugger protocol](https://developer.chrome.com/dev
 
 ##  Building
 
-Dependencies: 
+Dependencies:
 
     gem install jekyll
     npm install -g bower
-    
+
     bower install
-    
+
 Building:
 
     jekyll build  # compiles site to ._site/
-        
+
     jekyll serve
-    
+
 Deploying:
 
 All pushes to gh-pages instantly trigger a jeklyll build and the site will serve the resulting `_site`.
+
+## History
+
+
+* [v0.1](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.1/index.html)            original Eric Guzman app.
+* [v0.2](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.2/index.html)            irish's "upgrades".
+* [v0.8](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.8/index.html)            guzman's polymer 0.8 refactor
+* [v1.0](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v1.0/index.html)            konrad's polymer 1.0 + jekyll refactor
+* which brings us to… [now](https://chromedevtools.github.io/debugger-protocol-viewer/).
 
 
 ## License
