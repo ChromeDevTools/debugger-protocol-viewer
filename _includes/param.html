@@ -1,31 +1,50 @@
 {% assign param = include.param %}
 
 <div class="param-pair">
-  <dt class="param-name monospace {% if param.optional %}optional{% endif %}">{{param.name}}</dt>
-  <dd class="param-def">
-    {% if param.type %}
-      <span class="param-type">
-        {{ param.type }}
+  <div>
+    <dt class="param-name monospace {% if param.optional %}optional{% endif %}">{{param.name}}</dt>
+    <dd class="param-def">
+      {% if param.type %}
+        <span class="param-type">
+          {{ param.type }}
 
-        {% if param.items %}
-          {% if param.items.type %}
-            [{{ param.items.type }}]
-          {% else %}
-            {% assign referral=param.items["$ref"] %}
-            [{% include type-referral.html referral=referral %}]
+          {% if param.items %}
+            {% if param.items.type %}
+              [{{ param.items.type }}]
+            {% else %}
+              {% assign referral=param.items["$ref"] %}
+              [{% include type-referral.html referral=referral %}]
+            {% endif %}
           {% endif %}
+        </span>
+      {% elsif param["$ref"] %}
+        {% assign referral=param["$ref"] %}
+        <span class="param-type">{% include type-referral.html referral=referral %}</span>
+      {% endif %}
+      <span class="param-description">
+        {{ param.description }}
+
+        {% if param.enum[0] %}
+          Allowed values: {{ param.enum | join: ', ' }}.
         {% endif %}
       </span>
-    {% elsif param["$ref"] %}
-      {% assign referral=param["$ref"] %}
-      <span class="param-type">{% include type-referral.html referral=referral %}</span>
-    {% endif %}
-    <span class="param-description">
-      {{ param.description }}
-
-      {% if param.enum[0] %}
-        Allowed values: {{ param.enum | join: ', ' }}.
+    </dd>
+  </div>
+  {% if param.items.properties or param.items.enum or param.items.description %}
+  <div class="param-sub">
+    <div class="param-sub-name"></div>
+    <div class="param-sub-def">
+      <em>Array element:</em>
+      {{ param.items.description }}
+      {% if param.items.properties %}
+        {% for param in param.items.properties %}
+          {% include param.html param=param %}
+          {% assign param = include.param %}
+        {% endfor %}
+      {% elsif param.items.enum %}
+        Allowed values: {{ param.items.enum | join: ', ' }}.
       {% endif %}
-    </span>
-  </dd>
+    </div>
+  </div>
+  {% endif %}
 </div>
