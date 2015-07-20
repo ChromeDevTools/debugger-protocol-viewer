@@ -9,6 +9,13 @@ h3 {
   line-height: 28px;
 }
 
+h6 {
+  margin: 12px 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: hsl(0,0%,63%);
+}
+
 paper-material {
   border-radius: 2px;
   height: 100%;
@@ -80,17 +87,17 @@ paper-menu a {
   margin: 0 10%;
 }
 
-.param-pair > div {
+.param:hover {
+  background: hsla(0, 0%, 95%, 0.4);
+  border-radius: 5px;
+}
+
+.param-pair {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
   align-items: baseline;
   margin-bottom: 6px;
-}
-
-.param-pair:hover {
-  background: hsla(0, 100%, 100%, 0.6);
-  border-radius: 5px;
 }
 
 .param-type {
@@ -108,7 +115,7 @@ paper-menu a {
   display: block;
 }
 
-.param-pair dt, .param-sub-name {
+.param-name {
   flex: 1 0 0;
   -ms-flex: 1 0 0;
   -webkit-flex: 1 0 0;
@@ -117,7 +124,7 @@ paper-menu a {
   word-wrap: break-word;
 }
 
-.param-pair dd, .param-sub-def {
+.param-def {
   flex: 3 0 0;
   -ms-flex: 3 0 0;
   -webkit-flex: 3 0 0;
@@ -131,11 +138,11 @@ paper-menu a {
   -webkit-flex-direction: column;
 }
 
-.param-pair dt, .param-pair dd {
+.param-def, .param-name {
   vertical-align: text-top;
 }
 
-.param-sub-def {
+.param-sub > .param-def {
   border-left: solid hsl(0, 0%, 85%) 1px;
   padding-left: 5px;
 }
