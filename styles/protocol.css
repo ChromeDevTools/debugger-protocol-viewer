@@ -213,3 +213,12 @@ h4:hover .permalink {
     margin: 0;
   }
 }
+
+
+/* Search Control styles */
+.search-active  .title {
+  display: none;
+}
+.search-active  cr-search-control {
+  width: 100%;
+}
