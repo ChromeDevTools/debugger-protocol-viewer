@@ -1,0 +1,160 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-behaviors/iron-button-state.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../cr-search-menu/cr-search-menu.html">
+
+<dom-module id="cr-search-control">
+
+  <style>
+    :host {
+      display: block;
+    }
+    input {
+      font-size: 24px;
+      font-weight: 200;
+      font-family: Roboto;
+      background-color: #3F51B5;
+      border-style: none;
+      color: white;
+      padding: 10px 18px;
+    }
+  </style>
+
+  <template>
+    <iron-ajax id="ajax"
+        url="{{protocolSrc}}"
+        handle-as="json"
+        active-requests="{{requests}}"
+        last-response="{{ajaxResponse}}"></iron-ajax>
+    <paper-icon-button id="search-button" toggles
+        icon="search"
+        on-active-changed="handleActiveChange_"></paper-icon-button>
+    <div id="search-input-container" hidden$="{{!inputActive}}">
+      <input id="input" value="{{searchText::input}}"
+          placeholder="Search..." type="text">
+    </div>
+    <cr-search-menu id="resultsMenu"></cr-search-menu>
+  </template>
+
+</dom-module>
+
+<script>
+
+(function() {
+
+  // TODO: remembers previous searches (localstorage?).
+  var KeywordsModel = {
+    keys: null,
+    index: null,
+    getMatches: function(str) {
+      // TODO: Memoize.
+      return this.keys.filter(function(key) {
+        return key.indexOf(str) == 0;
+      }).map(function(key) {
+        return this.index[key];
+      }, this);
+    },
+    createKeywordsModel: function(index) {
+      var obj = Object.create(KeywordsModel);
+      obj.keys = Object.keys(index);
+      obj.index = index;
+      return obj;
+    }
+  };
+
+  Polymer({
+    is: 'cr-search-control',
+    behaviors: [
+      Polymer.IronButtonState
+    ],
+    properties: {
+      protocolSrc: {
+        value: String
+      },
+      inputActive: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: 'handleInputActive_'
+      },
+      searchText: {
+        type: String,
+        reflectToAttribute: true,
+        notify: true,
+        value: null,
+        observer: 'handleSearchChange_'
+      },
+      /**
+       * Bound from iron-ajax.
+       */
+      requests: {
+        type: Array,
+        value: []
+      },
+      ajaxResponse: {
+        type: Object,
+        observer: 'handleAjaxResponse_'
+      }
+    },
+
+    keyBindings: [{
+      'esc': 'handleEsc_'
+    }],
+
+    attached: function() {
+      // Attach Menu/Overlay to the body.
+      document.body.appendChild(this.$.resultsMenu);
+    },
+
+    setMenuOpen_: function(open) {
+      this.$.resultsMenu.opened = open;
+    },
+
+    handleSearchChange_: function() {
+      if (!this.inputActive) {
+        return;
+      }
+      this.debounce('inputChange', function() {
+        this.$.resultsMenu.searchString = this.searchText;
+        this.setMenuOpen_(true);
+      }.bind(this), 20);
+    },
+
+    handleEsc_: function() {
+      if (this.$.resultsMenu.opened) {
+        this.setMenuOpen_(false);
+      } else {
+        this.inputActive = false;
+      }
+    },
+
+    handleActiveChange_: function() {
+      this.inputActive = this.$['search-button'].active;
+      this.fire(this.inputActive ? 'active' : 'inactive');
+    },
+
+    handleInputActive_: function() {
+      // Prepares the search index if not previously requested.
+      if (this.inputActive && !this.ajaxResponse &&
+          this.requests.length === 0) {
+        this.prepareSearchIndex_();
+        this.async(function() {
+          this.$.input.focus();
+        }.bind(this), 50);
+      }
+    },
+
+    prepareSearchIndex_: function() {
+      // Execute AJAX call when the user clicks the search button.
+      this.$['ajax'].generateRequest();
+    },
+
+    handleAjaxResponse_: function() {
+      // Set the keywords model (search index) onto the menu.
+      this.$.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
+          this.ajaxResponse);
+    }
+  });
+})();
+</script>

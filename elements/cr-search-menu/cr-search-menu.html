@@ -1,0 +1,141 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="../../bower_components/iron-menu-behavior/iron-menu-behavior.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../cr-html-echo/cr-html-echo.html">
+
+<dom-module id="cr-search-menu">
+
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      width: 700px;
+      height: 600px;
+    }
+    paper-material, iron-list {
+      padding: 0;
+      height: 100%;
+    }
+    .search-match {
+      padding: 8px 16px;
+      text-decoration: none;
+      @apply(--layout-vertical);
+    }
+    .match-label {
+      @apply(--layout-horizontal);
+    }
+    .match-description {
+      @apply(--layout-flex-auto);
+    }
+    .label {
+      @apply(--layout-flex-auto);
+      font-size: 18px;
+      flex: 1 auto;
+    }
+    .domain-tag {
+      @apply(--layout-flex-none);
+      text-align: right;
+    }
+    .label .type, .domain-label {
+      color: #3A3A3A;
+      font-size: 14px;
+    }
+    .search-match:hover {
+      background-color: #E8F0FF;
+    }
+  </style>
+
+  <template>
+    <paper-material elevation="3">
+      <content select=".header"></content>
+      <iron-list items="[[renderItems]]" as="match">
+        <template>
+          <div class="search-match" role="menuitem">
+            <div class="match-label">
+              <div class="label">
+                <a href="[[match.href]]">[[match.label]]</a>
+                <span class="type">[[match.typeLabel]]</span>
+              </div>
+              <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
+                <span class="domain-label">Domain</span>
+                <a href="[[match.domainHref]]">[[match.domain]]</a>
+              </div>
+            </div>
+            <div class="match-description">
+              <cr-html-echo html="{{match.description}}"></cr-html-echo>
+            </div>
+          </div>
+        </template>
+      </iron-list>
+      <content select=".footer"></content>
+    </paper-material>
+  </template>
+
+</dom-module>
+
+<script>
+
+(function() {
+
+  Polymer({
+    is: 'cr-search-menu',
+
+    behaviors: [
+      Polymer.IronOverlayBehavior
+    ],
+
+    properties: {
+      keywordsModel: {
+        type: Object
+      },
+      searchString: {
+        type: String
+      },
+      renderItems: {
+        type: Array,
+        readOnly: true,
+        value: []
+      }
+    },
+
+    observers: [
+      'renderItems_(keywordsModel, searchString)'
+    ],
+
+    /** @override */
+    opened: true,
+
+    renderItems_: function(keywordsModel, searchString) {
+      if (keywordsModel) {
+        var matches = keywordsModel.getMatches(searchString.toLowerCase());
+        var items = [];
+        matches.forEach(function(keywordMatch) {
+          keywordMatch.pageReferences.forEach(function(ref) {
+            // Augment the raw page reference with the matched keyword and
+            // and match type as labels.
+            ref.typeLabel = this.TypeLabel[ref.type];
+            ref.label = keywordMatch.keyword;
+            items.push(ref);
+          }, this);
+        }, this);
+        this._setRenderItems(items);
+      }
+    },
+
+    isDomainType_: function(type) {
+      return type == '0';
+    },
+
+    TypeLabel: {
+      '0': 'Domain',
+      '1': 'Event',
+      '2': 'Parameter',
+      '3': 'Type',
+      '4': 'Method'
+    }
+  });
+})();
+</script>
