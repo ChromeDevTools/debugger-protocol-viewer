@@ -1,0 +1,27 @@
+{
+  "name": "iron-list",
+  "version": "1.0.2",
+  "homepage": "https://github.com/PolymerElements/iron-list",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "main": "iron-list.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-resizable-behavior": "polymerelements/iron-resizable-behavior#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-flex-layout": "polymerelements/iron-flex-layout#^1.0.1",
+    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
+    "paper-scroll-header-panel": "polymerelements/paper-scroll-header-panel#^1.0.0",
+    "paper-icon-button": "polymerelements/paper-icon-button#^1.0.0",
+    "iron-ajax": "polymerelements/iron-ajax#^1.0.0",
+    "iron-icon": "polymerelements/iron-icon#^1.0.0",
+    "iron-icons": "polymerelements/iron-icons#^1.0.0",
+    "paper-toolbar": "polymerelements/paper-toolbar#^1.0.0",
+    "test-fixture": "polymerelements/test-fixture#^1.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.2",
+    "web-component-tester": "*"
+  }
+}

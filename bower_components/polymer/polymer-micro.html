@@ -59,7 +59,11 @@ document.registerElement(prototype.is, options);
 return ctor;
 };
 var desugar = function (prototype) {
-prototype = Polymer.Base.chainObject(prototype, Polymer.Base);
+var base = Polymer.Base;
+if (prototype.extends) {
+base = Polymer.Base._getExtendedPrototype(prototype.extends);
+}
+prototype = Polymer.Base.chainObject(prototype, base);
 prototype.registerCallback();
 return prototype.constructor;
 };
@@ -92,6 +96,7 @@ return (document._currentScript || document.currentScript).ownerDocument;
 }
 });
 Polymer.Base = {
+__isPolymerInstance__: true,
 _addFeature: function (feature) {
 this.extend(this, feature);
 },
@@ -161,6 +166,16 @@ object.__proto__ = inherited;
 return object;
 };
 Polymer.Base = Polymer.Base.chainObject(Polymer.Base, HTMLElement.prototype);
+if (window.CustomElements) {
+Polymer.instanceof = CustomElements.instanceof;
+} else {
+Polymer.instanceof = function (obj, ctor) {
+return obj instanceof ctor;
+};
+}
+Polymer.isInstance = function (obj) {
+return Boolean(obj && obj.__isPolymerInstance__);
+};
 Polymer.telemetry.instanceCount = 0;
 (function () {
 var modules = {};
@@ -168,25 +183,30 @@ var DomModule = function () {
 return document.createElement('dom-module');
 };
 DomModule.prototype = Object.create(HTMLElement.prototype);
-DomModule.prototype.constructor = DomModule;
-DomModule.prototype.createdCallback = function () {
-var id = this.id || this.getAttribute('name') || this.getAttribute('is');
+Polymer.Base.extend(DomModule.prototype, {
+constructor: DomModule,
+createdCallback: function () {
+this.register();
+},
+register: function (id) {
+var id = id || this.id || this.getAttribute('name') || this.getAttribute('is');
 if (id) {
 this.id = id;
 modules[id] = this;
 }
-};
-DomModule.prototype.import = function (id, slctr) {
+},
+import: function (id, selector) {
 var m = modules[id];
 if (!m) {
 forceDocumentUpgrade();
 m = modules[id];
 }
-if (m && slctr) {
-m = m.querySelector(slctr);
+if (m && selector) {
+m = m.querySelector(selector);
 }
 return m;
-};
+}
+});
 var cePolyfill = window.CustomElements && !CustomElements.useNative;
 if (cePolyfill) {
 var ready = CustomElements.ready;
@@ -289,11 +309,6 @@ this._marshalBehavior(this);
 }
 });
 Polymer.Base._addFeature({
-_prepExtends: function () {
-if (this.extends) {
-this.__proto__ = this._getExtendedPrototype(this.extends);
-}
-},
 _getExtendedPrototype: function (tag) {
 return this._getExtendedNativePrototype(tag);
 },
@@ -487,7 +502,7 @@ _setupDebouncers: function () {
 this._debouncers = {};
 },
 debounce: function (jobName, callback, wait) {
-this._debouncers[jobName] = Polymer.Debounce.call(this, this._debouncers[jobName], callback, wait);
+return this._debouncers[jobName] = Polymer.Debounce.call(this, this._debouncers[jobName], callback, wait);
 },
 isDebouncerActive: function (jobName) {
 var debouncer = this._debouncers[jobName];
@@ -506,13 +521,12 @@ debouncer.stop();
 }
 }
 });
-Polymer.version = '1.0.5';
+Polymer.version = '1.0.8';
 Polymer.Base._addFeature({
 _registerFeatures: function () {
 this._prepIs();
 this._prepAttributes();
 this._prepBehaviors();
-this._prepExtends();
 this._prepConstructor();
 },
 _prepBehavior: function (b) {

@@ -1,6 +1,6 @@
 {
   "name": "paper-toolbar",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "license": "http://polymer.github.io/LICENSE.txt",
   "description": "A material design toolbar that is easily customizable",
   "private": true,
@@ -33,11 +33,11 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/PolymerElements/paper-toolbar",
-  "_release": "1.0.2",
+  "_release": "1.0.4",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.2",
-    "commit": "402eb11da736a5ae19713748bfa04cd96f3f7a0c"
+    "tag": "v1.0.4",
+    "commit": "15096d1c9ee6cc547eaf078b431f3e07d0968367"
   },
   "_source": "git://github.com/PolymerElements/paper-toolbar.git",
   "_target": "^1.0.0",

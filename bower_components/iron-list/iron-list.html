@@ -1,0 +1,997 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<!--
+
+`iron-list` displays a virtual, 'infinite' list. The template inside
+the iron-list element represents the DOM to create for each list item.
+The `items` property specifies an array of list item data.
+
+For performance reasons, not every item in the list is rendered at once;
+instead a small subset of actual template elements *(enough to fill the viewport)*
+are rendered and reused as the user scrolls. As such, it is important that all
+state of the list template be bound to the model driving it, since the view may
+be reused with a new model at any time. Particularly, any state that may change
+as the result of a user interaction with the list item must be bound to the model
+to avoid view state inconsistency.
+
+__Important:__ `iron-list` must ether be explicitly sized, or delegate scrolling to an
+explicitly sized parent. By "explicitly sized", we mean it either has an explicit
+CSS `height` property set via a class or inline style, or else is sized by other
+layout means (e.g. the `flex` or `fit` classes).
+
+### Template model
+
+List item templates should bind to template models of the following structure:
+
+    {
+      index: 0,     // data index for this item
+      item: {       // user data corresponding to items[index]
+        /* user item data  */
+      }
+    }
+
+Alternatively, you can change the property name used as data index by changing the
+`indexAs` property. The `as` property defines the name of the variable to add to the binding
+scope for the array.
+
+For example, given the following `data` array:
+
+##### data.json
+
+    [
+      {"name": "Bob"},
+      {"name": "Tim"},
+      {"name": "Mike"}
+    ]
+
+The following code would render the list (note the name and checked properties are
+bound from the model object provided to the template scope):
+
+    <template is="dom-bind">
+      <iron-ajax url="data.json" last-response="{{data}}" auto></iron-ajax>
+      <iron-list items="[[data]]" as="item">
+        <template>
+          <div>
+            Name: <span>[[item.name]]</span>
+          </div>
+        </template>
+      </iron-list>
+    </template>
+
+### Resizing
+
+`iron-list` lays out the items when it recives a notification via the `resize` event.
+This event is fired by any element that implements `IronResizableBehavior`.
+
+By default, elements such as `iron-pages`, `paper-tabs` or `paper-dialog` will trigger
+this event automatically. If you hide the list manually (e.g. you use `display: none`)
+you might want to implement `IronResizableBehavior` or fire this event manually right 
+after the list became visible again. e.g.
+
+    document.querySelector('iron-list').fire('resize');
+
+
+@group Iron Element
+@element iron-list
+@demo demo/index.html
+-->
+
+<dom-module id="iron-list">
+  <style>
+
+    :host {
+      display: block;
+      will-change: transform;
+    }
+
+    :host(.has-scroller) {
+      overflow: auto;
+    }
+
+    #items {
+      position: relative;
+    }
+
+    #items > ::content > * {
+      width: 100%;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+    }
+
+  </style>
+  <template>
+    <div id="items">
+      <content></content>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+
+(function() {
+
+  var IOS = navigator.userAgent.match(/iP(?:hone|ad;(?: U;)? CPU) OS (\d+)/);
+  var IOS_TOUCH_SCROLLING = IOS && IOS[1] >= 8;
+  var DEFAULT_PHYSICAL_COUNT = 20;
+  var MAX_PHYSICAL_COUNT = 500;
+
+  Polymer({
+
+    is: 'iron-list',
+
+    properties: {
+
+      /**
+       * An array containing items determining how many instances of the template
+       * to stamp and that that each template instance should bind to.
+       */
+      items: {
+        type: Array
+      },
+
+      /**
+       * The name of the variable to add to the binding scope for the array
+       * element associated with a given template instance.
+       */
+      as: {
+        type: String,
+        value: 'item'
+      },
+
+      /**
+       * The name of the variable to add to the binding scope with the index
+       * for the row.  If `sort` is provided, the index will reflect the
+       * sorted order (rather than the original array order).
+       */
+      indexAs: {
+        type: String,
+        value: 'index'
+      }
+
+    },
+
+    observers: [
+      '_itemsChanged(items.*)'
+    ],
+
+    behaviors: [
+      Polymer.Templatizer,
+      Polymer.IronResizableBehavior
+    ],
+
+    listeners: {
+      'iron-resize': '_resizeHandler'
+    },
+
+    /**
+     * The ratio of hidden tiles that should remain in the scroll direction.
+     * Recommended value ≈ 0.5, so it will distribute tiles evely in both directions.
+     */
+    _ratio: 0.5,
+
+    /**
+     * The element that controls the scroll
+     */
+    _scroller: null,
+
+    /**
+     * The padding-top value of the `scroller` element
+     */
+    _scrollerPaddingTop: 0,
+
+    /**
+     * This value is the same as `scrollTop`.
+     */
+    _scrollPosition: 0,
+
+    /**
+     * The number of tiles in the DOM.
+     */
+    _physicalCount: DEFAULT_PHYSICAL_COUNT,
+
+    /**
+     * The k-th tile that is at the top of the scrolling list.
+     */
+    _physicalStart: 0,
+
+    /**
+     * The k-th tile that is at the bottom of the scrolling list.
+     */
+    _physicalEnd: 0,
+
+    /**
+     * The sum of the heights of all the tiles in the DOM.
+     */
+    _physicalSize: 0,
+
+    /**
+     * The average `offsetHeight` of the tiles observed till now.
+     */
+    _physicalAverage: 0,
+
+    /**
+     * The number of tiles which `offsetHeight` > 0 observed until now.
+     */
+    _physicalAverageCount: 0,
+
+    /**
+     * The Y position of the item rendered in the `_physicalStart`
+     * tile relative to the scrolling list.
+     */
+    _physicalTop: 0,
+
+    /**
+     * The number of items in the list.
+     */
+    _virtualCount: 0,
+
+    /**
+     * The n-th item rendered in the `_physicalStart` tile.
+     */
+    _virtualStartVal: 0,
+
+    /**
+     * A map between an item key and its physical item index
+     */
+    _physicalIndexForKey: null,
+
+    /**
+     * The average scroll size
+     */
+    _scrollSize: 0,
+
+    /**
+     * The size of the viewport
+     */
+    _viewportSize: 0,
+
+    /**
+     * An array of DOM nodes that are currently in the tree
+     */
+    _physicalItems: null,
+
+    /**
+     * An array of heights for each item in `_physicalItems`
+     */
+    _physicalSizes: null,
+
+    /**
+     * A cached value for the visible index.
+     * See `firstVisibleIndex`
+     */
+    _firstVisibleIndexVal: null,
+
+    /**
+     * A Polymer collection for the items.
+     */
+    _collection: null,
+
+    /**
+     * True if the current item list was rendered for the first time
+     * after attached.
+     */
+    _initRendered: false,
+
+    /**
+     * The bottom of the physical content.
+     */
+    get _physicalBottom() {
+      return this._physicalTop + this._physicalSize;
+    },
+
+    /**
+     * The n-th item rendered in the last physical item.
+     */
+    get _virtualEnd() {
+      return this._virtualStartVal + this._physicalCount - 1;
+    },
+
+    /**
+     * The lowest n-th value for an item such that it can be rendered in `_physicalStart`.
+     */
+    _minVirtualStart: 0,
+
+    /**
+     * The largest n-th value for an item such that it can be rendered in `_physicalStart`.
+     */
+    get _maxVirtualStart() {
+      return this._virtualCount < this._physicalCount ?
+          this._virtualCount : this._virtualCount - this._physicalCount;
+    },
+
+    /**
+     * The height of the physical content that isn't on the screen.
+     */
+    get _hiddenContentSize() {
+      return this._physicalSize - this._viewportSize;
+    },
+
+    /**
+     * The maximum scroll top value.
+     */
+    get _maxScrollTop() {
+      return this._scrollSize - this._viewportSize;
+    },
+
+    /**
+     * Sets the n-th item rendered in `_physicalStart`
+     */
+    set _virtualStart(val) {
+      // clamp the value so that _minVirtualStart <= val <= _maxVirtualStart
+      this._virtualStartVal = Math.min(this._maxVirtualStart, Math.max(this._minVirtualStart, val));
+      this._physicalStart = this._virtualStartVal % this._physicalCount;
+      this._physicalEnd = (this._physicalStart + this._physicalCount - 1) % this._physicalCount;
+    },
+
+    /**
+     * Gets the n-th item rendered in `_physicalStart`
+     */
+    get _virtualStart() {
+      return this._virtualStartVal;
+    },
+
+    /**
+     * An optimal physical size such that we will have enough physical items
+     * to fill up the viewport and recycle when the user scrolls.
+     *
+     * This default value assumes that we will at least have the equivalent
+     * to a viewport of physical items above and below the user's viewport.
+     */
+    get _optPhysicalSize() {
+      return this._viewportSize * 3;
+    },
+
+   /**
+    * True if the current list is visible.
+    */
+    get _isVisible() {
+      return !!(this.offsetWidth || this.offsetHeight);
+    },
+
+    /**
+     * Gets the first visible item in the viewport.
+     *
+     * @property firstVisibleIndex
+     */
+    get firstVisibleIndex() {
+      var physicalOffset;
+
+      if (this._firstVisibleIndexVal === null) {
+        physicalOffset = this._physicalTop;
+
+        this._firstVisibleIndexVal = this._iterateItems(
+          function(pidx, vidx) {
+            physicalOffset += this._physicalSizes[pidx];
+
+            if (physicalOffset > this._scrollPosition) {
+              return vidx;
+            }
+          }) || 0;
+      }
+
+      return this._firstVisibleIndexVal;
+    },
+
+    /**
+     * When the element has been attached to the DOM tree.
+     */
+    attached: function() {
+      // delegate to the parent's scroller
+      // e.g. paper-scroll-header-panel
+      var el = Polymer.dom(this);
+
+      if (el.parentNode && el.parentNode.scroller) {
+        this._scroller = el.parentNode.scroller;
+      } else {
+        this._scroller = this;
+        this.classList.add('has-scroller');
+      }
+
+      this.updateViewportBoundaries();
+
+      if (IOS_TOUCH_SCROLLING) {
+        this._scroller.style.webkitOverflowScrolling = 'touch';
+
+        this._scroller.addEventListener('scroll', function() {
+          requestAnimationFrame(this._scrollHandler.bind(this));
+        }.bind(this));
+      } else {
+        this._scroller.addEventListener('scroll', this._scrollHandler.bind(this));
+      }
+
+      // render the list of items if we haven't rendered them yet
+      this._render();
+    },
+
+    /**
+     * When the element has been removed from the DOM tree.
+     */
+    detached: function() {
+      this._initRendered = false;
+    },
+
+    /**
+     * Invoke this method if you dynamically update the viewport's
+     * size or CSS padding.
+     *
+     * @method updateViewportBoundaries
+     */
+    updateViewportBoundaries: function() {
+      var scrollerStyle = window.getComputedStyle(this._scroller);
+      this._scrollerPaddingTop = parseInt(scrollerStyle['padding-top']);
+      this._viewportSize = this._scroller.offsetHeight;
+    },
+
+    /**
+     * Update the models, the position of the
+     * items in the viewport and recycle tiles as needed.
+     */
+    _refresh: function() {
+      var SCROLL_DIRECTION_UP = -1;
+      var SCROLL_DIRECTION_DOWN = 1;
+      var SCROLL_DIRECTION_NONE = 0;
+
+      // clamp the `scrollTop` value
+      // IE 10|11 scrollTop may go above `_maxScrollTop`
+      // iOS `scrollTop` may go below 0 and above `_maxScrollTop`
+      var scrollTop = Math.max(0, Math.min(this._maxScrollTop, this._scroller.scrollTop));
+
+      var tileHeight, kth, recycledTileSet;
+      var ratio = this._ratio;
+      var delta = scrollTop - this._scrollPosition;
+      var direction = SCROLL_DIRECTION_NONE;
+      var recycledTiles = 0;
+      var hiddenContentSize = this._hiddenContentSize;
+      var currentRatio = ratio;
+      var movingUp = [];
+
+      // track the last `scrollTop`
+      this._scrollPosition = scrollTop;
+
+      // clear cached visible index
+      this._firstVisibleIndexVal = null;
+
+      // random access
+      if (Math.abs(delta) > this._physicalSize) {
+        this._physicalTop += delta;
+        direction = SCROLL_DIRECTION_NONE;
+        recycledTiles =  Math.round(delta / this._physicalAverage);
+      }
+      // scroll up
+      else if (delta < 0) {
+        var topSpace = scrollTop - this._physicalTop;
+        var virtualStart = this._virtualStart;
+
+        direction = SCROLL_DIRECTION_UP;
+        recycledTileSet = [];
+
+        kth = this._physicalEnd;
+        currentRatio = topSpace / hiddenContentSize;
+
+        // move tiles from bottom to top
+        while (
+            // approximate `currentRatio` to `ratio`
+            currentRatio < ratio &&
+            // recycle less physical items than the total
+            recycledTiles < this._physicalCount &&
+            // ensure that these recycled tiles are needed
+            virtualStart - recycledTiles > 0
+        ) {
+
+          tileHeight = this._physicalSizes[kth] || this._physicalAverage;
+          currentRatio += tileHeight / hiddenContentSize;
+
+          recycledTileSet.push(kth);
+          recycledTiles++;
+          kth = (kth === 0) ? this._physicalCount - 1 : kth - 1;
+        }
+
+        movingUp = recycledTileSet;
+        recycledTiles = -recycledTiles;
+
+      }
+      // scroll down
+      else if (delta > 0) {
+        var bottomSpace = this._physicalBottom - (scrollTop + this._viewportSize);
+        var virtualEnd = this._virtualEnd;
+        var lastVirtualItemIndex = this._virtualCount-1;
+
+        direction = SCROLL_DIRECTION_DOWN;
+        recycledTileSet = [];
+
+        kth = this._physicalStart;
+        currentRatio = bottomSpace / hiddenContentSize;
+
+        // move tiles from top to bottom
+        while (
+            // approximate `currentRatio` to `ratio`
+            currentRatio < ratio &&
+            // recycle less physical items than the total
+            recycledTiles < this._physicalCount &&
+            // ensure that these recycled tiles are needed
+            virtualEnd + recycledTiles < lastVirtualItemIndex
+          ) {
+
+          tileHeight = this._physicalSizes[kth] || this._physicalAverage;
+          currentRatio += tileHeight / hiddenContentSize;
+
+          this._physicalTop += tileHeight;
+          recycledTileSet.push(kth);
+          recycledTiles++;
+          kth = (kth + 1) % this._physicalCount;
+        }
+      }
+
+      if (recycledTiles !== 0) {
+        this._virtualStart = this._virtualStart + recycledTiles;
+        this._update(recycledTileSet, movingUp);
+      }
+    },
+
+    /**
+     * Update the list of items, starting from the `_virtualStartVal` item.
+     */
+    _update: function(itemSet, movingUp) {
+      // update models
+      this._assignModels(itemSet);
+
+      // measure heights
+      // TODO(blasten) pass `recycledTileSet`
+      this._updateMetrics();
+
+      // adjust offset after measuring
+      if (movingUp) {
+        while (movingUp.length) {
+          this._physicalTop -= this._physicalSizes[movingUp.pop()];
+        }
+      }
+
+      // update the position of the items
+      this._positionItems();
+
+      // set the scroller size
+      this._updateScrollerSize();
+
+      // increase the pool of physical items if needed
+      if (itemSet = this._increasePoolIfNeeded()) {
+        // set models to the new items
+        this.async(this._update.bind(this, itemSet));
+      }
+    },
+
+    /**
+     * Creates a pool of DOM elements and attaches them to the local dom.
+     */
+    _createPool: function(size) {
+      var physicalItems = new Array(size);
+
+      this._ensureTemplatized();
+
+      for (var i = 0; i < size; i++) {
+        var inst = this.stamp(null);
+
+        // First element child is item; Safari doesn't support children[0]
+        // on a doc fragment
+        physicalItems[i] = inst.root.querySelector('*');
+        Polymer.dom(this).appendChild(inst.root);
+      }
+
+      return physicalItems;
+    },
+
+    /**
+     * Increases the pool size. That is, the physical items in the DOM.
+     * This function will allocate additional physical items
+     * (limited by `MAX_PHYSICAL_COUNT`) if the content size is shorter than
+     * `_optPhysicalSize`
+     *
+     * @return Array
+     */
+    _increasePoolIfNeeded: function() {
+      if (this._physicalSize >= this._optPhysicalSize || this._physicalAverage === 0) {
+        return null;
+      }
+
+      // the estimated number of physical items that we will need to reach
+      // the cap established by `_optPhysicalSize`.
+      var missingItems = Math.round(
+          (this._optPhysicalSize - this._physicalSize) * 1.2 / this._physicalAverage
+        );
+
+      // limit the size
+      var nextPhysicalCount = Math.min(
+          this._physicalCount + missingItems,
+          this._virtualCount,
+          MAX_PHYSICAL_COUNT
+        );
+
+      var prevPhysicalCount = this._physicalCount;
+      var delta = nextPhysicalCount - prevPhysicalCount;
+
+      if (delta <= 0) {
+        return null;
+      }
+
+      var newPhysicalItems = this._createPool(delta);
+      var emptyArray = new Array(delta);
+
+      [].push.apply(this._physicalItems, newPhysicalItems);
+      [].push.apply(this._physicalSizes, emptyArray);
+
+      this._physicalCount = prevPhysicalCount + delta;
+
+      // fill the array with the new item pos
+      while (delta > 0) {
+        emptyArray[--delta] = prevPhysicalCount + delta;
+      }
+
+      return emptyArray;
+    },
+
+    /**
+     * Render a new list of items. This method does exactly the same as `update`,
+     * but it also ensures that only one `update` cycle is created.
+     */
+    _render: function() {
+      if (this.isAttached && !this._initRendered && this._isVisible && this.items) {
+        this._update();
+        this._initRendered = true;
+      }
+    },
+
+    /**
+     * Templetizes the user template.
+     */
+    _ensureTemplatized: function() {
+      if (!this.ctor) {
+        // Template instance props that should be excluded from forwarding
+        this._instanceProps = {
+          __key__: true
+        };
+        this._instanceProps[this.as] = true;
+        this._instanceProps[this.indexAs] = true;
+        this._userTemplate = Polymer.dom(this).querySelector('template');
+        if (this._userTemplate) {
+          this.templatize(this._userTemplate);
+        } else {
+          console.warn('iron-list requires a template to be provided in light-dom');
+        }
+      }
+    },
+
+    /**
+     * Implements extension point from Templatizer mixin.
+     */
+    _getStampedChildren: function() {
+      return this._physicalItems;
+    },
+
+    /**
+     * Implements extension point from Templatizer
+     * Called as a side effect of a template instance path change, responsible
+     * for notifying items.<key-for-instance>.<path> change up to host.
+     */
+    _forwardInstancePath: function(inst, path, value) {
+      if (path.indexOf(this.as + '.') === 0) {
+        this.notifyPath('items.' + inst.__key__ + '.' +
+          path.slice(this.as.length + 1), value);
+      }
+    },
+
+    /**
+     * Implements extension point from Templatizer mixin
+     * Called as side-effect of a host property change, responsible for
+     * notifying parent path change on each row.
+     */
+    _forwardParentProp: function(prop, value) {
+      if (this._physicalItems) {
+        this._physicalItems.forEach(function(item) {
+          item._templateInstance[prop] = value;
+        }, this);
+      }
+    },
+
+    /**
+     * Implements extension point from Templatizer
+     * Called as side-effect of a host path change, responsible for
+     * notifying parent.<path> path change on each row.
+     */
+    _forwardParentPath: function(path, value) {
+      if (this._physicalItems) {
+        this._physicalItems.forEach(function(item) {
+          item._templateInstance.notifyPath(path, value, true);
+        }, this);
+      }
+    },
+
+    /**
+     * Called as a side effect of a host items.<key>.<path> path change,
+     * responsible for notifying item.<path> changes to row for key.
+     */
+    _forwardItemPath: function(path, value) {
+      if (this._physicalIndexForKey) {
+        var dot = path.indexOf('.');
+        var key = path.substring(0, dot < 0 ? path.length : dot);
+        var idx = this._physicalIndexForKey[key];
+        var row = this._physicalItems[idx];
+        if (row) {
+          var inst = row._templateInstance;
+          if (dot >= 0) {
+            path = this.as + '.' + path.substring(dot+1);
+            inst.notifyPath(path, value, true);
+          } else {
+            inst[this.as] = value;
+          }
+        }
+      }
+    },
+
+    _itemsChanged: function(change) {
+      if (change.path === 'items') {
+        // render the new set
+        this._initRendered = false;
+
+        // update the whole set
+        this._virtualStartVal = 0;
+        this._physicalTop = 0;
+        this._virtualCount = this.items ? this.items.length : 0;
+        this._collection = this.items ? Polymer.Collection.get(this.items) : null;
+        this._physicalIndexForKey = {};
+
+        // scroll to the top
+        this._resetScrollPosition(0);
+
+        // create the initial physical items
+        if (!this._physicalItems) {
+          this._physicalItems = this._createPool(this._physicalCount);
+          this._physicalSizes = new Array(this._physicalCount);
+        }
+
+        this.debounce('refresh', this._render);
+
+
+      } else if (change.path === 'items.splices') {
+        // render the new set
+        this._initRendered = false;
+
+        this._adjustVirtualIndex(change.value.indexSplices);
+        this._virtualCount = this.items ? this.items.length : 0;
+
+        this.debounce('refresh', this._render);
+
+      } else {
+        // update a single item
+        this._forwardItemPath(change.path.split('.').slice(1).join('.'), change.value);
+      }
+    },
+
+    _adjustVirtualIndex: function(splices) {
+      for (var i = 0; i < splices.length; i++) {
+        var splice = splices[i];
+        var idx = splice.index;
+        // We only need to care about changes happening above the current position
+        if (idx >= this._virtualStartVal) {
+          break;
+        }
+
+        this._virtualStart = this._virtualStart +
+            Math.max(splice.addedCount - splice.removed.length, idx - this._virtualStartVal);
+      }
+    },
+
+    _scrollHandler: function() {
+      this._refresh();
+    },
+
+    _iterateItems: function(fn, itemSet) {
+      var pidx, vidx, rtn, i;
+
+      if (arguments.length === 2 && itemSet) {
+        for (i = 0; i < itemSet.length; i++) {
+          pidx = itemSet[i];
+          if (pidx >= this._physicalStart) {
+            vidx = this._virtualStartVal + (pidx - this._physicalStart);
+          } else {
+            vidx = this._virtualStartVal + (this._physicalCount - this._physicalStart) + pidx;
+          }
+          if ((rtn = fn.call(this, pidx, vidx)) != null) {
+            return rtn;
+          }
+        }
+      } else {
+        pidx = this._physicalStart;
+        vidx = this._virtualStartVal;
+
+        for (; pidx < this._physicalCount; pidx++, vidx++) {
+          if ((rtn = fn.call(this, pidx, vidx)) != null) {
+            return rtn;
+          }
+        }
+
+        pidx = 0;
+
+        for (; pidx < this._physicalStart; pidx++, vidx++) {
+          if ((rtn = fn.call(this, pidx, vidx)) != null) {
+            return rtn;
+          }
+        }
+      }
+    },
+
+    _assignModels: function(itemSet) {
+      this._iterateItems(function(pidx, vidx) {
+        var el = this._physicalItems[pidx];
+        var inst = el._templateInstance;
+        var item = this.items && this.items[vidx];
+
+        if (item) {
+          inst[this.as] = item;
+          inst.__key__ = this._collection.getKey(item);
+          inst[this.indexAs] = vidx;
+          el.removeAttribute('hidden');
+          this._physicalIndexForKey[inst.__key__] = pidx;
+        } else {
+          inst.__key__ = null;
+          el.setAttribute('hidden', '');
+        }
+
+      }, itemSet);
+    },
+
+    _updateMetrics: function() {
+      var total = 0;
+      var prevAvgCount = this._physicalAverageCount;
+      var prevPhysicalAvg = this._physicalAverage;
+
+      // Make sure we distributed all the physical items
+      // so we can measure them
+      Polymer.dom.flush();
+
+      for (var i = 0; i < this._physicalCount; i++) {
+        this._physicalSizes[i] = this._physicalItems[i].offsetHeight;
+        total += this._physicalSizes[i];
+        this._physicalAverageCount += this._physicalSizes[i] ? 1 : 0;
+      }
+
+      this._physicalSize = total;
+      this._viewportSize = this._scroller.offsetHeight;
+
+      if (this._physicalAverageCount !== prevAvgCount) {
+        this._physicalAverage = Math.round(
+            ((prevPhysicalAvg * prevAvgCount) + total) /
+            this._physicalAverageCount);
+      }
+    },
+
+    _positionItems: function(itemSet) {
+      this._adjustScrollPosition();
+
+      var y = this._physicalTop;
+
+      this._iterateItems(function(pidx) {
+
+        this.transform('translate3d(0, ' + y + 'px, 0)', this._physicalItems[pidx]);
+        y += this._physicalSizes[pidx];
+
+      }, itemSet);
+    },
+
+    _adjustScrollPosition: function() {
+      var deltaHeight = this._virtualStartVal === 0 ? this._physicalTop :
+          Math.min(this._scrollPosition + this._physicalTop, 0);
+
+      if (deltaHeight) {
+        this._physicalTop = this._physicalTop - deltaHeight;
+
+        // juking scroll position during interial scrolling on iOS is no bueno
+        if (!IOS_TOUCH_SCROLLING) {
+          this._resetScrollPosition(this._scroller.scrollTop - deltaHeight);
+        }
+      }
+    },
+
+    _resetScrollPosition: function(pos) {
+      if (this._scroller) {
+        this._scroller.scrollTop = pos;
+        this._scrollPosition = this._scroller.scrollTop;
+      }
+    },
+
+    _updateScrollerSize: function() {
+      this._scrollSize = (this._physicalBottom +
+          Math.max(this._virtualCount - this._physicalCount - this._virtualStartVal, 0) * this._physicalAverage);
+
+      this.$.items.style.height = this._scrollSize + 'px';
+    },
+
+    /**
+     * Scroll to a specific item in the virtual list regardless
+     * of the physical items in the DOM tree.
+     *
+     * @method scrollToIndex
+     */
+    scrollToIndex: function(idx) {
+      if (typeof idx !== 'number') {
+        return;
+      }
+
+      var firstVisible = this.firstVisibleIndex;
+
+      idx = Math.min(Math.max(idx, 0), this._virtualCount-1);
+
+      // start at the previous virtual item
+      // so we have a item above the first visible item
+      this._virtualStart = idx - 1;
+
+      // assign new models
+      this._assignModels();
+
+      // measure the new sizes
+      this._updateMetrics();
+
+      // estimate new physical offset
+      this._physicalTop = this._virtualStart * this._physicalAverage;
+
+      var currentTopItem = this._physicalStart;
+      var currentVirtualItem = this._virtualStart;
+      var targetOffsetTop = 0;
+      var hiddenContentSize = this._hiddenContentSize;
+
+      // scroll to the item as much as we can
+      while (currentVirtualItem !== idx && targetOffsetTop < hiddenContentSize) {
+        targetOffsetTop = targetOffsetTop + this._physicalSizes[currentTopItem];
+        currentTopItem = (currentTopItem + 1) % this._physicalCount;
+        currentVirtualItem++;
+      }
+
+      // update the scroller size
+      this._updateScrollerSize();
+
+      // update the position of the items
+      this._positionItems();
+
+      // set the new scroll position
+      this._resetScrollPosition(this._physicalTop + targetOffsetTop + 1);
+
+      // clear cached visible index
+      this._firstVisibleIndexVal = null;
+    },
+
+    /**
+     * Reset the physical average and the average count.
+     */
+    _resetAverage: function() {
+      this._physicalAverage = 0;
+      this._physicalAverageCount = 0;
+    },
+
+    /**
+     * A handler for the `resize` event triggered by `IronResizableBehavior`
+     * when the element is resized.
+     */
+    _resizeHandler: function() {
+      this.debounce('resize', function() {
+        if (this._physicalItems && this._isVisible) {
+          this._resetAverage();
+          this.updateViewportBoundaries();
+          this.scrollToIndex(this.firstVisibleIndex);
+        }
+      });
+    }
+  });
+
+})();
+
+</script>

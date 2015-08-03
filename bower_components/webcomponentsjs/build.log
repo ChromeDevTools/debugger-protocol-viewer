@@ -1,33 +1,33 @@
 BUILD LOG
 ---------
-Build Time: 2015-06-17T19:01:18-0700
+Build Time: 2015-07-15T17:22:18-0700
 
 NODEJS INFORMATION
 ==================
-nodejs: v2.3.0
+nodejs: v2.3.4
 gulp: 3.9.0
 gulp-audit: 1.0.0
-gulp-concat: 2.5.2
+gulp-concat: 2.6.0
 gulp-header: 1.2.2
 gulp-uglify: 1.2.0
 run-sequence: 1.1.1
-web-component-tester: 3.2.0
+web-component-tester: 3.3.1
 
 REPO REVISIONS
 ==============
-webcomponentsjs: 1ee61faca40f109f2f5b6ddc8fa15de0319a6e61
+webcomponentsjs: 83cd82b847c1fbeab6ba9a40d822c7d4cc96367a
 
 BUILD HASHES
 ============
-CustomElements.js: f3f0c7f3c65aeb5cc56c64300fe89003a4c7fa31
-CustomElements.min.js: 557ccd338ab463c9bcd1e3c0fc4102455432214a
-HTMLImports.js: 8c1f33a777d7ff8ee3a22fce8d35e5b927285724
-HTMLImports.min.js: f4ba44076c40f408c661caa8baf81f9e3740689b
-MutationObserver.js: 81934731acd4175701d678dbef11aaefa7d701f5
-MutationObserver.min.js: 6202537174240ba28bf71e22cddf90ce80cf73f8
-ShadowDOM.js: 5e901cfe7eb384f15a39b1bf4e510a06ae03b43e
-ShadowDOM.min.js: 397715836fdd0cfe15a5e966f5ab187ccc1bec15
-webcomponents-lite.js: 5c38f87a645eea9d282de74340c101e5531cb2c0
-webcomponents-lite.min.js: 2a744443fbfba6b30fde7b17606f68cae6036e52
-webcomponents.js: 637cf33c1ee108fb376891eed0b5b47deed8c238
-webcomponents.min.js: c2841b948265560478872747618cad207a693c4f
+CustomElements.js: f77fa5739800df7721b1e2bb86bdd8f260ef672d
+CustomElements.min.js: f1ba945213ce0495cb93919caa6d050ef114fbf5
+HTMLImports.js: c5473ac4fc64180ba40da4679479ed5903feb54f
+HTMLImports.min.js: 401ea71282cb28c1af168d7c08defecab18f5afb
+MutationObserver.js: 2cc42498f20f5b3842c6b5e8f7735d111967b579
+MutationObserver.min.js: 39a017771ac32f3edc8881b7ea20d0b2013d103e
+ShadowDOM.js: fd1d36923e47ed2c48719485dc7768a854e09015
+ShadowDOM.min.js: f771f33aab417207f8e198500918f74c1dce7314
+webcomponents-lite.js: 77d1bace03f086a89f9a8346fa1974205ba130b5
+webcomponents-lite.min.js: e87572819aedb8268109af569158d65911d8e398
+webcomponents.js: c4b4dd834dc76bba3b45e143adbfaae19bd0d340
+webcomponents.min.js: fd64b22600db44a3a428b538c468f18069435f4f
