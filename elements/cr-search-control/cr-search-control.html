@@ -51,8 +51,8 @@
         icon="search"
         on-active-changed="handleActiveChange_"></paper-icon-button>
     <div id="search-input-container" hidden$="{{!inputActive}}">
-      <input id="input" value="{{searchText::input}}"
-          placeholder="Search..." type="text">
+      <input id="input" value="{{searchText::input}}" autocapitalize="off"
+          autocorrect="off" placeholder="Search..." type="text">
     </div>
     <cr-search-menu id="resultsMenu"></cr-search-menu>
   </template>
