@@ -29,6 +29,12 @@ var PageRefType = {
 };
 
 var SITE_ROOT = '/debugger-protocol-viewer/';
+var MAX_DESCRIPTION_LENGTH = 200;
+
+function getShortDescription(description) {
+  return description && description.length > MAX_DESCRIPTION_LENGTH ?
+      description.substr(0, MAX_DESCRIPTION_LENGTH) + '...' : description;
+}
 
 // Represents a page reference.
 var PageReference = {
@@ -39,7 +45,7 @@ var PageReference = {
   },
   createPageReference: function(title, type, description) {
     var ref = Object.create(PageReference);
-    ref.init(title, type, description);
+    ref.init(title, type, getShortDescription(description));
     return ref;
   },
   setHrefs: function(href, domainHref) {
