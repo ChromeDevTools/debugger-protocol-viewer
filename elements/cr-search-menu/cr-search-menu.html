@@ -55,7 +55,7 @@
       <content select=".header"></content>
       <iron-list items="[[renderItems]]" as="match">
         <template>
-          <div class="search-match" role="menuitem">
+          <div class="search-match" role="menuitem" on-click="activateItem_">
             <div class="match-label">
               <div class="label">
                 <a href="[[match.href]]">[[match.label]]</a>
@@ -125,6 +125,14 @@
       var target = document.querySelector(this.selectorForElementToLayOver);
       if (target) {
         this.setPositionAndSize(target.getBoundingClientRect());
+      }
+    },
+
+    activateItem_: function(e) {
+      var anchor = this.querySelector('a');
+      var href = anchor && anchor.href;
+      if (href) {
+        window.location.href = href;
       }
     },
 
