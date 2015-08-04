@@ -13,6 +13,7 @@
     }
     :host([input-active]) {
       @apply(--layout-horizontal);
+      @apply(--layout-center);
     }
     :host([input-active]) paper-icon-button {
       @apply(--layout-flex-none);
@@ -31,9 +32,11 @@
       color: white;
       padding: 10px 18px;
       @apply(--layout-flex);
+      border-bottom: 1px solid transparent;
     }
     input:focus {
-      border-bottom: 1px solid red;
+      transition: border-color 0.4s ease;
+      border-bottom: 1px solid #4BBDA8;
       outline: none;
     }
   </style>
@@ -153,13 +156,14 @@
     },
 
     handleInputActive_: function() {
-      // Prepares the search index if not previously requested.
-      if (this.inputActive && !this.ajaxResponse &&
-          this.requests.length === 0) {
-        this.prepareSearchIndex_();
+      if (this.inputActive) {
         this.async(function() {
           this.$.input.focus();
         }.bind(this), 50);
+        // Prepares the search index if not previously requested.
+        if (!this.ajaxResponse && this.requests.length === 0) {
+          this.prepareSearchIndex_();
+        }
       }
     },
 
