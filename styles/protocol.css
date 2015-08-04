@@ -219,6 +219,9 @@ h4:hover .permalink {
 .search-active  .title {
   display: none;
 }
+.search-active #paperToggle {
+  display: none;
+}
 .search-active  cr-search-control {
   width: 100%;
 }
