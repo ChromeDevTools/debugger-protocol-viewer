@@ -17,6 +17,8 @@
     }
     paper-material, iron-list {
       padding: 0;
+      margin: 0;
+      width: 100%;
       height: 100%;
     }
     .search-match {
@@ -98,15 +100,33 @@
         type: Array,
         readOnly: true,
         value: []
+      },
+      selectorForElementToLayOver: {
+        type: String,
+        value: '#mainPanel'
       }
     },
 
     observers: [
-      'renderItems_(keywordsModel, searchString)'
+      'renderItems_(keywordsModel, searchString)',
+      'handleOpened_(opened)'
     ],
 
     /** @override */
     opened: true,
+
+    handleOpened_: function(opened) {
+      if (opened) {
+        this.updatePosition();
+      }
+    },
+
+    updatePosition: function() {
+      var target = document.querySelector(this.selectorForElementToLayOver);
+      if (target) {
+        this.setPositionAndSize(target.getBoundingClientRect());
+      }
+    },
 
     renderItems_: function(keywordsModel, searchString) {
       if (keywordsModel) {
@@ -127,6 +147,16 @@
 
     isDomainType_: function(type) {
       return type == '0';
+    },
+
+    setPositionAndSize: function(rect) {
+      this.style.left = rect.left + 'px';
+      this.style.top = rect.top + 'px';
+      this.style.width = rect.width + 'px';
+
+      // TODO: Make more 'phisticated. Handle mobile.
+      var heightDiff = 30;
+      this.style.height = rect.height - heightDiff + 'px';
     },
 
     TypeLabel: {
