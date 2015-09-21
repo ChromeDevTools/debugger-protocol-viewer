@@ -17,6 +17,13 @@ Building:
 
     jekyll serve # compiles site to _site/ and watches for file changes
 
+Updating protocol:
+
+* Update `_data/protocol.json` to latest
+* Run `node create-domain-files.js`
+
+[#33](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/33) tracks a better flow.
+
 Deploying:
 
 All pushes to gh-pages instantly trigger a jeklyll build and the site will serve the resulting `_site`.
