@@ -48,12 +48,12 @@
         handle-as="json"
         active-requests="{{requests}}"
         last-response="{{ajaxResponse}}"></iron-ajax>
-    <paper-icon-button id="search-button" toggles
+    <paper-icon-button id="searchButton" toggles
         icon="search"
-        on-active-changed="handleActiveChange_"></paper-icon-button>
+        on-active-changed="handleButtonActiveChange_"></paper-icon-button>
     <div id="search-input-container" hidden$="{{!inputActive}}">
       <input id="input" value="{{searchText::input}}" autocapitalize="off"
-          autocorrect="off" placeholder="Search..." type="text">
+          autocorrect="off" placeholder="Search..." type="search">
     </div>
     <cr-search-menu id="resultsMenu"></cr-search-menu>
   </template>
@@ -104,7 +104,7 @@
         type: String,
         reflectToAttribute: true,
         notify: true,
-        value: null,
+        value: '',
         observer: 'handleSearchChange_'
       },
       /**
@@ -124,6 +124,11 @@
       'esc': 'handleEsc_'
     }],
 
+    listeners: {
+      'resultsMenu.item-activate': 'handleItemActivate_',
+      'input.blur': 'handleBlur_'
+    },
+
     attached: function() {
       // Attach Menu/Overlay to the body.
       document.body.appendChild(this.$.resultsMenu);
@@ -139,7 +144,7 @@
       }
       this.debounce('inputChange', function() {
         this.$.resultsMenu.searchString = this.searchText;
-        this.setMenuOpen_(true);
+        this.setMenuOpen_(!!this.searchText);
       }.bind(this), 20);
     },
 
@@ -151,21 +156,23 @@
       }
     },
 
-    handleActiveChange_: function() {
-      this.inputActive = this.$['search-button'].active;
-      this.fire(this.inputActive ? 'active' : 'inactive');
+    handleButtonActiveChange_: function() {
+      this.inputActive = this.$.searchButton.active;
     },
 
     handleInputActive_: function() {
       if (this.inputActive) {
         this.async(function() {
           this.$.input.focus();
+          this.handleSearchChange_();
         }.bind(this), 50);
         // Prepares the search index if not previously requested.
         if (!this.ajaxResponse && this.requests.length === 0) {
           this.prepareSearchIndex_();
         }
       }
+
+      this.fire(this.inputActive ? 'active' : 'inactive');
     },
 
     prepareSearchIndex_: function() {
@@ -177,6 +184,14 @@
       // Set the keywords model (search index) onto the menu.
       this.$.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
           this.ajaxResponse);
+    },
+
+    handleItemActivate_: function(e) {
+      this.setMenuOpen_(false);
+    },
+
+    handleBlur_: function() {
+      this.$.searchButton.active = false;
     }
   });
 })();

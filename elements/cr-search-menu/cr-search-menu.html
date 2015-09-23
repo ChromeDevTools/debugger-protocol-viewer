@@ -49,11 +49,19 @@
       /*Causes jank on mobile.*/
       /*background-color: #E8F0FF;*/
     }
+    .empty-state-message {
+      margin: 0;
+      padding: 35px;
+      text-align: center;
+    }
   </style>
 
   <template>
     <paper-material elevation="3">
       <content select=".header"></content>
+      <p class="empty-state-message" hidden$="{{!empty_}}">
+        No matches. Try another search.
+      </p>
       <iron-list items="[[renderItems]]" as="match">
         <template>
           <div class="search-match" role="menuitem" on-click="activateItem_">
@@ -95,12 +103,14 @@
         type: Object
       },
       searchString: {
-        type: String
+        type: String,
+        value: ''
       },
       renderItems: {
         type: Array,
         readOnly: true,
-        value: []
+        value: [],
+        observer: 'handleRenderItemsChange_'
       },
       selectorForElementToLayOver: {
         type: String,
@@ -116,6 +126,8 @@
     /** @override */
     opened: true,
 
+    empty_: false,
+
     handleOpened_: function(opened) {
       if (opened) {
         this.updatePosition();
@@ -130,8 +142,10 @@
     },
 
     activateItem_: function(e) {
-      var anchor = this.querySelector('a');
+      var anchor = e.target.tagName === 'A' ?
+          e.target : e.target.querySelector('a');
       var href = anchor && anchor.href;
+      this.fire('item-activate');
       if (href) {
         window.location.href = href;
       }
@@ -152,6 +166,10 @@
         }, this);
         this._setRenderItems(items);
       }
+    },
+
+    handleRenderItemsChange_: function() {
+      this.empty_ = !this.renderItems.length;
     },
 
     isDomainType_: function(type) {
