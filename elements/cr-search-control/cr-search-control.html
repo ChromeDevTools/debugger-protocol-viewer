@@ -17,6 +17,7 @@
     }
     :host([input-active]) paper-icon-button {
       @apply(--layout-flex-none);
+      color: black;
     }
     :host([input-active]) #search-input-container {
       @apply(--layout-flex);
@@ -64,15 +65,57 @@
 
 (function() {
 
-  // TODO: remembers previous searches (localstorage?).
+  /**
+   * A model managing keywords searches.
+   * TODO: remembers previous searches (localstorage?).
+   */
   var KeywordsModel = {
     keys: null,
     index: null,
+
+    prevKey_: null,
+    prevMatches_: null,
     getMatches: function(str) {
-      // TODO: Memoize.
-      return this.keys.filter(function(key) {
-        return key.indexOf(str) == 0;
-      }).map(function(key) {
+      if (!str) {
+        return [];
+      }
+      var useCache = false;
+      if (this.prevKey_) {
+        var occurredAt = str.indexOf(this.prevKey_);
+        // An occurance at 0 means the previous key is contained in the new
+        // search string.
+        // We don't handle the case where the search is exactly the same;
+        // we assume it cannot be the same because we're handling a 'change'
+        // event. This logic should be updated if ever not handled by a 'change'
+        // event.
+        if (occurredAt === 0) {
+          // Use the cached list of matching keys.
+          useCache = true;
+        }
+      }
+      var matches;
+      if (useCache) {
+        matches = this.prevMatches_.filter(function(key) {
+          return key.indexOf(str) !== -1;
+        });
+      } else {
+        var exactMatches = [];
+        var wildcardMatches = [];
+        this.keys.forEach(function(key) {
+          var matchIndex = key.indexOf(str);
+          if (matchIndex === 0) {
+            exactMatches.push(key);
+          } else if (matchIndex !== -1) {
+            wildcardMatches.push(key);
+          }
+        });
+        matches = exactMatches.concat(wildcardMatches);
+      }
+
+      this.prevKey_ = str;
+      this.prevMatches_ = matches;
+
+      return matches.map(function(key) {
         return this.index[key];
       }, this);
     },
@@ -112,7 +155,7 @@
        */
       requests: {
         type: Array,
-        value: []
+        value: function() { return []; }
       },
       ajaxResponse: {
         type: Object,
@@ -165,13 +208,15 @@
         this.async(function() {
           this.$.input.focus();
           this.handleSearchChange_();
+          this.$.searchButton.icon = 'icons:arrow-forward';
         }.bind(this), 50);
         // Prepares the search index if not previously requested.
         if (!this.ajaxResponse && this.requests.length === 0) {
           this.prepareSearchIndex_();
         }
+      } else {
+        this.$.searchButton.icon = 'search';
       }
-
       this.fire(this.inputActive ? 'active' : 'inactive');
     },
 
@@ -191,7 +236,9 @@
     },
 
     handleBlur_: function() {
-      this.$.searchButton.active = false;
+      if (!this.$.resultsMenu.opened) {
+        this.$.searchButton.active = false;
+      }
     }
   });
 })();
