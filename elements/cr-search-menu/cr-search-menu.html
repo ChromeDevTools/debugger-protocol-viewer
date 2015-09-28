@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../../bower_components/iron-menu-behavior/iron-menu-behavior.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../cr-html-echo/cr-html-echo.html">
 
 <dom-module id="cr-search-menu">
@@ -14,28 +14,53 @@
       position: absolute;
       width: 700px;
       height: 600px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.15);
+      background-color: white;
     }
-    paper-material, iron-list {
-      padding: 0;
-      margin: 0;
+    /* Prevent jank while scrolling. */
+    :host([scrolling]) .search-match {
+      pointer-events: none;
+    }
+    iron-list {
+      padding: 11px 0;
       width: 100%;
-      height: 100%;
+    }
+    .match-info {
+      @apply(--layout-vertical);
+      flex: 1 auto;
     }
     .search-match {
       padding: 8px 16px;
       text-decoration: none;
-      @apply(--layout-vertical);
+      font-weight: 200;
+      @apply(--layout-horizontal);
+      width: 100%;
+      cursor: pointer;
+    }
+    iron-icon {
+      width: 36px;
+      height: 36px;
+      padding-right: 10px;
+      fill: #4e4e4e;
+      -ms-flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+      flex-shrink: 0;
     }
     .match-label {
       @apply(--layout-horizontal);
     }
     .match-description {
       @apply(--layout-flex-auto);
+      margin-top: 3px;
     }
     .label {
       @apply(--layout-flex-auto);
       font-size: 18px;
-      flex: 1 auto;
+    }
+    a {
+      text-decoration: none;
+      color: #383838;
     }
     .domain-tag {
       @apply(--layout-flex-none);
@@ -46,43 +71,49 @@
       font-size: 14px;
     }
     .search-match:hover {
-      /*Causes jank on mobile.*/
-      /*background-color: #E8F0FF;*/
+      background-color: #E8F0FF;
     }
     .empty-state-message {
       margin: 0;
       padding: 35px;
       text-align: center;
     }
+    .scroller {
+      height: 100%;
+      overflow: auto;
+    }
   </style>
 
   <template>
-    <paper-material elevation="3">
       <content select=".header"></content>
       <p class="empty-state-message" hidden$="{{!empty_}}">
         No matches. Try another search.
       </p>
-      <iron-list items="[[renderItems]]" as="match">
-        <template>
-          <div class="search-match" role="menuitem" on-click="activateItem_">
-            <div class="match-label">
-              <div class="label">
-                <a href="[[match.href]]">[[match.label]]</a>
-                <span class="type">[[match.typeLabel]]</span>
-              </div>
-              <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
-                <span class="domain-label">Domain</span>
-                <a href="[[match.domainHref]]">[[match.domain]]</a>
+      <div class="scroller" on-scroll="handleScroll_">
+        <iron-list items="[[renderItems]]" as="match">
+          <template>
+            <div class="search-match" role="menuitem" on-click="activateItem_">
+              <iron-icon icon="{{match.icon}}"></iron-icon>
+              <div class="match-info">
+                <div class="match-label">
+                  <div class="label">
+                    <a href="[[match.href]]">[[match.label]]</a>
+                    <span class="type">[[match.typeLabel]]</span>
+                  </div>
+                  <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
+                    <span class="domain-label">Domain</span>
+                    <a href="[[match.domainHref]]">[[match.domain]]</a>
+                  </div>
+                </div>
+                <div class="match-description">
+                  <cr-html-echo html="{{match.description}}"></cr-html-echo>
+                </div>
               </div>
             </div>
-            <div class="match-description">
-              <cr-html-echo html="{{match.description}}"></cr-html-echo>
-            </div>
-          </div>
-        </template>
-      </iron-list>
+          </template>
+        </iron-list>
+      </div>
       <content select=".footer"></content>
-    </paper-material>
   </template>
 
 </dom-module>
@@ -115,6 +146,10 @@
       selectorForElementToLayOver: {
         type: String,
         value: '#mainPanel'
+      },
+      scrolling: {
+        type: Boolean,
+        reflectToAttribute: true
       }
     },
 
@@ -143,7 +178,7 @@
 
     activateItem_: function(e) {
       var anchor = e.target.tagName === 'A' ?
-          e.target : e.target.querySelector('a');
+          e.target : e.currentTarget.querySelector('a');
       var href = anchor && anchor.href;
       this.fire('item-activate');
       if (href) {
@@ -161,6 +196,7 @@
             // and match type as labels.
             ref.typeLabel = this.TypeLabel[ref.type];
             ref.label = keywordMatch.keyword;
+            ref.icon = this.TypeIcon[ref.type];
             items.push(ref);
           }, this);
         }, this);
@@ -173,7 +209,7 @@
     },
 
     isDomainType_: function(type) {
-      return type == '0';
+      return type == this.Type.DOMAIN;
     },
 
     setPositionAndSize: function(rect) {
@@ -186,12 +222,38 @@
       this.style.height = rect.height - heightDiff + 'px';
     },
 
+    timeoutId_: null,
+
+    handleScroll_: function() {
+      this.scrolling = true;
+      this.timeoutId_ && this.cancelAsync(this.timeoutId_);
+      this.timeoutId_ = this.async(function() {
+        this.scrolling = false
+      }.bind(this), 150);
+    },
+
+    Type: {
+      DOMAIN: '0',
+      EVENT: '1',
+      PARAM: '2',
+      TYPE: '3',
+      METHOD: '4'
+    },
+
     TypeLabel: {
       '0': 'Domain',
       '1': 'Event',
       '2': 'Parameter',
       '3': 'Type',
       '4': 'Method'
+    },
+
+    TypeIcon: {
+      '0': '',
+      '1': 'image:wb-iridescent',
+      '2': 'icons:more-horiz',
+      '3': 'icons:code',
+      '4': 'icons:apps'
     }
   });
 })();
