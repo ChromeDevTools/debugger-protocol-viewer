@@ -188,7 +188,7 @@
       this.debounce('inputChange', function() {
         this.$.resultsMenu.searchString = this.searchText;
         this.setMenuOpen_(!!this.searchText);
-      }.bind(this), 200);
+      }.bind(this), 70);
     },
 
     handleEsc_: function() {

@@ -36,7 +36,6 @@
     <paper-toolbar id="mainToolbar">
       <paper-icon-button id="paperToggle"
           icon="menu" paper-drawer-toggle></paper-icon-button>
-      <!-- <span class="flex"></span> -->
       <div class="top title">Chrome Debugger Protocol Viewer</div>
       <cr-search-control id="searchButton"
           protocol-src="{{ site.baseurl }}/searchindex.json"></cr-search-control>
@@ -47,8 +46,9 @@
         {% assign domain = site.data.protocol.domains[page.idx] %}
         {% include domain.html domain=domain %}
       {% else %}
-        <paper-material elevation="1">
+        <paper-material elevation="1" class="home-page-content">
           {{ content }}
+          {% include github-badge.html %}
         </paper-material>
       {% endif %}
     </div>
@@ -66,6 +66,5 @@ window.addEventListener('load', function() {
   }, false);
 });
 </script>
-<!-- {  % include github-badge.html %  } -->
 </body>
 </html>

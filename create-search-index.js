@@ -27,8 +27,8 @@ var PageRefType = {
   TYPE_ID: '3',
   COMMAND: '4'
 };
-
-var SITE_ROOT = '/debugger-protocol-viewer/';
+// Optional root path to be prepended to page reference URLs.
+var SITE_ROOT = '';
 var MAX_DESCRIPTION_LENGTH = 200;
 
 function getShortDescription(description) {
@@ -49,8 +49,10 @@ var PageReference = {
     return ref;
   },
   setHrefs: function(href, domainHref) {
-    this.href = href;
     this.domainHref = domainHref;
+    if (href) {
+      this.href = href;
+    }
   }
 };
 
@@ -97,13 +99,13 @@ var secondaryKeywords = [];
   // Store domain name as a page reference under itself as a keyword.
   var ref = PageReference.createPageReference(
       domainName, PageRefType.DOMAIN, domain.description);
-  ref.setHrefs(domainPath, domainPath);
+  ref.setHrefs('', domainPath);
   keywordMap.addReferenceForKey(domainName, ref);
 
   if (domain.commands) {
     domain.commands.forEach(function(command) {
       var commandName = command.name;
-      var commandNameHref = domainPath + '#method-' + commandName;
+      var commandNameHref = '#method-' + commandName;
       var ref = PageReference.createPageReference(
           domainName, PageRefType.COMMAND, command.description);
       ref.setHrefs(commandNameHref, domainPath);
@@ -113,7 +115,7 @@ var secondaryKeywords = [];
   if (domain.events) {
     domain.events.forEach(function(event) {
       var eventName = event.name;
-      var eventNameHref = domainPath + '#event-' + eventName;
+      var eventNameHref = '#event-' + eventName;
       var ref = PageReference.createPageReference(
           domainName, PageRefType.EVENT, event.description);
       ref.setHrefs(eventNameHref, domainPath);
@@ -123,7 +125,7 @@ var secondaryKeywords = [];
   if (domain.types) {
     domain.types.forEach(function(type) {
       var typeName = type.id;
-      var typeNameHref = domainPath + '#type-' + typeName;
+      var typeNameHref = '#type-' + typeName;
       var ref = PageReference.createPageReference(
           domainName, PageRefType.TYPE_ID, type.description);
       ref.setHrefs(typeNameHref, domainPath);

@@ -122,6 +122,7 @@
 <script>
 
 (function() {
+  var SITE_ROOT = '/debugger-protocol-viewer/';
 
   Polymer({
     is: 'cr-search-menu',
@@ -198,6 +199,11 @@
             ref.typeLabel = this.TypeLabel[ref.type];
             ref.label = keywordMatch.keyword;
             ref.icon = this.TypeIcon[ref.type];
+
+            ref.domainHref = SITE_ROOT + ref.domainHref;
+            // Concatenate the base domain path with the anchor ref if defined,
+            // otherwise assign the domain path to it.
+            ref.href = ref.href ? ref.domainHref + ref.href : ref.domainHref;
             items.push(ref);
           }, this);
         }, this);

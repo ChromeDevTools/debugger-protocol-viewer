@@ -76,6 +76,10 @@ paper-menu a {
   overflow: visible;;
 }
 
+.home-page-content {
+  min-height: 102px;
+}
+
 .monospace {
   font-family: Consolas, Menlo, monospace;
 }
