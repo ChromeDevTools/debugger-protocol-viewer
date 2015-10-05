@@ -135,6 +135,6 @@ var secondaryKeywords = [];
   // TODO(ericguzman): Index other keyword types.
 });
 
-var fileName = '_sandbox/searchindex.json';
+var fileName = 'searchindex.json';
 var content = JSON.stringify(keywordMap);
 fs.writeFileSync(fileName, content);
