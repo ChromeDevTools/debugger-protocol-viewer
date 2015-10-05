@@ -66,7 +66,7 @@
             {
                 "id": "ResourceType",
                 "type": "string",
-                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "WebSocket", "Other"],
+                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "Fetch", "EventSource", "WebSocket", "Other"],
                 "description": "Resource type as it was perceived by the rendering engine."
             },
             {
@@ -604,13 +604,6 @@
                 ]
             },
             {
-                "name": "setContinuousPaintingEnabled",
-                "description": "Requests that backend enables continuous painting",
-                "parameters": [
-                    { "name": "enabled", "type": "boolean", "description": "True for enabling cointinuous painting" }
-                ]
-            },
-            {
                 "name": "setShowScrollBottleneckRects",
                 "description": "Requests that backend shows scroll bottleneck rects",
                 "parameters": [
@@ -1076,6 +1069,66 @@
         ]
     },
     {
+        "domain": "Security",
+        "description": "Security",
+        "hidden": true,
+        "types": [
+            {
+                "id": "SecurityState",
+                "type": "string",
+                "enum": ["unknown", "neutral", "insecure", "warning", "secure"],
+                "description": "The security level of a page or resource."
+            },
+            {
+                "id": "SecurityStateExplanation",
+                "type": "object",
+                "properties": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
+                    { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
+                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." },
+                    { "name": "certificateId", "$ref": "Network.CertificateId", "optional": true, "description": "Associated certificate id." }
+                ],
+                "description": "An explanation of an factor contributing to the security state."
+            },
+            {
+                "id": "MixedContentStatus",
+                "type": "object",
+                "properties": [
+                    { "name": "ranInsecureContent", "type": "boolean", "description": "True if the page ran insecure content such as scripts." },
+                    { "name": "displayedInsecureContent", "type": "boolean", "description": "True if the page displayed insecure content such as images." },
+                    { "name": "ranInsecureContentStyle", "$ref": "SecurityState", "description": "Security state representing a page that ran insecure content." },
+                    { "name": "displayedInsecureContentStyle", "$ref": "SecurityState", "description": "Security state representing a page that displayed insecure content." }
+                ],
+                "description": "Information about mixed content on the page."
+            }
+        ],
+        "commands": [
+            {
+                "name": "enable",
+                "description": "Enables tracking security state changes.",
+                "handlers": ["browser"]
+            },
+            {
+                "name": "disable",
+                "description": "Disables tracking security state changes.",
+                "handlers": ["browser"]
+            }
+        ],
+        "events": [
+            {
+                "name": "securityStateChanged",
+                "description": "The security state of the page changed.",
+                "parameters": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state." },
+                    { "name": "explanations", "type": "array", "items": { "$ref": "SecurityStateExplanation" }, "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.", "optional": true },
+                    { "name": "mixedContentStatus", "$ref": "MixedContentStatus", "description": "Information about mixed content on the page.", "optional": true },
+                    { "name": "schemeIsCryptographic", "type": "boolean", "description": "True if the page was loaded over cryptographic transport such as HTTPS.", "optional": true }
+                ],
+                "handlers": ["browser"]
+            }
+        ]
+    },
+    {
         "domain": "Network",
         "description": "Network domain allows tracking network activities of the page. It exposes information about http, file, data and other requests and responses, their headers, bodies, timing, etc.",
         "types": [
@@ -1121,6 +1174,12 @@
                 ]
             },
             {
+                "id": "ResourcePriority",
+                "type": "string",
+                "enum": ["VeryLow", "Low", "Medium", "High", "VeryHigh"],
+                "description": "Loading priority of a resource request."
+            },
+            {
                 "id": "Request",
                 "type": "object",
                 "description": "HTTP request data.",
@@ -1128,8 +1187,55 @@
                     { "name": "url", "type": "string", "description": "Request URL." },
                     { "name": "method", "type": "string", "description": "HTTP request method." },
                     { "name": "headers", "$ref": "Headers", "description": "HTTP request headers." },
-                    { "name": "postData", "type": "string", "optional": true, "description": "HTTP POST request data." }
+                    { "name": "postData", "type": "string", "optional": true, "description": "HTTP POST request data." },
+                    { "name": "mixedContentType", "optional": true, "type": "string", "enum": ["blockable", "optionally-blockable", "none"], "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/" },
+                    { "name": "initialPriority", "$ref": "ResourcePriority", "description": "Priority of the resource request at the time request is sent."}
                 ]
+            },
+            {
+                "id": "CertificateId",
+                "type": "integer",
+                "description": "An internal certificate ID value."
+            },
+            {
+                "id": "CertificateSubject",
+                "type": "object",
+                "description": "Subject of a certificate.",
+                "properties": [
+                    { "name": "name", "type": "string", "description": "Certificate subject name." },
+                    { "name": "sanDnsNames", "type": "array", "items": { "type": "string" }, "description": "Subject Alternative Name (SAN) DNS names." },
+                    { "name": "sanIpAddresses", "type": "array", "items": { "type": "string" }, "description": "Subject Alternative Name (SAN) IP addresses." }
+                ]
+            },
+            {
+                "id": "CertificateDetails",
+                "type": "object",
+                "description": "Details about a request's certificate.",
+                "properties": [
+                    { "name": "subject", "$ref": "CertificateSubject", "description": "Certificate subject." },
+                    { "name": "issuer", "type": "string", "description": "Name of the issuing CA." },
+                    { "name": "validFrom", "$ref": "Timestamp", "description": "Certificate valid from date." },
+                    { "name": "validTo", "$ref": "Timestamp", "description": "Certificate valid to (expiration) date" }
+                ]
+            },
+            {
+                "id": "SecurityDetails",
+                "type": "object",
+                "description": "Security details about a request.",
+                "properties": [
+                    { "name": "protocol", "type": "string", "description": "Protocol name (e.g. \"TLS 1.2\" or \"QUIC\"." },
+                    { "name": "keyExchange", "type": "string", "description": "Key Exchange used by the connection." },
+                    { "name": "cipher", "type": "string", "description": "Cipher name." },
+                    { "name": "mac", "type": "string", "optional": true, "description": "TLS MAC. Note that AEAD ciphers do not have separate MACs." },
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "Certificate ID value." }
+                ]
+            },
+            {
+                "id": "BlockedReason",
+                "type": "string",
+                "description": "The reason why request was blocked.",
+                "enum": ["csp", "mixed-content", "origin", "inspector", "other"],
+                "hidden": true
             },
             {
                 "id": "Response",
@@ -1152,7 +1258,9 @@
                     { "name": "fromServiceWorker", "type": "boolean", "optional": true, "description": "Specifies that the request was served from the ServiceWorker." },
                     { "name": "encodedDataLength", "type": "number", "optional": false, "description": "Total number of bytes received for this request so far." },
                     { "name": "timing", "$ref": "ResourceTiming", "optional": true, "description": "Timing information for the given request." },
-                    { "name": "protocol", "type": "string", "optional": true, "description": "Protocol used to fetch this request." }
+                    { "name": "protocol", "type": "string", "optional": true, "description": "Protocol used to fetch this request." },
+                    { "name": "securityState", "$ref": "Security.SecurityState", "description": "Security state of the request resource." },
+                    { "name": "securityDetails", "$ref": "SecurityDetails", "optional": true, "description": "Security details for the request." }
                 ]
             },
             {
@@ -1266,6 +1374,22 @@
                 ]
             },
             {
+                "name": "addBlockedURL",
+                "description": "Blocks specific URL from loading.",
+                "parameters": [
+                    { "name": "url", "type": "string", "description": "URL to block." }
+                ],
+                "hidden": true
+            },
+            {
+                "name": "removeBlockedURL",
+                "description": "Cancels blocking of a specific URL from loading.",
+                "parameters": [
+                    { "name": "url", "type": "string", "description": "URL to stop blocking." }
+                ],
+                "hidden": true
+            },
+            {
                 "name": "replayXHR",
                 "description": "This method sends a new XMLHttpRequest which is identical to the original one. The following parameters should be identical: method, url, async, request body, extra headers, withCredentials attribute, user, password.",
                 "parameters": [
@@ -1362,6 +1486,25 @@
                 ],
                 "description": "For testing.",
                 "hidden": true
+            },
+            {
+                "name": "getCertificateDetails",
+                "description": "Returns details for the given certificate.",
+                "parameters": [
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "ID of the certificate to get details for." }
+                ],
+                "returns": [
+                    { "name": "result", "$ref": "CertificateDetails", "description": "Certificate details." }
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "showCertificateViewer",
+                "description": "Displays native dialog with the certificate details.",
+                "parameters": [
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "Certificate id." }
+                ],
+                "handlers": ["browser"]
             }
         ],
         "events": [
@@ -1427,7 +1570,8 @@
                     { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." },
                     { "name": "type", "$ref": "Page.ResourceType", "description": "Resource type." },
                     { "name": "errorText", "type": "string", "description": "User friendly error message." },
-                    { "name": "canceled", "type": "boolean", "optional": true, "description": "True if loading was canceled." }
+                    { "name": "canceled", "type": "boolean", "optional": true, "description": "True if loading was canceled." },
+                    { "name": "blockedReason", "$ref": "BlockedReason", "optional": true, "description": "The reason why loading was blocked, if any.", "hidden": true }
                 ]
             },
             {
@@ -2136,7 +2280,7 @@
             {
                 "id": "ShadowRootType",
                 "type": "string",
-                "enum": ["user-agent", "author"],
+                "enum": ["user-agent", "open", "closed"],
                 "description": "Shadow root type."
             },
             {
@@ -2236,7 +2380,7 @@
                     { "name": "showInfo", "type": "boolean", "optional": true, "description": "Whether the node info tooltip should be shown (default: false)." },
                     { "name": "showRulers", "type": "boolean", "optional": true, "description": "Whether the rulers should be shown (default: false)." },
                     { "name": "showExtensionLines", "type": "boolean", "optional": true, "description": "Whether the extension lines from node to the rulers should be shown (default: false)." },
-                    { "name": "showLayoutEditor", "type": "boolean", "optional": true, "hidden": true},
+                    { "name": "displayAsMaterial", "type": "boolean", "optional": true, "hidden": true},
                     { "name": "contentColor", "$ref": "RGBA", "optional": true, "description": "The content box highlight fill color (default: transparent)." },
                     { "name": "paddingColor", "$ref": "RGBA", "optional": true, "description": "The padding highlight fill color (default: transparent)." },
                     { "name": "borderColor", "$ref": "RGBA", "optional": true, "description": "The border highlight fill color (default: transparent)." },
@@ -2246,6 +2390,17 @@
                     { "name": "shapeMarginColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The shape margin fill color (default: transparent)." }
                 ],
                 "description": "Configuration data for the highlighting of page elements."
+            },
+            {
+                "id": "InspectMode",
+                "type": "string",
+                "hidden": true,
+                "enum": [
+                    "searchForNode",
+                    "searchForUAShadowDOM",
+                    "showLayoutEditor",
+                    "none"
+                ]
             }
         ],
         "commands": [
@@ -2409,11 +2564,10 @@
                 "description": "Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of <code>setChildNodes</code> notifications."
             },
             {
-                "name": "setInspectModeEnabled",
+                "name": "setInspectMode",
                 "hidden": true,
                 "parameters": [
-                    { "name": "enabled", "type": "boolean", "description": "True to enable inspection mode, false to disable it." },
-                    { "name": "inspectUAShadowDOM", "type": "boolean", "optional": true, "description": "True to enable inspection mode for user agent shadow DOM." },
+                    { "name": "mode", "$ref": "InspectMode", "description": "Set an inspection mode." },
                     { "name": "highlightConfig", "$ref": "HighlightConfig", "optional": true, "description": "A descriptor for the highlight appearance of hovered-over nodes. May be omitted if <code>enabled == false</code>." }
                 ],
                 "description": "Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection."
@@ -2629,7 +2783,7 @@
                 "parameters": [
                     { "name": "backendNodeId", "$ref": "BackendNodeId", "description": "Id of the node to inspect." }
                 ],
-                "description": "Fired when the node should be inspected. This happens after call to <code>setInspectModeEnabled</code>.",
+                "description": "Fired when the node should be inspected. This happens after call to <code>setInspectMode</code>.",
                 "hidden" : true
             },
             {
@@ -3122,6 +3276,49 @@
                     { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the removed stylesheet." }
                 ],
                 "description": "Fired whenever an active document stylesheet is removed."
+            },
+            {
+                "name": "layoutEditorChange",
+                "parameters": [
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the stylesheet where the modification occurred."},
+                    { "name": "changeRange", "$ref": "SourceRange", "description": "Range where the modification occurred."}
+                ]
+            }
+        ]
+    },
+    {
+        "domain": "IO",
+        "description": "Input/Output operations for streams produced by DevTools.",
+        "hidden": true,
+        "types": [
+            {
+                "id": "StreamHandle",
+                "type": "string"
+            }
+        ],
+        "commands": [
+            {
+                "name": "read",
+                "description": "Read a chunk of the stream",
+                "async": true,
+                "parameters": [
+                    { "name": "handle", "$ref": "StreamHandle", "description": "Handle of the stream to read." },
+                    { "name": "offset", "type": "integer", "optional": true, "description": "Seek to the specified offset before reading (if not specificed, proceed with offset following the last read)." },
+                    { "name": "size", "type": "integer", "optional": true,  "description": "Maximum number of bytes to read (left upon the agent discretion if not specified)." }
+                ],
+                "returns": [
+                    { "name": "data", "type": "string", "description": "Data that were read." },
+                    { "name": "eof", "type": "boolean", "description": "Set if the end-of-file condition occured while reading." }
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "close",
+                "description": "Close the stream, discard any temporary backing storage.",
+                "parameters": [
+                    { "name": "handle", "$ref": "StreamHandle", "description": "Handle of the stream to close." }
+                ],
+                "handlers": ["browser"]
             }
         ]
     },
@@ -3466,7 +3663,7 @@
                 ],
                 "returns": [
                     { "name": "callFrames", "type": "array", "optional": true, "items": { "$ref": "CallFrame" }, "description": "New stack trace in case editing has happened while VM was stopped." },
-                    { "name": "result", "type": "object", "optional": true, "description": "VM-specific description of the changes applied.", "hidden": true },
+                    { "name": "stackChanged", "type": "boolean", "optional": true, "description": "Whether current call stack  was modified after applying the changes.", "hidden": true },
                     { "name": "asyncStackTrace", "$ref": "StackTrace", "optional": true, "description": "Async stack trace, if any.", "hidden": true }
                 ],
                 "error": {
@@ -3481,7 +3678,6 @@
                 ],
                 "returns": [
                     { "name": "callFrames", "type": "array", "items": { "$ref": "CallFrame" }, "description": "New stack trace." },
-                    { "name": "result", "type": "object", "description": "VM-specific description." },
                     { "name": "asyncStackTrace", "$ref": "StackTrace", "optional": true, "description": "Async stack trace, if any." }
                 ],
                 "hidden": true,
@@ -4454,7 +4650,10 @@
                     { "name": "yOverscroll", "type": "integer", "optional": true, "description": "The number of additional pixels to scroll back along the Y axis, in addition to the given distance." },
                     { "name": "preventFling", "type": "boolean", "optional": true, "description": "Prevent fling (default: true)." },
                     { "name": "speed", "type": "integer", "optional": true, "description": "Swipe speed in pixels per second (default: 800)." },
-                    { "name": "gestureSourceType", "$ref": "GestureSourceType", "optional": true, "description": "Which type of input events to be generated (default: 'default', which queries the platform for the preferred input type)." }
+                    { "name": "gestureSourceType", "$ref": "GestureSourceType", "optional": true, "description": "Which type of input events to be generated (default: 'default', which queries the platform for the preferred input type)." },
+                    { "name": "repeatCount", "type": "integer", "optional": true, "description": "The number of times to repeat the gesture (default: 0)." },
+                    { "name": "repeatDelayMs", "type": "integer", "optional": true, "description": "The number of milliseconds delay between each repeat. (default: 250)." },
+                    { "name": "interactionMarkerName", "type": "string", "optional": true, "description": "The name of the interaction markers to generate, if not empty (default: \"\")." }
                 ],
                 "description": "Synthesizes a scroll gesture over a time period by issuing appropriate touch events.",
                 "hidden": true,
@@ -4695,7 +4894,8 @@
                 "parameters": [
                     { "name": "categories", "type": "string", "optional": true, "description": "Category/tag filter" },
                     { "name": "options", "type": "string", "optional": true, "description": "Tracing options" },
-                    { "name": "bufferUsageReportingInterval", "type": "number", "optional": true, "description": "If set, the agent will issue bufferUsage events at this interval, specified in milliseconds" }
+                    { "name": "bufferUsageReportingInterval", "type": "number", "optional": true, "description": "If set, the agent will issue bufferUsage events at this interval, specified in milliseconds" },
+                    { "name": "transferMode", "type": "string", "enum": ["ReportEvents", "ReturnAsStream"], "optional": true, "description": "Whether to report trace events as series of dataCollected events or to save trace to a stream (defaults to <code>ReportEvents</code>)." }
                 ],
                 "handlers": ["browser", "renderer"]
             },
@@ -4713,6 +4913,16 @@
                     { "name": "categories", "type": "array", "items": { "type": "string" }, "description": "A list of supported tracing categories." }
                 ],
                 "handlers": ["browser"]
+            },
+            {
+                "name": "requestMemoryDump",
+                "async": true,
+                "description": "Request a global memory dump.",
+                "returns": [
+                    { "name": "dumpGuid", "type": "string", "description": "GUID of the resulting global memory dump." },
+                    { "name": "success", "type": "boolean", "description": "True iff the global memory dump succeeded." }
+                ],
+                "handlers": ["browser"]
             }
         ],
         "events": [
@@ -4727,6 +4937,9 @@
             {
                 "name": "tracingComplete",
                 "description": "Signals that tracing is stopped and there is no trace buffers pending flush, all data were delivered via dataCollected events.",
+                "parameters": [
+                    { "name": "stream", "$ref": "IO.StreamHandle", "optional": true, "description": "A handle of the stream that holds resulting trace data." }
+                ],
                 "handlers": ["browser"]
             },
             {
@@ -5034,52 +5247,6 @@
                 ],
                 "description": "Fetches the accessibility node for this DOM node, if it exists.",
                 "hidden": true
-            }
-        ]
-    },
-    {
-        "domain": "Security",
-        "description": "Security",
-        "hidden": true,
-        "types": [
-            {
-                "id": "SecurityState",
-                "type": "string",
-                "enum": ["unknown", "http", "insecure", "warning", "secure"],
-                "description": "The security level of a page or resource."
-            },
-            {
-                "id": "SecurityStateExplanation",
-                "type": "object",
-                "properties": [
-                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
-                    { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
-                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." }
-                ],
-                "description": "An explanation of an factor contributing to the security state."
-            }
-        ],
-        "commands": [
-            {
-                "name": "enable",
-                "description": "Enables tracking security state changes.",
-                "handlers": ["browser"]
-            },
-            {
-                "name": "disable",
-                "description": "Disables tracking security state changes.",
-                "handlers": ["browser"]
-            }
-        ],
-        "events": [
-            {
-                "name": "securityStateChanged",
-                "description": "The security state of the page changed.",
-                "parameters": [
-                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state." },
-                    { "name": "explanations", "type": "array", "items": { "$ref": "SecurityStateExplanation" }, "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.", "optional": true }
-                ],
-                "handlers": ["browser"]
             }
         ]
     }]
