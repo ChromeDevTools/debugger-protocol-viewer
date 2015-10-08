@@ -193,18 +193,21 @@
         var matches = keywordsModel.getMatches(searchString.toLowerCase());
         var items = [];
         matches.forEach(function(keywordMatch) {
+          //
           keywordMatch.pageReferences.forEach(function(ref) {
+            var itemModel = Object.create(ref);
             // Augment the raw page reference with the matched keyword and
             // and match type as labels.
-            ref.typeLabel = this.TypeLabel[ref.type];
-            ref.label = keywordMatch.keyword;
-            ref.icon = this.TypeIcon[ref.type];
+            itemModel.typeLabel = this.TypeLabel[ref.type];
+            itemModel.label = keywordMatch.keyword;
+            itemModel.icon = this.TypeIcon[ref.type];
 
-            ref.domainHref = SITE_ROOT + ref.domainHref;
+            itemModel.domainHref = SITE_ROOT + ref.domainHref;
             // Concatenate the base domain path with the anchor ref if defined,
             // otherwise assign the domain path to it.
-            ref.href = ref.href ? ref.domainHref + ref.href : ref.domainHref;
-            items.push(ref);
+            itemModel.href = ref.href ?
+                itemModel.domainHref + ref.href : itemModel.domainHref;
+            items.push(itemModel);
           }, this);
         }, this);
         this._setRenderItems(items);
