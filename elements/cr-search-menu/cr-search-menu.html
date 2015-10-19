@@ -1,0 +1,270 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="../../bower_components/iron-menu-behavior/iron-menu-behavior.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../cr-html-echo/cr-html-echo.html">
+
+<dom-module id="cr-search-menu">
+
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      width: 700px;
+      height: 600px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.15);
+      background-color: white;
+    }
+    /* Prevent jank while scrolling. */
+    :host([scrolling]) .search-match {
+      pointer-events: none;
+      background-color: transparent;
+    }
+    iron-list {
+      padding: 11px 0;
+      width: 100%;
+    }
+    .match-info {
+      @apply(--layout-vertical);
+      flex: 1 auto;
+    }
+    .search-match {
+      padding: 8px 16px;
+      text-decoration: none;
+      font-weight: 200;
+      @apply(--layout-horizontal);
+      width: 100%;
+      cursor: pointer;
+    }
+    iron-icon {
+      width: 36px;
+      height: 36px;
+      padding-right: 10px;
+      fill: #4e4e4e;
+      -ms-flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+      flex-shrink: 0;
+    }
+    .match-label {
+      @apply(--layout-horizontal);
+    }
+    .match-description {
+      @apply(--layout-flex-auto);
+      margin-top: 3px;
+    }
+    .label {
+      @apply(--layout-flex-auto);
+      font-size: 18px;
+    }
+    a {
+      text-decoration: none;
+      color: #383838;
+    }
+    .domain-tag {
+      @apply(--layout-flex-none);
+      text-align: right;
+    }
+    .label .type, .domain-label {
+      color: #3A3A3A;
+      font-size: 14px;
+    }
+    .search-match:hover {
+      background-color: #E8F0FF;
+    }
+    .empty-state-message {
+      margin: 0;
+      padding: 35px;
+      text-align: center;
+    }
+    .scroller {
+      height: 100%;
+      overflow: auto;
+    }
+  </style>
+
+  <template>
+      <content select=".header"></content>
+      <p class="empty-state-message" hidden$="{{!empty_}}">
+        No matches. Try another search.
+      </p>
+      <div class="scroller" on-scroll="handleScroll_">
+        <iron-list items="[[renderItems]]" as="match">
+          <template>
+            <div class="search-match" role="menuitem" on-click="activateItem_">
+              <iron-icon icon="{{match.icon}}"></iron-icon>
+              <div class="match-info">
+                <div class="match-label">
+                  <div class="label">
+                    <a href="[[match.href]]">[[match.label]]</a>
+                    <span class="type">[[match.typeLabel]]</span>
+                  </div>
+                  <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
+                    <span class="domain-label">Domain</span>
+                    <a href="[[match.domainHref]]">[[match.domain]]</a>
+                  </div>
+                </div>
+                <div class="match-description">
+                  <cr-html-echo html="{{match.description}}"></cr-html-echo>
+                </div>
+              </div>
+            </div>
+          </template>
+        </iron-list>
+      </div>
+      <content select=".footer"></content>
+  </template>
+
+</dom-module>
+
+<script>
+
+(function() {
+  var SITE_ROOT = '/debugger-protocol-viewer/';
+
+  Polymer({
+    is: 'cr-search-menu',
+
+    behaviors: [
+      Polymer.IronOverlayBehavior
+    ],
+
+    properties: {
+      keywordsModel: {
+        type: Object
+      },
+      searchString: {
+        type: String,
+        value: ''
+      },
+      renderItems: {
+        type: Array,
+        readOnly: true,
+        value: [],
+        observer: 'handleRenderItemsChange_'
+      },
+      selectorForElementToLayOver: {
+        type: String,
+        value: '#mainPanel'
+      },
+      scrolling: {
+        type: Boolean,
+        reflectToAttribute: true
+      }
+    },
+
+    observers: [
+      'renderItems_(keywordsModel, searchString)',
+      'handleOpened_(opened)'
+    ],
+
+    /** @override */
+    opened: true,
+
+    empty_: false,
+
+    handleOpened_: function(opened) {
+      if (opened) {
+        this.updatePosition();
+      }
+    },
+
+    updatePosition: function() {
+      var target = document.querySelector(this.selectorForElementToLayOver);
+      if (target) {
+        this.setPositionAndSize(target.getBoundingClientRect());
+      }
+    },
+
+    activateItem_: function(e) {
+      var anchor = e.target.tagName === 'A' ?
+          e.target : e.currentTarget.querySelector('a');
+      var href = anchor && anchor.href;
+      this.fire('item-activate');
+      if (href) {
+        window.location.href = href;
+      }
+    },
+
+    renderItems_: function(keywordsModel, searchString) {
+      if (keywordsModel) {
+        var matches = keywordsModel.getMatches(searchString.toLowerCase());
+        var items = [];
+        matches.forEach(function(keywordMatch) {
+          //
+          keywordMatch.pageReferences.forEach(function(ref) {
+            var itemModel = Object.create(ref);
+            // Augment the raw page reference with the matched keyword and
+            // and match type as labels.
+            itemModel.typeLabel = this.TypeLabel[ref.type];
+            itemModel.label = keywordMatch.keyword;
+            itemModel.icon = this.TypeIcon[ref.type];
+
+            itemModel.domainHref = SITE_ROOT + ref.domainHref;
+            // Concatenate the base domain path with the anchor ref if defined,
+            // otherwise assign the domain path to it.
+            itemModel.href = ref.href ?
+                itemModel.domainHref + ref.href : itemModel.domainHref;
+            items.push(itemModel);
+          }, this);
+        }, this);
+        this._setRenderItems(items);
+      }
+    },
+
+    handleRenderItemsChange_: function() {
+      this.empty_ = !this.renderItems.length;
+    },
+
+    isDomainType_: function(type) {
+      return type == this.Type.DOMAIN;
+    },
+
+    setPositionAndSize: function(rect) {
+      this.style.left = rect.left + 'px';
+      this.style.top = rect.top + 'px';
+      this.style.width = rect.width + 'px';
+
+      // TODO: Make more 'phisticated. Handle mobile.
+      var heightDiff = 30;
+      this.style.height = rect.height - heightDiff + 'px';
+    },
+
+    timeoutId_: null,
+
+    handleScroll_: function() {
+      this.scrolling = true;
+      this.timeoutId_ && this.cancelAsync(this.timeoutId_);
+      this.timeoutId_ = this.async(function() {
+        this.scrolling = false
+      }.bind(this), 150);
+    },
+
+    Type: {
+      DOMAIN: '0',
+      EVENT: '1',
+      PARAM: '2',
+      TYPE: '3',
+      METHOD: '4'
+    },
+
+    TypeLabel: {
+      '0': 'Domain',
+      '1': 'Event',
+      '2': 'Parameter',
+      '3': 'Type',
+      '4': 'Method'
+    },
+
+    TypeIcon: {
+      '0': '',
+      '1': 'image:wb-iridescent',
+      '2': 'icons:more-horiz',
+      '3': 'icons:code',
+      '4': 'icons:apps'
+    }
+  });
+})();
+</script>

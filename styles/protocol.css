@@ -76,6 +76,10 @@ paper-menu a {
   overflow: visible;;
 }
 
+.home-page-content {
+  min-height: 102px;
+}
+
 .monospace {
   font-family: Consolas, Menlo, monospace;
 }
@@ -212,4 +216,16 @@ h4:hover .permalink {
   .parameter-list {
     margin: 0;
   }
+}
+
+
+/* Search Control styles */
+.search-active  .title {
+  display: none;
+}
+.search-active #paperToggle {
+  display: none;
+}
+.search-active  cr-search-control {
+  width: 100%;
 }

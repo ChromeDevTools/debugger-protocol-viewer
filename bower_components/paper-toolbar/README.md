@@ -49,3 +49,12 @@ When `tall`, items can pin to either the top (default), middle or bottom.  Use
 For `medium-tall` toolbar, the middle and bottom contents overlap and are
 pinned to the bottom.  But `middleJustify` and `bottomJustify` attributes are
 still honored separately.
+
+To make an element completely fit at the bottom of the toolbar, use `fit` along
+with `bottom`.
+
+```html
+<paper-toolbar class="tall">
+  <div id="progressBar" class="bottom fit"></div>
+</paper-toolbar>
+```

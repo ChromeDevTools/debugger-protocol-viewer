@@ -1,0 +1,245 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-behaviors/iron-button-state.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../cr-search-menu/cr-search-menu.html">
+
+<dom-module id="cr-search-control">
+
+  <style>
+    :host {
+      display: block;
+    }
+    :host([input-active]) {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+    :host([input-active]) paper-icon-button {
+      @apply(--layout-flex-none);
+      color: black;
+    }
+    :host([input-active]) #search-input-container {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+    }
+    input {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 200;
+      font-family: Roboto;
+      background-color: #3F51B5;
+      border-style: none;
+      color: white;
+      padding: 10px 18px;
+      @apply(--layout-flex);
+      border-bottom: 1px solid transparent;
+      border-radius: 0;
+    }
+    input:focus {
+      transition: border-color 0.4s ease;
+      border-bottom: 1px solid #4BBDA8;
+      outline: none;
+    }
+  </style>
+
+  <template>
+    <iron-ajax id="ajax"
+        url="{{protocolSrc}}"
+        handle-as="json"
+        active-requests="{{requests}}"
+        last-response="{{ajaxResponse}}"></iron-ajax>
+    <paper-icon-button id="searchButton" toggles
+        icon="search"
+        on-active-changed="handleButtonActiveChange_"></paper-icon-button>
+    <div id="search-input-container" hidden$="{{!inputActive}}">
+      <input id="input" value="{{searchText::input}}" autocapitalize="off"
+          autocorrect="off" placeholder="Search..." type="search">
+    </div>
+    <cr-search-menu id="resultsMenu"></cr-search-menu>
+  </template>
+
+</dom-module>
+
+<script>
+
+(function() {
+
+  /**
+   * A model managing keywords searches.
+   * TODO: remembers previous searches (localstorage?).
+   */
+  var KeywordsModel = {
+    keys: null,
+    index: null,
+
+    prevKey_: null,
+    prevMatches_: null,
+    getMatches: function(str) {
+      if (!str) {
+        return [];
+      }
+      var useCache = false;
+      if (this.prevKey_) {
+        var occurredAt = str.indexOf(this.prevKey_);
+        // An occurance at 0 means the previous key is contained in the new
+        // search string.
+        // We don't handle the case where the search is exactly the same;
+        // we assume it cannot be the same because we're handling a 'change'
+        // event. This logic should be updated if ever not handled by a 'change'
+        // event.
+        if (occurredAt === 0) {
+          // Use the cached list of matching keys.
+          useCache = true;
+        }
+      }
+      var matches;
+      if (useCache) {
+        matches = this.prevMatches_.filter(function(key) {
+          return key.indexOf(str) !== -1;
+        });
+      } else {
+        var exactMatches = [];
+        var wildcardMatches = [];
+        this.keys.forEach(function(key) {
+          var matchIndex = key.indexOf(str);
+          if (matchIndex === 0) {
+            exactMatches.push(key);
+          } else if (matchIndex !== -1) {
+            wildcardMatches.push(key);
+          }
+        });
+        matches = exactMatches.concat(wildcardMatches);
+      }
+
+      this.prevKey_ = str;
+      this.prevMatches_ = matches;
+
+      return matches.map(function(key) {
+        return this.index[key];
+      }, this);
+    },
+    createKeywordsModel: function(index) {
+      var obj = Object.create(KeywordsModel);
+      obj.keys = Object.keys(index);
+      obj.index = index;
+      return obj;
+    }
+  };
+
+  Polymer({
+    is: 'cr-search-control',
+    behaviors: [
+      Polymer.IronButtonState
+    ],
+    properties: {
+      protocolSrc: {
+        value: String
+      },
+      inputActive: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        reflectToAttribute: true,
+        observer: 'handleInputActive_'
+      },
+      searchText: {
+        type: String,
+        reflectToAttribute: true,
+        notify: true,
+        value: '',
+        observer: 'handleSearchChange_'
+      },
+      /**
+       * Bound from iron-ajax.
+       */
+      requests: {
+        type: Array,
+        value: function() { return []; }
+      },
+      ajaxResponse: {
+        type: Object,
+        observer: 'handleAjaxResponse_'
+      }
+    },
+
+    keyBindings: [{
+      'esc': 'handleEsc_'
+    }],
+
+    listeners: {
+      'resultsMenu.item-activate': 'handleItemActivate_',
+      'input.blur': 'handleBlur_'
+    },
+
+    attached: function() {
+      // Attach Menu/Overlay to the body.
+      document.body.appendChild(this.$.resultsMenu);
+    },
+
+    setMenuOpen_: function(open) {
+      this.$.resultsMenu.opened = open;
+    },
+
+    handleSearchChange_: function() {
+      if (!this.inputActive) {
+        return;
+      }
+      this.debounce('inputChange', function() {
+        this.$.resultsMenu.searchString = this.searchText;
+        this.setMenuOpen_(!!this.searchText);
+      }.bind(this), 70);
+    },
+
+    handleEsc_: function() {
+      if (this.$.resultsMenu.opened) {
+        this.setMenuOpen_(false);
+      } else {
+        this.inputActive = false;
+      }
+    },
+
+    handleButtonActiveChange_: function() {
+      this.inputActive = this.$.searchButton.active;
+    },
+
+    handleInputActive_: function() {
+      if (this.inputActive) {
+        this.async(function() {
+          this.$.input.focus();
+          this.handleSearchChange_();
+          this.$.searchButton.icon = 'icons:arrow-forward';
+        }.bind(this), 50);
+        // Prepares the search index if not previously requested.
+        if (!this.ajaxResponse && this.requests.length === 0) {
+          this.prepareSearchIndex_();
+        }
+      } else {
+        this.$.searchButton.icon = 'search';
+      }
+      this.fire(this.inputActive ? 'active' : 'inactive');
+    },
+
+    prepareSearchIndex_: function() {
+      // Execute AJAX call when the user clicks the search button.
+      this.$['ajax'].generateRequest();
+    },
+
+    handleAjaxResponse_: function() {
+      // Set the keywords model (search index) onto the menu.
+      this.$.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
+          this.ajaxResponse);
+    },
+
+    handleItemActivate_: function(e) {
+      this.setMenuOpen_(false);
+    },
+
+    handleBlur_: function() {
+      if (!this.$.resultsMenu.opened) {
+        this.$.searchButton.active = false;
+      }
+    }
+  });
+})();
+</script>

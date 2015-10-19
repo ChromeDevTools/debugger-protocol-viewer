@@ -114,128 +114,16 @@ To change the panel container in different modes:
 
 <dom-module id="paper-header-panel">
 
-  <style>
-    :host {
-      @apply(--layout);
-      @apply(--layout-vertical);
-
-      display: block;
-      position: relative;
-      height: 100%;
-
-      /* Create a stack context, we will need it for the shadow*/
-      z-index: 0;
-    }
-
-    :root {
-      /**
-       * Default paper header panel shadow
-       */
-      --paper-header-panel-shadow: {
-        height: 6px;
-        bottom: -6px;
-        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-      };
-    }
-
-    #mainContainer {
-      @apply(--layout-flex);
-
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      flex-basis: 0.0001px;
-    }
-
-    /*
-     * mode: scroll
-     */
-    :host([mode=scroll]) #mainContainer {
-      @apply(--paper-header-panel-scroll-container);
-      overflow: visible;
-    }
-
-    :host([mode=scroll]) {
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /*
-     * mode: cover
-     */
-    :host([mode=cover]) #mainContainer {
-      @apply(--paper-header-panel-cover-container);
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-
-    /*
-     * mode: standard
-     */
-    :host([mode=standard]) #mainContainer {
-      @apply(--paper-header-panel-standard-container);
-    }
-
-    /*
-     * mode: waterfall
-     */
-    :host([mode=waterfall]) #mainContainer {
-      @apply(--paper-header-panel-waterfall-container);
-    }
-
-    /*
-     * mode: waterfall-tall
-     */
-    :host([mode=waterfall-tall]) #mainContainer {
-      @apply(--paper-header-panel-waterfall-tall-container);
-    }
-
-    :host ::content paper-toolbar,
-    :host ::content .paper-header {
-      position: relative;
-      overflow: visible !important;
-    }
-
-    :host ::content paper-toolbar:after,
-    :host ::content .paper-header:after {
-      @apply(--paper-header-panel-shadow);
-
-      -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
-      transition: opacity 0.5s, transform 0.5s;
-
-      opacity: 0;
-      content: "";
-
-      width: 100%;
-      position: absolute;
-      left: 0px;
-      right: 0px;
-      z-index: 1;
-
-      -webkit-transform: scale3d(1, 0, 1);
-      -webkit-transform-origin: 0% 0%;
-
-      transform: scale3d(1, 0, 1);
-      transform-origin: 0% 0%;
-    }
-
-    :host ::content paper-toolbar.has-shadow:after,
-    :host ::content .paper-header.has-shadow:after {
-      opacity: 1;
-      -webkit-transform: scale3d(1, 1, 1);
-      transform: scale3d(1, 1, 1);
-    }
-  </style>
+  <link rel="import" type="css" href="paper-header-panel.css">
 
   <template>
     <content id="headerContent" select="paper-toolbar, .paper-header"></content>
-    <div id="mainContainer" class$="[[_computeMainContainerClass(mode)]]">
-      <content id="mainContent" select="*"></content>
+
+    <div id="mainPanel">
+      <div id="mainContainer" class$="[[_computeMainContainerClass(mode)]]">
+        <content id="mainContent" select="*"></content>
+      </div>
+      <div id="dropShadow"></div>
     </div>
   </template>
 
@@ -254,12 +142,12 @@ To change the panel container in different modes:
     var MODE_CONFIGS = {
 
       outerScroll: {
-        scroll: true
+        'scroll': true
       },
 
       shadowMode: {
-        standard: SHADOW_ALWAYS,
-        waterfall: SHADOW_WHEN_SCROLLING,
+        'standard': SHADOW_ALWAYS,
+        'waterfall': SHADOW_WHEN_SCROLLING,
         'waterfall-tall': SHADOW_WHEN_SCROLLING
       },
 
@@ -400,7 +288,7 @@ To change the panel container in different modes:
        * @type Boolean
        */
       get visibleShadow() {
-        return this.header.classList.contains('has-shadow');
+        return this.$.dropShadow.classList.contains('has-shadow');
       },
 
       _computeDropShadowHidden: function(atTop, mode, shadow) {
@@ -408,16 +296,16 @@ To change the panel container in different modes:
         var shadowMode = MODE_CONFIGS.shadowMode[mode];
 
         if (this.shadow) {
-          this.toggleClass('has-shadow', true, this.header);
+          this.toggleClass('has-shadow', true, this.$.dropShadow);
 
         } else if (shadowMode === SHADOW_ALWAYS) {
-          this.toggleClass('has-shadow', true, this.header);
+          this.toggleClass('has-shadow', true, this.$.dropShadow);
 
         } else if (shadowMode === SHADOW_WHEN_SCROLLING && !atTop) {
-          this.toggleClass('has-shadow', true, this.header);
+          this.toggleClass('has-shadow', true, this.$.dropShadow);
 
         } else {
-          this.toggleClass('has-shadow', false, this.header);
+          this.toggleClass('has-shadow', false, this.$.dropShadow);
 
         }
       },
@@ -464,20 +352,20 @@ To change the panel container in different modes:
         this._keepScrollingState();
       },
 
-      _keepScrollingState: function () {
+      _keepScrollingState: function() {
         var main = this.scroller;
         var header = this.header;
 
         this._setAtTop(main.scrollTop === 0);
 
-        if (header && MODE_CONFIGS.tallMode[this.mode]) {
+        if (header && this.tallClass && MODE_CONFIGS.tallMode[this.mode]) {
           this.toggleClass(this.tallClass, this.atTop ||
               header.classList.contains(this.tallClass) &&
               main.scrollHeight < this.offsetHeight, header);
         }
       },
 
-      _scroll: function(e) {
+      _scroll: function() {
         this._keepScrollingState();
         this.fire('content-scroll', {target: this.scroller}, {bubbles: false});
       },
