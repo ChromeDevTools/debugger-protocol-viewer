@@ -48,6 +48,14 @@
     {
         "domain": "Memory",
         "hidden": true,
+        "types": [
+            {
+                "id": "PressureLevel",
+                "type": "string",
+                "enum": ["moderate", "critical"],
+                "description": "Memory pressure level."
+            }
+        ],
         "commands": [
             {
                 "name": "getDOMCounters",
@@ -56,6 +64,22 @@
                     { "name": "nodes", "type": "integer" },
                     { "name": "jsEventListeners", "type": "integer" }
                 ]
+            },
+            {
+                "name": "setPressureNotificationsSuppressed",
+                "description": "Enable/disable suppressing memory pressure notifications in all processes.",
+                "parameters": [
+                    { "name": "suppressed", "type": "boolean", "description": "If true, memory pressure notifications will be suppressed."}
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "simulatePressureNotification",
+                "description": "Simulate a memory pressure notification in all processes.",
+                "parameters": [
+                    { "name": "level", "$ref": "PressureLevel", "description": "Memory pressure level of the notification." }
+                ],
+                "handlers": ["browser"]
             }
         ]
     },
@@ -1076,7 +1100,7 @@
             {
                 "id": "SecurityState",
                 "type": "string",
-                "enum": ["unknown", "neutral", "insecure", "warning", "secure"],
+                "enum": ["unknown", "neutral", "insecure", "warning", "secure", "info"],
                 "description": "The security level of a page or resource."
             },
             {
@@ -2896,6 +2920,13 @@
                 ],
                 "description": "Called when distrubution is changed.",
                 "hidden": true
+            },
+            {
+                "name": "nodeHighlightRequested",
+                "parameters": [
+                    {"name": "nodeId", "$ref": "NodeId"}
+                ],
+                "hidden": true
             }
         ]
     },
@@ -2915,10 +2946,10 @@
                 "description": "Stylesheet type: \"injected\" for stylesheets injected via extension, \"user-agent\" for user-agent stylesheets, \"inspector\" for stylesheets created by the inspector (i.e. those holding the \"via inspector\" rules), \"regular\" for regular stylesheets."
             },
             {
-                "id": "PseudoIdMatches",
+                "id": "PseudoElementMatches",
                 "type": "object",
                 "properties": [
-                    { "name": "pseudoId", "type": "integer", "description": "Pseudo style identifier (see <code>enum PseudoId</code> in <code>ComputedStyleConstants.h</code>)."},
+                    { "name": "pseudoType", "$ref": "DOM.PseudoType", "description": "Pseudo element type."},
                     { "name": "matches", "type": "array", "items": { "$ref": "RuleMatch" }, "description": "Matches of CSS rules applicable to the pseudo style."}
                 ],
                 "description": "CSS rule collection for a single pseudo style."
@@ -3105,13 +3136,13 @@
             {
                 "name": "getMatchedStylesForNode",
                 "parameters": [
-                    { "name": "nodeId", "$ref": "DOM.NodeId" },
-                    { "name": "excludePseudo", "type": "boolean", "optional": true, "description": "Whether to exclude pseudo styles (default: false)." },
-                    { "name": "excludeInherited", "type": "boolean", "optional": true, "description": "Whether to exclude inherited styles (default: false)." }
+                    { "name": "nodeId", "$ref": "DOM.NodeId" }
                 ],
                 "returns": [
+                    { "name": "inlineStyle", "$ref": "CSSStyle", "optional": true, "description": "Inline style for the specified DOM node." },
+                    { "name": "attributesStyle", "$ref": "CSSStyle", "optional": true, "description": "Attribute-defined element style (e.g. resulting from \"width=20 height=100%\")."},
                     { "name": "matchedCSSRules", "type": "array", "items": { "$ref": "RuleMatch" }, "optional": true, "description": "CSS rules matching this node, from all applicable stylesheets." },
-                    { "name": "pseudoElements", "type": "array", "items": { "$ref": "PseudoIdMatches" }, "optional": true, "description": "Pseudo style matches for this node." },
+                    { "name": "pseudoElements", "type": "array", "items": { "$ref": "PseudoElementMatches" }, "optional": true, "description": "Pseudo style matches for this node." },
                     { "name": "inherited", "type": "array", "items": { "$ref": "InheritedStyleEntry" }, "optional": true, "description": "A chain of inherited styles (from the immediate node parent up to the DOM tree root)." }
                 ],
                 "description": "Returns requested styles for a DOM node identified by <code>nodeId</code>."
@@ -3174,7 +3205,7 @@
                     { "name": "selector", "type": "string" }
                 ],
                 "returns": [
-                    { "name": "rule", "$ref": "CSSRule", "description": "The resulting rule after the selector modification." }
+                    { "name": "selectorList", "$ref": "SelectorList", "description": "The resulting selector list after modification." }
                 ],
                 "description": "Modifies the rule selector."
             },
@@ -3470,7 +3501,8 @@
                 "type": "object",
                 "properties": [
                     { "name": "type", "type": "string", "enum": ["global", "local", "with", "closure", "catch", "block", "script"], "description": "Scope type." },
-                    { "name": "object", "$ref": "Runtime.RemoteObject", "description": "Object representing the scope. For <code>global</code> and <code>with</code> scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties." }
+                    { "name": "object", "$ref": "Runtime.RemoteObject", "description": "Object representing the scope. For <code>global</code> and <code>with</code> scopes it represents the actual object; for the rest of the scopes, it is artificial transient object enumerating scope variables as its properties." },
+                    { "name": "name", "type": "string", "optional": true, "hidden": true }
                 ],
                 "description": "Scope description."
             },
@@ -3758,7 +3790,7 @@
                     { "name": "expression", "type": "string", "description": "Expression to compile." },
                     { "name": "sourceURL", "type": "string", "description": "Source url to be set for the script." },
                     { "name": "persistScript", "type": "boolean", "description": "Specifies whether the compiled script should be persisted." },
-                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "optional": true, "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page." }
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts." }
                 ],
                 "returns": [
                     { "name": "scriptId", "$ref": "ScriptId", "optional": true, "description": "Id of the script." },
@@ -3771,7 +3803,7 @@
                 "hidden": true,
                 "parameters": [
                     { "name": "scriptId", "$ref": "ScriptId", "description": "Id of the script to run." },
-                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "optional": true, "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page." },
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts." },
                     { "name": "objectGroup", "type": "string", "optional": true, "description": "Symbolic group name that can be used to release multiple objects." },
                     { "name": "doNotPauseOnExceptionsAndMuteConsole", "type": "boolean", "optional": true, "description": "Specifies whether script run should stop on exceptions and mute console. Overrides setPauseOnException state." }
                 ],
@@ -3982,7 +4014,8 @@
                     { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
                     { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
                     { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
-                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
+                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." },
+                    { "name": "originalHandler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event original handler function value." }
                 ],
                 "hidden": true
             }
@@ -4326,7 +4359,8 @@
                 "properties": [
                     { "name": "registrationId", "type": "string" },
                     { "name": "scopeURL", "type": "string" },
-                    { "name": "isDeleted", "type": "boolean", "optional": true }
+                    { "name": "isDeleted", "type": "boolean" },
+                    { "name": "forceUpdateOnPageLoad", "type": "boolean", "optional": true }
                 ]
             },
             {
@@ -4442,16 +4476,17 @@
                 "handlers": ["browser"]
             },
             {
-                "name": "skipWaiting",
+                "name": "setDebugOnStart",
                 "parameters": [
-                    { "name": "versionId", "type": "string" }
+                    { "name": "debugOnStart", "type": "boolean" }
                 ],
                 "handlers": ["browser"]
             },
             {
-                "name": "setDebugOnStart",
+                "name": "setForceUpdateOnPageLoad",
                 "parameters": [
-                    { "name": "debugOnStart", "type": "boolean" }
+                    { "name": "registrationId", "type": "string" },
+                    { "name": "forceUpdateOnPageLoad", "type": "boolean" }
                 ],
                 "handlers": ["browser"]
             },
@@ -4487,7 +4522,8 @@
                 "name": "workerCreated",
                 "parameters": [
                     { "name": "workerId", "type": "string" },
-                    { "name": "url", "type": "string" }
+                    { "name": "url", "type": "string" },
+                    { "name": "versionId", "type": "string" }
                 ],
                 "handlers": ["browser"]
             },
@@ -4954,62 +4990,6 @@
         ]
     },
     {
-        "domain": "Power",
-        "hidden": true,
-        "types": [
-            {
-                "id": "PowerEvent",
-                "type": "object",
-                "properties": [
-                    { "name": "type", "type": "string", "description": "Power Event Type." },
-                    { "name": "timestamp", "type": "number", "description": "Power Event Time, in milliseconds." },
-                    { "name": "value", "type": "number", "description": "Power Event Value." }
-                ],
-            "description": "PowerEvent item"
-            }
-        ],
-        "commands": [
-            {
-                "name": "start",
-                "description": "Start power events collection.",
-                "parameters": [],
-                "handlers": ["browser", "frontend"]
-            },
-            {
-                "name": "end",
-                "description": "Stop power events collection.",
-                "parameters": [],
-                "handlers": ["browser", "frontend"]
-            },
-            {
-                "name": "canProfilePower",
-                "description": "Tells whether power profiling is supported.",
-                "returns": [
-                  { "name": "result", "type": "boolean", "description": "True if power profiling is supported." }
-                ],
-                "hidden": true,
-                "handlers": ["browser", "frontend"]
-            },
-            {
-                "name": "getAccuracyLevel",
-                "description": "Describes the accuracy level of the data provider.",
-                "returns": [
-                    { "name": "result", "type": "string", "enum": ["high", "moderate", "low"] }
-                ],
-                "handlers": ["browser", "frontend"]
-            }
-        ],
-        "events": [
-            {
-                "name": "dataAvailable",
-                "parameters": [
-                    {"name": "value", "type": "array", "items": { "$ref": "PowerEvent" }, "description": "List of power events." }
-                ],
-                "handlers": ["browser", "frontend"]
-            }
-        ]
-    },
-    {
         "domain": "Animation",
         "hidden": true,
         "types": [
@@ -5092,37 +5072,57 @@
                 "description": "Sets the playback rate of the document timeline."
             },
             {
-                "name": "setCurrentTime",
+                "name": "getCurrentTime",
                 "parameters": [
-                    { "name": "currentTime", "type": "number", "description": "Current time for the page animation timeline" }
+                    { "name": "id", "type": "string", "description": "Id of animation." }
                 ],
-                "description": "Sets the current time of the document timeline."
+                "returns": [
+                    { "name": "currentTime", "type": "number", "description": "Current time of the page." }
+                ],
+                "description": "Returns the current time of the an animation."
             },
             {
                 "name": "setTiming",
                 "parameters": [
-                    { "name": "playerId", "type": "string", "description": "AnimationPlayer id." },
+                    { "name": "animationId", "type": "string", "description": "Animation id." },
                     { "name": "duration", "type": "number", "description": "Duration of the animation." },
                     { "name": "delay", "type": "number", "description": "Delay of the animation." }
                 ],
                 "description": "Sets the timing of an animation node."
+            },
+            {
+                "name": "seekAnimations",
+                "parameters": [
+                    { "name": "animations", "type": "array", "items": { "type": "string" }, "description": "List of animation ids to seek." },
+                    { "name": "currentTime", "type": "number", "description": "Set the current time of each animation." }
+                ],
+                "description": "Seek a set of animations to a particular time within each animation."
+            },
+            {
+                "name": "resolveAnimation",
+                "parameters": [
+                    { "name": "animationId", "type": "string", "description": "Animation id." }
+                ],
+                "returns": [
+                    { "name": "remoteObject", "$ref": "Runtime.RemoteObject", "description": "Corresponding remote object." }
+                ],
+                "description": "Gets the remote object of the Animation."
             }
         ],
         "events": [
             {
                 "name": "animationCreated",
                 "parameters": [
-                    { "name": "player", "$ref": "Animation", "description": "Animation that was created." },
-                    { "name": "resetTimeline", "type": "boolean", "description": "Whether the timeline should be reset." }
+                    { "name": "id", "type": "string", "description": "Id of the animation that was created." }
                 ],
-                "description": "Event for each animation player that has been created."
+                "description": "Event for each animation that has been created."
             },
             {
-                "name": "animationCanceled",
+                "name": "animationStarted",
                 "parameters": [
-                    { "name": "id", "type": "string", "description": "Id of the Animation that was cancelled." }
+                    { "name": "animation", "$ref": "Animation", "description": "Animation that was started." }
                 ],
-                "description": "Event for Animations in the frontend that have been cancelled."
+                "description": "Event for animation that has been started."
             }
         ]
     },
@@ -5138,23 +5138,29 @@
             {
                 "id": "AXValueType",
                 "type": "string",
-                "enum": [ "boolean", "tristate", "booleanOrUndefined", "idref", "idrefList", "integer", "number", "string", "token", "tokenList", "domRelation", "role", "internalRole" ],
+                "enum": [ "boolean", "tristate", "booleanOrUndefined", "idref", "idrefList", "integer", "node", "nodeList", "number", "string", "computedString", "token", "tokenList", "domRelation", "role", "internalRole", "valueUndefined" ],
                 "description": "Enum of possible property types."
             },
             {
-                "id": "AXPropertySourceType",
+                "id": "AXValueSourceType",
                 "type": "string",
-                "enum": [ "attribute", "implicit", "style" ],
+                "enum": [ "attribute", "implicit", "style", "contents", "placeholder", "relatedElement" ],
                 "description": "Enum of possible property sources."
             },
+            { "id": "AXValueNativeSourceType",
+              "type": "string",
+              "enum": [ "figcaption", "label", "labelfor", "labelwrapped", "tablecaption", "other" ],
+              "description": "Enum of possible native property sources (as a subtype of a particular AXValueSourceType)."
+            },
             {
-                "id": "AXPropertySource",
+                "id": "AXValueSource",
                 "type": "object",
                 "properties": [
-                    { "name": "name", "type": "string", "description": "The name/label of this source." },
-                    { "name": "sourceType", "$ref": "AXPropertySourceType", "description": "What type of source this is." },
-                    { "name": "value", "type": "any", "description": "The value of this property source." },
-                    { "name": "type", "$ref": "AXValueType", "description": "What type the value should be interpreted as." },
+                    { "name": "type", "$ref": "AXValueSourceType", "description": "What type of source this is." },
+                    { "name": "value", "$ref": "AXValue", "description": "The value of this property source.", "optional": true },
+                    { "name": "attribute", "type": "string", "description": "The attribute, if any.", "optional": true },
+                    { "name": "superseded", "type": "boolean", "description": "Whether this source is superseded by a higher priority source.", "optional": true },
+                    { "name": "nativeSource", "$ref": "AXValueNativeSourceType", "description": "The native markup source for this value, e.g. a <label> element.", "optional": true },
                     { "name": "invalid", "type": "boolean", "description": "Whether the value for this property is invalid.", "optional": true },
                     { "name": "invalidReason", "type": "string", "description": "Reason for the value being invalid, if it is.", "optional": true }
                 ],
@@ -5164,8 +5170,9 @@
                 "id": "AXRelatedNode",
                 "type": "object",
                 "properties": [
+                    { "name": "backendNodeId", "$ref": "DOM.BackendNodeId", "description": "The BackendNodeId of the related node." },
                     { "name": "idref", "type": "string", "description": "The IDRef value provided, if any.", "optional": true },
-                    { "name": "backendNodeId", "$ref": "DOM.BackendNodeId", "description": "The BackendNodeId of the related node." }
+                    { "name": "text", "type": "string", "description": "The text alternative of this node in the current context.", "optional": true }
                 ]
             },
             {
@@ -5183,9 +5190,8 @@
                     { "name": "type", "$ref": "AXValueType", "description": "The type of this value." },
 
                     { "name": "value", "type": "any", "description": "The computed value of this property.", "optional": true },
-                    { "name": "relatedNodeValue", "$ref": "AXRelatedNode", "description": "The related node value, if any.", "optional": true },
-                    { "name": "relatedNodeArrayValue", "type": "array", "items": { "$ref": "AXRelatedNode" }, "description": "Multiple relted nodes, if applicable.", "optional": true },
-                    { "name": "sources", "type": "array", "items": { "$ref": "AXPropertySource" }, "description": "The sources which contributed to the computation of this property.", "optional": true }
+                    { "name": "relatedNodes", "type": "array", "items": { "$ref": "AXRelatedNode" }, "description": "One or more related nodes, if applicable.", "optional": true },
+                    { "name": "sources", "type": "array", "items": { "$ref": "AXValueSource" }, "description": "The sources which contributed to the computation of this property.", "optional": true }
                 ],
                 "description": "A single computed AX property."
             },
