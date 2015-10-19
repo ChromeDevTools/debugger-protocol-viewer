@@ -19,9 +19,9 @@ Building:
 
 Updating protocol:
 
-* Update `_data/protocol.json` to latest
-* Run `node create-domain-files.js`
-* Run `node create-search-index.js`
+    cp -r ~/chromium/src/third_party/WebKit/Source/devtools/protocol.json _data/protocol.json
+    node create-domain-files.js
+    node create-search-index.js
 
 [#33](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/33) tracks a better flow.
 
