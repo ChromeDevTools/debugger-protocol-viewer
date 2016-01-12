@@ -90,7 +90,7 @@
             {
                 "id": "ResourceType",
                 "type": "string",
-                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "Fetch", "EventSource", "WebSocket", "Other"],
+                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "Fetch", "EventSource", "WebSocket", "Manifest", "Other"],
                 "description": "Resource type as it was perceived by the rendering engine."
             },
             {
@@ -290,6 +290,7 @@
             },
             {
                 "name": "searchInResource",
+                "async": true,
                 "description": "Searches for given string in resource content.",
                 "parameters": [
                     { "name": "frameId", "$ref": "FrameId", "description": "Frame id for resource to search in." },
@@ -397,22 +398,14 @@
                 "handlers": ["browser"]
             },
             {
-                "name": "canScreencast",
-                "description": "Tells whether screencast is supported.",
-                "returns": [
-                  { "name": "result", "type": "boolean", "description": "True if screencast is supported." }
-                ],
-                "hidden": true,
-                "handlers": ["browser"]
-            },
-            {
                 "name": "startScreencast",
                 "description": "Starts sending each frame using the <code>screencastFrame</code> event.",
                 "parameters": [
                     { "name": "format", "type": "string", "optional": true, "enum": ["jpeg", "png"], "description": "Image compression format." },
                     { "name": "quality", "type": "integer", "optional": true, "description": "Compression quality from range [0..100]." },
                     { "name": "maxWidth", "type": "integer", "optional": true, "description": "Maximum screenshot width." },
-                    { "name": "maxHeight", "type": "integer", "optional": true, "description": "Maximum screenshot height." }
+                    { "name": "maxHeight", "type": "integer", "optional": true, "description": "Maximum screenshot height." },
+                    { "name": "everyNthFrame", "type": "integer", "optional": true, "description": "Send every n-th frame." }
                 ],
                 "hidden": true,
                 "handlers": ["browser", "renderer"]
@@ -427,7 +420,7 @@
                 "name": "screencastFrameAck",
                 "description": "Acknowledges that a screencast frame has been received by the frontend.",
                 "parameters": [
-                    { "name": "frameNumber", "type": "integer", "description": "Frame number." }
+                    { "name": "sessionId", "type": "integer", "description": "Frame number." }
                 ],
                 "hidden": true,
                 "handlers": ["browser"]
@@ -441,15 +434,6 @@
                 ],
                 "hidden": true,
                 "handlers": ["browser"]
-            },
-            {
-                "name": "setShowViewportSizeOnResize",
-                "description": "Paints viewport size upon main frame resize.",
-                "parameters": [
-                    { "name": "show", "type": "boolean", "description": "Whether to paint size or not." },
-                    { "name": "showGrid", "type": "boolean", "optional": true, "description": "Whether to paint grid as well." }
-                ],
-                "hidden": true
             },
             {
                 "name": "setColorPickerEnabled",
@@ -564,7 +548,7 @@
                 "parameters": [
                     { "name": "data", "type": "string", "description": "Base64-encoded compressed image." },
                     { "name": "metadata", "$ref": "ScreencastFrameMetadata", "description": "Screencast frame metadata."},
-                    { "name": "frameNumber", "type": "integer", "optional": true, "description": "Frame number."}
+                    { "name": "sessionId", "type": "integer", "description": "Frame number."}
                 ],
                 "hidden": true,
                 "handlers": ["browser"]
@@ -729,6 +713,13 @@
                     { "name": "media", "type": "string", "description": "Media type to emulate. Empty string disables the override." }
                 ],
                 "description": "Emulates the given media for CSS media queries."
+            },
+            {
+                "name": "setCPUThrottlingRate",
+                "parameters": [
+                    { "name": "rate", "type": "number", "description": "Throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)." }
+                ],
+                "description": "Enables CPU throttling to emulate slow CPUs."
             },
             {
                 "name": "canEmulate",
@@ -1247,7 +1238,7 @@
                 "type": "object",
                 "description": "Security details about a request.",
                 "properties": [
-                    { "name": "protocol", "type": "string", "description": "Protocol name (e.g. \"TLS 1.2\" or \"QUIC\"." },
+                    { "name": "protocol", "type": "string", "description": "Protocol name (e.g. \"TLS 1.2\" or \"QUIC\")." },
                     { "name": "keyExchange", "type": "string", "description": "Key Exchange used by the connection." },
                     { "name": "cipher", "type": "string", "description": "Cipher name." },
                     { "name": "mac", "type": "string", "optional": true, "description": "TLS MAC. Note that AEAD ciphers do not have separate MACs." },
@@ -2411,7 +2402,8 @@
                     { "name": "marginColor", "$ref": "RGBA", "optional": true, "description": "The margin highlight fill color (default: transparent)." },
                     { "name": "eventTargetColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The event target element highlight fill color (default: transparent)." },
                     { "name": "shapeColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The shape outside fill color (default: transparent)." },
-                    { "name": "shapeMarginColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The shape margin fill color (default: transparent)." }
+                    { "name": "shapeMarginColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The shape margin fill color (default: transparent)." },
+                    { "name": "selectorList", "type": "string", "optional": true, "description": "Selectors to highlight relevant nodes."}
                 ],
                 "description": "Configuration data for the highlighting of page elements."
             },
@@ -2973,11 +2965,11 @@
                 "description": "Match data for a CSS rule."
             },
             {
-                "id": "Selector",
+                "id": "Value",
                 "type": "object",
                 "properties": [
-                    { "name": "value", "type": "string", "description": "Selector text." },
-                    { "name": "range", "$ref": "SourceRange", "optional": true, "description": "Selector range in the underlying resource (if available)." }
+                    { "name": "text", "type": "string", "description": "Value text." },
+                    { "name": "range", "$ref": "SourceRange", "optional": true, "description": "Value range in the underlying resource (if available)." }
                 ],
                 "description": "Data for a simple selector (these are delimited by commas in a selector list)."
             },
@@ -2985,7 +2977,7 @@
                 "id": "SelectorList",
                 "type": "object",
                 "properties": [
-                    { "name": "selectors", "type": "array", "items": { "$ref": "Selector" }, "description": "Selectors in the list." },
+                    { "name": "selectors", "type": "array", "items": { "$ref": "Value" }, "description": "Selectors in the list." },
                     { "name": "text", "type": "string", "description": "Rule selector text." }
                 ],
                 "description": "Selector list data."
@@ -3121,6 +3113,24 @@
                 ],
                 "description": "Information about amount of glyphs that were rendered with given font.",
                 "hidden": true
+            },
+            {
+                "id": "CSSKeyframesRule",
+                "type": "object",
+                "properties": [
+                    { "name": "animationName", "$ref": "Value", "description": "Animation name." },
+                    { "name": "keyframes", "type": "array", "items": { "$ref": "CSSKeyframeRule" }, "description": "List of keyframes." }
+                ],
+                "description": "CSS keyframes rule representation."
+            },
+            {
+                "id": "CSSKeyframeRule",
+                "type": "object",
+                "properties": [
+                    { "name": "keyText", "$ref": "Value", "description": "Associated key text." },
+                    { "name": "style", "$ref": "CSSStyle", "description": "Associated style declaration." }
+                ],
+                "description": "CSS keyframe rule representation."
             }
         ],
         "commands": [
@@ -3180,6 +3190,16 @@
                 "hidden": true
             },
             {
+                "name": "getCSSAnimationsForNode",
+                "parameters": [
+                    { "name": "nodeId", "$ref": "DOM.NodeId" }
+                ],
+                "returns": [
+                    { "name": "cssKeyframesRules", "type": "array", "items": { "$ref": "CSSKeyframesRule" }, "optional": true, "description": "A list of CSS keyframed animations matching this node." }
+                ],
+                "description": "Returns all CSS keyframed animations mtaching this node."
+            },
+            {
                 "name": "getStyleSheetText",
                 "parameters": [
                     { "name": "styleSheetId", "$ref": "StyleSheetId" }
@@ -3194,6 +3214,9 @@
                 "parameters": [
                     { "name": "styleSheetId", "$ref": "StyleSheetId" },
                     { "name": "text", "type": "string" }
+                ],
+                "returns": [
+                    { "name": "sourceMapURL", "type": "string", "optional": true, "description": "URL of source map associated with script (if any)." }
                 ],
                 "description": "Sets the new stylesheet text."
             },
@@ -3280,6 +3303,16 @@
                 ],
                 "description": "Find a rule with the given active property for the given node and set the new value for this property",
                 "hidden": true
+            },
+            {
+                "name": "getBackgroundColors",
+                "parameters": [
+                    { "name": "nodeId", "$ref": "DOM.NodeId", "description": "Id of the node to get background colors for." }
+                ],
+                "returns": [
+                    { "name": "backgroundColors", "type": "array", "items": { "type": "string" }, "description": "The range of background colors behind this element, if it contains any visible text. If no visible text is present, this will be undefined. In the case of a flat background color, this will consist of simply that color. In the case of a gradient, this will consist of each of the color stops. For anything more complicated, this will be an empty array. Images will be ignored (as if the image had failed to load).", "optional": true }
+                ],
+                "hidden": true
             }
         ],
         "events": [
@@ -3311,8 +3344,8 @@
             {
                 "name": "layoutEditorChange",
                 "parameters": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the stylesheet where the modification occurred."},
-                    { "name": "changeRange", "$ref": "SourceRange", "description": "Range where the modification occurred."}
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the stylesheet where the modification occurred." },
+                    { "name": "changeRange", "$ref": "SourceRange", "description": "Range where the modification occurred." }
                 ]
             }
         ]
@@ -3923,8 +3956,10 @@
                     { "name": "startColumn", "type": "integer", "description": "Column offset of the script within the resource with given URL." },
                     { "name": "endLine", "type": "integer", "description": "Last line of the script." },
                     { "name": "endColumn", "type": "integer", "description": "Length of the last line of the script." },
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "description": "Specifies script creation context.", "hidden": true },
                     { "name": "isContentScript", "type": "boolean", "optional": true, "description": "Determines whether this script is a user extension script." },
                     { "name": "isInternalScript", "type": "boolean", "optional": true, "description": "Determines whether this script is an internal script.", "hidden": true },
+                    { "name": "isLiveEdit", "type": "boolean", "optional": true, "description": "True, if this script is generated as a result of the live edit operation.", "hidden": true },
                     { "name": "sourceMapURL", "type": "string", "optional": true, "description": "URL of source map associated with script (if any)." },
                     { "name": "hasSourceURL", "type": "boolean", "optional": true, "description": "True, if this script has sourceURL.", "hidden": true }
                 ],
@@ -3939,6 +3974,7 @@
                     { "name": "startColumn", "type": "integer", "description": "Column offset of the script within the resource with given URL." },
                     { "name": "endLine", "type": "integer", "description": "Last line of the script." },
                     { "name": "endColumn", "type": "integer", "description": "Length of the last line of the script." },
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "description": "Specifies script creation context.", "hidden": true },
                     { "name": "isContentScript", "type": "boolean", "optional": true, "description": "Determines whether this script is a user extension script." },
                     { "name": "isInternalScript", "type": "boolean", "optional": true, "description": "Determines whether this script is an internal script.", "hidden": true },
                     { "name": "sourceMapURL", "type": "string", "optional": true, "description": "URL of source map associated with script (if any)." },
@@ -5005,7 +5041,8 @@
                     { "name": "startTime", "type": "number", "description": "<code>Animation</code>'s start time." },
                     { "name": "currentTime", "type": "number", "description": "<code>Animation</code>'s current time." },
                     { "name": "source", "$ref": "AnimationEffect", "description": "<code>Animation</code>'s source animation node." },
-                    { "name": "type", "type": "string", "enum": ["CSSTransition", "CSSAnimation", "WebAnimation"], "description": "Animation type of <code>Animation</code>." }
+                    { "name": "type", "type": "string", "enum": ["CSSTransition", "CSSAnimation", "WebAnimation"], "description": "Animation type of <code>Animation</code>." },
+                    { "name": "cssId", "type": "string", "optional": true, "description": "A unique ID for <code>Animation</code> representing the sources that triggered this CSS animation/transition."}
                 ],
                 "description": "Animation instance."
             },
@@ -5082,6 +5119,14 @@
                 "description": "Returns the current time of the an animation."
             },
             {
+                "name": "setPaused",
+                "parameters": [
+                    { "name": "animations", "type": "array", "items": { "type": "string" }, "description": "Animations to set the pause state of." },
+                    { "name": "paused", "type": "boolean", "description": "Paused state to set to." }
+                ],
+                "description": "Sets the paused state of a set of animations."
+            },
+            {
                 "name": "setTiming",
                 "parameters": [
                     { "name": "animationId", "type": "string", "description": "Animation id." },
@@ -5097,6 +5142,13 @@
                     { "name": "currentTime", "type": "number", "description": "Set the current time of each animation." }
                 ],
                 "description": "Seek a set of animations to a particular time within each animation."
+            },
+            {
+                "name": "releaseAnimations",
+                "parameters": [
+                    { "name": "animations", "type": "array", "items": { "type": "string" }, "description": "List of animation ids to seek." }
+                ],
+                "description": "Releases a set of animations to no longer be manipulated."
             },
             {
                 "name": "resolveAnimation",
@@ -5123,6 +5175,13 @@
                     { "name": "animation", "$ref": "Animation", "description": "Animation that was started." }
                 ],
                 "description": "Event for animation that has been started."
+            },
+            {
+                "name": "animationCanceled",
+                "parameters": [
+                    { "name": "id", "type": "string", "description": "Id of the animation that was cancelled."}
+                ],
+                "description": "Event for when an animation has been cancelled."
             }
         ]
     },
@@ -5149,7 +5208,7 @@
             },
             { "id": "AXValueNativeSourceType",
               "type": "string",
-              "enum": [ "figcaption", "label", "labelfor", "labelwrapped", "tablecaption", "other" ],
+              "enum": [ "figcaption", "label", "labelfor", "labelwrapped", "legend", "tablecaption", "title", "other" ],
               "description": "Enum of possible native property sources (as a subtype of a particular AXValueSourceType)."
             },
             {
@@ -5236,7 +5295,6 @@
                     { "name": "name", "$ref": "AXValue", "description": "The accessible name for this <code>Node</code>.", "optional": true },
                     { "name": "description", "$ref": "AXValue", "description": "The accessible description for this <code>Node</code>.", "optional": true },
                     { "name": "value", "$ref": "AXValue", "description": "The value for this <code>Node</code>.", "optional": true },
-                    { "name": "help", "$ref": "AXValue", "description": "Help.", "optional": true },
                     { "name": "properties", "type": "array", "items": { "$ref": "AXProperty" }, "description": "All other properties", "optional": true }
                 ],
                 "description": "A node in the accessibility tree."

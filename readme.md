@@ -19,9 +19,12 @@ Building:
 
 Updating protocol:
 
+    # on chromim repo, checkout origin/master. git pull.
     cp -r ~/chromium/src/third_party/WebKit/Source/devtools/protocol.json _data/protocol.json
     node create-domain-files.js
     node create-search-index.js
+
+    jekyll build # to build, though gh-pages will do that on its own.
 
 [#33](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/33) tracks a better flow.
 
