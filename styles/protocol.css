@@ -78,6 +78,34 @@ paper-menu a {
 
 .home-page-content {
   min-height: 102px;
+  word-wrap: break-word;
+}
+
+.gh-badge {
+  float: right;
+  width: 110px;
+  height: 110px;
+  shape-margin: 5px;
+  shape-outside: polygon(0px 0px, 110px 0px, 110px 110px);
+}
+
+.gh-badge img {
+  position: absolute; top: 0; right: 0; border: 0;
+}
+
+.home-page-content h5 {
+  margin-bottom: 0px;
+}
+
+.home-page-content pre {
+  margin: 8px 0;
+}
+
+a.reflink {
+    display: block;
+    font-size: 12px;
+    text-decoration: none;
+    margin-top: -4px;
 }
 
 .monospace {

@@ -47,8 +47,8 @@
         {% include domain.html domain=domain %}
       {% else %}
         <paper-material elevation="1" class="home-page-content">
-          {{ content }}
           {% include github-badge.html %}
+          {{ content }}
         </paper-material>
       {% endif %}
     </div>
