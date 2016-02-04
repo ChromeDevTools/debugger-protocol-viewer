@@ -19,11 +19,7 @@ Building:
 
 Updating protocol:
 
-    # on chromim repo, checkout origin/master. git pull.
-    cp -r ~/chromium/src/third_party/WebKit/Source/devtools/protocol.json _data/protocol.json
-    node create-domain-files.js
-    node create-search-index.js
-    # update the commit hash in index.html
+    ./update-protocol-json.sh
 
     jekyll build # to build, though gh-pages will do that on its own.
 
