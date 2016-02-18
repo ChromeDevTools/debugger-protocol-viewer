@@ -51,6 +51,14 @@ paper-menu a {
   padding: 0 16px;
 }
 
+paper-menu a:hover {
+  background: hsl(0,0%, 98%);
+}
+
+paper-menu a.iron-selected {
+  border-right: 5px solid #4bbda8;
+}
+
 #drawer > div {
   display: -ms-flexbox;
   display: -webkit-flex;
