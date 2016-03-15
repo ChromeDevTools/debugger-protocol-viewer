@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 standalone_path="$HOME/code/devtools-standalone/protocol.json"
 chromium_path="$HOME/chromium/src/third_party/WebKit/Source/devtools/protocol.json"
@@ -33,3 +34,4 @@ cat index.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/\b[0-9a-f]{20,40}\b/
 mv index.html.new index.html
 
 
+set +x
