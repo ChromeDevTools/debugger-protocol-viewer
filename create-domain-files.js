@@ -4,18 +4,31 @@
  * Utility command that creates HTML file in the _domains folder for each domain found in the _data/protocol.json.
  */
 
-var fs = require('fs');
+const fs = require('fs');
 
-var protocolText = fs.readFileSync('_data/protocol.json');
-var protocol = JSON.parse(protocolText);
+clearDomainsFolder();
+generateDomainFiles();
 
-(protocol.domains).forEach(function (domain, idx) {
-  var name = domain.domain;
-  var fileName = '_domains/' + name + '.html';
-  var content = "---\n" +
-    "title: " + name + '\n' +
-    "idx: " + idx + '\n' +
-    "---";
+function clearDomainsFolder() {
+  const path = '_domains/';
+  fs.readdirSync(path).forEach((file, index) => {
+    fs.unlinkSync(path + '/' + file);
+  });
+}
 
-  fs.writeFileSync(fileName, content);
-});
+function generateDomainFiles() {
+  const protocolText = fs.readFileSync('_data/protocol.json');
+  const protocol = JSON.parse(protocolText);
+
+  (protocol.domains).forEach((domain, idx) => {
+    const name = domain.domain;
+    const fileName = '_domains/' + name + '.html';
+    const content = "---\n" +
+      "title: " + name + '\n' +
+      "idx: " + idx + '\n' +
+      "---";
+
+    fs.writeFileSync(fileName, content);
+  });
+}
+
