@@ -5,28 +5,27 @@
  */
 
 const fs = require('fs');
+const DOMAINS_FOLDER = '_domains/';
+const PROTOCOL_FILE = '_data/protocol.json';
 
 clearDomainsFolder();
 generateDomainFiles();
 
 function clearDomainsFolder() {
-  const path = '_domains/';
-  fs.readdirSync(path).forEach((file, index) => {
-    fs.unlinkSync(path + '/' + file);
-  });
+  fs.readdirSync(DOMAINS_FOLDER).forEach((file, index) => fs.unlinkSync(`${DOMAINS_FOLDER}/${file}`));
 }
 
 function generateDomainFiles() {
-  const protocolText = fs.readFileSync('_data/protocol.json');
+  const protocolText = fs.readFileSync(PROTOCOL_FILE);
   const protocol = JSON.parse(protocolText);
 
   (protocol.domains).forEach((domain, idx) => {
     const name = domain.domain;
-    const fileName = '_domains/' + name + '.html';
-    const content = "---\n" +
-      "title: " + name + '\n' +
-      "idx: " + idx + '\n' +
-      "---";
+    const fileName = `${DOMAINS_FOLDER}/${name}.html`;
+    const content = `---
+title: ${name}
+idx: ${idx}
+---`;
 
     fs.writeFileSync(fileName, content);
   });
