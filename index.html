@@ -4,8 +4,11 @@ layout: default
 
 <span class="spacing-for-banner"></span>
 
-<p>The <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome debugging protocol</a> allows for tools to instrument, inspect, debug and profile Chromium, Chrome and other Blink-based browsers. The <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a> uses this protocol and the team maintains its API.
-<p>For production use, consider <a href="https://developer.chrome.com/devtools/docs/debugger-protocol#stable">the stable protocol version</a>. Many existing projects <a href="https://developer.chrome.com/devtools/docs/debugging-clients">currently use</a> the protocol.
+<p>The <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome debugging protocol</a> allows for tools to instrument, inspect, debug and profile Chromium, Chrome and other Blink-based browsers. Many existing projects <a href="https://developer.chrome.com/devtools/docs/debugging-clients">currently use</a> the protocol. The <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a> uses this protocol and the team maintains its API.
+
+<p>The <b>1.1 version of the protocol</b> is the latest stable release of the protocol, tagged at Chrome 31.</a>. It includes a smaller subset of the complete protocol compatibilities. Browse the 1.1 protocol at <a href="http://chromedevtools.github.io/debugger-protocol-viewer-1.1/">chromedevtools.github.io/debugger-protocol-viewer-1.1/</a>
+
+<p>The <b>latest (tip-of-tree) protocol</b> is documented on this site. It <a href="https://github.com/ChromeDevTools/devtools-frontend/commits/master/protocol.json">changes frequently</a> and may break at any time. However it captures the full capabilities of the Protocol, whereas the stable release is a subset. There is no backwards compatibility support guaranteed for the capabilities it introduces.</p>
 
 <h5>Latest protocol version updated:</h5>
 <pre>

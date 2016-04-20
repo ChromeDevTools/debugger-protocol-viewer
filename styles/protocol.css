@@ -101,12 +101,18 @@ paper-menu a.iron-selected {
   position: absolute; top: 0; right: 0; border: 0;
 }
 
+
 .home-page-content h5 {
   margin-bottom: 0px;
 }
 
 .home-page-content pre {
   margin: 8px 0;
+}
+
+.home-page-content h5,
+.home-page-content h5 ~ * {
+  margin-left: 20px;
 }
 
 a.reflink {
