@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const DOMAINS_FOLDER = '_domains/';
-const PROTOCOL_FILE = '_data/protocol.json';
+const PROTOCOL_FILE = '_data/Inspector-1.1.json';
 
 clearDomainsFolder();
 generateDomainFiles();

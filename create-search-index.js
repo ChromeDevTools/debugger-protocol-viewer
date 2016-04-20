@@ -8,7 +8,8 @@
 
 var fs = require('fs');
 
-var protocolText = fs.readFileSync('_data/protocol.json');
+var fileName = 'searchindex.json';
+var protocolText = fs.readFileSync('_data/Inspector-1.1.json');
 var protocol = JSON.parse(protocolText);
 
 // Set up Keyword bank
@@ -135,6 +136,5 @@ var secondaryKeywords = [];
   // TODO(ericguzman): Index other keyword types.
 });
 
-var fileName = 'searchindex.json';
 var content = JSON.stringify(keywordMap);
 fs.writeFileSync(fileName, content);
