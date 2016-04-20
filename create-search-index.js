@@ -9,7 +9,7 @@
 var fs = require('fs');
 
 var fileName = 'searchindex.json';
-var protocolText = fs.readFileSync('_data/Inspector-1.1.json');
+var protocolText = fs.readFileSync('_data/protocol1-1.json');
 var protocol = JSON.parse(protocolText);
 
 // Set up Keyword bank
