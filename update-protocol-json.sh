@@ -26,11 +26,11 @@ node create-search-index.js
 cd $(dirname "$repo_path")
 commit_line=$(git log --no-color HEAD~1..HEAD  | grep -E -o "^commit.*")
 date_line=$(git log --no-color HEAD~1..HEAD  | grep -E -o "^Date.*")
-commit_hash=$(echo $commit_line | grep -E -o "\b[0-9a-f]{20,40}\b")
+commit_hash=$(echo $commit_line | grep -E -o "[0-9a-f]{20,80}")
 
 # copy it into the HTML file
 cd $local_script_path
-cat index.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/\b[0-9a-f]{20,40}\b/$commit_hash/" > index.html.new
+cat index.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/[0-9a-f]{20,80}/$commit_hash/" > index.html.new
 mv index.html.new index.html
 
 
