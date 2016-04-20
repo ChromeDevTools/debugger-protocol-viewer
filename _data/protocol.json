@@ -8,21 +8,15 @@
             {
                 "name": "enable",
                 "description": "Enables inspector domain notifications.",
-                "handlers": ["browser", "renderer"]
+                "handlers": ["browser"]
             },
             {
                 "name": "disable",
-                "description": "Disables inspector domain notifications."
+                "description": "Disables inspector domain notifications.",
+                "handlers": ["browser"]
             }
         ],
         "events": [
-            {
-                "name": "inspect",
-                "parameters": [
-                    { "name": "object", "$ref": "Runtime.RemoteObject" },
-                    { "name": "hints", "type": "object" }
-                ]
-            },
             {
                 "name": "detached",
                 "description": "Fired when remote debugging connection is about to be terminated. Contains detach reason.",
@@ -455,9 +449,6 @@
             },
             {
                 "name": "requestAppBanner",
-                "returns": [
-                  { "name": "result", "type": "boolean" }
-                ],
                 "hidden": true,
                 "handlers": ["browser"]
             }
@@ -1048,6 +1039,14 @@
             {
                 "name": "executionContextsCleared",
                 "description": "Issued when all executionContexts were cleared in browser"
+            },
+            {
+                "name": "inspectRequested",
+                "parameters": [
+                    { "name": "object", "$ref": "RemoteObject" },
+                    { "name": "hints", "type": "object" }
+                ],
+                "hidden": true
             }
         ]
     },
@@ -1397,7 +1396,8 @@
                     { "name": "size", "type": "integer", "description": "Cookie size." },
                     { "name": "httpOnly", "type": "boolean", "description": "True if cookie is http-only." },
                     { "name": "secure", "type": "boolean", "description": "True if cookie is secure." },
-                    { "name": "session", "type": "boolean", "description": "True in case of session cookie." }
+                    { "name": "session", "type": "boolean", "description": "True in case of session cookie." },
+                    { "name": "sameSite", "type": "string", "optional": true, "enum": ["Strict", "Lax"], "description": "Represents the cookies' 'SameSite' status: https://tools.ietf.org/html/draft-west-first-party-cookies" }
                 ],
                 "hidden": true
             }
@@ -1545,6 +1545,14 @@
                     { "name": "cacheDisabled", "type": "boolean", "description": "Cache disabled state." }
                 ],
                 "description": "Toggles ignoring cache for each request. If <code>true</code>, cache will not be used."
+            },
+            {
+                "name": "setBypassServiceWorker",
+                "parameters": [
+                    { "name": "bypass", "type": "boolean", "description": "Bypass service worker and load from network." }
+                ],
+                "hidden": true,
+                "description": "Toggles ignoring of service worker for each request."
             },
             {
                 "name": "setDataSizeLimitsForTest",
@@ -3455,16 +3463,6 @@
                 "hidden": true
             },
             {
-                "id": "AsyncOperation",
-                "type": "object",
-                "description": "Information about the async operation.",
-                "properties": [
-                    { "name": "id", "type": "integer", "description": "Unique id of the async operation." },
-                    { "name": "stack", "$ref": "Runtime.StackTrace", "optional": true, "description": "Stack trace where async operation was scheduled." }
-                ],
-                "hidden": true
-            },
-            {
                 "id": "SearchMatch",
                 "type": "object",
                 "description": "Search match for resource.",
@@ -3560,11 +3558,6 @@
             {
                 "name": "resume",
                 "description": "Resumes JavaScript execution."
-            },
-            {
-                "name": "stepIntoAsync",
-                "description": "Steps into the first async operation handler that was scheduled by or after the current statement.",
-                "hidden": true
             },
             {
                 "name": "searchInContent",
@@ -3710,27 +3703,6 @@
                 "description": "Enables or disables async call stacks tracking."
             },
             {
-                "name": "flushAsyncOperationEvents",
-                "hidden": true,
-                "description": "Fires pending <code>asyncOperationStarted</code> events (if any), as if a debugger stepping session has just been started."
-            },
-            {
-                "name": "setAsyncOperationBreakpoint",
-                "parameters": [
-                    { "name": "operationId", "type": "integer", "description": "ID of the async operation to set breakpoint for." }
-                ],
-                "hidden": true,
-                "description": "Sets breakpoint on AsyncOperation callback handler."
-            },
-            {
-                "name": "removeAsyncOperationBreakpoint",
-                "parameters": [
-                    { "name": "operationId", "type": "integer", "description": "ID of the async operation to remove breakpoint for." }
-                ],
-                "hidden": true,
-                "description": "Removes AsyncOperation breakpoint."
-            },
-            {
                 "name": "setBlackboxedRanges",
                 "parameters": [
                     { "name": "scriptId", "$ref": "Runtime.ScriptId", "description": "Id of the script." },
@@ -3792,7 +3764,7 @@
                 "name": "paused",
                 "parameters": [
                     { "name": "callFrames", "type": "array", "items": { "$ref": "CallFrame" }, "description": "Call stack the virtual machine stopped on." },
-                    { "name": "reason", "type": "string", "enum": [ "XHR", "DOM", "EventListener", "exception", "assert", "CSPViolation", "debugCommand", "promiseRejection", "AsyncOperation", "other" ], "description": "Pause reason." },
+                    { "name": "reason", "type": "string", "enum": [ "XHR", "DOM", "EventListener", "exception", "assert", "CSPViolation", "debugCommand", "promiseRejection", "other" ], "description": "Pause reason." },
                     { "name": "data", "type": "object", "optional": true, "description": "Object containing break-specific auxiliary properties." },
                     { "name": "hitBreakpoints", "type": "array", "optional": true, "items": { "type": "string" }, "description": "Hit breakpoints IDs", "hidden": true },
                     { "name": "asyncStackTrace", "$ref": "Runtime.StackTrace", "optional": true, "description": "Async stack trace, if any.", "hidden": true }
@@ -3802,22 +3774,6 @@
             {
                 "name": "resumed",
                 "description": "Fired when the virtual machine resumed execution."
-            },
-            {
-                "name": "asyncOperationStarted",
-                "parameters": [
-                    { "name": "operation", "$ref": "AsyncOperation", "description": "Information about the async operation." }
-                ],
-                "description": "Fired when an async operation is scheduled (while in a debugger stepping session).",
-                "hidden": true
-            },
-            {
-                "name": "asyncOperationCompleted",
-                "parameters": [
-                    { "name": "id", "type": "integer", "description": "ID of the async operation that was completed." }
-                ],
-                "description": "Fired when an async operation is completed (while in a debugger stepping session).",
-                "hidden": true
             }
         ]
     },
@@ -3838,6 +3794,7 @@
                 "properties": [
                     { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
                     { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
+                    { "name": "passive", "type": "boolean", "description": "<code>EventListener</code>'s passive flag." },
                     { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
                     { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." },
                     { "name": "originalHandler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event original handler function value." }
@@ -4203,8 +4160,7 @@
                 "properties": [
                     { "name": "registrationId", "type": "string" },
                     { "name": "scopeURL", "type": "string" },
-                    { "name": "isDeleted", "type": "boolean" },
-                    { "name": "forceUpdateOnPageLoad", "type": "boolean", "optional": true }
+                    { "name": "isDeleted", "type": "boolean" }
                 ]
             },
             {
@@ -4320,16 +4276,8 @@
                 "handlers": ["browser"]
             },
             {
-                "name": "setDebugOnStart",
-                "parameters": [
-                    { "name": "debugOnStart", "type": "boolean" }
-                ],
-                "handlers": ["browser"]
-            },
-            {
                 "name": "setForceUpdateOnPageLoad",
                 "parameters": [
-                    { "name": "registrationId", "type": "string" },
                     { "name": "forceUpdateOnPageLoad", "type": "boolean" }
                 ],
                 "handlers": ["browser"]
@@ -4404,13 +4352,6 @@
                 "name": "workerErrorReported",
                 "parameters": [
                     { "name": "errorMessage", "$ref": "ServiceWorkerErrorMessage" }
-                ],
-                "handlers": ["browser"]
-            },
-            {
-                "name": "debugOnStartUpdated",
-                "parameters": [
-                    { "name": "debugOnStart", "type": "boolean" }
                 ],
                 "handlers": ["browser"]
             }
