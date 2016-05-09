@@ -1,5 +1,5 @@
 # Site settings
-title: Chrome Debugging Protocol v1.1 Viewer
+title: Protocol v1.1 Viewer
 baseurl: "/debugger-protocol-viewer-1.1"
 url: "https://chromedevtools.github.io"
 twitter_username: ChromeDevTools
