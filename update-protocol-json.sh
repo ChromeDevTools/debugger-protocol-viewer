@@ -6,7 +6,7 @@ chromium_path="$HOME/chromium/src/third_party/WebKit/Source/devtools/protocol.js
 repo_path="dunno"
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-local_protocol_path="_data/tot.json"
+local_protocol_path="_data/tot/protocol.json"
 
 if [ -s $standalone_path ]; then
   repo_path=$standalone_path
