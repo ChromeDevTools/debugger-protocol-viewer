@@ -38,12 +38,12 @@
           icon="menu" paper-drawer-toggle></paper-icon-button>
       <div class="top title">Chrome Debugging Protocol Viewer</div>
       <cr-search-control id="searchButton"
-          protocol-src="{{ site.baseurl }}/searchindex.json"></cr-search-control>
+          protocol-src="{{ site.baseurl }}/{{ page.version }}/searchindex.json"></cr-search-control>
     </paper-toolbar>
 
     <div class="content">
       {% if page.idx %}
-        {% assign domain = site.data.protocol.domains[page.idx] %}
+        {% assign domain = site.data[page.version].protocol.domains[page.idx] %}
         {% include domain.html domain=domain %}
       {% else %}
         <paper-material elevation="1" class="home-page-content">
