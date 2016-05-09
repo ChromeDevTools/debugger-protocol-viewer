@@ -1,3 +1,13 @@
+
+{% if page.url != "/index.html" %}
+<paper-menu class="list">
+  <a href="{{ site.baseurl }}/">
+    <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
+  </a>
+</paper-menu>
+{% endif %}
+
+
 <paper-toolbar id="drawerToolbar">
   <span class="paper-font-title">Domains</span>
 </paper-toolbar>

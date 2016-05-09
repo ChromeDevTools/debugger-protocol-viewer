@@ -32,6 +32,11 @@ paper-menu {
   overflow: scroll;
 }
 
+.paper-menu-0:first-child {
+  flex-shrink: 0;
+  background: hsl(0, 0%, 74%);
+}
+
 paper-menu a {
   text-decoration: none;
   display: -ms-flexbox;
