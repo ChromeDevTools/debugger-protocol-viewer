@@ -1609,6 +1609,16 @@
         ],
         "events": [
             {
+                "name": "resourceChangedPriority",
+                "description": "Fired when resource loading priority is changed",
+                "parameters": [
+                    { "name": "requestId", "$ref": "RequestId", "description": "Request identifier." },
+                    { "name": "newPriority", "$ref": "ResourcePriority", "description": "New priority" },
+                    { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." }
+                ],
+                "hidden": true
+            },
+            {
                 "name": "requestWillBeSent",
                 "description": "Fired when page is about to send HTTP request.",
                 "parameters": [
@@ -5108,6 +5118,41 @@
                 ],
                 "description": "Fetches the accessibility node for this DOM node, if it exists.",
                 "hidden": true
+            }
+        ]
+    },
+    {
+        "domain": "Storage",
+        "hidden": true,
+        "types": [
+            {
+                "id": "StorageType",
+                "type": "string",
+                "enum": [
+                    "appcache",
+                    "cookies",
+                    "file_systems",
+                    "indexeddb",
+                    "local_storage",
+                    "shader_cache",
+                    "websql",
+                    "webrtc_indetity",
+                    "service_workers",
+                    "cache_storage",
+                    "all"
+                ],
+                "description": "Enum of possible storage types."
+            }
+        ],
+        "commands": [
+            {
+                "name": "clearDataForOrigin",
+                "parameters": [
+                    { "name": "origin", "type": "string", "description": "Security origin." },
+                    { "name": "storageTypes", "type": "string", "description": "Comma separated origin names." }
+                ],
+                "description": "Clears storage for origin.",
+                "handlers": ["browser"]
             }
         ]
     }]
