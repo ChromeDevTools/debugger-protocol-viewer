@@ -30,8 +30,8 @@ commit_hash=$(echo $commit_line | grep -E -o "[0-9a-f]{20,80}")
 
 # copy it into the HTML file
 cd $local_script_path
-cat index.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/[0-9a-f]{20,80}/$commit_hash/" > index.html.new
-mv index.html.new index.html
+cat _versions/tot.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/[0-9a-f]{20,80}/$commit_hash/" > _versions/tot.html.new
+mv _versions/tot.html.new _versions/tot.html
 
 
 set +x

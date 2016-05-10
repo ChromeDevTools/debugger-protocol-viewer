@@ -12,7 +12,7 @@ const versionsText = fs.readFileSync(VERSIONS_FILE);
 const versions = JSON.parse(versionsText);
 
 versions.forEach(version => {
-  clearFolder(`${DOMAINS_FOLDER}/${version.folder}`);
+  clearFolder(`${DOMAINS_FOLDER}/${version.slug}`);
   generateDomainFiles(version);
 });
 
@@ -21,17 +21,17 @@ function clearFolder(path) {
 }
 
 function generateDomainFiles(version) {
-  const protocolFile = `_data/${version.folder}/protocol.json`;
+  const protocolFile = `_data/${version.slug}/protocol.json`;
   const protocolText = fs.readFileSync(protocolFile);
   const protocol = JSON.parse(protocolText);
 
   (protocol.domains).forEach((domain, idx) => {
     const name = domain.domain;
-    const fileName = `${DOMAINS_FOLDER}/${version.folder}/${name}.html`;
+    const fileName = `${DOMAINS_FOLDER}/${version.slug}/${name}.html`;
     const content = `---
 title: ${name}
-version: ${version.folder}
-version_name: ${version.name}
+category: ${version.slug}
+version: ${version.name}
 idx: ${idx}
 ---`;
 

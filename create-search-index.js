@@ -15,7 +15,7 @@ const versions = JSON.parse(versionsText);
 versions.forEach(generateSearchIndex);
 
 function generateSearchIndex(version) {
-  const protocolText = fs.readFileSync(`_data/${version.folder}/protocol.json`);
+  const protocolText = fs.readFileSync(`_data/${version.slug}/protocol.json`);
   const protocol = JSON.parse(protocolText);
 
   // Set up Keyword bank
@@ -101,7 +101,7 @@ function generateSearchIndex(version) {
 
   (protocol.domains).forEach(function (domain, idx) {
     var domainName = domain.domain;
-    var domainPath = SITE_ROOT + domainName + '/';
+    var domainPath = SITE_ROOT + version.slug + '/' + domainName + '/';
     // Reminder: You may have multiple pages per keyword.
     // Store domain name as a page reference under itself as a keyword.
     var ref = PageReference.createPageReference(
@@ -142,7 +142,7 @@ function generateSearchIndex(version) {
     // TODO(ericguzman): Index other keyword types.
   });
 
-  var fileName = `_data/${version.folder}/searchindex.json`;
-  var content = JSON.stringify(keywordMap);
+  const fileName = `search_index/${version.slug}.json`;
+  const content = JSON.stringify(keywordMap);
   fs.writeFileSync(fileName, content);
 }

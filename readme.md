@@ -29,6 +29,15 @@ Deploying:
 
 All pushes to gh-pages instantly trigger a jeklyll build and the site will serve the resulting `_site`.
 
+## Adding new version
+
+To add a new protocol version:
+
+1. Modify `_data/versions.json`
+1. Create `_data/VERSION_SLUG` folder and put `protocol.json` file there
+1. Create `_versions/VERSION_SLUG.html` file with protocol version description
+1. Build project
+
 ## History
 
 

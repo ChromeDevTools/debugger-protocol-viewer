@@ -1,10 +1,10 @@
 [
   {
-    "folder": "tot",
-    "name": "tip of the tree"
+    "slug": "tot",
+    "name": "latest (tip-of-tree)"
   },
   {
-    "folder": "1-1",
-    "name": "1.1"
+    "slug": "1-1",
+    "name": "stable (1.1)"
   }
 ]
