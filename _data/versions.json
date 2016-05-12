@@ -6,5 +6,9 @@
   {
     "slug": "1-1",
     "name": "stable (1.1)"
+  },
+  {
+    "slug": "v8",
+    "name": "v8-inspector (node-v7-pre)"
   }
 ]
