@@ -6,7 +6,7 @@ chromium_path="$HOME/chromium/src/third_party/WebKit/Source/devtools/protocol.js
 repo_path="dunno"
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-local_protocol_path="_data/protocol.json"
+local_protocol_path="_data/tot/protocol.json"
 
 if [ -s $standalone_path ]; then
   repo_path=$standalone_path
@@ -30,8 +30,8 @@ commit_hash=$(echo $commit_line | grep -E -o "[0-9a-f]{20,80}")
 
 # copy it into the HTML file
 cd $local_script_path
-cat index.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/[0-9a-f]{20,80}/$commit_hash/" > index.html.new
-mv index.html.new index.html
+cat _versions/tot.html | sed -e "s/^Date.*/$date_line/" | sed -E "s/[0-9a-f]{20,80}/$commit_hash/" > _versions/tot.html.new
+mv _versions/tot.html.new _versions/tot.html
 
 
 set +x

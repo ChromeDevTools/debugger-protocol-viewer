@@ -6,11 +6,19 @@ twitter_username: ChromeDevTools
 github_username:  chromedevtools
 
 collections:
+  versions:
+    output: true
+    permalink: /:path/
   domains:
     output: true
     permalink: /:path/
 
 defaults:
+- scope:
+    path: ""
+    type: versions
+  values:
+    layout: default
 - scope:
     path: ""
     type: domains
