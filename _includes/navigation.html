@@ -6,28 +6,28 @@
 </paper-menu>
 
 <paper-toolbar id="drawerToolbar">
-  <span class="paper-font-title">Domains</span>
-</paper-toolbar>
-
-<paper-menu class="list">
-  {% for domain in site.domains %}
-    {% if domain.category == page.category %}
-  <a href="{{ site.baseurl }}{{ domain.url }}" {% if page.title == domain.title %}class="iron-selected"{% endif %}>
-    <span>{{ domain.title }}</span>
-  </a>
-    {% endif %}
-  {% endfor %}
-</paper-menu>
-{% else %}
-<paper-toolbar id="drawerToolbar">
   <span class="paper-font-title">Versions</span>
 </paper-toolbar>
 
-<paper-menu class="list">
+<paper-menu selected="{{ page.category }}" attr-for-selected="name">
   {% for version in site.versions %}
-  <a href="{{ site.baseurl }}{{ version.url }}">
+  <a href="{{ site.baseurl }}{{ version.url }}" name="{{ version.category }}">
     <span>{{ version.title }}</span>
   </a>
   {% endfor %}
 </paper-menu>
 {% endif %}
+
+<paper-toolbar id="drawerToolbar">
+  <span class="paper-font-title">Domains</span>
+</paper-toolbar>
+
+<paper-menu selected="{{ page.title }}" attr-for-selected="name">
+  {% for domain in site.domains %}
+    {% if domain.category == page.category %}
+  <a href="{{ site.baseurl }}{{ domain.url }}" name="{{ domain.title }}">
+    <span>{{ domain.title }}</span>
+  </a>
+    {% endif %}
+  {% endfor %}
+</paper-menu>
