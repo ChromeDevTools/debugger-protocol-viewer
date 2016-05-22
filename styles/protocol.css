@@ -32,12 +32,6 @@ paper-menu {
   overflow: scroll;
 }
 
-.paper-menu-0:first-child {
-  flex-shrink: 0;
-  background: hsl(0, 0%, 74%);
-  max-height: 65px;
-}
-
 paper-menu a {
   text-decoration: none;
   display: -ms-flexbox;
@@ -65,22 +59,17 @@ paper-menu a.iron-selected {
   border-right: 5px solid #4bbda8;
 }
 
-#drawer > div {
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -ms-flex-direction: column;
-  -webkit-flex-direction: column;
-  flex-direction: column;
+#drawer paper-toolbar {
+  background: hsl(0, 0%, 82%);
+}
+
+#drawer paper-dropdown-menu {
+  width: 100%;
 }
 
 #drawerToolbar {
   height: 64px;
   min-height: 64px;
-}
-
-#mainContainer .content {
-  background-color: #fafafa;
 }
 
 #mainToolbar .title {

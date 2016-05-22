@@ -1,22 +1,14 @@
-{% if page.url != "/" %}
-<paper-menu class="list">
-  <a href="{{ site.baseurl }}/" data-url="{{ page.url }}">
-    <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
-  </a>
-</paper-menu>
-
-<paper-toolbar id="drawerToolbar">
-  <span class="paper-font-title">Versions</span>
+<paper-toolbar>
+  <paper-dropdown-menu label="Version">
+    <paper-listbox class="dropdown-content" selected="{{ page.category }}" attr-for-selected="value">
+      {% for version in site.versions %}
+      <a href="{{ site.baseurl }}{{ version.url }}" name="{{ version.category }}" value="{{ version.category }}">
+        <paper-item>{{ version.title }}</paper-item>
+      </a>
+      {% endfor %}
+    </paper-listbox>
+  </paper-dropdown-menu>
 </paper-toolbar>
-
-<paper-menu selected="{{ page.category }}" attr-for-selected="name">
-  {% for version in site.versions %}
-  <a href="{{ site.baseurl }}{{ version.url }}" name="{{ version.category }}">
-    <span>{{ version.title }}</span>
-  </a>
-  {% endfor %}
-</paper-menu>
-{% endif %}
 
 <paper-toolbar id="drawerToolbar">
   <span class="paper-font-title">Domains</span>
