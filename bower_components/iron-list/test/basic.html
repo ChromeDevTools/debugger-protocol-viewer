@@ -16,9 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="helpers.html">
   <link rel="import" href="x-list.html">
 </head>
@@ -41,9 +39,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('defaults', function() {
-      assert.equal(list.items, null);
-      assert.equal(list.as, 'item');
-      assert.equal(list.indexAs, 'index');
+      assert.equal(list.items, null, 'items');
+      assert.equal(list.as, 'item', 'as');
+      assert.equal(list.indexAs, 'index', 'indexAs');
+      assert.equal(list.selectedAs, 'selected', 'selectedAs');
+      assert.equal(list.scrollTarget, list, 'scrollTarget');
+      assert.isFalse(list.selectionEnabled, 'selectionEnabled');
+      assert.isFalse(list.multiSelection, 'multiSelection');
     });
 
     test('check items length', function(done) {
@@ -70,7 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('check physical item size', function(done) {
-      var setSize = list._physicalCount - 1;
+      var setSize = 10;
       container.data = buildDataSet(setSize);
 
       flush(function() {
@@ -84,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       flush(function() {
         var setSize = list.items.length;
-        var rowHeight = list._physicalItems[0].offsetHeight;
+        var rowHeight = container.itemHeight;
         var viewportHeight = list.offsetHeight;
         var scrollToItem;
 
@@ -93,31 +95,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.equal(getFirstItemFromList(list).textContent, scrollToItem);
         }
 
+        function checkLastVisible() {
+          var visibleItemsCount = Math.floor(viewportHeight / rowHeight);
+          assert.equal(list.lastVisibleIndex, scrollToItem + visibleItemsCount - 1);
+          assert.equal(getLastItemFromList(list).textContent, scrollToItem + visibleItemsCount - 1);
+        }
+
         function doneScrollDown() {
           checkFirstVisible();
-
+          checkLastVisible();
           scrollToItem = 1;
-
           flush(function() {
             simulateScroll({
               list: list,
               contribution: rowHeight,
-              target: scrollToItem*rowHeight
-            }, doneScrollUp);
+              target: scrollToItem*rowHeight,
+              onScrollEnd: doneScrollUp
+            });
           });
         }
 
         function doneScrollUp() {
           checkFirstVisible();
+          checkLastVisible();
           done();
         }
-
         scrollToItem = 50;
+
         simulateScroll({
           list: list,
           contribution: 50,
-          target: scrollToItem*rowHeight
-        }, doneScrollDown);
+          target: scrollToItem*rowHeight,
+          onScrollEnd: doneScrollDown
+        });
 
       });
     });
@@ -125,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     test('scroll to index', function(done) {
       list.items = buildDataSet(100);
 
-      flush(function() {
+      setTimeout(function() {
         list.scrollToIndex(30);
         assert.equal(list.firstVisibleIndex, 30);
 
@@ -148,9 +158,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.equal(list.firstVisibleIndex, 99);
           done();
         }, 100);
+      }, 100);
+    });
 
+    test('reset items', function(done) {
+      list.items = buildDataSet(100);
+
+      flush(function() {
+        assert.equal(getFirstItemFromList(list).textContent, '0');
+
+        list.items = null;
+
+        flush(function() {
+          assert.notEqual(getFirstItemFromList(list).textContent, '0');
+          list.items = buildDataSet(100);
+
+          flush(function() {
+            assert.equal(getFirstItemFromList(list).textContent, '0');
+            done();
+          });
+        });
       });
     });
+
   });
 </script>
 

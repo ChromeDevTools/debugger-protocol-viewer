@@ -16,65 +16,170 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../../iron-icons/iron-icons.html">
   <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../paper-progress/paper-progress.html">
+  <link rel="import" href="../../paper-styles/default-theme.html">
+
   <link rel="import" href="../paper-toolbar.html">
 
-  <style>
-    paper-toolbar + paper-toolbar {
-      margin-top: 20px;
+  <style is="custom-style" include="demo-pages-shared-styles">
+    .centered {
+      min-width: calc(100% - 200px);
+    }
+
+    paper-toolbar paper-progress {
+      --paper-progress-active-color: var(--accent-color);
+    }
+
+    .spacer {
+      @apply(--layout-flex);
     }
   </style>
 
 </head>
 <body unresolved>
 
-  <paper-toolbar>
-    <paper-icon-button icon="menu"></paper-icon-button>
-    <span class="title">Toolbar</span>
-    <paper-icon-button icon="refresh"></paper-icon-button>
-    <paper-icon-button icon="add">+</paper-icon-button>
-  </paper-toolbar>
+  <div class="vertical-section-container centered">
 
-  <paper-toolbar class="tall">
-    <paper-icon-button icon="menu"></paper-icon-button>
-    <span class="title">Toolbar: tall</span>
-    <paper-icon-button icon="refresh"></paper-icon-button>
-    <paper-icon-button icon="add">+</paper-icon-button>
-  </paper-toolbar>
+    <h3>
+      A plain <code>paper-toolbar</code>. Use <code>class="title"</code> to
+      indicate the toolbar's title.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar>
+          <span class="title">Title</span>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
 
-  <paper-toolbar class="tall">
-    <paper-icon-button icon="menu" class="bottom"></paper-icon-button>
-    <span class="bottom title">Toolbar: tall with elements pin to the bottom</span>
-    <paper-icon-button icon="refresh" class="bottom"></paper-icon-button>
-    <paper-icon-button icon="add" class="bottom">+</paper-icon-button>
-  </paper-toolbar>
+    <h3>A styled <code>paper-toolbar</code>.</h3>
+    <demo-snippet>
+      <template>
+        <style is="custom-style">
+          paper-toolbar.red {
+            --paper-toolbar-background: red;
+            --paper-toolbar-title: {
+              font-style: italic;
+              font-weight: bold;
+            };
+          }
+        </style>
 
-  <paper-toolbar class="medium-tall">
-    <paper-icon-button icon="menu"></paper-icon-button>
-    <span class="flex"></span>
-    <paper-icon-button icon="refresh"></paper-icon-button>
-    <paper-icon-button icon="add">+</paper-icon-button>
-    <span class="bottom title">Toolbar: medium-tall with label aligns to the bottom</span>
-  </paper-toolbar>
+        <paper-toolbar class="red">
+          <span class="title">Title</span>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
 
-  <paper-toolbar class="tall">
-    <paper-icon-button icon="menu"></paper-icon-button>
-    <div class="flex"></div>
-    <paper-icon-button icon="refresh"></paper-icon-button>
-    <paper-icon-button icon="add">+</paper-icon-button>
-    <div class="middle title">label aligns to the middle</div>
-    <div class="bottom title">some stuffs align to the bottom</div>
-  </paper-toolbar>
+    <h3>
+      <code>paper-icon-button</code> is styled specially when used in a toolbar
+      before the title element or if the button has <code>icon="menu"</code>.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar>
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <span class="title">Title</span>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
 
-  <paper-toolbar class="tall">
-    <paper-icon-button icon="menu"></paper-icon-button>
-    <div class="flex"></div>
-    <paper-icon-button icon="refresh"></paper-icon-button>
-    <paper-icon-button icon="add">+</paper-icon-button>
-    <div class="middle title">element (e.g. progress) fits at the bottom of the toolbar</div>
-    <div class="bottom fit" style="height: 20px; background-color: #0f9d58;"></div>
-  </paper-toolbar>
+    <h3>
+      Use <code>class="tall"</code> to expand the toolbar to three sections.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar class="tall">
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <span class="title">Title</span>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
+
+    <h3>
+      Use <code>class="medium-tall"</code> to expand the toolbar to two
+      sections.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar class="medium-tall">
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <span class="title">Title</span>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
+
+    <h3>
+      Use <code>class="middle"</code> and <code>class="bottom"</code> to
+      indicate which section of the toolbar an element should be placed in.
+      Elements are placed in the top section by default.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar class="tall">
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <span class="title">Title</span>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+
+          <span class="middle title">Middle Title</span>
+
+          <span class="bottom title">Bottom Title</span>
+          <paper-icon-button icon="content-cut" class="bottom"></paper-icon-button>
+          <paper-icon-button icon="content-copy" class="bottom"></paper-icon-button>
+          <paper-icon-button icon="content-paste" class="bottom"></paper-icon-button>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
+
+    <h3>
+      Don't use both <code>class="middle"</code> and <code>class="bottom"</code>
+      elements in a <code>class="medium-tall"</code> toolbar.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar class="medium-tall">
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <span class="title">Top Title</span>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+
+          <span class="middle title">Middle Title</span>
+
+          <span class="bottom title">Bottom Title</span>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
+
+    <h3>
+      Elements with <code>class="fit"</code> expand to fit to the bottom of the
+      toolbar section they are in.
+    </h3>
+    <demo-snippet>
+      <template>
+        <paper-toolbar class="medium-tall">
+          <paper-icon-button icon="menu"></paper-icon-button>
+          <div class="spacer"></div>
+          <paper-icon-button icon="refresh"></paper-icon-button>
+          <paper-icon-button icon="add">+</paper-icon-button>
+          <div class="middle title">Title</div>
+          <paper-progress class="middle fit" value="60"></paper-progress>
+        </paper-toolbar>
+      </template>
+    </demo-snippet>
+
+  </div>
 
 </body>
 </html>

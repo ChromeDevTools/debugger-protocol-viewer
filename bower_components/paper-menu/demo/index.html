@@ -20,10 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-item/paper-item.html">
+  <link rel="import" href="../../iron-collapse/iron-collapse.html">
   <link rel="import" href="../paper-menu.html">
+  <link rel="import" href="../paper-submenu.html">
   <link rel="import" href="../../paper-styles/demo-pages.html">
 
-  <style>
+  <style is="custom-style">
     .horizontal-section {
       padding: 0 !important;
     }
@@ -36,6 +38,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       overflow: hidden;
       background: #ccc;
     }
+
+    paper-item {
+      --paper-item: {
+        cursor: pointer;
+      };
+    }
+
+    .sublist paper-item {
+      padding-left: 30px;
+    }
+
+    .sublist2 paper-item {
+      padding-left: 50px;
+    }
   </style>
 </head>
 <body unresolved>
@@ -43,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div>
       <h4>Standard</h4>
       <div class="horizontal-section">
-        <paper-menu class="list">
+        <paper-menu>
           <paper-item>Inbox</paper-item>
           <paper-item>Starred</paper-item>
           <paper-item>Sent mail</paper-item>
@@ -55,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div>
       <h4>Pre-selected</h4>
       <div class="horizontal-section">
-        <paper-menu  class="list" selected="0">
+        <paper-menu selected="0">
           <paper-item>Inbox</paper-item>
           <paper-item disabled>Starred</paper-item>
           <paper-item>Sent mail</paper-item>
@@ -67,11 +83,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div>
       <h4>Multi-select</h4>
       <div class="horizontal-section">
-        <paper-menu class="list" multi>
+        <paper-menu multi>
           <paper-item>Bold</paper-item>
           <paper-item>Italic</paper-item>
           <paper-item>Underline</paper-item>
           <paper-item>Strikethrough</paper-item>
+        </paper-menu>
+      </div>
+    </div>
+
+    <div>
+      <h4>Sub-menu</h4>
+      <div class="horizontal-section">
+        <paper-menu attr-for-item-title="label" multi>
+          <paper-submenu label="paper-menu">
+            <paper-item class="menu-trigger">paper-menu</paper-item>
+            <paper-menu class="menu-content sublist" multi>
+              <paper-submenu label="Properties">
+                <paper-item class="menu-trigger">Properties</paper-item>
+                <paper-menu class="menu-content sublist2">
+                  <paper-item>focusedItem</paper-item>
+                  <paper-item>attrForItemTitle</paper-item>
+                </paper-menu>
+              </paper-submenu>
+              <paper-submenu label="Methods">
+                <paper-item class="menu-trigger">Methods</paper-item>
+                <paper-menu class="menu-content sublist2">
+                  <paper-item>select(value)</paper-item>
+                </paper-menu>
+              </paper-submenu>
+          </paper-menu>
+        </paper-submenu>
+
+        <paper-submenu label="paper-submenu">
+          <paper-item class="menu-trigger">paper-submenu</paper-item>
+          <paper-menu class="menu-content sublist">
+            <paper-submenu label="Properties">
+              <paper-item class="menu-trigger">Properties</paper-item>
+              <paper-menu class="menu-content sublist2">
+                <paper-item>opened</paper-item>
+              </paper-menu>
+              </paper-submenu>
+              <paper-submenu label="Methods">
+                <paper-item class="menu-trigger">Methods</paper-item>
+                <paper-menu class="menu-content sublist2">
+                  <paper-item>open()</paper-item>
+                  <paper-item>close()</paper-item>
+                  <paper-item>toggle()</paper-item>
+                </paper-menu>
+            </paper-submenu>
+          </paper-menu>
+        </paper-submenu>
+
+          <paper-submenu label="Unavailable" disabled>
+            <paper-item class="menu-trigger">Unavailable</paper-item>
+            <paper-menu class="menu-content sublist">
+              <paper-item>Unavailable 1</paper-item>
+              <paper-item>Unavailable 2</paper-item>
+            </paper-menu>
+          </paper-submenu>
         </paper-menu>
       </div>
     </div>

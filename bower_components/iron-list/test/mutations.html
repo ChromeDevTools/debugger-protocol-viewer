@@ -16,9 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="helpers.html">
   <link rel="import" href="x-list.html">
 </head>
@@ -30,9 +28,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="trivialListPrimitiveItem">
+    <template>
+      <x-list primitive></x-list>
+    </template>
+  </test-fixture>
+
   <script>
 
-    suite('mutations to items', function() {
+    suite('mutations to the collection of items', function() {
       var list, container;
 
       setup(function() {
@@ -63,26 +67,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         function scrollBackUp() {
           simulateScroll({
             list: list,
-            contribution: 100,
-            target: 0
-          }, function() {
-            flush(function() {
-              assert.equal(getFirstItemFromList(list).textContent, phrase);
-              done();
-            });
+            contribution: 200,
+            target: 0,
+            onScrollEnd: function() {
+             assert.equal(getFirstItemFromList(list).textContent, phrase);
+             done();
+            }
           });
         }
 
         flush(function() {
-          var rowHeight = list._physicalItems[0].offsetHeight;
+          var rowHeight = getFirstItemFromList(list).offsetHeight;
           // scroll down
           simulateScroll({
             list: list,
-            contribution: 100,
-            target: setSize*rowHeight
-          }, function() {
-            list.set('items.0.index', phrase);
-            flush(scrollBackUp);
+            contribution: 200,
+            target: setSize*rowHeight,
+            onScrollEnd: function() {
+              list.set('items.0.index', phrase);
+              scrollBackUp();
+            }
           });
         });
       });
@@ -105,14 +109,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           simulateScroll({
             list: list,
-            contribution: rowHeight,
-            target: list.items.length*rowHeight
-          }, function() {
-            assert.equal(getFirstItemFromList(list).textContent,
+            contribution: 200,
+            target: list.items.length*rowHeight,
+            onScrollEnd: function() {
+              assert.equal(getFirstItemFromList(list).textContent,
                 list.items.length - itemsPerViewport);
-            done();
+              done();
+            }
           });
         })
+      });
+
+      test('push and scroll to bottom', function(done) {
+        list.items = [buildItem(0)];
+
+        flush(function() {
+          var rowHeight = getFirstItemFromList(list).offsetHeight;
+          var viewportHeight = list.offsetHeight;
+          var itemsPerViewport = Math.floor(viewportHeight/rowHeight);
+
+          while (list.items.length < 200) {
+            list.push('items', buildItem(list.items.length));
+          }
+
+          list.scrollToIndex(list.items.length - 1);
+          assert.isTrue(isFullOfItems(list));
+          assert.equal(getFirstItemFromList(list).textContent.trim(),
+              list.items.length - itemsPerViewport);
+          done();
+        });
       });
 
       test('pop', function(done) {
@@ -120,23 +145,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         list.items = buildDataSet(setSize);
 
         flush(function() {
-          var rowHeight = list._physicalItems[0].offsetHeight;
+          var rowHeight = getFirstItemFromList(list).offsetHeight;
 
           simulateScroll({
             list: list,
-            contribution: rowHeight,
-            target: setSize*rowHeight
-          }, function() {
-            var viewportHeight = list.offsetHeight;
-            var itemsPerViewport = Math.floor(viewportHeight/rowHeight);
+            contribution: 200,
+            target: setSize*rowHeight,
+            onScrollEnd: function() {
+              var viewportHeight = list.offsetHeight;
+              var itemsPerViewport = Math.floor(viewportHeight/rowHeight);
 
-            list.pop('items');
+              list.pop('items');
 
-            flush(function() {
-              assert.equal(list.items.length, setSize-1);
-              assert.equal(getFirstItemFromList(list).textContent, setSize - 3 - 1);
-              done();
-            });
+              flush(function() {
+                assert.equal(list.items.length, setSize-1);
+                assert.equal(getFirstItemFromList(list).textContent, setSize - 3 - 1);
+                done();
+              });
+            }
           });
         });
       });
@@ -154,7 +180,112 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         });
       });
+
+      test('delete item and scroll to bottom', function() {
+        var setSize = 100, index;
+
+        list.items = buildDataSet(setSize);
+
+        while (list.items.length > 10) {
+          index = parseInt(list.items.length * Math.random());
+          list.arrayDelete('items',  list.items[index]);
+          list.scrollToIndex(list.items.length - 1);
+          assert.isTrue(/^[0-9]*$/.test(getFirstItemFromList(list).textContent));
+        }
+      });
+
+      test('reassign items', function(done) {
+        list.items = buildDataSet(100);
+        container.itemHeight = 'auto';
+
+        flush(function() {
+          var itemHeight = getFirstItemFromList(list).offsetHeight;
+          var hasRepeatedItems = checkRepeatedItems(list);
+
+          simulateScroll({
+            list: list,
+            contribution: 200,
+            target: itemHeight * list.items.length,
+            onScrollEnd: function() {
+              list.items = list.items.slice(0);
+              simulateScroll({
+                list: list,
+                contribution: itemHeight,
+                target: itemHeight * list.items.length,
+                onScroll: function() {
+                  assert.isFalse(hasRepeatedItems(), 'List should not have repeated items');
+                },
+                onScrollEnd: done
+              });
+            }
+          });
+        });
+      });
+
+      test('empty items array', function(done) {
+        list.items = buildDataSet(100);
+
+        flush(function() {
+          list.items = [];
+          flush(function() {
+            assert.notEqual(getFirstItemFromList(list).textContent, '0');
+            done();
+          });
+        });
+      });
+
+      test('should notify path to the right physical item', function(done) {
+        list.items = buildDataSet(100);
+        flush(function() {
+          var idx = list._physicalCount + 1;
+
+          list.scrollToIndex(idx);
+          list.notifyPath('items.1.index', 'bad');
+          assert.equal(getFirstItemFromList(list).textContent, idx);
+          done();
+        });
+      });
     });
+
+    suite('mutations of primitive type items', function() {
+      var container, list;
+
+      setup(function() {
+        container = fixture('trivialListPrimitiveItem');
+        list = container.list;
+      });
+
+      test('push item = polymer', function(done) {
+        list.items = [];
+        list.push('items', 'polymer');
+
+        flush(function() {
+         assert.equal(getFirstItemFromList(list).textContent, 'polymer');
+         done();
+        });
+      });
+
+      test('push item = 0', function(done) {
+        list.items = [];
+        list.push('items', 0);
+
+        flush(function() {
+          assert.equal(getFirstItemFromList(list).textContent, '0');
+          done();
+        });
+      });
+
+      test('push item = false', function(done) {
+        list.items = [];
+        list.push('items', false);
+
+        flush(function() {
+          assert.equal(getFirstItemFromList(list).textContent, 'false');
+          done();
+        });
+      });
+    });
+
   </script>
 
 </body>

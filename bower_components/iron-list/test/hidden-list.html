@@ -16,10 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-  <link rel="import" href="../../test-fixture/test-fixture.html">
-  <link rel="import" href="../../paper-styles/paper-styles.html">
   <link rel="import" href="helpers.html">
   <link rel="import" href="x-list.html">
 
@@ -51,23 +48,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      test('resize', function(done) {
+      test('iron-resize', function(done) {
         list.items = buildDataSet(100);
-        list.fire('resize');
-        flush(function() {
-          assert.notEqual(getFirstItemFromList(list).textContent, '0');
+        list.fire('iron-resize');
 
+        assert.notEqual(getFirstItemFromList(list).textContent, '0');
+        Polymer.RenderStatus.whenReady(function() {
           container.removeAttribute('hidden');
-
+          assert.notEqual(getFirstItemFromList(list).textContent, '0');
+          list.fire('iron-resize');
           flush(function() {
-            assert.notEqual(getFirstItemFromList(list).textContent, '0');
-
-            list.fire('resize');
-
-            flush(function() {
-              assert.equal(getFirstItemFromList(list).textContent, '0');
-              done();
-            });
+            assert.isTrue(list.isAttached);
+            assert.equal(getFirstItemFromList(list).textContent, '0');
+            done();
           });
         });
       });
