@@ -4,6 +4,15 @@ layout: default
 
 <p>The <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">Chrome debugging protocol</a> allows for tools to instrument, inspect, debug and profile Chromium, Chrome and other Blink-based browsers. Many existing projects <a href="https://developer.chrome.com/devtools/docs/debugging-clients">currently use</a> the protocol. The <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a> uses this protocol and the team maintains its API.
 
+<p>Instrumentation is divided into a number of domains (DOM, Debugger, Network
+etc.). Each domain defines a number of commands it supports and events it
+generates. Both commands and events are serialized JSON objects of a fixed
+structure. You can either <a href="https://developer.chrome.com/devtools/docs/debugger-protocoll">debug
+over the wire</a> using the raw messages as they are described in the corresponding domain
+documentation, or use <a href="https://developer.chrome.com/devtools/docs/debugger-protocol#extension">extension
+JavaScript API.</a>
+</p>
+
 <p>The <b>1.1 version of the protocol</b> is the latest stable release of the protocol, tagged at Chrome 31. It includes a smaller subset of the complete protocol compatibilities.
 
 <p>The <b>latest (tip-of-tree) protocol</b> <a href="https://github.com/ChromeDevTools/devtools-frontend/commits/master/protocol.json">changes frequently</a> and may break at any time. However it captures the full capabilities of the Protocol, whereas the stable release is a subset. There is no backwards compatibility support guaranteed for the capabilities it introduces.</p>
