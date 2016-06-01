@@ -52,6 +52,6 @@
     "commit": "d6eda791a84a456f98eb30283be1e8cd1c93d252"
   },
   "_source": "git://github.com/PolymerElements/paper-dropdown-menu.git",
-  "_target": "^1.0.0",
+  "_target": "^1.2.1",
   "_originalSource": "PolymerElements/paper-dropdown-menu"
 }
