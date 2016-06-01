@@ -1,6 +1,6 @@
 {
   "name": "iron-behaviors",
-  "version": "1.0.5",
+  "version": "1.0.16",
   "description": "Provides a set of behaviors for the iron elements",
   "private": true,
   "authors": [
@@ -16,23 +16,25 @@
   ],
   "license": "http://polymer.github.io/LICENSE.txt",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0",
+    "polymer": "Polymer/polymer#^1.2.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.0"
   },
   "devDependencies": {
     "paper-styles": "polymerelements/paper-styles#^1.0.2",
+    "paper-input": "polymerelements/paper-input#^1.0.0",
     "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
     "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
     "test-fixture": "polymerelements/test-fixture#^1.0.0",
-    "web-component-tester": "*",
+    "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
+  "ignore": [],
   "homepage": "https://github.com/PolymerElements/iron-behaviors",
-  "_release": "1.0.5",
+  "_release": "1.0.16",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.5",
-    "commit": "bdae66f398838eda78c203b3ae979dcb5cd2a60e"
+    "tag": "v1.0.16",
+    "commit": "161e67233c4776e32a275a719a000865ed309393"
   },
   "_source": "git://github.com/PolymerElements/iron-behaviors.git",
   "_target": "^1.0.5",

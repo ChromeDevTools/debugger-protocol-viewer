@@ -14,12 +14,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <title>paper-header-panel demo</title>
 
     <script src="../../webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="../../paper-styles/paper-styles.html">
+    <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="../../paper-styles/demo-pages.html">
     <link rel="import" href="../paper-header-panel.html">
 
     <style is="custom-style">
       body {
+        @apply(--layout-inline);
+        @apply(--layout-center-center);
+        @apply(--layout-wrap);
         padding: 40px;
       }
 
@@ -107,42 +110,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
 
   <body>
-    <div class="layout wrap inline center-center">
-      <paper-header-panel class="blue">
-        <div class="paper-header">standard</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel class="blue">
+      <div class="paper-header">standard</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="seamed" class="red">
-        <div class="paper-header">seamed</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel mode="seamed" class="red">
+      <div class="paper-header">seamed</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="scroll" class="orange">
-        <div class="paper-header">scroll</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel mode="scroll" class="orange">
+      <div class="paper-header">scroll</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="waterfall" class="green">
-        <div class="paper-header">waterfall</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel mode="waterfall" class="green">
+      <div class="paper-header">waterfall</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="waterfall-tall" class="pink">
-        <div class="paper-header">waterfall-tall</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel mode="waterfall-tall" class="pink">
+      <div class="paper-header">waterfall-tall</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="waterfall-tall" tall-class="medium-tall" class="cyan">
-        <div class="paper-header">waterfall-tall<br>tall-class: medium-tall</div>
-        <div class="content"></div>
-      </paper-header-panel>
+    <paper-header-panel mode="waterfall-tall" tall-class="medium-tall" class="cyan">
+      <div class="paper-header">waterfall-tall<br>tall-class: medium-tall</div>
+      <div class="content"></div>
+    </paper-header-panel>
 
-      <paper-header-panel mode="cover" class="lime">
-        <div class="paper-header tall">cover</div>
-        <div class="content cover"></div>
-      </paper-header-panel>
-    </div>
+    <paper-header-panel mode="cover" class="lime">
+      <div class="paper-header tall">cover</div>
+      <div class="content cover"></div>
+    </paper-header-panel>
   </body>
 
 </html>

@@ -1,33 +1,25 @@
-{% if page.url != "/" %}
-<paper-menu class="list">
-  <a href="{{ site.baseurl }}/" data-url="{{ page.url }}">
-    <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
-  </a>
-</paper-menu>
+<paper-toolbar>
+  <paper-dropdown-menu label="Version">
+    <paper-listbox class="dropdown-content" selected="{{ page.category }}" attr-for-selected="value">
+      {% for version in site.versions %}
+      <a href="{{ site.baseurl }}{{ version.url }}" name="{{ version.category }}" value="{{ version.category }}">
+        <paper-item>{{ version.title }}</paper-item>
+      </a>
+      {% endfor %}
+    </paper-listbox>
+  </paper-dropdown-menu>
+</paper-toolbar>
 
 <paper-toolbar id="drawerToolbar">
   <span class="paper-font-title">Domains</span>
 </paper-toolbar>
 
-<paper-menu class="list">
+<paper-menu selected="{{ page.title }}" attr-for-selected="name">
   {% for domain in site.domains %}
     {% if domain.category == page.category %}
-  <a href="{{ site.baseurl }}{{ domain.url }}" {% if page.title == domain.title %}class="iron-selected"{% endif %}>
+  <a href="{{ site.baseurl }}{{ domain.url }}" name="{{ domain.title }}">
     <span>{{ domain.title }}</span>
   </a>
     {% endif %}
   {% endfor %}
 </paper-menu>
-{% else %}
-<paper-toolbar id="drawerToolbar">
-  <span class="paper-font-title">Versions</span>
-</paper-toolbar>
-
-<paper-menu class="list">
-  {% for version in site.versions %}
-  <a href="{{ site.baseurl }}{{ version.url }}">
-    <span>{{ version.title }}</span>
-  </a>
-  {% endfor %}
-</paper-menu>
-{% endif %}

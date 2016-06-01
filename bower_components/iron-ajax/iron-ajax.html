@@ -60,13 +60,16 @@ element.
      * @event error
      */
 
+    hostAttributes: {
+      hidden: true
+    },
+
     properties: {
       /**
        * The URL target of the request.
        */
       url: {
-        type: String,
-        value: ''
+        type: String
       },
 
       /**
@@ -116,6 +119,8 @@ element.
        * Content type to use when sending data. If the `contentType` property
        * is set and a `Content-Type` header is specified in the `headers`
        * property, the `headers` property value will take precedence.
+       *
+       * Varies the handling of the `body` param.
        */
       contentType: {
         type: String,
@@ -187,6 +192,14 @@ element.
       },
 
       /**
+       * Set the timeout flag on the request.
+       */
+      timeout: {
+        type: Number,
+        value: 0
+      },
+
+      /**
        * If true, automatically performs an Ajax request when either `url` or
        * `params` changes.
        */
@@ -204,17 +217,7 @@ element.
       },
 
       /**
-       * Will be set to true if there is at least one in-flight request
-       * associated with this iron-ajax element.
-       */
-      loading: {
-        type: Boolean,
-        notify: true,
-        readOnly: true
-      },
-
-      /**
-       * Will be set to the most recent request made by this iron-ajax element.
+       * The most recent request made by this iron-ajax element.
        */
       lastRequest: {
         type: Object,
@@ -223,10 +226,25 @@ element.
       },
 
       /**
-       * Will be set to the most recent response received by a request
-       * that originated from this iron-ajax element. The type of the response
-       * is determined by the value of `handleAs` at the time that the request
-       * was generated.
+       * True while lastRequest is in flight.
+       */
+      loading: {
+        type: Boolean,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * lastRequest's response.
+       *
+       * Note that lastResponse and lastError are set when lastRequest finishes,
+       * so if loading is true, then lastResponse and lastError will correspond
+       * to the result of the previous request.
+       *
+       * The type of the response is determined by the value of `handleAs` at
+       * the time that the request was generated.
+       *
+       * @type {Object}
        */
       lastResponse: {
         type: Object,
@@ -235,8 +253,9 @@ element.
       },
 
       /**
-       * Will be set to the most recent error that resulted from a request
-       * that originated from this iron-ajax element.
+       * lastRequest's error, if any.
+       *
+       * @type {Object}
        */
       lastError: {
         type: Object,
@@ -258,12 +277,36 @@ element.
       },
 
       /**
-       * Length of time in milliseconds to debounce multiple requests.
+       * Length of time in milliseconds to debounce multiple automatically generated requests.
        */
       debounceDuration: {
         type: Number,
         value: 0,
         notify: true
+      },
+
+      /**
+       * Prefix to be stripped from a JSON response before parsing it.
+       *
+       * In order to prevent an attack using CSRF with Array responses
+       * (http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/)
+       * many backends will mitigate this by prefixing all JSON response bodies
+       * with a string that would be nonsensical to a JavaScript parser.
+       *
+       */
+      jsonPrefix: {
+        type: String,
+        value: ''
+      },
+
+      /**
+       * By default, these events do not bubble largely because the `error` event has special
+       * meaning in the window object. Setting this attribute will cause iron-ajax's request,
+       * response, and error events to bubble to the window object.
+       */
+      bubbles: {
+        type: Boolean,
+        value: false
       },
 
       _boundHandleResponse: {
@@ -275,8 +318,8 @@ element.
     },
 
     observers: [
-      '_requestOptionsChanged(url, method, params, headers,' +
-        'contentType, body, sync, handleAs, withCredentials, auto)'
+      '_requestOptionsChanged(url, method, params.*, headers, contentType, ' +
+          'body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)'
     ],
 
     /**
@@ -294,11 +337,15 @@ element.
         value = this.params[param];
         param = window.encodeURIComponent(param);
 
-        if (value !== null) {
-          param += '=' + window.encodeURIComponent(value);
+        if (Array.isArray(value)) {
+          for (var i = 0; i < value.length; i++) {
+            queryParts.push(param + '=' + window.encodeURIComponent(value[i]));
+          }
+        } else if (value !== null) {
+          queryParts.push(param + '=' + window.encodeURIComponent(value));
+        } else {
+          queryParts.push(param);
         }
-
-        queryParts.push(param);
       }
 
       return queryParts.join('&');
@@ -314,7 +361,8 @@ element.
       var queryString = this.queryString;
 
       if (queryString) {
-        return this.url + '?' + queryString;
+        var bindingChar = this.url.indexOf('?') >= 0 ? '&' : '?';
+        return this.url + bindingChar + queryString;
       }
 
       return this.url;
@@ -334,7 +382,7 @@ element.
         contentType = 'application/x-www-form-urlencoded';
       }
       if (contentType) {
-        headers['Content-Type'] = contentType;
+        headers['content-type'] = contentType;
       }
       var header;
 
@@ -358,17 +406,20 @@ element.
      *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
      *   headers: (Object|undefined),
      *   handleAs: (string|undefined),
+     *   jsonPrefix: (string|undefined),
      *   withCredentials: (boolean|undefined)}}
      */
     toRequestOptions: function() {
       return {
-        url: this.requestUrl,
+        url: this.requestUrl || '',
         method: this.method,
         headers: this.requestHeaders,
         body: this.body,
         async: !this.sync,
         handleAs: this.handleAs,
-        withCredentials: this.withCredentials
+        jsonPrefix: this.jsonPrefix,
+        withCredentials: this.withCredentials,
+        timeout: this.timeout
       };
     },
 
@@ -399,14 +450,18 @@ element.
       this.fire('request', {
         request: request,
         options: requestOptions
-      });
+      }, {bubbles: this.bubbles});
 
       return request;
     },
 
     _handleResponse: function(request) {
-      this._setLastResponse(request.response);
-      this.fire('response', request);
+      if (request === this.lastRequest) {
+        this._setLastResponse(request.response);
+        this._setLastError(null);
+        this._setLoading(false);
+      }
+      this.fire('response', request, {bubbles: this.bubbles});
     },
 
     _handleError: function(request, error) {
@@ -414,14 +469,18 @@ element.
         console.error(error);
       }
 
-      this._setLastError({
-        request: request,
-        error: error
-      });
+      if (request === this.lastRequest) {
+        this._setLastError({
+          request: request,
+          error: error
+        });
+        this._setLastResponse(null);
+        this._setLoading(false);
+      }
       this.fire('error', {
         request: request,
         error: error
-      });
+      }, {bubbles: this.bubbles});
     },
 
     _discardRequest: function(request) {
@@ -430,15 +489,11 @@ element.
       if (requestIndex > -1) {
         this.activeRequests.splice(requestIndex, 1);
       }
-
-      if (this.activeRequests.length === 0) {
-        this._setLoading(false);
-      }
     },
 
     _requestOptionsChanged: function() {
       this.debounce('generate-request', function() {
-        if (!this.url && this.url !== '') {
+        if (this.url == null) {
           return;
         }
 
