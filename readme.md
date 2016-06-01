@@ -8,14 +8,14 @@ More on the [Chrome DevTools Debugging Protocol](https://developer.chrome.com/de
 
 Dependencies:
 
-    gem install jekyll
+    bundle install
     npm install -g bower
 
     bower install
 
 Building:
 
-    jekyll serve # compiles site to _site/ and watches for file changes
+    bundle exec jekyll serve # compiles site to _site/ and watches for file changes
 
 Updating protocol:
 
