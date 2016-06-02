@@ -25,13 +25,6 @@ paper-material {
   background: white;
 }
 
-paper-menu {
-  -ms-flex-grow: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  overflow: scroll;
-}
-
 paper-menu a {
   text-decoration: none;
   display: -ms-flexbox;
