@@ -6,6 +6,9 @@
         <paper-item>{{ version.title }}</paper-item>
       </a>
       {% endfor %}
+      <a href="{{ site.baseurl }}/" data-url="{{ page.url }}" class="homelink">
+        <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
+      </a>
     </paper-listbox>
   </paper-dropdown-menu>
 </paper-toolbar>
