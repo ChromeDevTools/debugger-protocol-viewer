@@ -18,6 +18,7 @@
                     "id": "RemoteObject",
                     "type": "object",
                     "description": "Mirror object referencing original JavaScript object.",
+                    "exported": true,
                     "properties": [
                         {
                             "name": "type",
@@ -424,7 +425,8 @@
                 {
                     "id": "ExceptionDetails",
                     "type": "object",
-                    "description": "Detailed information on exception (or error) that was thrown during script compilation or execution.",
+                    "hidden": true,
+                    "description": "Detailed information about exception (or error) that was thrown during script compilation or execution.",
                     "properties": [
                         {
                             "name": "text",
@@ -432,36 +434,39 @@
                             "description": "Exception text."
                         },
                         {
+                            "name": "scriptId",
+                            "$ref": "ScriptId",
+                            "description": "Script ID of the exception location."
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer",
+                            "description": "Line number of the exception location (0-based)."
+                        },
+                        {
+                            "name": "columnNumber",
+                            "type": "integer",
+                            "description": "Column number of the exception location (0-based)."
+                        },
+                        {
                             "name": "url",
                             "type": "string",
                             "optional": true,
-                            "description": "URL of the message origin."
+                            "description": "URL of the exception location, to be used when the script was not reported."
                         },
                         {
-                            "name": "scriptId",
-                            "type": "string",
-                            "optional": true,
-                            "description": "Script ID of the message origin."
-                        },
-                        {
-                            "name": "line",
-                            "type": "integer",
-                            "optional": true,
-                            "description": "Line number in the resource that generated this message."
-                        },
-                        {
-                            "name": "column",
-                            "type": "integer",
-                            "optional": true,
-                            "description": "Column number in the resource that generated this message."
-                        },
-                        {
-                            "name": "stack",
+                            "name": "stackTrace",
                             "$ref": "StackTrace",
                             "optional": true,
-                            "description": "JavaScript stack trace for assertions and error messages."
+                            "description": "JavaScript stack trace if available."
                         }
                     ]
+                },
+                {
+                    "id": "Timestamp",
+                    "type": "number",
+                    "description": "Number of milliseconds since epoch.",
+                    "hidden": true
                 },
                 {
                     "id": "CallFrame",
@@ -486,12 +491,12 @@
                         {
                             "name": "lineNumber",
                             "type": "integer",
-                            "description": "JavaScript script line number."
+                            "description": "JavaScript script line number (0-based)."
                         },
                         {
                             "name": "columnNumber",
                             "type": "integer",
-                            "description": "JavaScript script column number."
+                            "description": "JavaScript script column number (0-based)."
                         }
                     ]
                 },
@@ -499,6 +504,7 @@
                     "id": "StackTrace",
                     "type": "object",
                     "description": "Call frames for assertions or error messages.",
+                    "exported": true,
                     "properties": [
                         {
                             "name": "description",
@@ -763,6 +769,11 @@
                     "description": "Disables reporting of execution contexts creation."
                 },
                 {
+                    "name": "discardConsoleEntries",
+                    "hidden": true,
+                    "description": "Discards collected exceptions and console API calls."
+                },
+                {
                     "name": "setCustomObjectFormatterEnabled",
                     "parameters": [
                         {
@@ -890,6 +901,110 @@
                     "description": "Issued when all executionContexts were cleared in browser"
                 },
                 {
+                    "name": "exceptionThrown",
+                    "description": "Issued when exception was thrown and unhandled.",
+                    "parameters": [
+                        {
+                            "name": "exceptionId",
+                            "type": "integer",
+                            "description": "Exception id."
+                        },
+                        {
+                            "name": "timestamp",
+                            "$ref": "Timestamp",
+                            "description": "Timestamp of the exception."
+                        },
+                        {
+                            "name": "details",
+                            "$ref": "ExceptionDetails"
+                        },
+                        {
+                            "name": "exception",
+                            "$ref": "RemoteObject",
+                            "optional": true,
+                            "description": "Exception object."
+                        },
+                        {
+                            "name": "executionContextId",
+                            "$ref": "ExecutionContextId",
+                            "optional": true,
+                            "description": "Identifier of the context where exception happened."
+                        }
+                    ],
+                    "hidden": true
+                },
+                {
+                    "name": "exceptionRevoked",
+                    "description": "Issued when unhandled exception was revoked.",
+                    "parameters": [
+                        {
+                            "name": "message",
+                            "type": "string",
+                            "description": "Message describing why exception was revoked."
+                        },
+                        {
+                            "name": "exceptionId",
+                            "type": "integer",
+                            "description": "The id of revoked exception, as reported in <code>exceptionUnhandled</code>."
+                        }
+                    ],
+                    "hidden": true
+                },
+                {
+                    "name": "consoleAPICalled",
+                    "description": "Issued when console API was called.",
+                    "parameters": [
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "enum": [
+                                "log",
+                                "debug",
+                                "info",
+                                "error",
+                                "warning",
+                                "dir",
+                                "dirxml",
+                                "table",
+                                "trace",
+                                "clear",
+                                "startGroup",
+                                "startGroupCollapsed",
+                                "endGroup",
+                                "assert",
+                                "profile",
+                                "profileEnd"
+                            ],
+                            "description": "Type of the call."
+                        },
+                        {
+                            "name": "args",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RemoteObject"
+                            },
+                            "description": "Call arguments."
+                        },
+                        {
+                            "name": "executionContextId",
+                            "$ref": "ExecutionContextId",
+                            "description": "Identifier of the context where the call was made."
+                        },
+                        {
+                            "name": "timestamp",
+                            "$ref": "Timestamp",
+                            "description": "Call timestamp."
+                        },
+                        {
+                            "name": "stackTrace",
+                            "$ref": "StackTrace",
+                            "optional": true,
+                            "description": "Stack trace captured when the call was made."
+                        }
+                    ],
+                    "hidden": true
+                },
+                {
                     "name": "inspectRequested",
                     "parameters": [
                         {
@@ -960,39 +1075,6 @@
                         }
                     ],
                     "description": "Location in the source code."
-                },
-                {
-                    "id": "FunctionDetails",
-                    "hidden": true,
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "location",
-                            "$ref": "Location",
-                            "optional": true,
-                            "description": "Location of the function, none for native functions."
-                        },
-                        {
-                            "name": "functionName",
-                            "type": "string",
-                            "description": "Name of the function."
-                        },
-                        {
-                            "name": "isGenerator",
-                            "type": "boolean",
-                            "description": "Whether this is a generator function."
-                        },
-                        {
-                            "name": "scopeChain",
-                            "type": "array",
-                            "optional": true,
-                            "items": {
-                                "$ref": "Scope"
-                            },
-                            "description": "Scope chain for this closure."
-                        }
-                    ],
-                    "description": "Information about the function."
                 },
                 {
                     "id": "CallFrame",
@@ -1090,32 +1172,10 @@
                     "description": "Scope description."
                 },
                 {
-                    "id": "SetScriptSourceError",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "message",
-                            "type": "string",
-                            "description": "Compiler error message"
-                        },
-                        {
-                            "name": "lineNumber",
-                            "type": "integer",
-                            "description": "Compile error line number (1-based)"
-                        },
-                        {
-                            "name": "columnNumber",
-                            "type": "integer",
-                            "description": "Compile error column number (1-based)"
-                        }
-                    ],
-                    "description": "Error data for setScriptSource command. Contains uncompilable script source error.",
-                    "hidden": true
-                },
-                {
                     "id": "SearchMatch",
                     "type": "object",
                     "description": "Search match for resource.",
+                    "exported": true,
                     "properties": [
                         {
                             "name": "lineNumber",
@@ -1387,7 +1447,7 @@
                         {
                             "name": "compileError",
                             "optional": true,
-                            "$ref": "SetScriptSourceError",
+                            "$ref": "Runtime.ExceptionDetails",
                             "description": "Error data if any."
                         }
                     ],
@@ -1438,25 +1498,6 @@
                         }
                     ],
                     "description": "Returns source for the script with given id."
-                },
-                {
-                    "name": "getFunctionDetails",
-                    "hidden": true,
-                    "parameters": [
-                        {
-                            "name": "functionId",
-                            "$ref": "Runtime.RemoteObjectId",
-                            "description": "Id of the function to get details for."
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "details",
-                            "$ref": "FunctionDetails",
-                            "description": "Information about the function."
-                        }
-                    ],
-                    "description": "Returns detailed information on given function."
                 },
                 {
                     "name": "setPauseOnExceptions",
@@ -1844,12 +1885,12 @@
                                 "EventListener",
                                 "exception",
                                 "assert",
-                                "CSPViolation",
                                 "debugCommand",
                                 "promiseRejection",
                                 "other"
                             ],
-                            "description": "Pause reason."
+                            "description": "Pause reason.",
+                            "exported": true
                         },
                         {
                             "name": "data",
@@ -1885,17 +1926,12 @@
         },
         {
             "domain": "Console",
-            "description": "Console domain defines methods and events for interaction with the JavaScript console. Console collects messages created by means of the <a href='http://getfirebug.com/wiki/index.php/Console_API'>JavaScript Console API</a>. One needs to enable this domain using <code>enable</code> command in order to start receiving the console messages. Browser collects messages issued while console domain is not enabled as well and reports them using <code>messageAdded</code> notification upon enabling.",
+            "description": "This domain is deprecated - use Runtime or Log instead.",
             "dependencies": [
                 "Runtime"
             ],
+            "deprecated": true,
             "types": [
-                {
-                    "id": "Timestamp",
-                    "type": "number",
-                    "description": "Number of seconds since epoch.",
-                    "hidden": true
-                },
                 {
                     "id": "ConsoleMessage",
                     "type": "object",
@@ -1914,7 +1950,8 @@
                                 "rendering",
                                 "security",
                                 "other",
-                                "deprecation"
+                                "deprecation",
+                                "worker"
                             ],
                             "description": "Message source."
                         },
@@ -1926,8 +1963,7 @@
                                 "warning",
                                 "error",
                                 "debug",
-                                "info",
-                                "revokedError"
+                                "info"
                             ],
                             "description": "Message severity."
                         },
@@ -1935,32 +1971,6 @@
                             "name": "text",
                             "type": "string",
                             "description": "Message text."
-                        },
-                        {
-                            "name": "type",
-                            "type": "string",
-                            "optional": true,
-                            "enum": [
-                                "log",
-                                "dir",
-                                "dirxml",
-                                "table",
-                                "trace",
-                                "clear",
-                                "startGroup",
-                                "startGroupCollapsed",
-                                "endGroup",
-                                "assert",
-                                "profile",
-                                "profileEnd"
-                            ],
-                            "description": "Console message type."
-                        },
-                        {
-                            "name": "scriptId",
-                            "type": "string",
-                            "optional": true,
-                            "description": "Script ID of the message origin."
                         },
                         {
                             "name": "url",
@@ -1972,67 +1982,13 @@
                             "name": "line",
                             "type": "integer",
                             "optional": true,
-                            "description": "Line number in the resource that generated this message."
+                            "description": "Line number in the resource that generated this message (1-based)."
                         },
                         {
                             "name": "column",
                             "type": "integer",
                             "optional": true,
-                            "description": "Column number in the resource that generated this message."
-                        },
-                        {
-                            "name": "repeatCount",
-                            "type": "integer",
-                            "optional": true,
-                            "description": "Repeat count for repeated messages."
-                        },
-                        {
-                            "name": "parameters",
-                            "type": "array",
-                            "items": {
-                                "$ref": "Runtime.RemoteObject"
-                            },
-                            "optional": true,
-                            "description": "Message parameters in case of the formatted message."
-                        },
-                        {
-                            "name": "stack",
-                            "$ref": "Runtime.StackTrace",
-                            "optional": true,
-                            "description": "JavaScript stack trace for assertions and error messages."
-                        },
-                        {
-                            "name": "networkRequestId",
-                            "type": "string",
-                            "optional": true,
-                            "description": "Identifier of the network request associated with this message."
-                        },
-                        {
-                            "name": "timestamp",
-                            "$ref": "Timestamp",
-                            "description": "Timestamp, when this message was fired.",
-                            "hidden": true
-                        },
-                        {
-                            "name": "executionContextId",
-                            "$ref": "Runtime.ExecutionContextId",
-                            "optional": true,
-                            "description": "Identifier of the context where this message was created",
-                            "hidden": true
-                        },
-                        {
-                            "name": "messageId",
-                            "type": "integer",
-                            "hidden": true,
-                            "optional": true,
-                            "description": "Message id."
-                        },
-                        {
-                            "name": "relatedMessageId",
-                            "type": "integer",
-                            "hidden": true,
-                            "optional": true,
-                            "description": "Related message id."
+                            "description": "Column number in the resource that generated this message (1-based)."
                         }
                     ]
                 }
@@ -2048,7 +2004,7 @@
                 },
                 {
                     "name": "clearMessages",
-                    "description": "Clears console messages collected in the browser."
+                    "description": "Does nothing."
                 }
             ],
             "events": [
@@ -2073,17 +2029,18 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "Runtime.Timestamp",
                             "description": "Timestamp of most recent message in batch.",
                             "hidden": true
                         }
                     ],
-                    "description": "Is not issued. Will be gone in the future versions of the protocol.",
+                    "description": "Not issued.",
                     "deprecated": true
                 },
                 {
                     "name": "messagesCleared",
-                    "description": "Issued when console is cleared. This happens either upon <code>clearMessages</code> command or after page navigation."
+                    "description": "Not issued.",
+                    "deprecated": true
                 }
             ]
         },
@@ -2101,39 +2058,14 @@
                     "description": "CPU Profile node. Holds callsite information, execution statistics and child nodes.",
                     "properties": [
                         {
-                            "name": "functionName",
-                            "type": "string",
-                            "description": "Function name."
-                        },
-                        {
-                            "name": "scriptId",
-                            "$ref": "Runtime.ScriptId",
-                            "description": "Script identifier."
-                        },
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "description": "URL."
-                        },
-                        {
-                            "name": "lineNumber",
-                            "type": "integer",
-                            "description": "1-based line number of the function start position."
-                        },
-                        {
-                            "name": "columnNumber",
-                            "type": "integer",
-                            "description": "1-based column number of the function start position."
+                            "name": "callFrame",
+                            "$ref": "Runtime.CallFrame",
+                            "description": "Function location."
                         },
                         {
                             "name": "hitCount",
                             "type": "integer",
                             "description": "Number of samples where this node was on top of the call stack."
-                        },
-                        {
-                            "name": "callUID",
-                            "type": "number",
-                            "description": "Call UID."
                         },
                         {
                             "name": "children",
@@ -2318,29 +2250,9 @@
                     "description": "Sampling Heap Profile node. Holds callsite information, allocation statistics and child nodes.",
                     "properties": [
                         {
-                            "name": "functionName",
-                            "type": "string",
-                            "description": "Function name."
-                        },
-                        {
-                            "name": "scriptId",
-                            "$ref": "Runtime.ScriptId",
-                            "description": "Script identifier."
-                        },
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "description": "URL."
-                        },
-                        {
-                            "name": "lineNumber",
-                            "type": "integer",
-                            "description": "1-based line number of the function start position."
-                        },
-                        {
-                            "name": "columnNumber",
-                            "type": "integer",
-                            "description": "1-based column number of the function start position."
+                            "name": "callFrame",
+                            "$ref": "Runtime.CallFrame",
+                            "description": "Function location."
                         },
                         {
                             "name": "selfSize",
@@ -3304,7 +3216,7 @@
                             "name": "lineNumber",
                             "type": "number",
                             "optional": true,
-                            "description": "Initiator line number, set for Parser type only."
+                            "description": "Initiator line number, set for Parser type only (0-based)."
                         }
                     ]
                 },
@@ -4238,6 +4150,9 @@
         },
         {
             "domain": "IndexedDB",
+            "dependencies": [
+                "Runtime"
+            ],
             "hidden": true,
             "types": [
                 {
@@ -4403,18 +4318,18 @@
                     "properties": [
                         {
                             "name": "key",
-                            "type": "string",
-                            "description": "JSON-stringified key object."
+                            "$ref": "Runtime.RemoteObject",
+                            "description": "Key object."
                         },
                         {
                             "name": "primaryKey",
-                            "type": "string",
-                            "description": "JSON-stringified primary key object."
+                            "$ref": "Runtime.RemoteObject",
+                            "description": "Primary key object."
                         },
                         {
                             "name": "value",
-                            "type": "string",
-                            "description": "JSON-stringified value object."
+                            "$ref": "Runtime.RemoteObject",
+                            "description": "Value object."
                         }
                     ]
                 },
@@ -7693,9 +7608,19 @@
                             "description": "<code>EventListener</code>'s passive flag."
                         },
                         {
-                            "name": "location",
-                            "$ref": "Debugger.Location",
-                            "description": "Handler code location."
+                            "name": "scriptId",
+                            "$ref": "Runtime.ScriptId",
+                            "description": "Script id of the handler code."
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer",
+                            "description": "Line number in the script (0-based)."
+                        },
+                        {
+                            "name": "columnNumber",
+                            "type": "integer",
+                            "description": "Column number in the script (0-based)."
                         },
                         {
                             "name": "handler",
@@ -10273,6 +10198,121 @@
             ]
         },
         {
+            "domain": "Log",
+            "description": "Provides access to log entries.",
+            "dependencies": [
+                "Runtime",
+                "Network",
+                "Worker"
+            ],
+            "hidden": true,
+            "types": [
+                {
+                    "id": "LogEntry",
+                    "type": "object",
+                    "description": "Log entry.",
+                    "properties": [
+                        {
+                            "name": "source",
+                            "type": "string",
+                            "enum": [
+                                "xml",
+                                "javascript",
+                                "network",
+                                "storage",
+                                "appcache",
+                                "rendering",
+                                "security",
+                                "deprecation",
+                                "worker",
+                                "other"
+                            ],
+                            "description": "Log entry source."
+                        },
+                        {
+                            "name": "level",
+                            "type": "string",
+                            "enum": [
+                                "log",
+                                "warning",
+                                "error",
+                                "debug",
+                                "info"
+                            ],
+                            "description": "Log entry severity."
+                        },
+                        {
+                            "name": "text",
+                            "type": "string",
+                            "description": "Logged text."
+                        },
+                        {
+                            "name": "timestamp",
+                            "$ref": "Runtime.Timestamp",
+                            "description": "Timestamp when this entry was added."
+                        },
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "optional": true,
+                            "description": "URL of the resource if known."
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Line number in the resource."
+                        },
+                        {
+                            "name": "stackTrace",
+                            "$ref": "Runtime.StackTrace",
+                            "optional": true,
+                            "description": "JavaScript stack trace."
+                        },
+                        {
+                            "name": "networkRequestId",
+                            "$ref": "Network.RequestId",
+                            "optional": true,
+                            "description": "Identifier of the network request associated with this entry."
+                        },
+                        {
+                            "name": "workerId",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Identifier of the worker associated with this entry."
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Enables log domain, sends the entries collected so far to the client by means of the <code>entryAdded</code> notification."
+                },
+                {
+                    "name": "disable",
+                    "description": "Disables log domain, prevents further log entries from being reported to the client."
+                },
+                {
+                    "name": "clear",
+                    "description": "Clears the log."
+                }
+            ],
+            "events": [
+                {
+                    "name": "entryAdded",
+                    "parameters": [
+                        {
+                            "name": "entry",
+                            "$ref": "LogEntry",
+                            "description": "The entry."
+                        }
+                    ],
+                    "description": "Issued when new message was logged."
+                }
+            ]
+        },
+        {
             "domain": "Browser",
             "description": "The Browser domain allows listing, creating, activating and attaching to the targets.",
             "hidden": true,
@@ -10347,7 +10387,7 @@
                     "description": "Creates a new page.",
                     "parameters": [
                         {
-                            "name": "initialUrl",
+                            "name": "url",
                             "type": "string",
                             "description": "The initial URL the page will be navigated to."
                         },
