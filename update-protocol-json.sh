@@ -8,7 +8,7 @@ local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 local_tot_protocol_path="_data/tot/protocol.json"
 local_v8_protocol_path="_data/v8/protocol.json"
 
-if ! [ -s $standalone_path ]; then
+if ! [ -s $browser_protocol_path ]; then
   echo "error: couldn't find local checkout" >&2; exit 1
 fi
 # copy the protocol.json over
@@ -20,7 +20,7 @@ node create-domain-files.js
 node create-search-index.js
 
 # get the latest change
-cd $(dirname "$repo_path")
+cd $(dirname "$browser_protocol_path")
 commit_line=$(git log --no-color HEAD~1..HEAD  | grep -E -o "^commit.*")
 date_line=$(git log --no-color HEAD~1..HEAD  | grep -E -o "^Date.*")
 commit_hash=$(echo $commit_line | grep -E -o "[0-9a-f]{20,80}")
