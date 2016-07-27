@@ -1,22 +1,19 @@
 #!/bin/bash
 set -x
 
-standalone_path="$HOME/code/devtools-standalone/protocol.json"
-chromium_path="$HOME/chromium/src/third_party/WebKit/Source/devtools/protocol.json"
-repo_path="dunno"
+browser_protocol_path="$HOME/chromium/src/third_party/WebKit/Source/core/inspector/browser_protocol.json"
+js_protocol_path="$HOME/chromium/src/third_party/WebKit/Source/platform/v8_inspector/js_protocol.json"
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-local_protocol_path="_data/tot/protocol.json"
+local_tot_protocol_path="_data/tot/protocol.json"
+local_v8_protocol_path="_data/v8/protocol.json"
 
-if [ -s $standalone_path ]; then
-  repo_path=$standalone_path
-elif [ -s $chromium_path ]; then
-  repo_path=$chromium_path
-else
+if ! [ -s $standalone_path ]; then
   echo "error: couldn't find local checkout" >&2; exit 1
 fi
 # copy the protocol.json over
-cp -r "$repo_path" "$local_protocol_path"
+cp $js_protocol_path $local_v8_protocol_path
+node merge-protocol-files.js $browser_protocol_path $js_protocol_path > $local_tot_protocol_path
 
 cd $local_script_path
 node create-domain-files.js
