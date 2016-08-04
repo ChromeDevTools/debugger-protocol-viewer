@@ -15,8 +15,8 @@ const protocol2Text = fs.readFileSync(args[1]);
 const protocol2 = JSON.parse(protocol2Text);
 
 var mergedDomains = [];
-protocol1.domains.forEach(domain => mergedDomains.push(domain))
-protocol2.domains.forEach(domain => mergedDomains.push(domain))
+mergedDomains.push(...protocol1.domains);
+mergedDomains.push(...protocol2.domains);
 
 const protocolMerged = {
   domains: mergedDomains
