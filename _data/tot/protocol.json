@@ -533,6 +533,7 @@
             "commands": [
                 {
                     "name": "evaluate",
+                    "async": true,
                     "parameters": [
                         {
                             "name": "expression",
@@ -563,7 +564,7 @@
                             "name": "contextId",
                             "$ref": "ExecutionContextId",
                             "optional": true,
-                            "description": "Specifies in which isolated context to perform evaluation. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page."
+                            "description": "Specifies in which isolated context to perform evaluation. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         },
                         {
                             "name": "returnByValue",
@@ -584,6 +585,13 @@
                             "optional": true,
                             "hidden": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
+                        },
+                        {
+                            "name": "awaitPromise",
+                            "type": "boolean",
+                            "optional": true,
+                            "hidden": true,
+                            "description": "Whether execution should wait for promise to be resolved. If the result of evaluation is not a Promise, it's considered to be an error."
                         }
                     ],
                     "returns": [
@@ -609,7 +617,52 @@
                     "description": "Evaluates expression on global object."
                 },
                 {
+                    "name": "awaitPromise",
+                    "hidden": true,
+                    "async": true,
+                    "parameters": [
+                        {
+                            "name": "promiseObjectId",
+                            "$ref": "RemoteObjectId",
+                            "description": "Identifier of the promise."
+                        },
+                        {
+                            "name": "returnByValue",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether the result is expected to be a JSON object that should be sent by value."
+                        },
+                        {
+                            "name": "generatePreview",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether preview should be generated for the result."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "result",
+                            "$ref": "RemoteObject",
+                            "description": "Promise result. Will contain rejected value if promise was rejected."
+                        },
+                        {
+                            "name": "wasThrown",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True if the promise was rejected."
+                        },
+                        {
+                            "name": "exceptionDetails",
+                            "$ref": "ExceptionDetails",
+                            "optional": true,
+                            "description": "Exception details if stack strace is available."
+                        }
+                    ],
+                    "description": "Add handler to promise with given promise object id."
+                },
+                {
                     "name": "callFunctionOn",
+                    "async": true,
                     "parameters": [
                         {
                             "name": "objectId",
@@ -657,6 +710,13 @@
                             "optional": true,
                             "hidden": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
+                        },
+                        {
+                            "name": "awaitPromise",
+                            "type": "boolean",
+                            "optional": true,
+                            "hidden": true,
+                            "description": "Whether execution should wait for promise to be resolved. If the result of evaluation is not a Promise, it's considered to be an error."
                         }
                     ],
                     "returns": [
@@ -670,6 +730,13 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "True if the result was thrown during the evaluation."
+                        },
+                        {
+                            "name": "exceptionDetails",
+                            "$ref": "ExceptionDetails",
+                            "optional": true,
+                            "hidden": true,
+                            "description": "Exception details."
                         }
                     ],
                     "description": "Calls function with given declaration on the given object. Object group of the result is inherited from the target object."
@@ -805,7 +872,8 @@
                         {
                             "name": "executionContextId",
                             "$ref": "ExecutionContextId",
-                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts."
+                            "optional": true,
+                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         }
                     ],
                     "returns": [
@@ -827,6 +895,7 @@
                 {
                     "name": "runScript",
                     "hidden": true,
+                    "async": true,
                     "parameters": [
                         {
                             "name": "scriptId",
@@ -836,7 +905,8 @@
                         {
                             "name": "executionContextId",
                             "$ref": "ExecutionContextId",
-                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts."
+                            "optional": true,
+                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         },
                         {
                             "name": "objectGroup",
@@ -855,6 +925,24 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Determines whether Command Line API should be available during the evaluation."
+                        },
+                        {
+                            "name": "returnByValue",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether the result is expected to be a JSON object which should be sent by value."
+                        },
+                        {
+                            "name": "generatePreview",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether preview should be generated for the result."
+                        },
+                        {
+                            "name": "awaitPromise",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether execution should wait for promise to be resolved. If the result of evaluation is not a Promise, it's considered to be an error."
                         }
                     ],
                     "returns": [
@@ -862,6 +950,12 @@
                             "name": "result",
                             "$ref": "RemoteObject",
                             "description": "Run result."
+                        },
+                        {
+                            "name": "wasThrown",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True if the result was thrown during the execution."
                         },
                         {
                             "name": "exceptionDetails",
@@ -7453,6 +7547,10 @@
                 {
                     "name": "mediaQueryResultChanged",
                     "description": "Fires whenever a MediaQuery result changes (for example, after a browser window has been resized.) The current implementation considers only viewport-dependent media features."
+                },
+                {
+                    "name": "fontsUpdated",
+                    "description": "Fires whenever a web font gets loaded."
                 },
                 {
                     "name": "styleSheetChanged",
