@@ -2,7 +2,7 @@
     "domains": [
         {
             "domain": "Inspector",
-            "hidden": true,
+            "experimental": true,
             "types": [],
             "commands": [
                 {
@@ -46,7 +46,7 @@
         },
         {
             "domain": "Memory",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "PressureLevel",
@@ -216,7 +216,7 @@
                             "description": "True if the resource was canceled during loading."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "FrameResourceTree",
@@ -246,13 +246,13 @@
                             "description": "Information about frame resources."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "ScriptIdentifier",
                     "type": "string",
                     "description": "Unique script identifier.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "NavigationEntry",
@@ -275,7 +275,7 @@
                             "description": "Title of the navigation history entry."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "ScreencastFrameMetadata",
@@ -285,48 +285,48 @@
                         {
                             "name": "offsetTop",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Top offset in DIP."
                         },
                         {
                             "name": "pageScaleFactor",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Page scale factor."
                         },
                         {
                             "name": "deviceWidth",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Device screen width in DIP."
                         },
                         {
                             "name": "deviceHeight",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Device screen height in DIP."
                         },
                         {
                             "name": "scrollOffsetX",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Position of horizontal scroll in CSS pixels."
                         },
                         {
                             "name": "scrollOffsetY",
                             "type": "number",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Position of vertical scroll in CSS pixels."
                         },
                         {
                             "name": "timestamp",
                             "type": "number",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Frame swap timestamp."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "DialogType",
@@ -338,7 +338,7 @@
                         "prompt",
                         "beforeunload"
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "AppManifestError",
@@ -366,7 +366,7 @@
                             "description": "Error column."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "NavigationResponse",
@@ -377,7 +377,7 @@
                         "Cancel",
                         "CancelAndIgnore"
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -412,7 +412,7 @@
                             "description": "Identifier of the added script."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "removeScriptToEvaluateOnLoad",
@@ -422,7 +422,7 @@
                             "$ref": "ScriptIdentifier"
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setAutoAttachToCreatedPages",
@@ -434,7 +434,7 @@
                         }
                     ],
                     "description": "Controls whether browser will open a new inspector window for connected pages.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "reload",
@@ -471,7 +471,7 @@
                         {
                             "name": "frameId",
                             "$ref": "FrameId",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Frame id that will be navigated."
                         }
                     ],
@@ -499,7 +499,7 @@
                         }
                     ],
                     "description": "Returns navigation history for the current page.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -514,7 +514,7 @@
                         }
                     ],
                     "description": "Navigates current page to the given history entry.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -536,7 +536,7 @@
                         "browser"
                     ],
                     "async": true,
-                    "hidden": true,
+                    "experimental": true,
                     "redirect": "Network"
                 },
                 {
@@ -558,7 +558,7 @@
                         "browser"
                     ],
                     "async": true,
-                    "hidden": true,
+                    "experimental": true,
                     "redirect": "Network"
                 },
                 {
@@ -571,7 +571,7 @@
                             "description": "Present frame / resource tree structure."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getResourceContent",
@@ -601,7 +601,7 @@
                             "description": "True, if content was served as base64."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "searchInResource",
@@ -646,7 +646,7 @@
                             "description": "List of search matches."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setDocumentContent",
@@ -663,7 +663,7 @@
                             "description": "HTML content to set."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setDeviceMetricsOverride",
@@ -747,7 +747,7 @@
                         "browser"
                     ],
                     "redirect": "Emulation",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "clearDeviceMetricsOverride",
@@ -756,7 +756,7 @@
                         "browser"
                     ],
                     "redirect": "Emulation",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setGeolocationOverride",
@@ -815,13 +815,13 @@
                         }
                     ],
                     "redirect": "DeviceOrientation",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "clearDeviceOrientationOverride",
                     "description": "Clears the overridden Device Orientation.",
                     "redirect": "DeviceOrientation",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setTouchEmulationEnabled",
@@ -843,7 +843,7 @@
                         }
                     ],
                     "description": "Toggles mouse event-based touch event emulation.",
-                    "hidden": true,
+                    "experimental": true,
                     "redirect": "Emulation",
                     "handlers": [
                         "browser",
@@ -861,7 +861,7 @@
                             "description": "Base64-encoded image data (PNG)."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -905,7 +905,7 @@
                             "description": "Send every n-th frame."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser",
                         "renderer"
@@ -914,7 +914,7 @@
                 {
                     "name": "stopScreencast",
                     "description": "Stops sending each frame in the <code>screencastFrame</code>.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser",
                         "renderer"
@@ -930,7 +930,7 @@
                             "description": "Frame number."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -951,7 +951,7 @@
                             "description": "The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -966,7 +966,7 @@
                         }
                     ],
                     "description": "Shows / hides color picker",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -987,12 +987,12 @@
                             "description": "Overlay message to display."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Configures overlay."
                 },
                 {
                     "name": "getAppManifest",
-                    "hidden": true,
+                    "experimental": true,
                     "returns": [
                         {
                             "name": "url",
@@ -1019,14 +1019,14 @@
                 },
                 {
                     "name": "requestAppBanner",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
                 },
                 {
                     "name": "setBlockedEventsWarningThreshold",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "threshold",
@@ -1044,7 +1044,7 @@
                         }
                     ],
                     "description": "Toggles navigation throttling which allows programatic control over navigation and redirect response.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1062,7 +1062,7 @@
                         }
                     ],
                     "description": "Should be sent in response to a navigationRequested or a redirectRequested event, telling the browser how to handle the navigation.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1135,7 +1135,7 @@
                             "description": "Id of the frame that has started loading."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "frameStoppedLoading",
@@ -1147,7 +1147,7 @@
                             "description": "Id of the frame that has stopped loading."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "frameScheduledNavigation",
@@ -1164,7 +1164,7 @@
                             "description": "Delay (in seconds) until the navigation is scheduled to begin. The navigation is not guaranteed to start."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "frameClearedScheduledNavigation",
@@ -1176,11 +1176,11 @@
                             "description": "Id of the frame that has cleared its scheduled navigation."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "frameResized",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "javascriptDialogOpening",
@@ -1197,7 +1197,7 @@
                             "description": "Dialog type."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "javascriptDialogClosed",
@@ -1209,7 +1209,7 @@
                             "description": "Whether dialog was confirmed."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "screencastFrame",
@@ -1231,7 +1231,7 @@
                             "description": "Frame number."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1246,7 +1246,7 @@
                             "description": "True if the page is visible."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1261,7 +1261,7 @@
                             "description": "RGBA of the picked color."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1269,7 +1269,7 @@
                 {
                     "name": "interstitialShown",
                     "description": "Fired when interstitial page was shown",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1277,7 +1277,7 @@
                 {
                     "name": "interstitialHidden",
                     "description": "Fired when interstitial page was hidden",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -1315,7 +1315,7 @@
         {
             "domain": "Rendering",
             "description": "This domain allows to control rendering of the page.",
-            "hidden": true,
+            "experimental": true,
             "commands": [
                 {
                     "name": "setShowPaintRects",
@@ -1377,7 +1377,7 @@
         {
             "domain": "Emulation",
             "description": "This domain emulates different environments for the page.",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "ScreenOrientation",
@@ -1639,7 +1639,7 @@
                             "description": "If set, after this many virtual milliseconds have elapsed virtual time will be paused and a virtualTimeBudgetExpired event is sent."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "events": [
@@ -1652,7 +1652,7 @@
         {
             "domain": "Security",
             "description": "Security",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "CertificateId",
@@ -1880,13 +1880,13 @@
                             "name": "workerStart",
                             "type": "number",
                             "description": "Started running ServiceWorker.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "workerReady",
                             "type": "number",
                             "description": "Finished Starting ServiceWorker.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "sendStart",
@@ -1902,13 +1902,13 @@
                             "name": "pushStart",
                             "type": "number",
                             "description": "Time the server started pushing request.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "pushEnd",
                             "type": "number",
                             "description": "Time the server finished pushing request.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "receiveHeadersEnd",
@@ -2029,28 +2029,6 @@
                     ]
                 },
                 {
-                    "id": "CertificateValidationDetails",
-                    "type": "object",
-                    "description": "Details about the validation status of a request's certificate.",
-                    "properties": [
-                        {
-                            "name": "numUnknownScts",
-                            "type": "integer",
-                            "description": "The number of SCTs from unknown logs."
-                        },
-                        {
-                            "name": "numInvalidScts",
-                            "type": "integer",
-                            "description": "The number of invalid SCTs."
-                        },
-                        {
-                            "name": "numValidScts",
-                            "type": "integer",
-                            "description": "The number of valid SCTs."
-                        }
-                    ]
-                },
-                {
                     "id": "SignedCertificateTimestamp",
                     "type": "object",
                     "description": "Details of a signed certificate timestamp (SCT).",
@@ -2129,12 +2107,6 @@
                             "description": "Certificate ID value."
                         },
                         {
-                            "name": "certificateValidationDetails",
-                            "$ref": "CertificateValidationDetails",
-                            "optional": true,
-                            "description": "Validation details for the request's certficate."
-                        },
-                        {
                             "name": "signedCertificateTimestampList",
                             "type": "array",
                             "items": {
@@ -2156,7 +2128,7 @@
                         "subresource-filter",
                         "other"
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "Response",
@@ -2220,14 +2192,14 @@
                             "name": "remoteIPAddress",
                             "type": "string",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Remote IP address."
                         },
                         {
                             "name": "remotePort",
                             "type": "integer",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Remote port."
                         },
                         {
@@ -2277,7 +2249,7 @@
                     "id": "WebSocketRequest",
                     "type": "object",
                     "description": "WebSocket request data.",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "headers",
@@ -2290,7 +2262,7 @@
                     "id": "WebSocketResponse",
                     "type": "object",
                     "description": "WebSocket response data.",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "status",
@@ -2331,7 +2303,7 @@
                     "id": "WebSocketFrame",
                     "type": "object",
                     "description": "WebSocket frame data.",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "opcode",
@@ -2474,7 +2446,7 @@
                             "description": "Represents the cookies' 'SameSite' status: https://tools.ietf.org/html/draft-west-first-party-cookies"
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -2486,14 +2458,14 @@
                             "name": "maxTotalBufferSize",
                             "type": "integer",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Buffer size in bytes to use when preserving network payloads (XHRs, etc)."
                         },
                         {
                             "name": "maxResourceBufferSize",
                             "type": "integer",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc)."
                         }
                     ]
@@ -2558,7 +2530,7 @@
                             "description": "URL to block."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "removeBlockedURL",
@@ -2570,7 +2542,7 @@
                             "description": "URL to stop blocking."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "replayXHR",
@@ -2582,7 +2554,7 @@
                             "description": "Identifier of XHR to replay."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setMonitoringXHREnabled",
@@ -2594,7 +2566,7 @@
                         }
                     ],
                     "description": "Toggles monitoring of XMLHttpRequest. If <code>true</code>, console will receive messages upon each XHR issued.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "canClearBrowserCache",
@@ -2649,7 +2621,7 @@
                         "browser"
                     ],
                     "async": true,
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "deleteCookie",
@@ -2670,7 +2642,7 @@
                         "browser"
                     ],
                     "async": true,
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "canEmulateNetworkConditions",
@@ -2682,7 +2654,7 @@
                             "description": "True if emulation of network conditions is supported."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -2718,7 +2690,7 @@
                             "description": "Connection type if known."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser",
                         "renderer"
@@ -2744,7 +2716,7 @@
                             "description": "Bypass service worker and load from network."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Toggles ignoring of service worker for each request."
                 },
                 {
@@ -2762,7 +2734,7 @@
                         }
                     ],
                     "description": "For testing.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getCertificateDetails",
@@ -2821,7 +2793,7 @@
                             "description": "Timestamp."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "requestWillBeSent",
@@ -2836,7 +2808,7 @@
                             "name": "frameId",
                             "$ref": "Page.FrameId",
                             "description": "Frame identifier.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "loaderId",
@@ -2861,7 +2833,7 @@
                         {
                             "name": "wallTime",
                             "$ref": "Timestamp",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "UTC Timestamp."
                         },
                         {
@@ -2879,7 +2851,7 @@
                             "name": "type",
                             "$ref": "Page.ResourceType",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Type of this resource."
                         }
                     ]
@@ -2908,7 +2880,7 @@
                             "name": "frameId",
                             "$ref": "Page.FrameId",
                             "description": "Frame identifier.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "loaderId",
@@ -3014,7 +2986,7 @@
                             "$ref": "BlockedReason",
                             "optional": true,
                             "description": "The reason why loading was blocked, if any.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ]
                 },
@@ -3035,7 +3007,7 @@
                         {
                             "name": "wallTime",
                             "$ref": "Timestamp",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "UTC Timestamp."
                         },
                         {
@@ -3044,7 +3016,7 @@
                             "description": "WebSocket request data."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketHandshakeResponseReceived",
@@ -3066,7 +3038,7 @@
                             "description": "WebSocket response data."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketCreated",
@@ -3089,7 +3061,7 @@
                             "description": "Request initiator."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketClosed",
@@ -3106,7 +3078,7 @@
                             "description": "Timestamp."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketFrameReceived",
@@ -3128,7 +3100,7 @@
                             "description": "WebSocket response data."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketFrameError",
@@ -3150,7 +3122,7 @@
                             "description": "WebSocket frame error message."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "webSocketFrameSent",
@@ -3172,7 +3144,7 @@
                             "description": "WebSocket response data."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "eventSourceMessageReceived",
@@ -3204,25 +3176,25 @@
                             "description": "Message content."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ]
         },
         {
             "domain": "Database",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "DatabaseId",
                     "type": "string",
                     "description": "Unique identifier of Database object.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "Database",
                     "type": "object",
                     "description": "Database object.",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "id",
@@ -3346,7 +3318,7 @@
             "dependencies": [
                 "Runtime"
             ],
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "DatabaseWithObjectStores",
@@ -3699,7 +3671,7 @@
         },
         {
             "domain": "CacheStorage",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "CacheId",
@@ -3839,14 +3811,14 @@
         },
         {
             "domain": "DOMStorage",
-            "hidden": true,
+            "experimental": true,
             "description": "Query and modify DOM storage.",
             "types": [
                 {
                     "id": "StorageId",
                     "type": "object",
                     "description": "DOM Storage identifier.",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "securityOrigin",
@@ -3864,7 +3836,7 @@
                     "id": "Item",
                     "type": "array",
                     "description": "DOM Storage item.",
-                    "hidden": true,
+                    "experimental": true,
                     "items": {
                         "type": "string"
                     }
@@ -3993,7 +3965,7 @@
         },
         {
             "domain": "ApplicationCache",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "ApplicationCacheResource",
@@ -4179,7 +4151,7 @@
                     "id": "BackendNodeId",
                     "type": "integer",
                     "description": "Unique DOM node identifier used to reference a node that may not have been pushed to the front-end.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "BackendNode",
@@ -4200,7 +4172,7 @@
                             "$ref": "BackendNodeId"
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Backend node with a friendly name."
                 },
                 {
@@ -4299,7 +4271,7 @@
                             "type": "string",
                             "optional": true,
                             "description": "Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "publicId",
@@ -4354,7 +4326,7 @@
                             "$ref": "Page.FrameId",
                             "optional": true,
                             "description": "Frame ID for frame owner elements.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "contentDocument",
@@ -4370,14 +4342,14 @@
                                 "$ref": "Node"
                             },
                             "description": "Shadow root list for given element host.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "templateContent",
                             "$ref": "Node",
                             "optional": true,
                             "description": "Content document fragment for template elements.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "pseudoElements",
@@ -4387,7 +4359,7 @@
                             },
                             "optional": true,
                             "description": "Pseudo elements associated with this node.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "importedDocument",
@@ -4403,7 +4375,7 @@
                             },
                             "optional": true,
                             "description": "Distributed nodes for given insertion point.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
@@ -4445,12 +4417,12 @@
                     "minItems": 8,
                     "maxItems": 8,
                     "description": "An array of quad vertices, x immediately followed by y for each point, points clock-wise.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "BoxModel",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "content",
@@ -4494,7 +4466,7 @@
                 {
                     "id": "ShapeOutsideInfo",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "bounds",
@@ -4523,7 +4495,7 @@
                 {
                     "id": "Rect",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "x",
@@ -4574,7 +4546,7 @@
                             "name": "displayAsMaterial",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "contentColor",
@@ -4604,21 +4576,21 @@
                             "name": "eventTargetColor",
                             "$ref": "RGBA",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "The event target element highlight fill color (default: transparent)."
                         },
                         {
                             "name": "shapeColor",
                             "$ref": "RGBA",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "The shape outside fill color (default: transparent)."
                         },
                         {
                             "name": "shapeMarginColor",
                             "$ref": "RGBA",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "The shape margin fill color (default: transparent)."
                         },
                         {
@@ -4633,7 +4605,7 @@
                 {
                     "id": "InspectMode",
                     "type": "string",
-                    "hidden": true,
+                    "experimental": true,
                     "enum": [
                         "searchForNode",
                         "searchForUAShadowDOM",
@@ -4675,7 +4647,7 @@
                             "type": "integer",
                             "optional": true,
                             "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Requests that children of the node with given id are returned to the caller in form of <code>setChildNodes</code> events where not only immediate children are retrieved, but all children down to the specified depth."
@@ -4885,7 +4857,7 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "True to search in user agent shadow DOM.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "returns": [
@@ -4901,7 +4873,7 @@
                         }
                     ],
                     "description": "Searches for a given string in the DOM tree. Use <code>getSearchResults</code> to access search results or <code>cancelSearch</code> to end this search session.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getSearchResults",
@@ -4933,7 +4905,7 @@
                         }
                     ],
                     "description": "Returns search results from given <code>fromIndex</code> to given <code>toIndex</code> from the sarch with the given identifier.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "discardSearchResults",
@@ -4945,7 +4917,7 @@
                         }
                     ],
                     "description": "Discards search results from the session with the given id. <code>getSearchResults</code> should no longer be called for that search.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "requestNode",
@@ -4967,7 +4939,7 @@
                 },
                 {
                     "name": "setInspectMode",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "mode",
@@ -5043,7 +5015,7 @@
                         }
                     ],
                     "description": "Highlights given quad. Coordinates are absolute with respect to the main frame viewport.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "highlightNode",
@@ -5070,7 +5042,7 @@
                             "$ref": "Runtime.RemoteObjectId",
                             "optional": true,
                             "description": "JavaScript object id of the node to be highlighted.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or objectId must be specified."
@@ -5101,7 +5073,7 @@
                         }
                     ],
                     "description": "Highlights owner element of the frame with given id.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "pushNodeByPathToFrontend",
@@ -5120,7 +5092,7 @@
                         }
                     ],
                     "description": "Requests that the node is sent to the caller given its path. // FIXME, use XPath",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "pushNodesByBackendIdsToFrontend",
@@ -5145,7 +5117,7 @@
                         }
                     ],
                     "description": "Requests that a batch of nodes is sent to the caller given their backend node ids.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setInspectedNode",
@@ -5157,7 +5129,7 @@
                         }
                     ],
                     "description": "Enables console to refer to the node with given id via $x (see Command Line API for more details $x functions).",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "resolveNode",
@@ -5232,7 +5204,7 @@
                         }
                     ],
                     "description": "Creates a deep copy of the specified node and places it into the target container before the given anchor.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "moveTo",
@@ -5266,17 +5238,17 @@
                 {
                     "name": "undo",
                     "description": "Undoes the last performed action.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "redo",
                     "description": "Re-does the last undone action.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "markUndoableState",
                     "description": "Marks last undoable state.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "focus",
@@ -5288,7 +5260,7 @@
                         }
                     ],
                     "description": "Focuses the given element.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setFileInputFiles",
@@ -5308,7 +5280,7 @@
                         }
                     ],
                     "description": "Sets files for the given file input element.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser",
                         "renderer"
@@ -5331,7 +5303,7 @@
                         }
                     ],
                     "description": "Returns boxes for the currently selected nodes.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getNodeForLocation",
@@ -5355,7 +5327,7 @@
                         }
                     ],
                     "description": "Returns node id at given location.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getRelayoutBoundary",
@@ -5374,7 +5346,7 @@
                         }
                     ],
                     "description": "Returns the id of the nearest ancestor that is a relayout boundary.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getHighlightObjectForTest",
@@ -5393,7 +5365,7 @@
                         }
                     ],
                     "description": "For testing.",
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "events": [
@@ -5411,7 +5383,7 @@
                         }
                     ],
                     "description": "Fired when the node should be inspected. This happens after call to <code>setInspectMode</code>.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setChildNodes",
@@ -5482,7 +5454,7 @@
                         }
                     ],
                     "description": "Fired when <code>Element</code>'s inline style is modified via a CSS property modification.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "characterDataModified",
@@ -5568,7 +5540,7 @@
                         }
                     ],
                     "description": "Called when shadow root is pushed into the element.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "shadowRootPopped",
@@ -5585,7 +5557,7 @@
                         }
                     ],
                     "description": "Called when shadow root is popped from the element.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "pseudoElementAdded",
@@ -5602,7 +5574,7 @@
                         }
                     ],
                     "description": "Called when a pseudo element is added to an element.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "pseudoElementRemoved",
@@ -5619,7 +5591,7 @@
                         }
                     ],
                     "description": "Called when a pseudo element is removed from an element.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "distributedNodesUpdated",
@@ -5639,7 +5611,7 @@
                         }
                     ],
                     "description": "Called when distrubution is changed.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "nodeHighlightRequested",
@@ -5649,13 +5621,13 @@
                             "$ref": "NodeId"
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ]
         },
         {
             "domain": "CSS",
-            "hidden": true,
+            "experimental": true,
             "description": "This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules, and styles) have an associated <code>id</code> used in subsequent operations on the related object. Each object type has a specific <code>id</code> structure, and those are not interchangeable between objects of different kinds. CSS objects can be loaded using the <code>get*ForNode()</code> calls (which accept a DOM node id). A client can also discover all the existing stylesheets with the <code>getAllStyleSheets()</code> method (or keeping track of the <code>styleSheetAdded</code>/<code>styleSheetRemoved</code> events) and subsequently load the required stylesheet contents using the <code>getStyleSheet[Text]()</code> methods.",
             "dependencies": [
                 "DOM"
@@ -6086,7 +6058,7 @@
                                 "$ref": "MediaQuery"
                             },
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Array of media queries."
                         }
                     ],
@@ -6111,7 +6083,7 @@
                         }
                     ],
                     "description": "Media query descriptor.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "MediaQueryExpression",
@@ -6146,7 +6118,7 @@
                         }
                     ],
                     "description": "Media query expression descriptor.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "PlatformFontUsage",
@@ -6169,7 +6141,7 @@
                         }
                     ],
                     "description": "Information about amount of glyphs that were rendered with given font.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "CSSKeyframesRule",
@@ -6375,7 +6347,7 @@
                         }
                     ],
                     "description": "Requests information about platform fonts which we used to render child TextNodes in the given node.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getStyleSheetText",
@@ -6597,7 +6569,7 @@
                         }
                     ],
                     "description": "Returns all media queries parsed by the rendering engine.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setEffectivePropertyValueForNode",
@@ -6617,7 +6589,7 @@
                         }
                     ],
                     "description": "Find a rule with the given active property for the given node and set the new value for this property",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "getBackgroundColors",
@@ -6639,7 +6611,7 @@
                             "optional": true
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "events": [
@@ -6703,7 +6675,7 @@
         {
             "domain": "IO",
             "description": "Input/Output operations for streams produced by DevTools.",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "StreamHandle",
@@ -6838,7 +6810,7 @@
                             "description": "Event listener remove function."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -6887,7 +6859,7 @@
                             "type": "string",
                             "optional": true,
                             "description": "EventTarget interface name to stop on. If equal to <code>\"*\"</code> or not provided, will stop on any EventTarget.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Sets breakpoint on particular DOM event."
@@ -6905,7 +6877,7 @@
                             "type": "string",
                             "optional": true,
                             "description": "EventTarget interface name.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Removes breakpoint on particular DOM event."
@@ -6920,7 +6892,7 @@
                         }
                     ],
                     "description": "Sets breakpoint on particular native event.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "removeInstrumentationBreakpoint",
@@ -6932,7 +6904,7 @@
                         }
                     ],
                     "description": "Removes breakpoint on particular native event.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "setXHRBreakpoint",
@@ -6958,7 +6930,7 @@
                 },
                 {
                     "name": "getEventListeners",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "objectId",
@@ -6982,7 +6954,7 @@
         },
         {
             "domain": "Worker",
-            "hidden": true,
+            "experimental": true,
             "types": [],
             "commands": [
                 {
@@ -7058,7 +7030,7 @@
         },
         {
             "domain": "ServiceWorker",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "ServiceWorkerRegistration",
@@ -7505,7 +7477,7 @@
                 {
                     "id": "TouchPoint",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "state",
@@ -7564,7 +7536,7 @@
                 {
                     "id": "GestureSourceType",
                     "type": "string",
-                    "hidden": true,
+                    "experimental": true,
                     "enum": [
                         "default",
                         "touch",
@@ -7726,7 +7698,7 @@
                 },
                 {
                     "name": "dispatchTouchEvent",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "type",
@@ -7763,7 +7735,7 @@
                 },
                 {
                     "name": "emulateTouchFromMouseEvent",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "type",
@@ -7865,7 +7837,7 @@
                         }
                     ],
                     "description": "Synthesizes a pinch gesture over a time period by issuing appropriate touch events.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -7946,7 +7918,7 @@
                         }
                     ],
                     "description": "Synthesizes a scroll gesture over a time period by issuing appropriate touch events.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -7985,7 +7957,7 @@
                         }
                     ],
                     "description": "Synthesizes a tap gesture over a time period by issuing appropriate touch events.",
-                    "hidden": true,
+                    "experimental": true,
                     "handlers": [
                         "browser"
                     ]
@@ -7995,7 +7967,7 @@
         },
         {
             "domain": "LayerTree",
-            "hidden": true,
+            "experimental": true,
             "dependencies": [
                 "DOM"
             ],
@@ -8373,7 +8345,7 @@
         },
         {
             "domain": "DeviceOrientation",
-            "hidden": true,
+            "experimental": true,
             "commands": [
                 {
                     "name": "setDeviceOrientationOverride",
@@ -8652,7 +8624,7 @@
         },
         {
             "domain": "Animation",
-            "hidden": true,
+            "experimental": true,
             "dependencies": [
                 "Runtime",
                 "DOM"
@@ -8661,7 +8633,7 @@
                 {
                     "id": "Animation",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "id",
@@ -8676,7 +8648,7 @@
                         {
                             "name": "pausedState",
                             "type": "boolean",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "<code>Animation</code>'s internal paused state."
                         },
                         {
@@ -8726,7 +8698,7 @@
                 {
                     "id": "AnimationEffect",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "delay",
@@ -8737,11 +8709,6 @@
                             "name": "endDelay",
                             "type": "number",
                             "description": "<code>AnimationEffect</code>'s end delay."
-                        },
-                        {
-                            "name": "playbackRate",
-                            "type": "number",
-                            "description": "<code>AnimationEffect</code>'s playbackRate."
                         },
                         {
                             "name": "iterationStart",
@@ -9005,7 +8972,7 @@
         },
         {
             "domain": "Accessibility",
-            "hidden": true,
+            "experimental": true,
             "dependencies": [
                 "DOM"
             ],
@@ -9346,13 +9313,13 @@
                         }
                     ],
                     "description": "Fetches the accessibility node for this DOM node, if it exists.",
-                    "hidden": true
+                    "experimental": true
                 }
             ]
         },
         {
             "domain": "Storage",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "StorageType",
@@ -9402,7 +9369,7 @@
                 "Network",
                 "Worker"
             ],
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "LogEntry",
@@ -9512,7 +9479,7 @@
         {
             "domain": "Browser",
             "description": "The Browser domain allows listing, creating, activating and attaching to the targets.",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "BrowserContextID",
@@ -9721,7 +9688,7 @@
         {
             "domain": "SystemInfo",
             "description": "The SystemInfo domain defines methods and events for querying low-level system information.",
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "GPUDevice",
@@ -9817,7 +9784,7 @@
         {
             "domain": "Tethering",
             "description": "The Tethering domain defines methods and events for browser port binding.",
-            "hidden": true,
+            "experimental": true,
             "commands": [
                 {
                     "name": "bind",
@@ -9887,6 +9854,17 @@
                     "description": "Unique object identifier."
                 },
                 {
+                    "id": "UnserializableValue",
+                    "type": "string",
+                    "enum": [
+                        "Infinity",
+                        "NaN",
+                        "-Infinity",
+                        "-0"
+                    ],
+                    "description": "Primitive value which cannot be JSON-stringified."
+                },
+                {
                     "id": "RemoteObject",
                     "type": "object",
                     "description": "Mirror object referencing original JavaScript object.",
@@ -9920,7 +9898,10 @@
                                 "set",
                                 "iterator",
                                 "generator",
-                                "error"
+                                "error",
+                                "proxy",
+                                "promise",
+                                "typedarray"
                             ],
                             "description": "Object subtype hint. Specified for <code>object</code> type values only."
                         },
@@ -9934,7 +9915,14 @@
                             "name": "value",
                             "type": "any",
                             "optional": true,
-                            "description": "Remote object value in case of primitive values or JSON values (if it was requested), or description string if the value can not be JSON-stringified (like NaN, Infinity, -Infinity, -0)."
+                            "description": "Remote object value in case of primitive values or JSON values (if it was requested)."
+                        },
+                        {
+                            "name": "unserializableValue",
+                            "$ref": "UnserializableValue",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Primitive value which can not be JSON-stringified does not have <code>value</code>, but gets this property."
                         },
                         {
                             "name": "description",
@@ -9953,20 +9941,20 @@
                             "$ref": "ObjectPreview",
                             "optional": true,
                             "description": "Preview containing abbreviated property values. Specified for <code>object</code> type values only.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "customPreview",
                             "$ref": "CustomPreview",
                             "optional": true,
-                            "hidden": true
+                            "experimental": true
                         }
                     ]
                 },
                 {
                     "id": "CustomPreview",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "header",
@@ -9994,7 +9982,7 @@
                 {
                     "id": "ObjectPreview",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Object containing abbreviated remote object value.",
                     "properties": [
                         {
@@ -10062,7 +10050,7 @@
                 {
                     "id": "PropertyPreview",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "name",
@@ -10119,7 +10107,7 @@
                 {
                     "id": "EntryPreview",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "properties": [
                         {
                             "name": "key",
@@ -10189,14 +10177,14 @@
                             "optional": true,
                             "type": "boolean",
                             "description": "True if the property is owned for the object.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "symbol",
                             "$ref": "RemoteObject",
                             "optional": true,
                             "description": "Property symbol object, if the property is of the <code>symbol</code> type.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ]
                 },
@@ -10217,40 +10205,31 @@
                             "description": "The value associated with the property."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "CallArgument",
                     "type": "object",
-                    "description": "Represents function call argument. Either remote object id <code>objectId</code> or primitive <code>value</code> or neither of (for undefined) them should be specified.",
+                    "description": "Represents function call argument. Either remote object id <code>objectId</code>, primitive <code>value</code>, unserializable primitive value or neither of (for undefined) them should be specified.",
                     "properties": [
                         {
                             "name": "value",
                             "type": "any",
                             "optional": true,
-                            "description": "Primitive value, or description string if the value can not be JSON-stringified (like NaN, Infinity, -Infinity, -0)."
+                            "description": "Primitive value."
+                        },
+                        {
+                            "name": "unserializableValue",
+                            "$ref": "UnserializableValue",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Primitive value which can not be JSON-stringified."
                         },
                         {
                             "name": "objectId",
                             "$ref": "RemoteObjectId",
                             "optional": true,
                             "description": "Remote object handle."
-                        },
-                        {
-                            "name": "type",
-                            "optional": true,
-                            "hidden": true,
-                            "type": "string",
-                            "enum": [
-                                "object",
-                                "function",
-                                "undefined",
-                                "string",
-                                "number",
-                                "boolean",
-                                "symbol"
-                            ],
-                            "description": "Object type."
                         }
                     ]
                 },
@@ -10270,34 +10249,30 @@
                             "description": "Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed."
                         },
                         {
-                            "name": "isDefault",
-                            "type": "boolean",
-                            "description": "Whether context is the default page context (as opposite to e.g. context of content script).",
-                            "hidden": true
-                        },
-                        {
                             "name": "origin",
                             "type": "string",
                             "description": "Execution context origin.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "name",
                             "type": "string",
                             "description": "Human readable name describing given context.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
-                            "name": "frameId",
-                            "type": "string",
-                            "description": "Id of the owning frame. May be an empty string if the context is not associated with a frame."
+                            "name": "auxData",
+                            "type": "object",
+                            "optional": true,
+                            "description": "Embedder-specific auxiliary data.",
+                            "experimental": true
                         }
                     ]
                 },
                 {
                     "id": "ExceptionDetails",
                     "type": "object",
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Detailed information about exception (or error) that was thrown during script compilation or execution.",
                     "properties": [
                         {
@@ -10338,7 +10313,7 @@
                     "id": "Timestamp",
                     "type": "number",
                     "description": "Number of milliseconds since epoch.",
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "id": "CallFrame",
@@ -10396,7 +10371,7 @@
                             "name": "parent",
                             "$ref": "StackTrace",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Asynchronous JavaScript stack trace that preceded this stack, if available."
                         }
                     ]
@@ -10423,20 +10398,20 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Determines whether Command Line API should be available during the evaluation.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "doNotPauseOnExceptionsAndMuteConsole",
                             "type": "boolean",
                             "optional": true,
                             "description": "Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "contextId",
                             "$ref": "ExecutionContextId",
                             "optional": true,
-                            "description": "Specifies in which isolated context to perform evaluation. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
+                            "description": "Specifies in which execution context to perform evaluation. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         },
                         {
                             "name": "returnByValue",
@@ -10448,21 +10423,21 @@
                             "name": "generatePreview",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether preview should be generated for the result."
                         },
                         {
                             "name": "userGesture",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
                         },
                         {
                             "name": "awaitPromise",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether execution should wait for promise to be resolved. If the result of evaluation is not a Promise, it's considered to be an error."
                         }
                     ],
@@ -10473,16 +10448,10 @@
                             "description": "Evaluation result."
                         },
                         {
-                            "name": "wasThrown",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "True if the result was thrown during the evaluation."
-                        },
-                        {
                             "name": "exceptionDetails",
                             "$ref": "ExceptionDetails",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Exception details."
                         }
                     ],
@@ -10490,7 +10459,7 @@
                 },
                 {
                     "name": "awaitPromise",
-                    "hidden": true,
+                    "experimental": true,
                     "async": true,
                     "parameters": [
                         {
@@ -10516,12 +10485,6 @@
                             "name": "result",
                             "$ref": "RemoteObject",
                             "description": "Promise result. Will contain rejected value if promise was rejected."
-                        },
-                        {
-                            "name": "wasThrown",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "True if the promise was rejected."
                         },
                         {
                             "name": "exceptionDetails",
@@ -10561,7 +10524,7 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Specifies whether function call should stop on exceptions and mute console. Overrides setPauseOnException state.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "returnByValue",
@@ -10573,21 +10536,21 @@
                             "name": "generatePreview",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether preview should be generated for the result."
                         },
                         {
                             "name": "userGesture",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
                         },
                         {
                             "name": "awaitPromise",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether execution should wait for promise to be resolved. If the result of evaluation is not a Promise, it's considered to be an error."
                         }
                     ],
@@ -10598,16 +10561,10 @@
                             "description": "Call result."
                         },
                         {
-                            "name": "wasThrown",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "True if the result was thrown during the evaluation."
-                        },
-                        {
                             "name": "exceptionDetails",
                             "$ref": "ExceptionDetails",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Exception details."
                         }
                     ],
@@ -10632,13 +10589,13 @@
                             "optional": true,
                             "type": "boolean",
                             "description": "If true, returns accessor properties (with getter/setter) only; internal properties are not returned either.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "generatePreview",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether preview should be generated for the results."
                         }
                     ],
@@ -10659,13 +10616,13 @@
                                 "$ref": "InternalPropertyDescriptor"
                             },
                             "description": "Internal object properties (only of the element itself).",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "exceptionDetails",
                             "$ref": "ExceptionDetails",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Exception details."
                         }
                     ],
@@ -10695,7 +10652,7 @@
                 },
                 {
                     "name": "run",
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Tells inspected instance(worker or page) that it can run in case it was started paused."
                 },
                 {
@@ -10704,12 +10661,12 @@
                 },
                 {
                     "name": "disable",
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Disables reporting of execution contexts creation."
                 },
                 {
                     "name": "discardConsoleEntries",
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Discards collected exceptions and console API calls."
                 },
                 {
@@ -10720,11 +10677,11 @@
                             "type": "boolean"
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "compileScript",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "expression",
@@ -10745,7 +10702,7 @@
                             "name": "executionContextId",
                             "$ref": "ExecutionContextId",
                             "optional": true,
-                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
+                            "description": "Specifies in which execution context to perform script run. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         }
                     ],
                     "returns": [
@@ -10766,7 +10723,7 @@
                 },
                 {
                     "name": "runScript",
-                    "hidden": true,
+                    "experimental": true,
                     "async": true,
                     "parameters": [
                         {
@@ -10778,7 +10735,7 @@
                             "name": "executionContextId",
                             "$ref": "ExecutionContextId",
                             "optional": true,
-                            "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter is used to specify one of those contexts. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
+                            "description": "Specifies in which execution context to perform script run. If the parameter is omitted the evaluation will be performed in the context of the inspected page."
                         },
                         {
                             "name": "objectGroup",
@@ -10822,12 +10779,6 @@
                             "name": "result",
                             "$ref": "RemoteObject",
                             "description": "Run result."
-                        },
-                        {
-                            "name": "wasThrown",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "True if the result was thrown during the execution."
                         },
                         {
                             "name": "exceptionDetails",
@@ -10897,7 +10848,7 @@
                             "description": "Identifier of the context where exception happened."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "exceptionRevoked",
@@ -10914,7 +10865,7 @@
                             "description": "The id of revoked exception, as reported in <code>exceptionUnhandled</code>."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "consoleAPICalled",
@@ -10968,7 +10919,7 @@
                             "description": "Stack trace captured when the call was made."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 },
                 {
                     "name": "inspectRequested",
@@ -10982,7 +10933,7 @@
                             "type": "object"
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ]
         },
@@ -11028,7 +10979,7 @@
                 },
                 {
                     "id": "ScriptPosition",
-                    "hidden": true,
+                    "experimental": true,
                     "type": "object",
                     "properties": [
                         {
@@ -11060,7 +11011,7 @@
                             "name": "functionLocation",
                             "$ref": "Location",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Location in the source code."
                         },
                         {
@@ -11085,7 +11036,7 @@
                             "name": "returnValue",
                             "$ref": "Runtime.RemoteObject",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "The value being returned, if the function is at return point."
                         }
                     ],
@@ -11118,20 +11069,20 @@
                             "name": "name",
                             "type": "string",
                             "optional": true,
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "startLocation",
                             "$ref": "Location",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Location in the source code where scope starts"
                         },
                         {
                             "name": "endLocation",
                             "$ref": "Location",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Location in the source code where scope ends"
                         }
                     ],
@@ -11154,7 +11105,7 @@
                             "description": "Line with match content."
                         }
                     ],
-                    "hidden": true
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -11179,7 +11130,7 @@
                 },
                 {
                     "name": "setSkipAllPauses",
-                    "hidden": true,
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "skipped",
@@ -11285,13 +11236,6 @@
                             "name": "location",
                             "$ref": "Location",
                             "description": "Location to continue to."
-                        },
-                        {
-                            "name": "interstatementLocation",
-                            "type": "boolean",
-                            "optional": true,
-                            "hidden": true,
-                            "description": "Allows breakpoints at the intemediate positions inside statements."
                         }
                     ],
                     "description": "Continues execution until specific location is reached."
@@ -11355,17 +11299,6 @@
                     "description": "Searches for given string in script content."
                 },
                 {
-                    "name": "canSetScriptSource",
-                    "returns": [
-                        {
-                            "name": "result",
-                            "type": "boolean",
-                            "description": "True if <code>setScriptSource</code> is supported."
-                        }
-                    ],
-                    "description": "Always returns true."
-                },
-                {
                     "name": "setScriptSource",
                     "parameters": [
                         {
@@ -11383,7 +11316,7 @@
                             "type": "boolean",
                             "optional": true,
                             "description": " If true the change will not actually be applied. Preview mode may be used to get result description without actually modifying the code.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "returns": [
@@ -11401,14 +11334,14 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Whether current call stack  was modified after applying the changes.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "asyncStackTrace",
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
                             "description": "Async stack trace, if any.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "compileError",
@@ -11444,7 +11377,7 @@
                             "description": "Async stack trace, if any."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Restarts particular call frame from the beginning."
                 },
                 {
@@ -11505,14 +11438,14 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Specifies whether command line API should be available to the evaluated expression, defaults to false.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "doNotPauseOnExceptionsAndMuteConsole",
                             "type": "boolean",
                             "optional": true,
                             "description": "Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "returnByValue",
@@ -11524,7 +11457,7 @@
                             "name": "generatePreview",
                             "type": "boolean",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Whether preview should be generated for the result."
                         }
                     ],
@@ -11535,16 +11468,10 @@
                             "description": "Object wrapper for the evaluation result."
                         },
                         {
-                            "name": "wasThrown",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "True if the result was thrown during the evaluation."
-                        },
-                        {
                             "name": "exceptionDetails",
                             "$ref": "Runtime.ExceptionDetails",
                             "optional": true,
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Exception details."
                         }
                     ],
@@ -11574,29 +11501,8 @@
                             "description": "Id of callframe that holds variable."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Changes value of variable in a callframe. Object-based scopes are not supported and must be mutated manually."
-                },
-                {
-                    "name": "getBacktrace",
-                    "returns": [
-                        {
-                            "name": "callFrames",
-                            "type": "array",
-                            "items": {
-                                "$ref": "CallFrame"
-                            },
-                            "description": "Call stack the virtual machine stopped on."
-                        },
-                        {
-                            "name": "asyncStackTrace",
-                            "$ref": "Runtime.StackTrace",
-                            "optional": true,
-                            "description": "Async stack trace, if any."
-                        }
-                    ],
-                    "hidden": true,
-                    "description": "Returns call stack including variables changed since VM was paused. VM must be paused."
                 },
                 {
                     "name": "setAsyncCallStackDepth",
@@ -11607,7 +11513,7 @@
                             "description": "Maximum depth of async call stacks. Setting to <code>0</code> will effectively disable collecting async call stacks (default)."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Enables or disables async call stacks tracking."
                 },
                 {
@@ -11622,7 +11528,7 @@
                             "description": "Array of regexps that will be used to check script url for blackbox state."
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Replace previous blackbox patterns with passed ones. Forces backend to skip stepping/pausing in scripts with url matching one of the patterns. VM will try to leave blackboxed script by performing 'step in' several times, finally resorting to 'step out' if unsuccessful."
                 },
                 {
@@ -11641,7 +11547,7 @@
                             }
                         }
                     ],
-                    "hidden": true,
+                    "experimental": true,
                     "description": "Makes backend skip steps in the script in blackboxed ranges. VM will try leave blacklisted scripts by performing 'step in' several times, finally resorting to 'step out' if unsuccessful. Positions array contains positions where blackbox state is changed. First interval isn't blackboxed. Array should be sorted."
                 }
             ],
@@ -11683,33 +11589,34 @@
                             "name": "executionContextId",
                             "$ref": "Runtime.ExecutionContextId",
                             "description": "Specifies script creation context.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "hash",
                             "type": "string",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Content hash of the script."
                         },
                         {
-                            "name": "isContentScript",
-                            "type": "boolean",
+                            "name": "executionContextAuxData",
+                            "type": "object",
                             "optional": true,
-                            "description": "Determines whether this script is a user extension script."
+                            "description": "Embedder-specific auxiliary data.",
+                            "experimental": true
                         },
                         {
                             "name": "isInternalScript",
                             "type": "boolean",
                             "optional": true,
                             "description": "Determines whether this script is an internal script.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "isLiveEdit",
                             "type": "boolean",
                             "optional": true,
                             "description": "True, if this script is generated as a result of the live edit operation.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "sourceMapURL",
@@ -11722,14 +11629,7 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
-                            "hidden": true
-                        },
-                        {
-                            "name": "deprecatedCommentWasUsed",
-                            "type": "boolean",
-                            "optional": true,
-                            "hidden": true,
-                            "description": "True, if '//@ sourceURL' or '//@ sourceMappingURL' was used."
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger."
@@ -11771,26 +11671,27 @@
                             "name": "executionContextId",
                             "$ref": "Runtime.ExecutionContextId",
                             "description": "Specifies script creation context.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "hash",
                             "type": "string",
-                            "hidden": true,
+                            "experimental": true,
                             "description": "Content hash of the script."
                         },
                         {
-                            "name": "isContentScript",
-                            "type": "boolean",
+                            "name": "executionContextAuxData",
+                            "type": "object",
                             "optional": true,
-                            "description": "Determines whether this script is a user extension script."
+                            "description": "Embedder-specific auxiliary data.",
+                            "experimental": true
                         },
                         {
                             "name": "isInternalScript",
                             "type": "boolean",
                             "optional": true,
                             "description": "Determines whether this script is an internal script.",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "sourceMapURL",
@@ -11803,14 +11704,7 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
-                            "hidden": true
-                        },
-                        {
-                            "name": "deprecatedCommentWasUsed",
-                            "type": "boolean",
-                            "optional": true,
-                            "hidden": true,
-                            "description": "True, if '//@ sourceURL' or '//@ sourceMappingURL' was used."
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine fails to parse the script."
@@ -11872,14 +11766,14 @@
                                 "type": "string"
                             },
                             "description": "Hit breakpoints IDs",
-                            "hidden": true
+                            "experimental": true
                         },
                         {
                             "name": "asyncStackTrace",
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
                             "description": "Async stack trace, if any.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria."
@@ -11997,7 +11891,7 @@
                             "name": "timestamp",
                             "$ref": "Runtime.Timestamp",
                             "description": "Timestamp of most recent message in batch.",
-                            "hidden": true
+                            "experimental": true
                         }
                     ],
                     "description": "Not issued.",
@@ -12016,7 +11910,7 @@
                 "Runtime",
                 "Debugger"
             ],
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "CPUProfileNode",
@@ -12203,7 +12097,7 @@
             "dependencies": [
                 "Runtime"
             ],
-            "hidden": true,
+            "experimental": true,
             "types": [
                 {
                     "id": "HeapSnapshotObjectId",
