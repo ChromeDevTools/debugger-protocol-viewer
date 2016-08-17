@@ -1827,6 +1827,15 @@
                     "description": "Loading priority of a resource request."
                 },
                 {
+                    "id": "CookieSameSite",
+                    "type": "string",
+                    "enum": [
+                        "Strict",
+                        "Lax"
+                    ],
+                    "description": "Represents the cookie's 'SameSite' status: https://tools.ietf.org/html/draft-west-first-party-cookies"
+                },
+                {
                     "id": "ResourceTiming",
                     "type": "object",
                     "description": "Timing information for the request.",
@@ -2413,7 +2422,7 @@
                         {
                             "name": "expires",
                             "type": "number",
-                            "description": "Cookie expires."
+                            "description": "Cookie expiration date as the number of seconds since the UNIX epoch."
                         },
                         {
                             "name": "size",
@@ -2437,13 +2446,9 @@
                         },
                         {
                             "name": "sameSite",
-                            "type": "string",
+                            "$ref": "CookieSameSite",
                             "optional": true,
-                            "enum": [
-                                "Strict",
-                                "Lax"
-                            ],
-                            "description": "Represents the cookies' 'SameSite' status: https://tools.ietf.org/html/draft-west-first-party-cookies"
+                            "description": "Cookie SameSite type."
                         }
                     ],
                     "experimental": true
@@ -2638,6 +2643,75 @@
                         }
                     ],
                     "description": "Deletes browser cookie with given name, domain and path.",
+                    "handlers": [
+                        "browser"
+                    ],
+                    "async": true,
+                    "experimental": true
+                },
+                {
+                    "name": "setCookie",
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "description": "The request-URI to associate with the setting of the cookie. This value can affect the default domain and path values of the created cookie."
+                        },
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "description": "The name of the cookie."
+                        },
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "description": "The value of the cookie."
+                        },
+                        {
+                            "name": "domain",
+                            "type": "string",
+                            "optional": true,
+                            "description": "If omitted, the cookie becomes a host-only cookie."
+                        },
+                        {
+                            "name": "path",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Defaults to the path portion of the url parameter."
+                        },
+                        {
+                            "name": "secure",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Defaults ot false."
+                        },
+                        {
+                            "name": "httpOnly",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Defaults to false."
+                        },
+                        {
+                            "name": "sameSite",
+                            "$ref": "CookieSameSite",
+                            "optional": true,
+                            "description": "Defaults to browser default behavior."
+                        },
+                        {
+                            "name": "expirationDate",
+                            "$ref": "Timestamp",
+                            "optional": true,
+                            "description": "If omitted, the cookie becomes a session cookie."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean",
+                            "description": "True if successfully set cookie."
+                        }
+                    ],
+                    "description": "Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.",
                     "handlers": [
                         "browser"
                     ],
@@ -9558,13 +9632,13 @@
                         {
                             "name": "width",
                             "type": "integer",
-                            "description": "Window width (headless chrome only).",
+                            "description": "Frame width in DIP (headless chrome only).",
                             "optional": true
                         },
                         {
                             "name": "height",
                             "type": "integer",
-                            "description": "Window height (headless chrome only).",
+                            "description": "Frame height in DIP (headless chrome only).",
                             "optional": true
                         },
                         {
@@ -10401,10 +10475,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "doNotPauseOnExceptionsAndMuteConsole",
+                            "name": "silent",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.",
+                            "description": "In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.",
                             "experimental": true
                         },
                         {
@@ -10520,10 +10594,10 @@
                             "description": "Call arguments. All call arguments must belong to the same JavaScript world as the target object."
                         },
                         {
-                            "name": "doNotPauseOnExceptionsAndMuteConsole",
+                            "name": "silent",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Specifies whether function call should stop on exceptions and mute console. Overrides setPauseOnException state.",
+                            "description": "In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.",
                             "experimental": true
                         },
                         {
@@ -10651,9 +10725,9 @@
                     "description": "Releases all remote objects that belong to a given group."
                 },
                 {
-                    "name": "run",
+                    "name": "runIfWaitingForDebugger",
                     "experimental": true,
-                    "description": "Tells inspected instance(worker or page) that it can run in case it was started paused."
+                    "description": "Tells inspected instance to run if it was waiting for debugger to attach."
                 },
                 {
                     "name": "enable",
@@ -10744,10 +10818,11 @@
                             "description": "Symbolic group name that can be used to release multiple objects."
                         },
                         {
-                            "name": "doNotPauseOnExceptionsAndMuteConsole",
+                            "name": "silent",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Specifies whether script run should stop on exceptions and mute console. Overrides setPauseOnException state."
+                            "description": "In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.",
+                            "experimental": true
                         },
                         {
                             "name": "includeCommandLineAPI",
@@ -10923,6 +10998,7 @@
                 },
                 {
                     "name": "inspectRequested",
+                    "description": "Issued when object should be inspected (for example, as a result of inspect() command line API call).",
                     "parameters": [
                         {
                             "name": "object",
@@ -11133,7 +11209,7 @@
                     "experimental": true,
                     "parameters": [
                         {
-                            "name": "skipped",
+                            "name": "skip",
                             "type": "boolean",
                             "description": "New value for skip pauses state."
                         }
@@ -11312,10 +11388,10 @@
                             "description": "New content of the script."
                         },
                         {
-                            "name": "preview",
+                            "name": "dryRun",
                             "type": "boolean",
                             "optional": true,
-                            "description": " If true the change will not actually be applied. Preview mode may be used to get result description without actually modifying the code.",
+                            "description": " If true the change will not actually be applied. Dry run may be used to get result description without actually modifying the code.",
                             "experimental": true
                         }
                     ],
@@ -11441,10 +11517,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "doNotPauseOnExceptionsAndMuteConsole",
+                            "name": "silent",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Specifies whether evaluation should stop on exceptions and mute console. Overrides setPauseOnException state.",
+                            "description": "In silent mode exceptions thrown during evaluation are not reported and do not pause execution. Overrides <code>setPauseOnException</code> state.",
                             "experimental": true
                         },
                         {
@@ -11605,13 +11681,6 @@
                             "experimental": true
                         },
                         {
-                            "name": "isInternalScript",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "Determines whether this script is an internal script.",
-                            "experimental": true
-                        },
-                        {
                             "name": "isLiveEdit",
                             "type": "boolean",
                             "optional": true,
@@ -11684,13 +11753,6 @@
                             "type": "object",
                             "optional": true,
                             "description": "Embedder-specific auxiliary data.",
-                            "experimental": true
-                        },
-                        {
-                            "name": "isInternalScript",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "Determines whether this script is an internal script.",
                             "experimental": true
                         },
                         {
@@ -11878,29 +11940,6 @@
                         }
                     ],
                     "description": "Issued when new console message is added."
-                },
-                {
-                    "name": "messageRepeatCountUpdated",
-                    "parameters": [
-                        {
-                            "name": "count",
-                            "type": "integer",
-                            "description": "New repeat count value."
-                        },
-                        {
-                            "name": "timestamp",
-                            "$ref": "Runtime.Timestamp",
-                            "description": "Timestamp of most recent message in batch.",
-                            "experimental": true
-                        }
-                    ],
-                    "description": "Not issued.",
-                    "deprecated": true
-                },
-                {
-                    "name": "messagesCleared",
-                    "description": "Not issued.",
-                    "deprecated": true
                 }
             ]
         },
@@ -11918,6 +11957,11 @@
                     "description": "CPU Profile node. Holds callsite information, execution statistics and child nodes.",
                     "properties": [
                         {
+                            "name": "id",
+                            "type": "integer",
+                            "description": "Unique id of the node."
+                        },
+                        {
                             "name": "callFrame",
                             "$ref": "Runtime.CallFrame",
                             "description": "Function location."
@@ -11931,19 +11975,15 @@
                             "name": "children",
                             "type": "array",
                             "items": {
-                                "$ref": "CPUProfileNode"
+                                "type": "integer"
                             },
-                            "description": "Child nodes."
+                            "description": "Child node ids."
                         },
                         {
                             "name": "deoptReason",
                             "type": "string",
+                            "experimental": true,
                             "description": "The reason of being not optimized. The function may be deoptimized or marked as don't optimize."
-                        },
-                        {
-                            "name": "id",
-                            "type": "integer",
-                            "description": "Unique id of the node."
                         },
                         {
                             "name": "positionTicks",
@@ -11951,6 +11991,7 @@
                             "items": {
                                 "$ref": "PositionTickInfo"
                             },
+                            "experimental": true,
                             "description": "An array of source position ticks."
                         }
                     ]
@@ -11961,8 +12002,12 @@
                     "description": "Profile.",
                     "properties": [
                         {
-                            "name": "head",
-                            "$ref": "CPUProfileNode"
+                            "name": "nodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CPUProfileNode"
+                            },
+                            "description": "The list of profile nodes. First item is the root node."
                         },
                         {
                             "name": "startTime",
@@ -11997,6 +12042,7 @@
                 {
                     "id": "PositionTickInfo",
                     "type": "object",
+                    "experimental": true,
                     "description": "Specifies a number of samples attributed to a certain source position.",
                     "properties": [
                         {
@@ -12061,7 +12107,7 @@
                             "name": "title",
                             "type": "string",
                             "optional": true,
-                            "description": "Profile title passed as argument to console.profile()."
+                            "description": "Profile title passed as an argument to console.profile()."
                         }
                     ],
                     "description": "Sent when new profile recodring is started using console.profile() call."
@@ -12086,7 +12132,7 @@
                             "name": "title",
                             "type": "string",
                             "optional": true,
-                            "description": "Profile title passed as argunet to console.profile()."
+                            "description": "Profile title passed as an argument to console.profile()."
                         }
                     ]
                 }
