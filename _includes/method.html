@@ -6,8 +6,8 @@
 
   <p class="method-description">
     {{method.description}}
+    {% include experimental.html item=method %}
   </p>
-
   {% if method.parameters[0] %}
   <h5>Parameters</h5>
   <dl class="parameter-list">

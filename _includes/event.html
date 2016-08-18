@@ -6,8 +6,8 @@
 
   <p class="event-description">
     {{event.description}}
+    {% include experimental.html item=event %}
   </p>
-
   {% if event.parameters[0] %}
   <h5>Parameters</h5>
   <dl class="parameter-list">

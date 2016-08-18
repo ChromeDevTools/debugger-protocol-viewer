@@ -27,6 +27,7 @@
         {% if param.enum[0] %}
           Allowed values: {{ param.enum | join: ', ' }}.
         {% endif %}
+        {% include experimental.html item=param %}
       </span>
     </dd>
   </div>

@@ -103,6 +103,17 @@ paper-menu a.iron-selected {
   margin-left: 20px;
 }
 
+.experimental {
+  font-size: 70%;
+  text-transform: uppercase;
+  background-color: hsl(340, 80%, 94%);
+  padding: 2px;
+  cursor: help;
+}
+.deprecated {
+  background-color: hsla(0,0%,90%,1);
+}
+
 a.reflink {
     display: block;
     font-size: 12px;
@@ -192,6 +203,10 @@ a.reflink {
   text-decoration: underline;
 }
 
+h4 {
+  margin: 18px 0;
+}
+
 h4:hover .permalink {
   display: initial;
 }
@@ -208,8 +223,8 @@ h4:hover .permalink {
   paper-material {
     --menu-container-display: none;
     width: calc(97.33% - 32px);
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   #drawer .paper-toolbar {
@@ -223,8 +238,8 @@ h4:hover .permalink {
   paper-material {
     width: calc(98% - 46px);
     margin-bottom: 32px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
   #drawer.paper-drawer-panel > [drawer] {
