@@ -113,17 +113,34 @@ a.reflink {
 .monospace {
   font-family: Consolas, Menlo, monospace;
 }
+h4 { 
+    margin: 1rem 0 0.5rem;
+}
+
+h5 { 
+    color: gray;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 1rem 0 0;
+}
+
+p {
+    margin: 0.5rem 0 1rem;
+}
 
 .parameter-list {
-  padding: 1rem 5px;
-  border: 2px solid hsl(0, 0%, 85%);
-  border-radius: 5px;
+  padding: 0.5rem 5px;
+  /*border: 2px solid hsl(0, 0%, 85%);*/
+  /*border-radius: 5px;*/
   margin: 0 10%;
 }
 
+.param {
+  border-left: 3px solid transparent;
+}
 .param:hover {
-  background: hsla(0, 0%, 95%, 0.4);
-  border-radius: 5px;
+  border-left: 3px solid hsl(0, 0%, 84%);
 }
 
 .param-pair {
@@ -181,6 +198,13 @@ a.reflink {
   padding-left: 5px;
 }
 
+.param-description {
+  font-size: 90%;
+}
+.param-description code {
+    font-size: 120%;
+}
+
 .permalink {
   display: none;
   margin-left: 5px;
@@ -232,17 +256,19 @@ h4:hover .permalink {
   }
 
   #mainContainer .content {
-    padding: 48px 62px;
+    padding: 48px 20px;
   }
 
   #mainToolbar .title {
     font-size: 26px;
     line-height: 26px;
   }
-
 }
 
 @media (max-width: 980px) {
+  #mainContainer .content {
+    padding: 48px 40px;
+  }
   .parameter-list {
     margin: 0;
   }
