@@ -1,6 +1,10 @@
+:root {
+    --font-stack: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
+}
+
 body {
   background: #fafafa;
-  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--font-stack);
   color: #333;
 }
 
@@ -106,9 +110,13 @@ paper-menu a.iron-selected {
 .experimental {
   font-size: 70%;
   text-transform: uppercase;
-  background-color: hsl(340, 80%, 94%);
+  background-color: #E57373;
   padding: 2px;
   cursor: help;
+  color: white;
+  vertical-align: baseline;
+  font-weight: normal;
+  font-family: inherit;
 }
 .deprecated {
   background-color: hsla(0,0%,90%,1);
@@ -193,10 +201,11 @@ a.reflink {
 }
 
 .permalink {
-  display: none;
+  /* display: none; */
   margin-left: 5px;
   vertical-align: top;
   text-decoration: none;
+  opacity: 0;
 }
 
 .permalink:hover {
@@ -208,7 +217,8 @@ h4 {
 }
 
 h4:hover .permalink {
-  display: initial;
+  /* display: initial; */
+  opacity: 1;
 }
 
 /* Breakpoints */
