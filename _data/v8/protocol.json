@@ -143,12 +143,15 @@
                 "experimental": true,
                 "description": "Detailed information about exception (or error) that was thrown during script compilation or execution.",
                 "properties": [
-                    { "name": "text", "type": "string", "description": "Exception text." },
-                    { "name": "scriptId", "$ref": "ScriptId", "description": "Script ID of the exception location." },
+                    { "name": "exceptionId", "type": "integer", "description": "Exception id." },
+                    { "name": "text", "type": "string", "description": "Exception text, which should be used together with exception object when available." },
                     { "name": "lineNumber", "type": "integer", "description": "Line number of the exception location (0-based)." },
                     { "name": "columnNumber", "type": "integer", "description": "Column number of the exception location (0-based)." },
+                    { "name": "scriptId", "$ref": "ScriptId", "optional": true, "description": "Script ID of the exception location." },
                     { "name": "url", "type": "string", "optional": true, "description": "URL of the exception location, to be used when the script was not reported." },
-                    { "name": "stackTrace", "$ref": "StackTrace", "optional": true, "description": "JavaScript stack trace if available." }
+                    { "name": "stackTrace", "$ref": "StackTrace", "optional": true, "description": "JavaScript stack trace if available." },
+                    { "name": "exception", "$ref": "RemoteObject", "optional": true, "description": "Exception object if available." },
+                    { "name": "executionContextId", "$ref": "ExecutionContextId", "optional": true, "description": "Identifier of the context where exception happened." }
                 ]
             },
             {
@@ -353,11 +356,8 @@
                 "name": "exceptionThrown",
                 "description": "Issued when exception was thrown and unhandled.",
                 "parameters": [
-                    { "name": "exceptionId", "type": "integer", "description": "Exception id." },
                     { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp of the exception." },
-                    { "name": "details", "$ref": "ExceptionDetails" },
-                    { "name": "exception", "$ref": "RemoteObject", "optional": true, "description": "Exception object." },
-                    { "name": "executionContextId", "$ref": "ExecutionContextId", "optional": true, "description": "Identifier of the context where exception happened." }
+                    { "name": "exceptionDetails", "$ref": "ExceptionDetails" }
                 ],
                 "experimental": true
             },
@@ -365,7 +365,7 @@
                 "name": "exceptionRevoked",
                 "description": "Issued when unhandled exception was revoked.",
                 "parameters": [
-                    { "name": "message", "type": "string", "description": "Message describing why exception was revoked." },
+                    { "name": "reason", "type": "string", "description": "Reason describing why exception was revoked." },
                     { "name": "exceptionId", "type": "integer", "description": "The id of revoked exception, as reported in <code>exceptionUnhandled</code>." }
                 ],
                 "experimental": true
@@ -575,7 +575,7 @@
                     { "name": "callFrames", "type": "array", "optional": true, "items": { "$ref": "CallFrame" }, "description": "New stack trace in case editing has happened while VM was stopped." },
                     { "name": "stackChanged", "type": "boolean", "optional": true, "description": "Whether current call stack  was modified after applying the changes.", "experimental": true },
                     { "name": "asyncStackTrace", "$ref": "Runtime.StackTrace", "optional": true, "description": "Async stack trace, if any.", "experimental": true },
-                    { "name": "compileError", "optional": true, "$ref": "Runtime.ExceptionDetails", "description": "Error data if any." }
+                    { "name": "exceptionDetails", "optional": true, "$ref": "Runtime.ExceptionDetails", "description": "Exception details if any." }
                 ],
                 "description": "Edits JavaScript source live."
             },

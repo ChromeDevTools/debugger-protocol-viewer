@@ -10350,14 +10350,14 @@
                     "description": "Detailed information about exception (or error) that was thrown during script compilation or execution.",
                     "properties": [
                         {
-                            "name": "text",
-                            "type": "string",
-                            "description": "Exception text."
+                            "name": "exceptionId",
+                            "type": "integer",
+                            "description": "Exception id."
                         },
                         {
-                            "name": "scriptId",
-                            "$ref": "ScriptId",
-                            "description": "Script ID of the exception location."
+                            "name": "text",
+                            "type": "string",
+                            "description": "Exception text, which should be used together with exception object when available."
                         },
                         {
                             "name": "lineNumber",
@@ -10370,6 +10370,12 @@
                             "description": "Column number of the exception location (0-based)."
                         },
                         {
+                            "name": "scriptId",
+                            "$ref": "ScriptId",
+                            "optional": true,
+                            "description": "Script ID of the exception location."
+                        },
+                        {
                             "name": "url",
                             "type": "string",
                             "optional": true,
@@ -10380,6 +10386,18 @@
                             "$ref": "StackTrace",
                             "optional": true,
                             "description": "JavaScript stack trace if available."
+                        },
+                        {
+                            "name": "exception",
+                            "$ref": "RemoteObject",
+                            "optional": true,
+                            "description": "Exception object if available."
+                        },
+                        {
+                            "name": "executionContextId",
+                            "$ref": "ExecutionContextId",
+                            "optional": true,
+                            "description": "Identifier of the context where exception happened."
                         }
                     ]
                 },
@@ -10897,30 +10915,13 @@
                     "description": "Issued when exception was thrown and unhandled.",
                     "parameters": [
                         {
-                            "name": "exceptionId",
-                            "type": "integer",
-                            "description": "Exception id."
-                        },
-                        {
                             "name": "timestamp",
                             "$ref": "Timestamp",
                             "description": "Timestamp of the exception."
                         },
                         {
-                            "name": "details",
+                            "name": "exceptionDetails",
                             "$ref": "ExceptionDetails"
-                        },
-                        {
-                            "name": "exception",
-                            "$ref": "RemoteObject",
-                            "optional": true,
-                            "description": "Exception object."
-                        },
-                        {
-                            "name": "executionContextId",
-                            "$ref": "ExecutionContextId",
-                            "optional": true,
-                            "description": "Identifier of the context where exception happened."
                         }
                     ],
                     "experimental": true
@@ -10930,9 +10931,9 @@
                     "description": "Issued when unhandled exception was revoked.",
                     "parameters": [
                         {
-                            "name": "message",
+                            "name": "reason",
                             "type": "string",
-                            "description": "Message describing why exception was revoked."
+                            "description": "Reason describing why exception was revoked."
                         },
                         {
                             "name": "exceptionId",
@@ -11420,10 +11421,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "compileError",
+                            "name": "exceptionDetails",
                             "optional": true,
                             "$ref": "Runtime.ExceptionDetails",
-                            "description": "Error data if any."
+                            "description": "Exception details if any."
                         }
                     ],
                     "description": "Edits JavaScript source live."
