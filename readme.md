@@ -26,8 +26,6 @@ Updating protocol:
 jekyll build # to build, though gh-pages will do that on its own.
 ```
 
-[#33](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/33) tracks a better flow.
-
 Deploying:
 
 All pushes to gh-pages instantly trigger a jeklyll build and the site will serve the resulting `_site`.
