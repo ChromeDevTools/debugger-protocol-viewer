@@ -8,20 +8,23 @@ More on the [Chrome DevTools Debugging Protocol](https://developer.chrome.com/de
 
 Dependencies:
 
-    bundle install
-    npm install -g bower
-
-    bower install
+```sh
+bundle install
+bower install
+```
 
 Building:
-
-    bundle exec jekyll serve # compiles site to _site/ and watches for file changes
-
+```sh
+jekyll server --incremental # compiles site to _site/ and watches for file changes
+# may need to prefix however: `bundle exec jekyll server --incremental`
+```
 Updating protocol:
 
-    ./update-protocol-json.sh
+```sh
+./update-protocol-json.sh
 
-    jekyll build # to build, though gh-pages will do that on its own.
+jekyll build # to build, though gh-pages will do that on its own.
+```
 
 [#33](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/33) tracks a better flow.
 
