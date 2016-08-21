@@ -204,6 +204,16 @@
                             "description": "Resource mimeType as determined by the browser."
                         },
                         {
+                            "name": "lastModified",
+                            "type": "number",
+                            "description": "Resource last-modified time as was reported by the server."
+                        },
+                        {
+                            "name": "decodedSize",
+                            "type": "number",
+                            "description": "Resource decoded size"
+                        },
+                        {
                             "name": "failed",
                             "type": "boolean",
                             "optional": true,
