@@ -1,6 +1,34 @@
 {
     "version": { "major": "1", "minor": "1" },
-    "domains": [{
+    "domains": [
+    {
+        "domain": "Schema",
+        "description": "Provides information about the protocol schema.",
+        "experimental": true,
+        "types": [
+            {
+                "id": "Domain",
+                "type": "object",
+                "description": "Description of the protocol domain.",
+                "exported": true,
+                "properties": [
+                    { "name": "name", "type": "string", "description": "Domain name." },
+                    { "name": "version", "type": "string", "description": "Domain version." }
+                ]
+            }
+        ],
+        "commands": [
+            {
+                "name": "getDomains",
+                "description": "Returns supported domains.",
+                "handlers": ["browser", "renderer"],
+                "returns": [
+                    { "name": "domains", "type": "array", "items": { "$ref": "Domain" }, "description": "List of supported domains." }
+                ]
+            }
+        ]
+    },
+    {
         "domain": "Runtime",
         "description": "Runtime domain exposes JavaScript runtime by means of remote evaluation and mirror objects. Evaluation results are returned as mirror object that expose object type, string representation and unique identifier that can be used for further object reference. Original objects are maintained in memory unless they are either explicitly released or are released along with the other objects in their object group.",
         "types": [
@@ -780,7 +808,7 @@
                     { "name": "id", "type": "integer", "description": "Unique id of the node." },
                     { "name": "callFrame", "$ref": "Runtime.CallFrame", "description": "Function location." },
                     { "name": "hitCount", "type": "integer", "description": "Number of samples where this node was on top of the call stack." },
-                    { "name": "children", "type": "array", "items": { "type": "integer" }, "description": "Child node ids." },
+                    { "name": "children", "type": "array", "items": { "type": "integer" }, "optional": true, "description": "Child node ids." },
                     { "name": "deoptReason", "type": "string", "experimental": true, "description": "The reason of being not optimized. The function may be deoptimized or marked as don't optimize."},
                     { "name": "positionTicks", "type": "array", "items": { "$ref": "PositionTickInfo" }, "experimental": true, "description": "An array of source position ticks." }
                 ]
@@ -791,10 +819,10 @@
                 "description": "Profile.",
                 "properties": [
                     { "name": "nodes", "type": "array", "items": { "$ref": "CPUProfileNode" }, "description": "The list of profile nodes. First item is the root node." },
-                    { "name": "startTime", "type": "number", "description": "Profiling start time in seconds." },
-                    { "name": "endTime", "type": "number", "description": "Profiling end time in seconds." },
+                    { "name": "startTime", "type": "number", "description": "Profiling start timestamp in microseconds." },
+                    { "name": "endTime", "type": "number", "description": "Profiling end timestamp in microseconds." },
                     { "name": "samples", "optional": true, "type": "array", "items": { "type": "integer" }, "description": "Ids of samples top nodes." },
-                    { "name": "timestamps", "optional": true, "type": "array", "items": { "type": "number" }, "description": "Timestamps of the samples in microseconds." }
+                    { "name": "timestampDeltas", "optional": true, "type": "array", "items": { "type": "integer" }, "description": "Deltas between adjacent sample timestamps in microseconds. The first delta is relative to the profile startTime." }
                 ]
             },
             {

@@ -204,16 +204,6 @@
                             "description": "Resource mimeType as determined by the browser."
                         },
                         {
-                            "name": "lastModified",
-                            "type": "number",
-                            "description": "Resource last-modified time as was reported by the server."
-                        },
-                        {
-                            "name": "decodedSize",
-                            "type": "number",
-                            "description": "Resource decoded size"
-                        },
-                        {
                             "name": "failed",
                             "type": "boolean",
                             "optional": true,
@@ -9924,6 +9914,51 @@
             ]
         },
         {
+            "domain": "Schema",
+            "description": "Provides information about the protocol schema.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "Domain",
+                    "type": "object",
+                    "description": "Description of the protocol domain.",
+                    "exported": true,
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "description": "Domain name."
+                        },
+                        {
+                            "name": "version",
+                            "type": "string",
+                            "description": "Domain version."
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "getDomains",
+                    "description": "Returns supported domains.",
+                    "handlers": [
+                        "browser",
+                        "renderer"
+                    ],
+                    "returns": [
+                        {
+                            "name": "domains",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Domain"
+                            },
+                            "description": "List of supported domains."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "domain": "Runtime",
             "description": "Runtime domain exposes JavaScript runtime by means of remote evaluation and mirror objects. Evaluation results are returned as mirror object that expose object type, string representation and unique identifier that can be used for further object reference. Original objects are maintained in memory unless they are either explicitly released or are released along with the other objects in their object group.",
             "types": [
@@ -11988,6 +12023,7 @@
                             "items": {
                                 "type": "integer"
                             },
+                            "optional": true,
                             "description": "Child node ids."
                         },
                         {
@@ -12023,12 +12059,12 @@
                         {
                             "name": "startTime",
                             "type": "number",
-                            "description": "Profiling start time in seconds."
+                            "description": "Profiling start timestamp in microseconds."
                         },
                         {
                             "name": "endTime",
                             "type": "number",
-                            "description": "Profiling end time in seconds."
+                            "description": "Profiling end timestamp in microseconds."
                         },
                         {
                             "name": "samples",
@@ -12040,13 +12076,13 @@
                             "description": "Ids of samples top nodes."
                         },
                         {
-                            "name": "timestamps",
+                            "name": "timestampDeltas",
                             "optional": true,
                             "type": "array",
                             "items": {
-                                "type": "number"
+                                "type": "integer"
                             },
-                            "description": "Timestamps of the samples in microseconds."
+                            "description": "Deltas between adjacent sample timestamps in microseconds. The first delta is relative to the profile startTime."
                         }
                     ]
                 },
