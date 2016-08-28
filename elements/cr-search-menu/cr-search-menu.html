@@ -71,7 +71,7 @@
       color: #3A3A3A;
       font-size: 14px;
     }
-    .search-match:hover {
+    .search-match:hover, .search-match--active {
       background-color: #E8F0FF;
     }
     .empty-state-message {
@@ -93,7 +93,7 @@
       <div class="scroller" on-scroll="handleScroll_">
         <iron-list items="[[renderItems]]" as="match">
           <template>
-            <div class="search-match" role="menuitem" on-click="activateItem_">
+            <div class$="search-match {{highlightedClass(match.selected)}}" role="menuitem" on-click="activateItem_">
               <iron-icon icon="{{match.icon}}"></iron-icon>
               <div class="match-info">
                 <div class="match-label">
@@ -152,6 +152,10 @@
       scrolling: {
         type: Boolean,
         reflectToAttribute: true
+      },
+      highlightedResultIdx: {
+        type: Number,
+        value: -1
       }
     },
 
@@ -168,6 +172,56 @@
     handleOpened_: function(opened) {
       if (opened) {
         this.updatePosition();
+      }
+    },
+
+    highlightedClass: function (selected) {
+      return selected ? 'search-match--active' : '';
+    },
+
+    highlightNextResult: function () {
+      if (this.highlightedResultIdx >= this.renderItems.length) {
+        return;
+      }
+
+      this.set('renderItems.' + this.highlightedResultIdx + '.selected', false);
+      this.highlightedResultIdx++;
+      this.set('renderItems.' + this.highlightedResultIdx + '.selected', true);
+
+      this.showHighlightedResult_();
+    },
+
+    highlightPreviousResult: function () {
+      if (this.highlightedResultIdx <= 0) {
+        return;
+      }
+
+      this.set('renderItems.' + this.highlightedResultIdx + '.selected', false);
+      this.highlightedResultIdx--;
+      this.set('renderItems.' + this.highlightedResultIdx + '.selected', true);
+
+      this.showHighlightedResult_();
+    },
+
+    showHighlightedResult_: function () {
+      var selected = this.$$('.search-match--active');
+      if (!selected) {
+        return;
+      }
+      if (selected.scrollIntoViewIfNeeded) {
+        selected.scrollIntoViewIfNeeded(false);
+      } else if (selected.scrollIntoView) {
+        selected.scrollIntoView(false);
+      }
+    },
+
+    chooseHighlightedResult: function() {
+      var selectedItem = this.renderItems[this.highlightedResultIdx];
+      if(selectedItem) {
+        this.fire('item-activate');
+        if (selectedItem.href) {
+          window.location.href = selectedItem.href;
+        }
       }
     },
 
@@ -189,6 +243,8 @@
     },
 
     renderItems_: function(keywordsModel, searchString) {
+      this.highlightedResultIdx = -1;
+
       if (keywordsModel) {
         var matches = keywordsModel.getMatches(searchString.toLowerCase());
         var items = [];
