@@ -15,15 +15,17 @@ bower install
 
 Building:
 ```sh
-jekyll server --incremental # compiles site to _site/ and watches for file changes
-# may need to prefix however: `bundle exec jekyll server --incremental`
+# compiles site to _site/ and watches for file changes
+bundle exec jekyll server --incremental
+# always use `bundle exec` to use the local version of jeykyll
 ```
 Updating protocol:
 
 ```sh
 ./update-protocol-json.sh
 
-jekyll build # to build, though gh-pages will do that on its own.
+# to build (although gh-pages will do it on its own)..
+bundle exec jekyll build
 ```
 
 Deploying:
