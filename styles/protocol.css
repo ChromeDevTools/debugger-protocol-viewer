@@ -107,7 +107,7 @@ paper-menu a.iron-selected {
   margin-left: 20px;
 }
 
-.experimental {
+span.experimental {
   font-size: 70%;
   text-transform: uppercase;
   background-color: #E57373;
@@ -118,8 +118,20 @@ paper-menu a.iron-selected {
   font-weight: normal;
   font-family: inherit;
 }
-.deprecated {
+span.deprecated {
   background-color: hsla(0,0%,90%,1);
+}
+
+.domain-experimental span.experimental {
+  display: none;
+}
+
+.domain-experimental .heading-domain span.experimental {
+  display: inline-block;
+}
+
+.domain-experimental .heading-domain {
+  border: 1px solid #E57373;
 }
 
 a.reflink {

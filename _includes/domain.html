@@ -1,6 +1,7 @@
 {% assign domain = include.domain %}
+<div class="{% if domain.experimental %} domain-experimental {% endif %}">
 
-<paper-material elevation="1">
+<paper-material elevation="1" class="heading-domain">
   <h2 class="heading"><span>{{domain.domain}}</span> Domain</h2>
 
   <p class="description">
@@ -43,3 +44,5 @@ Hide entries marked with "redirect". Those are just for backwards compatibility.
   {% endfor %}
 </paper-material>
 {% endif %}
+
+</div>
