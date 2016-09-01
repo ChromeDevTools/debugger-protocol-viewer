@@ -12,9 +12,10 @@
 {% comment %}
 Hide entries marked with "redirect". Those are just for backwards compatibility.
 {% endcomment %}
-{% assign commands = (domain.commands | where: "redirect", null) %}
-{% assign events = (domain.events | where: "redirect", null) %}
-{% assign types = (domain.types | where: "redirect", null) %}
+
+{% assign commands = (domain.commands | where_exp: "item", "item.redirect == nil") %}
+{% assign events = (domain.events | where_exp: "item", "item.redirect == nil") %}
+{% assign types = (domain.types | where_exp: "item", "item.redirect == nil") %}
 
 {% if commands[0] %}
 <h3>Methods</h3>
