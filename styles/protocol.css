@@ -1,5 +1,5 @@
 :root {
-    --font-stack: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
+    --font-stack: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -144,11 +144,11 @@ a.reflink {
 .monospace {
   font-family: Consolas, Menlo, monospace;
 }
-h4 { 
+h4 {
     margin: 1rem 0 0.5rem;
 }
 
-h5 { 
+h5 {
     color: gray;
     font-weight: 300;
     text-transform: uppercase;
@@ -235,7 +235,6 @@ p {
 }
 
 .permalink {
-  /* display: none; */
   margin-left: 5px;
   vertical-align: top;
   text-decoration: none;
@@ -251,7 +250,6 @@ h4 {
 }
 
 h4:hover .permalink {
-  /* display: initial; */
   opacity: 1;
 }
 
