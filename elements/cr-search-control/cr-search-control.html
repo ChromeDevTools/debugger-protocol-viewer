@@ -163,9 +163,12 @@
       }
     },
 
-    keyBindings: [{
-      'esc': 'handleEsc_'
-    }],
+    keyBindings: {
+      'esc': 'handleEsc_',
+      'enter': 'handleEnter_',
+      'up': 'handleUpArrow_',
+      'down': 'handleDownArrow_'
+    },
 
     listeners: {
       'resultsMenu.item-activate': 'handleItemActivate_',
@@ -179,6 +182,18 @@
 
     setMenuOpen_: function(open) {
       this.$.resultsMenu.opened = open;
+    },
+
+    handleEnter_: function() {
+      this.$.resultsMenu.chooseHighlightedResult();
+    },
+
+    handleUpArrow_: function() {
+      this.$.resultsMenu.highlightPreviousResult();
+    },
+
+    handleDownArrow_: function() {
+      this.$.resultsMenu.highlightNextResult();
     },
 
     handleSearchChange_: function() {
