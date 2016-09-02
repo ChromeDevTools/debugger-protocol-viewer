@@ -4,9 +4,13 @@
 <div class="type">
   <h4 class="type-name monospace" id="type-{{type.id}}">{{type.id}}<a href="{{permalink}}" class="permalink">#</a></h4>
 
-  <p class="type-description">{{type.description}}</p>
+  <p class="type-description">
+    {{type.description}}
+    {% include experimental.html item=type %}
+  </p>
   <p class="type-type">Type: <strong>{{type.type}}</strong></p>
-
+  
+  
   {% if type.properties[0] %}
   <h5>Properties</h5>
   <dl class="parameter-list">

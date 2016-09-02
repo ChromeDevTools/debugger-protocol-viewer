@@ -1,6 +1,10 @@
+:root {
+    --font-stack: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 body {
   background: #fafafa;
-  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--font-stack);
   color: #333;
 }
 
@@ -103,6 +107,33 @@ paper-menu a.iron-selected {
   margin-left: 20px;
 }
 
+span.experimental {
+  font-size: 70%;
+  text-transform: uppercase;
+  background-color: #E57373;
+  padding: 2px;
+  cursor: help;
+  color: white;
+  vertical-align: baseline;
+  font-weight: normal;
+  font-family: inherit;
+}
+span.deprecated {
+  background-color: hsla(0,0%,90%,1);
+}
+
+.domain-experimental span.experimental {
+  display: none;
+}
+
+.domain-experimental .heading-domain span.experimental {
+  display: inline-block;
+}
+
+.domain-experimental .heading-domain {
+  border: 1px solid #E57373;
+}
+
 a.reflink {
     display: block;
     font-size: 12px;
@@ -113,11 +144,11 @@ a.reflink {
 .monospace {
   font-family: Consolas, Menlo, monospace;
 }
-h4 { 
+h4 {
     margin: 1rem 0 0.5rem;
 }
 
-h5 { 
+h5 {
     color: gray;
     font-weight: 300;
     text-transform: uppercase;
@@ -204,18 +235,22 @@ p {
 }
 
 .permalink {
-  display: none;
   margin-left: 5px;
   vertical-align: top;
   text-decoration: none;
+  opacity: 0;
 }
 
 .permalink:hover {
   text-decoration: underline;
 }
 
+h4 {
+  margin: 18px 0;
+}
+
 h4:hover .permalink {
-  display: initial;
+  opacity: 1;
 }
 
 /* Breakpoints */
@@ -230,8 +265,8 @@ h4:hover .permalink {
   paper-material {
     --menu-container-display: none;
     width: calc(97.33% - 32px);
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   #drawer .paper-toolbar {
@@ -245,8 +280,8 @@ h4:hover .permalink {
   paper-material {
     width: calc(98% - 46px);
     margin-bottom: 32px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
   #drawer.paper-drawer-panel > [drawer] {
