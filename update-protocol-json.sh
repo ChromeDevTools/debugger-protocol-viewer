@@ -2,6 +2,7 @@
 set -x
 
 chromium_src_path="$HOME/chromium/src"
+git -C "$chromium_src_path" fetch origin
 git -C "$chromium_src_path" checkout origin/master
 
 browser_protocol_path="$chromium_src_path/third_party/WebKit/Source/core/inspector/browser_protocol.json"
