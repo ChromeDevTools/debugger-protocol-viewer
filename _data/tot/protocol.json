@@ -1730,18 +1730,28 @@
                     "description": "An explanation of an factor contributing to the security state."
                 },
                 {
-                    "id": "MixedContentStatus",
+                    "id": "InsecureContentStatus",
                     "type": "object",
                     "properties": [
                         {
-                            "name": "ranInsecureContent",
+                            "name": "ranMixedContent",
                             "type": "boolean",
-                            "description": "True if the page ran insecure content such as scripts."
+                            "description": "True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts."
                         },
                         {
-                            "name": "displayedInsecureContent",
+                            "name": "displayedMixedContent",
                             "type": "boolean",
-                            "description": "True if the page displayed insecure content such as images."
+                            "description": "True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images."
+                        },
+                        {
+                            "name": "ranContentWithCertErrors",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over HTTPS without certificate errors, and ran content such as scripts that were loaded with certificate errors."
+                        },
+                        {
+                            "name": "displayedContentWithCertErrors",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over HTTPS without certificate errors, and displayed content such as images that were loaded with certificate errors."
                         },
                         {
                             "name": "ranInsecureContentStyle",
@@ -1754,7 +1764,7 @@
                             "description": "Security state representing a page that displayed insecure content."
                         }
                     ],
-                    "description": "Information about mixed content on the page."
+                    "description": "Information about insecure content on the page."
                 }
             ],
             "commands": [
@@ -1793,9 +1803,9 @@
                             "optional": true
                         },
                         {
-                            "name": "mixedContentStatus",
-                            "$ref": "MixedContentStatus",
-                            "description": "Information about mixed content on the page.",
+                            "name": "insecureContentStatus",
+                            "$ref": "InsecureContentStatus",
+                            "description": "Information about insecure content on the page.",
                             "optional": true
                         },
                         {
@@ -2502,19 +2512,11 @@
                             "experimental": true,
                             "description": "Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc)."
                         }
-                    ],
-                    "handlers": [
-                        "renderer",
-                        "browser"
                     ]
                 },
                 {
                     "name": "disable",
-                    "description": "Disables network tracking, prevents network events from being sent to the client.",
-                    "handlers": [
-                        "renderer",
-                        "browser"
-                    ]
+                    "description": "Disables network tracking, prevents network events from being sent to the client."
                 },
                 {
                     "name": "setUserAgentOverride",
@@ -8486,6 +8488,7 @@
         },
         {
             "domain": "Tracing",
+            "experimental": true,
             "types": [
                 {
                     "id": "MemoryDumpConfig",
