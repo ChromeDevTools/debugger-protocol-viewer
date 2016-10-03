@@ -2,11 +2,11 @@
 set -x
 
 chromium_src_path="$HOME/chromium/src"
-#git -C "$chromium_src_path" fetch origin
-#git -C "$chromium_src_path" checkout origin/master
+git -C "$chromium_src_path" fetch origin
+git -C "$chromium_src_path" checkout origin/master
 
 browser_protocol_path="$chromium_src_path/third_party/WebKit/Source/core/inspector/browser_protocol.json"
-js_protocol_path="$chromium_src_path/third_party/WebKit/Source/platform/v8_inspector/js_protocol.json"
+js_protocol_path="$chromium_src_path/v8/src/inspector/js_protocol.json"
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 local_tot_protocol_path="_data/tot/protocol.json"
