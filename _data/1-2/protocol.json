@@ -1,6 +1,7 @@
 {
     "version": { "major": "1", "minor": "2" },
-    "domains": [{
+    "domains": [
+      {
         "domain": "Page",
         "description": "Actions and events related to the inspected page belong to the page domain.",
         "dependencies": [
@@ -4108,103 +4109,6 @@
         ]
     },
     {
-        "domain": "Console",
-        "description": "This domain is deprecated - use Runtime or Log instead.",
-        "dependencies": [
-            "Runtime"
-        ],
-        "deprecated": true,
-        "types": [
-            {
-                "id": "ConsoleMessage",
-                "type": "object",
-                "description": "Console message.",
-                "properties": [
-                    {
-                        "name": "source",
-                        "type": "string",
-                        "enum": [
-                            "xml",
-                            "javascript",
-                            "network",
-                            "console-api",
-                            "storage",
-                            "appcache",
-                            "rendering",
-                            "security",
-                            "other",
-                            "deprecation",
-                            "worker"
-                        ],
-                        "description": "Message source."
-                    },
-                    {
-                        "name": "level",
-                        "type": "string",
-                        "enum": [
-                            "log",
-                            "warning",
-                            "error",
-                            "debug",
-                            "info"
-                        ],
-                        "description": "Message severity."
-                    },
-                    {
-                        "name": "text",
-                        "type": "string",
-                        "description": "Message text."
-                    },
-                    {
-                        "name": "url",
-                        "type": "string",
-                        "optional": true,
-                        "description": "URL of the message origin."
-                    },
-                    {
-                        "name": "line",
-                        "type": "integer",
-                        "optional": true,
-                        "description": "Line number in the resource that generated this message (1-based)."
-                    },
-                    {
-                        "name": "column",
-                        "type": "integer",
-                        "optional": true,
-                        "description": "Column number in the resource that generated this message (1-based)."
-                    }
-                ]
-            }
-        ],
-        "commands": [
-            {
-                "name": "enable",
-                "description": "Enables console domain, sends the messages collected so far to the client by means of the <code>messageAdded</code> notification."
-            },
-            {
-                "name": "disable",
-                "description": "Disables console domain, prevents further console messages from being reported to the client."
-            },
-            {
-                "name": "clearMessages",
-                "description": "Does nothing."
-            }
-        ],
-        "events": [
-            {
-                "name": "messageAdded",
-                "parameters": [
-                    {
-                        "name": "message",
-                        "$ref": "ConsoleMessage",
-                        "description": "Console message that has been added."
-                    }
-                ],
-                "description": "Issued when new console message is added."
-            }
-        ]
-    },
-    {
         "domain": "Profiler",
         "dependencies": [
             "Runtime",
@@ -4383,5 +4287,6 @@
                 ]
             }
         ]
-    }]
+    }
+  ]
 }
