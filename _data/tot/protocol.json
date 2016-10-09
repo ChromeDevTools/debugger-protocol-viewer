@@ -4497,6 +4497,62 @@
                     "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
                 },
                 {
+                    "id": "InlineTextBox",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "boundingBox",
+                            "$ref": "Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "startCharacterIndex",
+                            "type": "integer",
+                            "description": "The starting index in characters, for this post layout textbox substring."
+                        },
+                        {
+                            "name": "numCharacters",
+                            "type": "integer",
+                            "description": "The number of characters in this post layout textbox substring."
+                        }
+                    ],
+                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
+                    "experimental": true
+                },
+                {
+                    "id": "LayoutTreeNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "description": "The BackendNodeId of the related DOM node."
+                        },
+                        {
+                            "name": "boundingBox",
+                            "$ref": "Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "layoutText",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Contents of the LayoutText if any"
+                        },
+                        {
+                            "name": "inlineTextNodes",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "InlineTextBox"
+                            },
+                            "description": "The post layout inline text nodes, if any."
+                        }
+                    ],
+                    "description": "Details of an element in the DOM tree with a LayoutObject.",
+                    "experimental": true
+                },
+                {
                     "id": "RGBA",
                     "type": "object",
                     "properties": [
@@ -4749,6 +4805,20 @@
                         }
                     ],
                     "description": "Returns the root DOM node to the caller."
+                },
+                {
+                    "name": "getLayoutTreeNodes",
+                    "returns": [
+                        {
+                            "name": "layoutTreeNodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "LayoutTreeNode"
+                            }
+                        }
+                    ],
+                    "description": "Returns the document's LayoutTreeNodes to the caller, and those of any iframes too.",
+                    "experimental": true
                 },
                 {
                     "name": "collectClassNamesFromSubtree",
@@ -7113,7 +7183,7 @@
         },
         {
             "domain": "Target",
-            "description": "Supports discovery and auto-attach to related targets.",
+            "description": "Supports additional targets discovery and allows to attach to them.",
             "experimental": true,
             "types": [
                 {
@@ -7125,7 +7195,7 @@
                     "type": "string",
                     "enum": [
                         "page",
-                        "frame",
+                        "iframe",
                         "worker",
                         "service_worker"
                     ]
@@ -7155,26 +7225,45 @@
             ],
             "commands": [
                 {
-                    "name": "enable",
-                    "description": "Start discovering targets and attach to all related targets from now on.",
+                    "name": "setDiscoverTargets",
+                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetRemoved</code> events.",
+                    "parameters": [
+                        {
+                            "name": "discover",
+                            "type": "boolean",
+                            "description": "Whether to discover available targets."
+                        }
+                    ],
                     "handlers": [
                         "browser"
                     ]
                 },
                 {
-                    "name": "disable",
-                    "description": "Stop discovering targets and detach from all currently attached targets.",
+                    "name": "setAutoAttach",
+                    "description": "Controls whether to automatically attach to new targets which are considered to be related to this one. When turned on, attaches to all existing related targets as well. When turned off, automatically detaches from all currently attached targets.",
+                    "parameters": [
+                        {
+                            "name": "autoAttach",
+                            "type": "boolean",
+                            "description": "Whether to auto-attach to related targets."
+                        },
+                        {
+                            "name": "waitForDebuggerOnStart",
+                            "type": "boolean",
+                            "description": "Whether to pause new targets when attaching to them. Use <code>Runtime.runIfWaitingForDebugger</code> to run paused targets."
+                        }
+                    ],
                     "handlers": [
                         "browser"
                     ]
                 },
                 {
-                    "name": "setWaitForDebuggerOnStart",
+                    "name": "setAttachToFrames",
                     "parameters": [
                         {
                             "name": "value",
                             "type": "boolean",
-                            "description": "Whether to pause new targets when attaching to them. Use <code>Runtime.runIfWaitingForDebugger</code> to run puased targets."
+                            "description": "Whether to attach to frames."
                         }
                     ],
                     "handlers": [
@@ -7226,6 +7315,37 @@
                     "handlers": [
                         "browser"
                     ]
+                },
+                {
+                    "name": "attachToTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean",
+                            "description": "Whether attach succeeded."
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "detachFromTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
                 }
             ],
             "events": [
@@ -7233,16 +7353,32 @@
                     "name": "targetCreated",
                     "parameters": [
                         {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "targetRemoved",
+                    "parameters": [
+                        {
                             "name": "targetId",
                             "$ref": "TargetID"
-                        },
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "attachedToTarget",
+                    "parameters": [
                         {
-                            "name": "type",
-                            "$ref": "TargetType"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
+                            "name": "targetId",
+                            "$ref": "TargetID"
                         },
                         {
                             "name": "waitingForDebugger",
@@ -7254,7 +7390,7 @@
                     ]
                 },
                 {
-                    "name": "targetRemoved",
+                    "name": "detachedFromTarget",
                     "parameters": [
                         {
                             "name": "targetId",
