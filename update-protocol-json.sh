@@ -4,6 +4,7 @@ set -x
 chromium_src_path="$HOME/chromium/src"
 git -C "$chromium_src_path" fetch origin
 git -C "$chromium_src_path" checkout origin/master
+env GYP_DEFINES=disable_nacl=1 gclient sync --jobs=16
 
 browser_protocol_path="$chromium_src_path/third_party/WebKit/Source/core/inspector/browser_protocol.json"
 js_protocol_path="$chromium_src_path/v8/src/inspector/js_protocol.json"
@@ -39,7 +40,7 @@ cd $local_script_path
 
 cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" | sed -Ee "s/(browser.*)([0-9a-f]{40,80})/\1$br_commit_line/" > _versions/tot.html.new
 cat _versions/tot.html |      sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"      | sed -Ee "s/(js.*)([0-9a-f]{40,80})/\1$js_commit_hash/" > _versions/tot.html.new
-mv _versions/tot.html.new _versions/tot.html
-
+cp _versions/tot.html.new _versions/tot.html
+rm -f cp _versions/tot.html.new
 
 set +x
