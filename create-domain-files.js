@@ -5,7 +5,7 @@
  */
 
 const fs = require('fs');
-const DOMAINS_FOLDER = '_domains/';
+const DOMAINS_FOLDER = '_domains';
 const VERSIONS_FILE = '_data/versions.json';
 
 const versionsText = fs.readFileSync(VERSIONS_FILE);
@@ -25,6 +25,7 @@ function generateDomainFiles(version) {
   const protocolText = fs.readFileSync(protocolFile);
   const protocol = JSON.parse(protocolText);
 
+  console.log('Generating protocol:', version.name, '– Size in bytes:', protocolText.length.toLocaleString());
   (protocol.domains).forEach((domain, idx) => {
     const name = domain.domain;
     const fileName = `${DOMAINS_FOLDER}/${version.slug}/${name}.html`;
@@ -34,6 +35,8 @@ category: ${version.slug}
 version: ${version.name}
 idx: ${idx}
 ---`;
+
+    console.log('  Writing domain stub:', fileName);
 
     fs.writeFileSync(fileName, content);
   });
