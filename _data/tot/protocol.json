@@ -204,6 +204,18 @@
                             "description": "Resource mimeType as determined by the browser."
                         },
                         {
+                            "name": "lastModified",
+                            "$ref": "Network.Timestamp",
+                            "description": "last-modified timestamp as reported by server.",
+                            "optional": true
+                        },
+                        {
+                            "name": "contentSize",
+                            "type": "number",
+                            "description": "Resource content size.",
+                            "optional": true
+                        },
+                        {
                             "name": "failed",
                             "type": "boolean",
                             "optional": true,
@@ -2117,7 +2129,7 @@
                         {
                             "name": "keyExchange",
                             "type": "string",
-                            "description": "Key Exchange used by the connection."
+                            "description": "Key Exchange used by the connection, or the empty string if not applicable."
                         },
                         {
                             "name": "keyExchangeGroup",
@@ -4497,62 +4509,6 @@
                     "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
                 },
                 {
-                    "id": "InlineTextBox",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "boundingBox",
-                            "$ref": "Rect",
-                            "description": "The absolute position bounding box."
-                        },
-                        {
-                            "name": "startCharacterIndex",
-                            "type": "integer",
-                            "description": "The starting index in characters, for this post layout textbox substring."
-                        },
-                        {
-                            "name": "numCharacters",
-                            "type": "integer",
-                            "description": "The number of characters in this post layout textbox substring."
-                        }
-                    ],
-                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
-                    "experimental": true
-                },
-                {
-                    "id": "LayoutTreeNode",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "backendNodeId",
-                            "$ref": "BackendNodeId",
-                            "description": "The BackendNodeId of the related DOM node."
-                        },
-                        {
-                            "name": "boundingBox",
-                            "$ref": "Rect",
-                            "description": "The absolute position bounding box."
-                        },
-                        {
-                            "name": "layoutText",
-                            "type": "string",
-                            "optional": true,
-                            "description": "Contents of the LayoutText if any"
-                        },
-                        {
-                            "name": "inlineTextNodes",
-                            "type": "array",
-                            "optional": true,
-                            "items": {
-                                "$ref": "InlineTextBox"
-                            },
-                            "description": "The post layout inline text nodes, if any."
-                        }
-                    ],
-                    "description": "Details of an element in the DOM tree with a LayoutObject.",
-                    "experimental": true
-                },
-                {
                     "id": "RGBA",
                     "type": "object",
                     "properties": [
@@ -4797,6 +4753,22 @@
                 },
                 {
                     "name": "getDocument",
+                    "parameters": [
+                        {
+                            "name": "depth",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "traverseFrames",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes should be traversed when returning the subtree (default is false).",
+                            "experimental": true
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "root",
@@ -4804,21 +4776,7 @@
                             "description": "Resulting node."
                         }
                     ],
-                    "description": "Returns the root DOM node to the caller."
-                },
-                {
-                    "name": "getLayoutTreeNodes",
-                    "returns": [
-                        {
-                            "name": "layoutTreeNodes",
-                            "type": "array",
-                            "items": {
-                                "$ref": "LayoutTreeNode"
-                            }
-                        }
-                    ],
-                    "description": "Returns the document's LayoutTreeNodes to the caller, and those of any iframes too.",
-                    "experimental": true
+                    "description": "Returns the root DOM node (and optionally the subtree) to the caller."
                 },
                 {
                     "name": "collectClassNamesFromSubtree",
@@ -4855,6 +4813,13 @@
                             "type": "integer",
                             "optional": true,
                             "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "traverseFrames",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes should be traversed when returning the sub-tree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -6420,6 +6385,83 @@
                         }
                     ],
                     "description": "A descriptor of operation to mutate style declaration text."
+                },
+                {
+                    "id": "InlineTextBox",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "startCharacterIndex",
+                            "type": "integer",
+                            "description": "The starting index in characters, for this post layout textbox substring."
+                        },
+                        {
+                            "name": "numCharacters",
+                            "type": "integer",
+                            "description": "The number of characters in this post layout textbox substring."
+                        }
+                    ],
+                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
+                    "experimental": true
+                },
+                {
+                    "id": "LayoutTreeNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "DOM.BackendNodeId",
+                            "description": "The BackendNodeId of the related DOM node."
+                        },
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "layoutText",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Contents of the LayoutText if any"
+                        },
+                        {
+                            "name": "inlineTextNodes",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "InlineTextBox"
+                            },
+                            "description": "The post layout inline text nodes, if any."
+                        },
+                        {
+                            "name": "styleIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Index into the computedStyles array returned by getLayoutTreeAndStyles."
+                        }
+                    ],
+                    "description": "Details of an element in the DOM tree with a LayoutObject.",
+                    "experimental": true
+                },
+                {
+                    "id": "ComputedStyle",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "properties",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CSSComputedStyleProperty"
+                            }
+                        }
+                    ],
+                    "description": "A subset of the full ComputedStyle as defined by the request whitelist.",
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -6841,6 +6883,37 @@
                         }
                     ],
                     "experimental": true
+                },
+                {
+                    "name": "getLayoutTreeAndStyles",
+                    "parameters": [
+                        {
+                            "name": "computedStyleWhitelist",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Whitelist of computed styles to return."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "layoutTreeNodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "LayoutTreeNode"
+                            }
+                        },
+                        {
+                            "name": "computedStyles",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ComputedStyle"
+                            }
+                        }
+                    ],
+                    "description": "For the main document and any content documents, return the LayoutTreeNodes and a whitelisted subset of the computed style.",
+                    "experimental": true
                 }
             ],
             "events": [
@@ -7191,16 +7264,6 @@
                     "type": "string"
                 },
                 {
-                    "id": "TargetType",
-                    "type": "string",
-                    "enum": [
-                        "page",
-                        "iframe",
-                        "worker",
-                        "service_worker"
-                    ]
-                },
-                {
                     "id": "TargetInfo",
                     "type": "object",
                     "properties": [
@@ -7210,7 +7273,7 @@
                         },
                         {
                             "name": "type",
-                            "$ref": "TargetType"
+                            "type": "string"
                         },
                         {
                             "name": "title",
@@ -7221,12 +7284,26 @@
                             "type": "string"
                         }
                     ]
+                },
+                {
+                    "id": "RemoteLocation",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "host",
+                            "type": "string"
+                        },
+                        {
+                            "name": "port",
+                            "type": "integer"
+                        }
+                    ]
                 }
             ],
             "commands": [
                 {
                     "name": "setDiscoverTargets",
-                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetRemoved</code> events.",
+                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetDestroyed</code> events.",
                     "parameters": [
                         {
                             "name": "discover",
@@ -7266,6 +7343,23 @@
                             "description": "Whether to attach to frames."
                         }
                     ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "setRemoteLocations",
+                    "parameters": [
+                        {
+                            "name": "locations",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RemoteLocation"
+                            },
+                            "description": "List of remote locations."
+                        }
+                    ],
+                    "description": "Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was set to <code>true</code>.",
                     "handlers": [
                         "browser"
                     ]
@@ -7362,7 +7456,7 @@
                     ]
                 },
                 {
-                    "name": "targetRemoved",
+                    "name": "targetDestroyed",
                     "parameters": [
                         {
                             "name": "targetId",
@@ -7377,8 +7471,8 @@
                     "name": "attachedToTarget",
                     "parameters": [
                         {
-                            "name": "targetId",
-                            "$ref": "TargetID"
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
                         },
                         {
                             "name": "waitingForDebugger",
@@ -9858,20 +9952,6 @@
                             "type": "string"
                         }
                     ]
-                },
-                {
-                    "id": "RemoteLocation",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "host",
-                            "type": "string"
-                        },
-                        {
-                            "name": "port",
-                            "type": "integer"
-                        }
-                    ]
                 }
             ],
             "commands": [
@@ -9982,23 +10062,6 @@
                         "browser"
                     ],
                     "async": true
-                },
-                {
-                    "name": "setRemoteLocations",
-                    "parameters": [
-                        {
-                            "name": "locations",
-                            "type": "array",
-                            "items": {
-                                "$ref": "RemoteLocation"
-                            },
-                            "description": "List of remote locations"
-                        }
-                    ],
-                    "description": "Enables target discovery for the specified locations.",
-                    "handlers": [
-                        "browser"
-                    ]
                 },
                 {
                     "name": "attach",
