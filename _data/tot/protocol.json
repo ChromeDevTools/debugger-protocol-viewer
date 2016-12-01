@@ -531,6 +531,11 @@
                     "description": "Navigates current page to the given URL."
                 },
                 {
+                    "name": "stopLoading",
+                    "description": "Force the page stop all navigations and pending resource fetches.",
+                    "experimental": true
+                },
+                {
                     "name": "getNavigationHistory",
                     "returns": [
                         {
@@ -4656,10 +4661,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "traverseFrames",
+                            "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes should be traversed when returning the subtree (default is false).",
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -4710,10 +4715,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "traverseFrames",
+                            "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes should be traversed when returning the sub-tree (default is false).",
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the sub-tree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -7003,6 +7008,11 @@
                             "description": "<code>EventListener</code>'s passive flag."
                         },
                         {
+                            "name": "once",
+                            "type": "boolean",
+                            "description": "<code>EventListener</code>'s once flag."
+                        },
+                        {
                             "name": "scriptId",
                             "$ref": "Runtime.ScriptId",
                             "description": "Script id of the handler code."
@@ -8660,6 +8670,9 @@
         },
         {
             "domain": "Tracing",
+            "dependencies": [
+                "IO"
+            ],
             "experimental": true,
             "types": [
                 {
@@ -9721,6 +9734,31 @@
                             "description": "Identifier of the worker associated with this entry."
                         }
                     ]
+                },
+                {
+                    "id": "ViolationSetting",
+                    "type": "object",
+                    "description": "Violation configuration setting.",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "enum": [
+                                "longTask",
+                                "longLayout",
+                                "blockedEvent",
+                                "blockedParser",
+                                "handler",
+                                "recurringHandler"
+                            ],
+                            "description": "Violation type."
+                        },
+                        {
+                            "name": "threshold",
+                            "type": "number",
+                            "description": "Time threshold to trigger upon."
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -9737,15 +9775,22 @@
                     "description": "Clears the log."
                 },
                 {
-                    "name": "setReportViolationsEnabled",
+                    "name": "startViolationsReport",
                     "parameters": [
                         {
-                            "name": "enabled",
-                            "type": "boolean",
-                            "description": "Pass true to enable."
+                            "name": "config",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ViolationSetting"
+                            },
+                            "description": "Configuration for violations."
                         }
                     ],
-                    "description": "Reports runtime audit violations as log entries."
+                    "description": "start violation reporting."
+                },
+                {
+                    "name": "stopViolationsReport",
+                    "description": "Stop violation reporting."
                 }
             ],
             "events": [
