@@ -50,7 +50,7 @@ js_commit_hash=$(echo $js_commit_line | grep -E -o "[0-9a-f]{20,80}")
 # => into viewer
 cd $local_script_path
 
-cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" | sed -Ee "s/(browser.*)([0-9a-f]{40,80})/\1$br_commit_line/" > _versions/tot.html.new
+cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" | sed -Ee "s/(browser>)commit ([0-9a-f]{40,80})/\1$br_commit_line/" > _versions/tot.html.new
 cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  | sed -Ee "s/(js.*)([0-9a-f]{40,80})/\1$js_commit_hash/" > _versions/tot.html
 rm -f _versions/tot.html.new
 
