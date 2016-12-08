@@ -2601,6 +2601,14 @@
                 },
                 {
                     "name": "getCookies",
+                    "parameters": [
+                        {
+                            "name": "global",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "If true, returns all cookies, otherwise only the cookies for the current URL."
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "cookies",
