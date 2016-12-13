@@ -14,7 +14,7 @@ origBranchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
 
 git fetch origin
 git checkout -f origin/master
-env GYP_DEFINES=disable_nacl=1 gclient sync --jobs=70
+env GYP_DEFINES=disable_nacl=1 gclient sync --jobs=70  --nohooks
 
 browser_protocol_path="$chromium_src_path/third_party/WebKit/Source/core/inspector/browser_protocol.json"
 js_protocol_path="$chromium_src_path/v8/src/inspector/js_protocol.json"
