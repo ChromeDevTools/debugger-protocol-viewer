@@ -1776,24 +1776,27 @@
                             "description": "Security state."
                         },
                         {
+                            "name": "schemeIsCryptographic",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over cryptographic transport such as HTTPS."
+                        },
+                        {
                             "name": "explanations",
                             "type": "array",
                             "items": {
                                 "$ref": "SecurityStateExplanation"
                             },
-                            "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.",
-                            "optional": true
+                            "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included."
                         },
                         {
                             "name": "insecureContentStatus",
                             "$ref": "InsecureContentStatus",
-                            "description": "Information about insecure content on the page.",
-                            "optional": true
+                            "description": "Information about insecure content on the page."
                         },
                         {
-                            "name": "schemeIsCryptographic",
-                            "type": "boolean",
-                            "description": "True if the page was loaded over cryptographic transport such as HTTPS.",
+                            "name": "summary",
+                            "type": "string",
+                            "description": "Overrides user-visible description of the state.",
                             "optional": true
                         }
                     ]
@@ -11178,7 +11181,8 @@
                                 "catch",
                                 "block",
                                 "script",
-                                "eval"
+                                "eval",
+                                "module"
                             ],
                             "description": "Scope type."
                         },
