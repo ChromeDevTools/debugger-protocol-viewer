@@ -3904,6 +3904,15 @@
                     "description": "Disables storage tracking, prevents storage events from being sent to the client."
                 },
                 {
+                    "name": "clear",
+                    "parameters": [
+                        {
+                            "name": "storageId",
+                            "$ref": "StorageId"
+                        }
+                    ]
+                },
+                {
                     "name": "getDOMStorageItems",
                     "parameters": [
                         {
@@ -9708,11 +9717,10 @@
                             "name": "level",
                             "type": "string",
                             "enum": [
-                                "log",
+                                "verbose",
+                                "info",
                                 "warning",
-                                "error",
-                                "debug",
-                                "info"
+                                "error"
                             ],
                             "description": "Log entry severity."
                         },
@@ -11882,6 +11890,7 @@
                                 "assert",
                                 "debugCommand",
                                 "promiseRejection",
+                                "OOM",
                                 "other"
                             ],
                             "description": "Pause reason."
