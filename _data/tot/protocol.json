@@ -875,11 +875,29 @@
                 {
                     "name": "captureScreenshot",
                     "description": "Capture page screenshot.",
+                    "parameters": [
+                        {
+                            "name": "format",
+                            "type": "string",
+                            "optional": true,
+                            "enum": [
+                                "jpeg",
+                                "png"
+                            ],
+                            "description": "Image compression format (defaults to png)."
+                        },
+                        {
+                            "name": "quality",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Compression quality from range [0..100] (jpeg only)."
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "data",
                             "type": "string",
-                            "description": "Base64-encoded image data (PNG)."
+                            "description": "Base64-encoded image data."
                         }
                     ],
                     "experimental": true
@@ -2617,6 +2635,17 @@
                 },
                 {
                     "name": "getCookies",
+                    "parameters": [
+                        {
+                            "name": "urls",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "optional": true,
+                            "description": "The list of URLs for which applicable cookies will be fetched"
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "cookies",
@@ -3722,6 +3751,23 @@
                     ],
                     "returns": [],
                     "description": "Clears all entries from an object store."
+                },
+                {
+                    "name": "deleteDatabase",
+                    "parameters": [
+                        {
+                            "name": "securityOrigin",
+                            "type": "string",
+                            "description": "Security origin."
+                        },
+                        {
+                            "name": "databaseName",
+                            "type": "string",
+                            "description": "Database name."
+                        }
+                    ],
+                    "returns": [],
+                    "description": "Deletes a database."
                 }
             ]
         },
