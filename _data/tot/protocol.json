@@ -9522,7 +9522,9 @@
                         "disabled",
                         "hidden",
                         "hiddenRoot",
-                        "invalid"
+                        "invalid",
+                        "keyshortcuts",
+                        "roledescription"
                     ],
                     "description": "States which apply to every AX node."
                 },
@@ -9562,6 +9564,7 @@
                     "enum": [
                         "checked",
                         "expanded",
+                        "modal",
                         "pressed",
                         "selected"
                     ],
@@ -9572,9 +9575,11 @@
                     "type": "string",
                     "enum": [
                         "activedescendant",
-                        "flowto",
                         "controls",
                         "describedby",
+                        "details",
+                        "errormessage",
+                        "flowto",
                         "labelledby",
                         "owns"
                     ],
