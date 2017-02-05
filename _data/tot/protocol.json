@@ -4325,6 +4325,13 @@
                             "description": "Node identifier that is passed into the rest of the DOM messages as the <code>nodeId</code>. Backend will only push node with given <code>id</code> once. It is aware of all requested nodes and will only fire DOM events for nodes known to the client."
                         },
                         {
+                            "name": "parentId",
+                            "$ref": "NodeId",
+                            "optional": true,
+                            "description": "The id of the parent node if any.",
+                            "experimental": true
+                        },
+                        {
                             "name": "backendNodeId",
                             "$ref": "BackendNodeId",
                             "description": "The BackendNodeId for this node.",
@@ -4765,6 +4772,36 @@
                         {
                             "name": "root",
                             "$ref": "Node",
+                            "description": "Resulting node."
+                        }
+                    ],
+                    "description": "Returns the root DOM node (and optionally the subtree) to the caller."
+                },
+                {
+                    "name": "getFlattenedDocument",
+                    "parameters": [
+                        {
+                            "name": "depth",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "pierce",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
+                            "experimental": true
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Node"
+                            },
                             "description": "Resulting node."
                         }
                     ],
