@@ -1367,6 +1367,9 @@
         {
             "domain": "Emulation",
             "description": "This domain emulates different environments for the page.",
+            "dependencies": [
+                "DOM"
+            ],
             "types": [
                 {
                     "id": "ScreenOrientation",
@@ -1668,6 +1671,19 @@
                             "type": "integer",
                             "optional": true,
                             "description": "If set, after this many virtual milliseconds have elapsed virtual time will be paused and a virtualTimeBudgetExpired event is sent."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "name": "setDefaultBackgroundColorOverride",
+                    "description": "Sets or clears an override of the default background color of the frame. This override is used if the content does not specify one.",
+                    "parameters": [
+                        {
+                            "name": "color",
+                            "$ref": "DOM.RGBA",
+                            "optional": true,
+                            "description": "RGBA of the default background color. If not specified, any existing override will be cleared."
                         }
                     ],
                     "experimental": true
@@ -11881,6 +11897,13 @@
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
                             "experimental": true
+                        },
+                        {
+                            "name": "isModule",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True, if this script is ES6 module.",
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger."
@@ -11946,6 +11969,13 @@
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
                             "experimental": true
+                        },
+                        {
+                            "name": "isModule",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True, if this script is ES6 module.",
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine fails to parse the script."
@@ -11989,7 +12019,8 @@
                                 "debugCommand",
                                 "promiseRejection",
                                 "OOM",
-                                "other"
+                                "other",
+                                "ambiguous"
                             ],
                             "description": "Pause reason."
                         },
