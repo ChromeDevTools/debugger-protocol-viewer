@@ -11538,12 +11538,6 @@
                             "$ref": "Location",
                             "optional": true,
                             "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range."
-                        },
-                        {
-                            "name": "restrictToFunction",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "Only consider locations which are in the same (non-nested) function as start."
                         }
                     ],
                     "returns": [
