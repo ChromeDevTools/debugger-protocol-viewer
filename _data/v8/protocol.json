@@ -471,6 +471,17 @@
                     { "name": "lineContent", "type": "string", "description": "Line with match content." }
                 ],
                 "experimental": true
+            },
+            {
+                "id": "BreakLocation",
+                "type": "object",
+                "properties": [
+                    { "name": "scriptId", "$ref": "Runtime.ScriptId", "description": "Script identifier as reported in the <code>Debugger.scriptParsed</code>." },
+                    { "name": "lineNumber", "type": "integer", "description": "Line number in the script (0-based)." },
+                    { "name": "columnNumber", "type": "integer", "optional": true, "description": "Column number in the script (0-based)." },
+                    { "name": "type", "type": "string", "enum": [ "debuggerStatement", "call", "return" ], "optional": true }
+                ],
+                "experimental": true
             }
         ],
         "commands": [
@@ -534,10 +545,11 @@
                 "name": "getPossibleBreakpoints",
                 "parameters": [
                     { "name": "start", "$ref": "Location", "description": "Start of range to search possible breakpoint locations in." },
-                    { "name": "end", "$ref": "Location", "optional": true, "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range." }
+                    { "name": "end", "$ref": "Location", "optional": true, "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range." },
+                    { "name": "restrictToFunction", "type": "boolean", "optional": true, "description": "Only consider locations which are in the same (non-nested) function as start." }
                 ],
                 "returns": [
-                    { "name": "locations", "type": "array", "items": { "$ref": "Location" }, "description": "List of the possible breakpoint locations." }
+                    { "name": "locations", "type": "array", "items": { "$ref": "BreakLocation" }, "description": "List of the possible breakpoint locations." }
                 ],
                 "description": "Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.",
                 "experimental": true
@@ -564,6 +576,11 @@
             {
                 "name": "pause",
                 "description": "Stops on the next JavaScript statement."
+            },
+            {
+                "name": "scheduleStepIntoAsync",
+                "description": "Steps into next scheduled async task if any is scheduled before next pause. Returns success when async task is actually scheduled, returns error if no task were scheduled or another scheduleStepIntoAsync was called.",
+                "experimental": true
             },
             {
                 "name": "resume",
@@ -695,7 +712,8 @@
                     { "name": "isLiveEdit", "type": "boolean", "optional": true, "description": "True, if this script is generated as a result of the live edit operation.", "experimental": true },
                     { "name": "sourceMapURL", "type": "string", "optional": true, "description": "URL of source map associated with script (if any)." },
                     { "name": "hasSourceURL", "type": "boolean", "optional": true, "description": "True, if this script has sourceURL.", "experimental": true },
-                    { "name": "isModule", "type": "boolean", "optional": true, "description": "True, if this script is ES6 module.", "experimental": true }
+                    { "name": "isModule", "type": "boolean", "optional": true, "description": "True, if this script is ES6 module.", "experimental": true },
+                    { "name": "length", "type": "integer", "optional": true, "description": "This script length.", "experimental": true }
                 ],
                 "description": "Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger."
             },
@@ -713,7 +731,8 @@
                     { "name": "executionContextAuxData", "type": "object", "optional": true, "description": "Embedder-specific auxiliary data." },
                     { "name": "sourceMapURL", "type": "string", "optional": true, "description": "URL of source map associated with script (if any)." },
                     { "name": "hasSourceURL", "type": "boolean", "optional": true, "description": "True, if this script has sourceURL.", "experimental": true },
-                    { "name": "isModule", "type": "boolean", "optional": true, "description": "True, if this script is ES6 module.", "experimental": true }
+                    { "name": "isModule", "type": "boolean", "optional": true, "description": "True, if this script is ES6 module.", "experimental": true },
+                    { "name": "length", "type": "integer", "optional": true, "description": "This script length.", "experimental": true }
                 ],
                 "description": "Fired when virtual machine fails to parse the script."
             },
@@ -833,6 +852,8 @@
                     { "name": "startColumnNumber", "type": "integer", "description": "JavaScript script column number (0-based) for the range start." },
                     { "name": "endLineNumber", "type": "integer", "description": "JavaScript script line number (0-based) for the range end." },
                     { "name": "endColumnNumber", "type": "integer", "description": "JavaScript script column number (0-based) for the range end." },
+                    { "name": "startOffset", "type": "integer", "description": "JavaScript script source offset for the range start." },
+                    { "name": "endOffset", "type": "integer", "description": "JavaScript script source offset for the range end." },
                     { "name": "count", "type": "integer", "description": "Collected execution count of the source range." }
                 ],
                 "experimental": true

@@ -6051,6 +6051,12 @@
                             "name": "startColumn",
                             "type": "number",
                             "description": "Column offset of the stylesheet within the resource (zero based)."
+                        },
+                        {
+                            "name": "length",
+                            "type": "number",
+                            "description": "Size of the content (in characters).",
+                            "experimental": true
                         }
                     ],
                     "description": "CSS stylesheet metainformation."
@@ -6102,9 +6108,14 @@
                             "description": "The css style sheet identifier (absent for user agent stylesheet and user-specified stylesheet rules) this rule came from."
                         },
                         {
-                            "name": "range",
-                            "$ref": "SourceRange",
-                            "description": "Style declaration range in the enclosing stylesheet (if available)."
+                            "name": "startOffset",
+                            "type": "number",
+                            "description": "Offset of the start of the rule (including selector) from the beginning of the stylesheet."
+                        },
+                        {
+                            "name": "endOffset",
+                            "type": "number",
+                            "description": "Offset of the end of the rule body from the beginning of the stylesheet."
                         },
                         {
                             "name": "used",
@@ -11403,6 +11414,39 @@
                         }
                     ],
                     "experimental": true
+                },
+                {
+                    "id": "BreakLocation",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "scriptId",
+                            "$ref": "Runtime.ScriptId",
+                            "description": "Script identifier as reported in the <code>Debugger.scriptParsed</code>."
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer",
+                            "description": "Line number in the script (0-based)."
+                        },
+                        {
+                            "name": "columnNumber",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Column number in the script (0-based)."
+                        },
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "enum": [
+                                "debuggerStatement",
+                                "call",
+                                "return"
+                            ],
+                            "optional": true
+                        }
+                    ],
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -11538,6 +11582,12 @@
                             "$ref": "Location",
                             "optional": true,
                             "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range."
+                        },
+                        {
+                            "name": "restrictToFunction",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Only consider locations which are in the same (non-nested) function as start."
                         }
                     ],
                     "returns": [
@@ -11545,7 +11595,7 @@
                             "name": "locations",
                             "type": "array",
                             "items": {
-                                "$ref": "Location"
+                                "$ref": "BreakLocation"
                             },
                             "description": "List of the possible breakpoint locations."
                         }
@@ -11579,6 +11629,11 @@
                 {
                     "name": "pause",
                     "description": "Stops on the next JavaScript statement."
+                },
+                {
+                    "name": "scheduleStepIntoAsync",
+                    "description": "Steps into next scheduled async task if any is scheduled before next pause. Returns success when async task is actually scheduled, returns error if no task were scheduled or another scheduleStepIntoAsync was called.",
+                    "experimental": true
                 },
                 {
                     "name": "resume",
@@ -11950,6 +12005,13 @@
                             "optional": true,
                             "description": "True, if this script is ES6 module.",
                             "experimental": true
+                        },
+                        {
+                            "name": "length",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "This script length.",
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger."
@@ -12021,6 +12083,13 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "True, if this script is ES6 module.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "length",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "This script length.",
                             "experimental": true
                         }
                     ],
@@ -12338,6 +12407,16 @@
                             "name": "endColumnNumber",
                             "type": "integer",
                             "description": "JavaScript script column number (0-based) for the range end."
+                        },
+                        {
+                            "name": "startOffset",
+                            "type": "integer",
+                            "description": "JavaScript script source offset for the range start."
+                        },
+                        {
+                            "name": "endOffset",
+                            "type": "integer",
+                            "description": "JavaScript script source offset for the range end."
                         },
                         {
                             "name": "count",
