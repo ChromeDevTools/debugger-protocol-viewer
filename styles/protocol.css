@@ -160,6 +160,14 @@ p {
     margin: 0.5rem 0 1rem;
 }
 
+.method-name, .event-name {
+    display: flex;
+}
+
+span.domain-dot {
+    color: #ababab;
+}
+
 .parameter-list {
   padding: 0.5rem 5px;
   margin: 0 10%;
