@@ -5617,6 +5617,12 @@
                             "name": "y",
                             "type": "integer",
                             "description": "Y coordinate."
+                        },
+                        {
+                            "name": "includeUserAgentShadowDOM",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "False to skip to the nearest non-UA shadow root ancestor (default: false)."
                         }
                     ],
                     "returns": [
@@ -6185,7 +6191,7 @@
                             "description": "Indicates whether the rule was actually used by some element in the page."
                         }
                     ],
-                    "description": "CSS rule usage information.",
+                    "description": "CSS coverage information.",
                     "experimental": true
                 },
                 {
@@ -7078,6 +7084,20 @@
                 {
                     "name": "startRuleUsageTracking",
                     "description": "Enables the selector recording.",
+                    "experimental": true
+                },
+                {
+                    "name": "takeCoverageDelta",
+                    "description": "Obtain list of rules that became used since last call to this method (or since start of coverage instrumentation)",
+                    "returns": [
+                        {
+                            "name": "coverage",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RuleUsage"
+                            }
+                        }
+                    ],
                     "experimental": true
                 },
                 {
