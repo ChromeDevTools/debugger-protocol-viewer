@@ -2680,7 +2680,7 @@
                 },
                 {
                     "name": "setBlockedURLs",
-                    "description": "Blocks specific URL from loading.",
+                    "description": "Blocks URLs from loading.",
                     "parameters": [
                         {
                             "name": "urls",
@@ -2688,7 +2688,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "URLs to block."
+                            "description": "URL patterns to block. Wildcards ('*') are allowed."
                         }
                     ],
                     "experimental": true
