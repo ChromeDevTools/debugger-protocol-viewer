@@ -30,7 +30,16 @@ bundle exec jekyll build
 
 Deploying:
 
+We deploy to https://chromedevtools.github.io/devtools-protocol/ despite the source living here. The [repo/branch layout is described here](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/78).
+
+```sh
+# deploy to https://chromedevtools.github.io/devtools-protocol/
+git remote add dtprotocol git@github.com:ChromeDevTools/devtools-protocol.git
+git push dtprotocol master:gh-pages
+```
+
 All pushes to gh-pages instantly trigger a jeklyll build and the site will serve the resulting `_site`.
+
 
 ## Adding new version
 
