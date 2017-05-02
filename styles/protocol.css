@@ -81,6 +81,10 @@ paper-menu a.iron-selected {
   word-wrap: break-word;
 }
 
+.home-page-content h4 {
+  margin-bottom: 0;
+}
+
 .gh-badge {
   float: right;
   width: 110px;
