@@ -19,10 +19,10 @@ Building:
 bundle exec jekyll server --incremental
 # always use `bundle exec` to use the local version of jeykyll
 ```
-Updating protocol:
+Generate latest up-to-date docs:
 
 ```sh
-./update-protocol-json.sh
+./generate-docs.sh
 
 # to build (although gh-pages will do it on its own)..
 bundle exec jekyll build
