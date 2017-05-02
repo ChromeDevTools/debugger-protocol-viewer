@@ -1,7 +1,7 @@
-# debugging-protocol-viewer
-Explore the Chrome Debugging Protocol, its methods, events and basic documentation.
+# devtools-protocol
+Explore the Chrome DevTools Protocol, its methods, events and basic documentation.
 
-More on the [Chrome DevTools Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
+More on the [Chrome DevTools Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
 
 
 ##  Building
