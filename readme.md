@@ -44,11 +44,11 @@ To add a new protocol version:
 ## History
 
 
-* [v0.1](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.1/index.html)            original Eric Guzman app.
-* [v0.2](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.2/index.html)            irish's "upgrades".
-* [v0.8](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v0.8/index.html)            guzman's polymer 0.8 refactor
-* [v1.0](https://rawgit.com/ChromeDevTools/debugger-protocol-viewer/v1.0/index.html)            konrad's polymer 1.0 + jekyll refactor
-* which brings us to… [now](https://chromedevtools.github.io/debugger-protocol-viewer/).
+* [v0.1](https://rawgit.com/ChromeDevTools/devtools-protocol/v0.1/index.html)            original Eric Guzman app.
+* [v0.2](https://rawgit.com/ChromeDevTools/devtools-protocol/v0.2/index.html)            irish's "upgrades".
+* [v0.8](https://rawgit.com/ChromeDevTools/devtools-protocol/v0.8/index.html)            guzman's polymer 0.8 refactor
+* [v1.0](https://rawgit.com/ChromeDevTools/devtools-protocol/v1.0/index.html)            konrad's polymer 1.0 + jekyll refactor
+* which brings us to… [now](https://chromedevtools.github.io/devtools-protocol/).
 
 
 ## License
