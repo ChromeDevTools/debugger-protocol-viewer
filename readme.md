@@ -1,7 +1,7 @@
 # devtools-protocol
 Explore the Chrome DevTools Protocol, its methods, events and basic documentation.
 
-More on the [Chrome DevTools Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol)
+More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protocol) and [published devtools protocol viewer](https://chromedevtools.github.io/devtools-protocol/)
 
 
 ##  Building
