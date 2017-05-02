@@ -29,7 +29,7 @@ JavaScript API.</a></p>
 
 <h3>Resources</h3>
 <p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
-<p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be used for concerns with the protocol.
+<p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be used for concerns with the protocol. It also hosts the canonical copy of the json files.
 <p>The <a href="https://github.com/cyrus-and/chrome-remote-interface/">chrome-remote-interface</a> node module is recommended, and its <a href="https://github.com/cyrus-and/chrome-remote-interface/wiki">wiki</a> and <a href="https://github.com/cyrus-and/chrome-remote-interface/issues?utf8=%E2%9C%93&q=is%3Aissue%20">issue tracker</a> are full of useful recipes.
 
 
@@ -44,12 +44,12 @@ JavaScript API.</a></p>
 </p>
 
 <pre class="summary">
-  chrome.exe --remote-debugging-port=9222</pre>
+chrome.exe --remote-debugging-port=9222</pre>
 
 <p>Then you can start a separate <i>client</i> Chrome instance, using a distinct user profile:</p>
 
 <pre class="summary">
-  chrome.exe --user-data-dir=&lt;some directory&gt;</pre>
+chrome.exe --user-data-dir=&lt;some directory&gt;</pre>
 
 <p>Now you can navigate to the given port from your <i>client</i> and attach to
   any of the discovered tabs for debugging: <a href="http://localhost:9222">http://localhost:9222</a>
@@ -91,9 +91,10 @@ JavaScript API.</a></p>
 
 <h3>Sniffing the protocol</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
-  First, run Chrome with the debugging port open: <pre>
-    alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
-    canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</pre>
+  First, run Chrome with the debugging port open: 
+<pre>
+alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
+canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</pre>
 
   Then, select the Chromium Projects item in the <em>Inspectable Pages</em> list. Now that DevTools is up and fullscreen, open DevTools to inspect it.
   Cmd-R in the new inspector to make the first restart. Now head to Network Panel, filter by Websocket, select the connection and click the Frames tab.
@@ -101,15 +102,9 @@ JavaScript API.</a></p>
 </p>
 
 <figure class="screenshot">
-  <a href="https://developer.chrome.com/devtools/docs/debugger-protocol/debugger-protocol-sniffing-full.png" style="text-align: center; display:block;">
-<div style="
-    background: url(https://developer.chrome.com/devtools/docs/debugger-protocol/debugger-protocol-sniffing-full.png) no-repeat;
-    text-indent: -999em;
-    background-size: cover;
-    height: 260px;
-    background-position-y: -122px;
-">
-    <img src="https://developer.chrome.com/devtools/docs/debugger-protocol/debugger-protocol-sniffing.png" alt="Sniffing the debugger protocol">
+  <a href="{{ site.baseurl }}/images/debugger-protocol-sniffing-full.png" style="text-align: center; display:block;">
+    <div style="background-image: url({{ site.baseurl }}/images/debugger-protocol-sniffing-full.png)">
+      <img src="{{ site.baseurl }}/images/debugger-protocol-sniffing.png" alt="Sniffing the debugger protocol">
     </div>
     Screenshot of sniffing the DevTools protocol with DevTools
   </a>
@@ -119,7 +114,7 @@ JavaScript API.</a></p>
 <h3 id="clients">Debugging Protocol Clients</h3>
 <p>Many applications and libraries already use the protocol. Some to collect
   performance data, others to breakpoint debug from another editor. There are
-  libraries to access the raw protocol from Node.js and Python. Some of these clients are mentioned at: <a href="https://developer.chrome.com/devtools/docs/debugging-clients">Debugging Protocol Clients</a>.
+  libraries to access the raw protocol from Node.js and Python. Some of these clients are mentioned at <a href="https://developer.chrome.com/devtools/docs/debugging-clients">Debugging Protocol Clients</a>.
 </p>
 
 
