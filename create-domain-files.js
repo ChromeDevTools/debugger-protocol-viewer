@@ -31,6 +31,8 @@ function generateDomainFiles(version) {
     const fileName = `${DOMAINS_FOLDER}/${version.slug}/${name}.html`;
     const content = `---
 title: ${name}
+redirect_to:
+  - https://chromedevtools.github.io/devtools-protocol/${version.slug}/${name}/
 category: ${version.slug}
 version: ${version.name}
 idx: ${idx}
