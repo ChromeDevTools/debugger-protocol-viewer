@@ -249,6 +249,26 @@
                     "experimental": true
                 },
                 {
+                    "id": "TransitionType",
+                    "type": "string",
+                    "description": "Transition type.",
+                    "experimental": true,
+                    "enum": [
+                        "link",
+                        "typed",
+                        "auto_bookmark",
+                        "auto_subframe",
+                        "manual_subframe",
+                        "generated",
+                        "auto_toplevel",
+                        "form_submit",
+                        "reload",
+                        "keyword",
+                        "keyword_generated",
+                        "other"
+                    ]
+                },
+                {
                     "id": "NavigationEntry",
                     "type": "object",
                     "description": "Navigation history entry.",
@@ -264,9 +284,19 @@
                             "description": "URL of the navigation history entry."
                         },
                         {
+                            "name": "userTypedURL",
+                            "type": "string",
+                            "description": "URL that the user typed in the url bar."
+                        },
+                        {
                             "name": "title",
                             "type": "string",
                             "description": "Title of the navigation history entry."
+                        },
+                        {
+                            "name": "transitionType",
+                            "$ref": "TransitionType",
+                            "description": "Transition type."
                         }
                     ],
                     "experimental": true
@@ -525,6 +555,13 @@
                             "optional": true,
                             "experimental": true,
                             "description": "Referrer URL."
+                        },
+                        {
+                            "name": "transitionType",
+                            "$ref": "TransitionType",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Intended transition type."
                         }
                     ],
                     "returns": [
