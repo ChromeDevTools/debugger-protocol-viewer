@@ -294,8 +294,29 @@ h4:hover .permalink {
     padding-right: 8px;
   }
 
+
+  #mainContainer .content {
+    padding: 48px 10px;
+  }
+
   #drawer .paper-toolbar {
     margin-left: 16px;
+  }
+}
+
+/* extra narrow */
+@media (max-width: 405px) {
+  body {
+    font-size: 13px
+  }
+  #mainContainer .content {
+    padding: 18px 0px;
+  }
+  paper-material {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 0;
+    width: calc(100% - 16px);
   }
 }
 
