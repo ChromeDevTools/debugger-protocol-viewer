@@ -32,10 +32,10 @@ JavaScript API.</a></p>
 <p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be used for concerns with the protocol. It also hosts the canonical copy of the json files.
 <p>Useful: <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Getting Started with Headless Chrome</a> and the <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md">Headless Chromium readme</a>.
 <p>The <a href="https://github.com/cyrus-and/chrome-remote-interface/">chrome-remote-interface</a> node module is recommended, and its <a href="https://github.com/cyrus-and/chrome-remote-interface/wiki">wiki</a> and <a href="https://github.com/cyrus-and/chrome-remote-interface/issues?utf8=%E2%9C%93&q=is%3Aissue%20">issue tracker</a> are full of useful recipes.
-<p>The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem.
+<p>The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
 
 
-
+Many applications and libraries already use the protocol.  
 
 <h3 id="remote">Basics: Using DevTools as protocol client</h3>
 <p>The Developer Tools front-end can attach to a remotely running Chrome instance for debugging.
@@ -111,15 +111,6 @@ canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</p
     Screenshot of sniffing the DevTools protocol with DevTools
   </a>
 </figure>
-
-
-<h3 id="clients">Debugging Protocol Clients</h3>
-<p>Many applications and libraries already use the protocol. Some to collect
-  performance data, others to breakpoint debug from another editor. There are
-  libraries to access the raw protocol from Node.js and Python. Some of these clients are mentioned at <a href="https://developer.chrome.com/devtools/docs/debugging-clients">Debugging Protocol Clients</a>.
-</p>
-
-
 
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
