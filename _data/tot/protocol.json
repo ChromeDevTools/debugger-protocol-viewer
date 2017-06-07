@@ -10149,23 +10149,6 @@
                         "all"
                     ],
                     "description": "Enum of possible storage types."
-                },
-                {
-                    "id": "QuotaAndUsage",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "quota",
-                            "type": "number",
-                            "description": "Storage quota (bytes)."
-                        },
-                        {
-                            "name": "usage",
-                            "type": "number",
-                            "description": "Storage usage (bytes)."
-                        }
-                    ],
-                    "description": "Quota and usage information."
                 }
             ],
             "commands": [
@@ -10184,24 +10167,6 @@
                         }
                     ],
                     "description": "Clears storage for origin."
-                },
-                {
-                    "name": "getUsageAndQuota",
-                    "parameters": [
-                        {
-                            "name": "origin",
-                            "type": "string",
-                            "description": "Security origin."
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "quotaAndUsage",
-                            "$ref": "QuotaAndUsage",
-                            "description": "Quota and usage information."
-                        }
-                    ],
-                    "description": "Returns usage and quota in bytes."
                 }
             ]
         },
