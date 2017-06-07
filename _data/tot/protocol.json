@@ -3850,6 +3850,11 @@
                             "$ref": "Request"
                         },
                         {
+                            "name": "resourceType",
+                            "$ref": "Page.ResourceType",
+                            "description": "How the requested resource will be used."
+                        },
+                        {
                             "name": "redirectHeaders",
                             "$ref": "Headers",
                             "optional": true,
