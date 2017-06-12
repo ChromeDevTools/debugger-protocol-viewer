@@ -4400,7 +4400,12 @@
                         {
                             "name": "response",
                             "type": "string",
-                            "description": "Response stataus text."
+                            "description": "Response status text."
+                        },
+                        {
+                            "name": "responseTime",
+                            "type": "number",
+                            "description": "Number of seconds since epoch."
                         }
                     ]
                 },
