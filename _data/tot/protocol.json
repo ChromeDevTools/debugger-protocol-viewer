@@ -2552,7 +2552,9 @@
                                 "no-referrer",
                                 "origin",
                                 "origin-when-cross-origin",
-                                "no-referrer-when-downgrade-origin-when-cross-origin"
+                                "same-origin",
+                                "strict-origin",
+                                "strict-origin-when-cross-origin"
                             ],
                             "description": "The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/"
                         },
