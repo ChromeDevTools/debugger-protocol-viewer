@@ -1206,6 +1206,13 @@
                             "optional": true,
                             "description": "Whether or not universal access should be granted to the isolated world. This is a powerful option, use with caution."
                         }
+                    ],
+                    "returns": [
+                        {
+                            "name": "executionContextId",
+                            "$ref": "Runtime.ExecutionContextId",
+                            "description": "Execution context of the isolated world."
+                        }
                     ]
                 }
             ],
