@@ -2955,13 +2955,13 @@
                             "name": "url",
                             "type": "string",
                             "optional": true,
-                            "description": "Initiator URL, set for Parser type only."
+                            "description": "Initiator URL, set for Parser type or for Script type (when script is importing module)."
                         },
                         {
                             "name": "lineNumber",
                             "type": "number",
                             "optional": true,
-                            "description": "Initiator line number, set for Parser type only (0-based)."
+                            "description": "Initiator line number, set for Parser type or for Script type (when script is importing module) (0-based)."
                         }
                     ]
                 },
