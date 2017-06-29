@@ -7972,6 +7972,11 @@
                         {
                             "name": "url",
                             "type": "string"
+                        },
+                        {
+                            "name": "attached",
+                            "type": "boolean",
+                            "description": "Whether the target has an attached client."
                         }
                     ]
                 },
@@ -7993,7 +7998,7 @@
             "commands": [
                 {
                     "name": "setDiscoverTargets",
-                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetDestroyed</code> events.",
+                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetInfoChanged/targetDestroyed</code> events.",
                     "parameters": [
                         {
                             "name": "discover",
@@ -8207,6 +8212,16 @@
                 {
                     "name": "targetCreated",
                     "description": "Issued when a possible inspection target is created.",
+                    "parameters": [
+                        {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        }
+                    ]
+                },
+                {
+                    "name": "targetInfoChanged",
+                    "description": "Issued when some information about a target has changed. This only happens between <code>targetCreated</code> and <code>targetDestroyed</code>.",
                     "parameters": [
                         {
                             "name": "targetInfo",
