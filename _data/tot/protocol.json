@@ -7490,6 +7490,12 @@
                             "description": "Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion."
                         },
                         {
+                            "name": "contentLanguage",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Only set for documents, contains the document's content language."
+                        },
+                        {
                             "name": "publicId",
                             "type": "string",
                             "optional": true,
