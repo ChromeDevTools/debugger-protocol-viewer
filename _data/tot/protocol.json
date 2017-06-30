@@ -7530,6 +7530,12 @@
                             "$ref": "DOM.PseudoType",
                             "optional": true,
                             "description": "Type of a pseudo element node."
+                        },
+                        {
+                            "name": "isClickable",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether this DOM node responds to mouse clicks. This includes nodes that have had click event listeners attached via JavaScript as well as anchor tags that naturally navigate when clicked."
                         }
                     ],
                     "description": "A Node in the DOM tree."
