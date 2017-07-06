@@ -2138,6 +2138,16 @@
                     "description": "An internal certificate ID value."
                 },
                 {
+                    "id": "MixedContentType",
+                    "type": "string",
+                    "enum": [
+                        "blockable",
+                        "optionally-blockable",
+                        "none"
+                    ],
+                    "description": "A description of mixed content (HTTP resources on HTTPS pages), as defined by https://www.w3.org/TR/mixed-content/#categories"
+                },
+                {
                     "id": "SecurityState",
                     "type": "string",
                     "enum": [
@@ -2173,6 +2183,11 @@
                             "name": "hasCertificate",
                             "type": "boolean",
                             "description": "True if the page has a certificate."
+                        },
+                        {
+                            "name": "mixedContentType",
+                            "$ref": "MixedContentType",
+                            "description": "The type of mixed content described by the explanation."
                         }
                     ],
                     "description": "An explanation of an factor contributing to the security state."
@@ -2542,14 +2557,9 @@
                         },
                         {
                             "name": "mixedContentType",
+                            "$ref": "Security.MixedContentType",
                             "optional": true,
-                            "type": "string",
-                            "enum": [
-                                "blockable",
-                                "optionally-blockable",
-                                "none"
-                            ],
-                            "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/"
+                            "description": "The mixed content type of the request."
                         },
                         {
                             "name": "initialPriority",
