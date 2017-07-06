@@ -93,7 +93,8 @@
             "description": "Actions and events related to the inspected page belong to the page domain.",
             "dependencies": [
                 "Debugger",
-                "DOM"
+                "DOM",
+                "Network"
             ],
             "types": [
                 {
@@ -187,7 +188,7 @@
                         },
                         {
                             "name": "lastModified",
-                            "$ref": "Network.Timestamp",
+                            "$ref": "Network.TimeSinceEpoch",
                             "description": "last-modified timestamp as reported by server.",
                             "optional": true
                         },
@@ -344,7 +345,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "Network.TimeSinceEpoch",
                             "optional": true,
                             "experimental": true,
                             "description": "Frame swap timestamp."
@@ -1222,7 +1223,7 @@
                     "parameters": [
                         {
                             "name": "timestamp",
-                            "type": "number"
+                            "$ref": "Network.MonotonicTime"
                         }
                     ]
                 },
@@ -1231,7 +1232,7 @@
                     "parameters": [
                         {
                             "name": "timestamp",
-                            "type": "number"
+                            "$ref": "Network.MonotonicTime"
                         }
                     ]
                 },
@@ -2371,9 +2372,14 @@
                     "description": "Network level fetch failure reason."
                 },
                 {
-                    "id": "Timestamp",
+                    "id": "TimeSinceEpoch",
                     "type": "number",
-                    "description": "Number of seconds since epoch."
+                    "description": "UTC time in seconds, counted from January 1, 1970."
+                },
+                {
+                    "id": "MonotonicTime",
+                    "type": "number",
+                    "description": "Monotonically increasing time in seconds since an arbitrary point in the past."
                 },
                 {
                     "id": "Headers",
@@ -2600,7 +2606,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Issuance date."
                         },
                         {
@@ -2677,12 +2683,12 @@
                         },
                         {
                             "name": "validFrom",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Certificate valid from date."
                         },
                         {
                             "name": "validTo",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Certificate valid to (expiration) date"
                         },
                         {
@@ -3323,7 +3329,7 @@
                         },
                         {
                             "name": "expirationDate",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
                             "description": "If omitted, the cookie becomes a session cookie."
                         }
@@ -3525,7 +3531,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         }
                     ],
@@ -3557,14 +3563,14 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
                             "name": "wallTime",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "experimental": true,
-                            "description": "UTC Timestamp."
+                            "description": "Timestamp."
                         },
                         {
                             "name": "initiator",
@@ -3620,7 +3626,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3653,7 +3659,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3679,7 +3685,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3700,7 +3706,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3739,12 +3745,12 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
                             "name": "wallTime",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "experimental": true,
                             "description": "UTC Timestamp."
                         },
@@ -3767,7 +3773,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3812,7 +3818,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         }
                     ],
@@ -3829,7 +3835,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3851,7 +3857,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3873,7 +3879,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3895,7 +3901,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -8638,6 +8644,11 @@
                         "touch",
                         "mouse"
                     ]
+                },
+                {
+                    "id": "TimeSinceEpoch",
+                    "type": "number",
+                    "description": "UTC time in seconds, counted from January 1, 1970."
                 }
             ],
             "commands": [
@@ -8674,9 +8685,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "text",
@@ -8772,9 +8783,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "button",
@@ -8827,9 +8838,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         }
                     ],
                     "description": "Dispatches a touch event to the page."
@@ -8861,8 +8872,8 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970."
+                            "$ref": "TimeSinceEpoch",
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "button",
