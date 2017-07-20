@@ -19,7 +19,7 @@ Hide entries marked with "redirect". Those are just for backwards compatibility.
 {% assign types = (domain.types | where_exp: "item", "item.redirect == nil") %}
 
 {% if commands[0] %}
-<h3>Methods</h3>
+<h3 id="methods">Methods</h3>
 <paper-material elevation="1" class="methods">
   {% for method in commands %}
     {% include method.html method=method domain=domain %}
@@ -28,7 +28,7 @@ Hide entries marked with "redirect". Those are just for backwards compatibility.
 {% endif %}
 
 {% if events[0] %}
-<h3>Events</h3>
+<h3 id="events">Events</h3>
 <paper-material elevation="1" class="events">
   {% for event in events %}
     {% include event.html event=event domain=domain %}
@@ -37,7 +37,7 @@ Hide entries marked with "redirect". Those are just for backwards compatibility.
 {% endif %}
 
 {% if types[0] %}
-<h3>Types</h3>
+<h3 id="types">Types</h3>
 <paper-material elevation="1" class="types">
   {% for type in types %}
     {% include type.html type=type %}
