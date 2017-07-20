@@ -846,28 +846,10 @@
                             "description": "Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text autosizing and more."
                         },
                         {
-                            "name": "fitWindow",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "Whether a view that exceeds the available browser window area should be scaled down to fit."
-                        },
-                        {
                             "name": "scale",
                             "type": "number",
                             "optional": true,
                             "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode."
-                        },
-                        {
-                            "name": "offsetX",
-                            "type": "number",
-                            "optional": true,
-                            "description": "X offset to shift resulting view image by. Ignored in |fitWindow| mode."
-                        },
-                        {
-                            "name": "offsetY",
-                            "type": "number",
-                            "optional": true,
-                            "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode."
                         },
                         {
                             "name": "screenWidth",
@@ -892,6 +874,12 @@
                             "type": "integer",
                             "optional": true,
                             "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                        },
+                        {
+                            "name": "dontSetVisibleSize",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Do not set visible view size, rely upon explicit setVisibleSize call."
                         },
                         {
                             "name": "screenOrientation",
@@ -1949,33 +1937,10 @@
                             "description": "Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text autosizing and more."
                         },
                         {
-                            "name": "fitWindow",
-                            "type": "boolean",
-                            "optional": true,
-                            "description": "Whether a view that exceeds the available browser window area should be scaled down to fit."
-                        },
-                        {
                             "name": "scale",
                             "type": "number",
                             "optional": true,
-                            "experimental": true,
                             "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode."
-                        },
-                        {
-                            "name": "offsetX",
-                            "type": "number",
-                            "optional": true,
-                            "deprecated": true,
-                            "experimental": true,
-                            "description": "Not used."
-                        },
-                        {
-                            "name": "offsetY",
-                            "type": "number",
-                            "optional": true,
-                            "deprecated": true,
-                            "experimental": true,
-                            "description": "Not used."
                         },
                         {
                             "name": "screenWidth",
@@ -2004,6 +1969,13 @@
                             "optional": true,
                             "experimental": true,
                             "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                        },
+                        {
+                            "name": "dontSetVisibleSize",
+                            "type": "boolean",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Do not set visible view size, rely upon explicit setVisibleSize call."
                         },
                         {
                             "name": "screenOrientation",
@@ -2036,7 +2008,7 @@
                 },
                 {
                     "name": "setVisibleSize",
-                    "description": "Deprecated, does nothing. Please use setDeviceMetricsOverride instead.",
+                    "description": "Resizes the frame/viewport of the page. Note that this does not affect the frame's container (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported on Android.",
                     "experimental": true,
                     "deprecated": true,
                     "parameters": [
