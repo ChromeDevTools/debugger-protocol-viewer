@@ -167,8 +167,8 @@
                         {
                             "name": "unreachableUrl",
                             "type": "string",
-                            "optional": "true",
-                            "experimental": "true",
+                            "optional": true,
+                            "experimental": true,
                             "description": "If the frame failed to load, this contains the URL that could not be loaded."
                         }
                     ]
