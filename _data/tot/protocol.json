@@ -1393,6 +1393,20 @@
                             "name": "delay",
                             "type": "number",
                             "description": "Delay (in seconds) until the navigation is scheduled to begin. The navigation is not guaranteed to start."
+                        },
+                        {
+                            "name": "reason",
+                            "type": "string",
+                            "experimental": true,
+                            "enum": [
+                                "formSubmission",
+                                "httpHeaderRefresh",
+                                "scriptInitiated",
+                                "metaTagRefresh",
+                                "pageBlockInterstitial",
+                                "reload"
+                            ],
+                            "description": "The reason for the navigation."
                         }
                     ],
                     "experimental": true
@@ -7825,14 +7839,12 @@
         {
             "domain": "IO",
             "description": "Input/Output operations for streams produced by DevTools.",
-            "dependencies": [
-                "Runtime"
-            ],
             "experimental": true,
             "types": [
                 {
                     "id": "StreamHandle",
-                    "type": "string"
+                    "type": "string",
+                    "description": "This is either obtained from another method or specifed as <code>blob:&lt;uuid&gt;</code> where <code>&lt;uuid&gt</code> is an UUID of a Blob."
                 }
             ],
             "commands": [
@@ -7859,6 +7871,12 @@
                         }
                     ],
                     "returns": [
+                        {
+                            "name": "base64Encoded",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Set if the data is base64-encoded"
+                        },
                         {
                             "name": "data",
                             "type": "string",
