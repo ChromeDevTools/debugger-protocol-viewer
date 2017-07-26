@@ -1411,6 +1411,12 @@
                                 "reload"
                             ],
                             "description": "The reason for the navigation."
+                        },
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "experimental": true,
+                            "description": "The destination URL for the scheduled navigation."
                         }
                     ],
                     "experimental": true
