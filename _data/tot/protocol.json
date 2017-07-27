@@ -9349,6 +9349,35 @@
                     ]
                 },
                 {
+                    "id": "StickyPositionConstraint",
+                    "type": "object",
+                    "description": "Sticky position constraints.",
+                    "properties": [
+                        {
+                            "name": "stickyBoxRect",
+                            "$ref": "DOM.Rect",
+                            "description": "Layout rectangle of the sticky element before being shifted"
+                        },
+                        {
+                            "name": "containingBlockRect",
+                            "$ref": "DOM.Rect",
+                            "description": "Layout rectangle of the containing block of the sticky element"
+                        },
+                        {
+                            "name": "nearestLayerShiftingStickyBox",
+                            "$ref": "LayerId",
+                            "optional": true,
+                            "description": "The nearest sticky layer that shifts the sticky box"
+                        },
+                        {
+                            "name": "nearestLayerShiftingContainingBlock",
+                            "$ref": "LayerId",
+                            "optional": true,
+                            "description": "The nearest sticky layer that shifts the containing block"
+                        }
+                    ]
+                },
+                {
                     "id": "PictureTile",
                     "type": "object",
                     "description": "Serialized fragment of layer picture along with its offset within the layer.",
@@ -9465,6 +9494,12 @@
                             },
                             "optional": true,
                             "description": "Rectangles scrolling on main thread only."
+                        },
+                        {
+                            "name": "stickyPositionConstraint",
+                            "$ref": "StickyPositionConstraint",
+                            "optional": true,
+                            "description": "Sticky position constraint information"
                         }
                     ]
                 },
