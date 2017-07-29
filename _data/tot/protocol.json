@@ -1890,6 +1890,17 @@
                             "description": "Id of the node to inspect."
                         }
                     ]
+                },
+                {
+                    "name": "screenshotRequested",
+                    "description": "Fired when user asks to capture screenshot of some area on the page.",
+                    "parameters": [
+                        {
+                            "name": "viewport",
+                            "$ref": "Page.Viewport",
+                            "description": "Viewport to capture, in CSS."
+                        }
+                    ]
                 }
             ]
         },
