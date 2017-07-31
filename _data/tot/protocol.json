@@ -7705,6 +7705,12 @@
                             "description": "Only set for documents, contains the document's content language."
                         },
                         {
+                            "name": "documentEncoding",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Only set for documents, contains the document's character set encoding."
+                        },
+                        {
                             "name": "publicId",
                             "type": "string",
                             "optional": true,
