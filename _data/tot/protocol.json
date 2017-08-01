@@ -1225,32 +1225,6 @@
                     "experimental": true
                 },
                 {
-                    "name": "setControlNavigations",
-                    "parameters": [
-                        {
-                            "name": "enabled",
-                            "type": "boolean"
-                        }
-                    ],
-                    "description": "Toggles navigation throttling which allows programatic control over navigation and redirect response.",
-                    "experimental": true
-                },
-                {
-                    "name": "processNavigation",
-                    "parameters": [
-                        {
-                            "name": "response",
-                            "$ref": "NavigationResponse"
-                        },
-                        {
-                            "name": "navigationId",
-                            "type": "integer"
-                        }
-                    ],
-                    "description": "Should be sent in response to a navigationRequested or a redirectRequested event, telling the browser how to handle the navigation.",
-                    "experimental": true
-                },
-                {
                     "name": "getLayoutMetrics",
                     "description": "Returns metrics relating to the layouting of the page, such as viewport bounds/scale.",
                     "experimental": true,
@@ -1517,31 +1491,6 @@
                 {
                     "name": "interstitialHidden",
                     "description": "Fired when interstitial page was hidden"
-                },
-                {
-                    "name": "navigationRequested",
-                    "description": "Fired when a navigation is started if navigation throttles are enabled.  The navigation will be deferred until processNavigation is called.",
-                    "parameters": [
-                        {
-                            "name": "isInMainFrame",
-                            "type": "boolean",
-                            "description": "Whether the navigation is taking place in the main frame or in a subframe."
-                        },
-                        {
-                            "name": "isRedirect",
-                            "type": "boolean",
-                            "description": "Whether the navigation has encountered a server redirect or not."
-                        },
-                        {
-                            "name": "navigationId",
-                            "type": "integer"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "description": "URL of requested navigation."
-                        }
-                    ]
                 }
             ]
         },
@@ -3563,7 +3512,7 @@
                             "name": "errorReason",
                             "$ref": "ErrorReason",
                             "optional": true,
-                            "description": "If set this causes the request to fail with the given reason. Must not be set in response to an authChallenge."
+                            "description": "If set this causes the request to fail with the given reason. Passing <code>Aborted</code> for requests marked with <code>isNavigationRequest</code> also cancels the navigation. Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "rawResponse",
@@ -4030,6 +3979,11 @@
                             "name": "resourceType",
                             "$ref": "Page.ResourceType",
                             "description": "How the requested resource will be used."
+                        },
+                        {
+                            "name": "isNavigationRequest",
+                            "type": "boolean",
+                            "description": "Whether this is a navigation request, which can abort the navigation completely."
                         },
                         {
                             "name": "redirectHeaders",
