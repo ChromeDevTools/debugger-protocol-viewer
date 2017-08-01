@@ -10509,6 +10509,7 @@
                     "id": "AXGlobalStates",
                     "type": "string",
                     "enum": [
+                        "busy",
                         "disabled",
                         "hidden",
                         "hiddenRoot",
@@ -10525,7 +10526,6 @@
                         "live",
                         "atomic",
                         "relevant",
-                        "busy",
                         "root"
                     ],
                     "description": "Attributes which apply to nodes in live regions."
