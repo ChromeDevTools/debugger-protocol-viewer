@@ -7696,7 +7696,7 @@
                             "name": "frameId",
                             "$ref": "Page.FrameId",
                             "optional": true,
-                            "description": "Frame ID for frame owner elements."
+                            "description": "Frame ID for frame owner elements and also for the document node."
                         },
                         {
                             "name": "contentDocumentIndex",
