@@ -2290,14 +2290,17 @@
                             "description": "Full text explanation of the factor."
                         },
                         {
-                            "name": "hasCertificate",
-                            "type": "boolean",
-                            "description": "True if the page has a certificate."
-                        },
-                        {
                             "name": "mixedContentType",
                             "$ref": "MixedContentType",
                             "description": "The type of mixed content described by the explanation."
+                        },
+                        {
+                            "name": "certificate",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Page certificate."
                         }
                     ],
                     "description": "An explanation of an factor contributing to the security state."
@@ -2362,10 +2365,6 @@
                 {
                     "name": "disable",
                     "description": "Disables tracking security state changes."
-                },
-                {
-                    "name": "showCertificateViewer",
-                    "description": "Displays native dialog with the certificate details."
                 },
                 {
                     "name": "handleCertificateError",
