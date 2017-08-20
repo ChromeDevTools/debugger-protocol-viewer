@@ -5970,7 +5970,20 @@
                         {
                             "name": "nodeId",
                             "$ref": "NodeId",
-                            "description": "Id of the node to get markup for."
+                            "optional": true,
+                            "description": "Identifier of the node."
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "optional": true,
+                            "description": "Identifier of the backend node."
+                        },
+                        {
+                            "name": "objectId",
+                            "$ref": "Runtime.RemoteObjectId",
+                            "optional": true,
+                            "description": "JavaScript object id of the node wrapper."
                         }
                     ],
                     "returns": [
