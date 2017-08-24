@@ -12641,9 +12641,9 @@
                     "name": "queryObjects",
                     "parameters": [
                         {
-                            "name": "constructorObjectId",
+                            "name": "prototypeObjectId",
                             "$ref": "RemoteObjectId",
-                            "description": "Identifier of the constructor to return objects for."
+                            "description": "Identifier of the prototype to return objects for."
                         }
                     ],
                     "returns": [
