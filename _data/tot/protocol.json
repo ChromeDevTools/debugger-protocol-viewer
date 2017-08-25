@@ -2328,7 +2328,6 @@
                         "unknown",
                         "neutral",
                         "insecure",
-                        "warning",
                         "secure",
                         "info"
                     ],
