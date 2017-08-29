@@ -4835,19 +4835,22 @@
                     "description": "Data entry.",
                     "properties": [
                         {
-                            "name": "request",
+                            "name": "requestURL",
                             "type": "string",
-                            "description": "Request url spec."
-                        },
-                        {
-                            "name": "response",
-                            "type": "string",
-                            "description": "Response status text."
+                            "description": "Request URL."
                         },
                         {
                             "name": "responseTime",
                             "type": "number",
                             "description": "Number of seconds since epoch."
+                        },
+                        {
+                            "name": "responseHeaders",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Header"
+                            },
+                            "description": "Response headers"
                         }
                     ]
                 },
@@ -4874,15 +4877,24 @@
                     ]
                 },
                 {
+                    "id": "Header",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "value",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "id": "CachedResponse",
                     "type": "object",
                     "description": "Cached response",
                     "properties": [
-                        {
-                            "name": "headers",
-                            "type": "object",
-                            "description": "Response headers"
-                        },
                         {
                             "name": "body",
                             "type": "string",
