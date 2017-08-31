@@ -12406,14 +12406,15 @@
                     "name": "callFunctionOn",
                     "parameters": [
                         {
-                            "name": "objectId",
-                            "$ref": "RemoteObjectId",
-                            "description": "Identifier of the object to call function on."
-                        },
-                        {
                             "name": "functionDeclaration",
                             "type": "string",
                             "description": "Declaration of the function to call."
+                        },
+                        {
+                            "name": "objectId",
+                            "$ref": "RemoteObjectId",
+                            "optional": true,
+                            "description": "Identifier of the object to call function on. Either objectId or executionContextId should be specified."
                         },
                         {
                             "name": "arguments",
@@ -12456,6 +12457,18 @@
                             "type": "boolean",
                             "optional": true,
                             "description": "Whether execution should <code>await</code> for resulting value and return once awaited promise is resolved."
+                        },
+                        {
+                            "name": "executionContextId",
+                            "$ref": "ExecutionContextId",
+                            "optional": true,
+                            "description": "Specifies execution context which global object will be used to call function on. Either executionContextId or objectId should be specified."
+                        },
+                        {
+                            "name": "objectGroup",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Symbolic group name that can be used to release multiple objects. If objectGroup is not specified and objectId is, objectGroup will be inherited from object."
                         }
                     ],
                     "returns": [
