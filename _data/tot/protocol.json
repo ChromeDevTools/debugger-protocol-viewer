@@ -932,31 +932,31 @@
                             "name": "scale",
                             "type": "number",
                             "optional": true,
-                            "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode."
+                            "description": "Scale to apply to resulting view image."
                         },
                         {
                             "name": "screenWidth",
                             "type": "integer",
                             "optional": true,
-                            "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "screenHeight",
                             "type": "integer",
                             "optional": true,
-                            "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "positionX",
                             "type": "integer",
                             "optional": true,
-                            "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "positionY",
                             "type": "integer",
                             "optional": true,
-                            "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "dontSetVisibleSize",
@@ -2066,35 +2066,35 @@
                             "name": "scale",
                             "type": "number",
                             "optional": true,
-                            "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode."
+                            "description": "Scale to apply to resulting view image."
                         },
                         {
                             "name": "screenWidth",
                             "type": "integer",
                             "optional": true,
                             "experimental": true,
-                            "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "screenHeight",
                             "type": "integer",
                             "optional": true,
                             "experimental": true,
-                            "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "positionX",
                             "type": "integer",
                             "optional": true,
                             "experimental": true,
-                            "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "positionY",
                             "type": "integer",
                             "optional": true,
                             "experimental": true,
-                            "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|."
+                            "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000)."
                         },
                         {
                             "name": "dontSetVisibleSize",
