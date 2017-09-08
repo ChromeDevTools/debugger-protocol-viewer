@@ -9241,25 +9241,25 @@
                     "properties": [
                         {
                             "name": "x",
-                            "type": "integer",
+                            "type": "number",
                             "description": "X coordinate of the event relative to the main frame's viewport in CSS pixels."
                         },
                         {
                             "name": "y",
-                            "type": "integer",
+                            "type": "number",
                             "description": "Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to the top of the viewport and Y increases as it proceeds towards the bottom of the viewport."
                         },
                         {
                             "name": "radiusX",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
-                            "description": "X radius of the touch area (default: 1)."
+                            "description": "X radius of the touch area (default: 1.0)."
                         },
                         {
                             "name": "radiusY",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
-                            "description": "Y radius of the touch area (default: 1)."
+                            "description": "Y radius of the touch area (default: 1.0)."
                         },
                         {
                             "name": "rotationAngle",
