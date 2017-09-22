@@ -35,7 +35,7 @@ JavaScript API.</a></p>
 <p>The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
 
 
-Many applications and libraries already use the protocol.  
+Many applications and libraries already use the protocol.
 
 <h3 id="remote">Basics: Using DevTools as protocol client</h3>
 <p>The Developer Tools front-end can attach to a remotely running Chrome instance for debugging.
@@ -93,7 +93,7 @@ chrome.exe --user-data-dir=&lt;some directory&gt;</pre>
 
 <h3>Sniffing the protocol</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
-  First, run Chrome with the debugging port open: 
+  First, run Chrome with the debugging port open:
 <pre>
 alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
 canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</pre>
@@ -141,10 +141,23 @@ canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</p
   remote connection and thus detach the extension.
 </p>
 
+<h3>Frequently Asked Questions</h3>
+
+<h4 id="how-is-the-protocol-defined">How is the protocol defined?</h4>
+<p>The canonical protocol definitions live in the Chromium source tree: (<a href="https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/core/inspector/browser_protocol.json">browser_protocol.json</a> and <a href="https://chromium.googlesource.com/v8/v8/+/master/src/inspector/js_protocol.json">js_protocol.json</a>). They are maintained manually by the DevTools engineering team. These files are mirrored (hourly) on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">in the devtools-protocol repo</a>.</p>
+<p>The declarative protocol definitions are used across tools. Within Chromium, a binding layer is created for the Chrome DevTools to interact with, and separately the protocol is used for <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md#client_devtools-api">Chrome Headless’s C++ interface</a>.</p>
+
+<h4 id="whats-the-protocol_externs-file">What’s the protocol_externs file?</h4>
+<p>It’s created via <a href="https://cs.chromium.org/chromium/src/third_party/WebKit/Source/devtools/scripts/build/generate_protocol_externs.py">generate_protocol_externs.py</a> and useful for tools using closure compiler. The TypeScript story is <a href="https://github.com/ChromeDevTools/devtools-protocol/issues/18">here</a>.</p>
+
+<h4 id="are-the-http-endpoints-documented">Are the HTTP endpoints documented?</h4>
+<p>Not yet. See bugger-daemon’s <a href="https://github.com/buggerjs/bugger-daemon/blob/master/README.md#api">third-party docs</a>. See also the <a href="https://cs.chromium.org/search/?q=f:devtools_http_handler.cc+%22command+%3D%3D+%22&amp;sq=package:chromium&amp;type=cs">endpoints implementation</a> in Chromium. <code>/json/protocol</code> was added in Chrome 60.</p>
+
+<h4 id="how-do-i-access-the-browser-target">How do I access the browser target?</h4>
+<p>The endpoint is exposed as <code>webSocketDebuggerUrl</code> in <code>/json/version</code>. Note the <code>browser</code> in the URL, rather than <code>page</code>. If Chrome was launched with <code>--remote-debugging-port=0</code> and chose an open port, the browser endpoint is written to both stderr and the <code>DevToolsActivePort</code> file in browser profile folder.</p>
 
 
-
-<h3 id="simultaneous">Simultaneous protocol clients</h3>
+<h4 id="simultaneous">Does the protocol support multiple simultaneous clients?</h4>
 <p>
   We currently do not support multiple clients connected to the protocol simultaneously.
   This includes opening DevTools while another client is connected.
@@ -158,5 +171,3 @@ canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</p
   (For reference: the <a href="https://chromiumcodereview.appspot.com/11361034/">original patch</a>).
   After disconnection, some apps have chosen to pause their state and offer a reconnect button.
 </p>
-
-
