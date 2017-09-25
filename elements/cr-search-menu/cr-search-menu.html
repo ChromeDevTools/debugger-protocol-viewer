@@ -85,14 +85,14 @@
       }
     </style>
     <slot name="header"></slot>
-    <p class="empty-state-message" hidden$="{{!empty_}}">
+    <p class="empty-state-message" hidden$="[[!empty_]]">
       No matches. Try another search.
     </p>
-    <div class="scroller" on-scroll="handleScroll_">
-      <iron-list items="[[renderItems]]" as="match">
+    <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty]]">
+      <iron-list id="ironList" items="[[renderItems]]" as="match">
         <template>
-          <div class$="search-match {{highlightedClass(match.selected)}}" role="menuitem" on-click="activateItem_">
-            <iron-icon icon="{{match.icon}}"></iron-icon>
+          <div class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
+            <iron-icon icon="[[match.icon]]"></iron-icon>
             <div class="match-info">
               <div class="match-label">
                 <div class="label">
@@ -145,7 +145,7 @@
       },
       selectorForElementToLayOver: {
         type: String,
-        value: '#mainPanel'
+        value: '.content'
       },
       scrolling: {
         type: Boolean,
@@ -154,6 +154,15 @@
       highlightedResultIdx: {
         type: Number,
         value: -1
+      },
+      /** @override */
+      opened: {
+        type: Boolean,
+        value: false
+      },
+      empty_: {
+        type: Boolean,
+        empty: false
       }
     },
 
@@ -161,11 +170,6 @@
       'renderItems_(keywordsModel, searchString)',
       'handleOpened_(opened)'
     ],
-
-    /** @override */
-    opened: true,
-
-    empty_: false,
 
     handleOpened_: function(opened) {
       if (opened) {
@@ -227,6 +231,7 @@
       var target = document.querySelector(this.selectorForElementToLayOver);
       if (target) {
         this.setPositionAndSize(target.getBoundingClientRect());
+        this.$.ironList.updateViewportBoundaries();
       }
     },
 
@@ -242,10 +247,10 @@
 
     renderItems_: function(keywordsModel, searchString) {
       this.highlightedResultIdx = -1;
+      var items = [];
 
       if (keywordsModel) {
         var matches = keywordsModel.getMatches(searchString.toLowerCase());
-        var items = [];
         matches.forEach(function(keywordMatch) {
           //
           keywordMatch.pageReferences.forEach(function(ref) {
@@ -264,8 +269,8 @@
             items.push(itemModel);
           }, this);
         }, this);
-        this._setRenderItems(items);
       }
+      this._setRenderItems(items);
     },
 
     handleRenderItemsChange_: function() {

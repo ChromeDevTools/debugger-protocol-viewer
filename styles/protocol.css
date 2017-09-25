@@ -67,6 +67,7 @@ paper-listbox a.iron-selected, iron-selector a.iron-selected {
 
 #drawer paper-dropdown-menu {
   padding: 0 16px;
+  width: calc(100% - 32px);
   background: hsl(0, 0%, 82%)
 }
 
