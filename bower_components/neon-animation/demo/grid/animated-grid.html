@@ -15,8 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="animated-grid">
   <template>
-    <style include="shared-styles"></style>
-    <style>
+    <style include="shared-styles">
 
       :host {
         display: block;
@@ -30,9 +29,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: calc(100% / 6);
         height: calc(100% / 3);
 
-        @apply(--paper-font-title);
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
+        @apply --paper-font-title;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
       }
 
       .tile:nth-of-type(1) {
@@ -72,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <template is="dom-repeat" items="[[config]]">
-      <div class$="[[_computeTileClass(item.color)]]">
+      <div item="[[item]]" class$="[[_computeTileClass(item.color)]]" on-click="_onClick">
         <span>[[item.value]]</span>
       </div>
     </template>
@@ -129,18 +128,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     },
 
-    listeners: {
-      click: '_onClick'
-    },
-
     _computeTileClass: function(color) {
       return 'tile ' + color + '-300';
     },
 
     _onClick: function(event) {
-      var target = event.target;
-      while (target !== this && !target._templateInstance) {
-        target = target.parentNode;
+      var target = Polymer.dom(event).rootTarget;
+
+      if (!target.item) {
+        target = Polymer.dom(target).parentNode;
       }
 
       // configure the page animation
@@ -155,7 +151,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       this.fire('tile-click', {
         tile: target,
-        data: target._templateInstance.item
+        data: target.item
       });
     }
 

@@ -17,7 +17,7 @@ thing! https://github.com/PolymerLabs/tedium/issues
 _[Demo and API docs](https://elements.polymer-project.org/elements/paper-item)_
 
 
-##&lt;paper-item&gt;
+## &lt;paper-item&gt;
 
 Material design: [Lists](https://www.google.com/design/spec/components/lists.html)
 
@@ -95,7 +95,7 @@ This element has `role="listitem"` by default. Depending on usage, it may be mor
 
 
 
-##&lt;paper-icon-item&gt;
+## &lt;paper-icon-item&gt;
 
 `<paper-icon-item>` is a convenience element to make an item with icon. It is an interactive list
 item with a fixed-width icon area, according to Material Design. This is useful if the icons are of
@@ -131,7 +131,7 @@ The following custom properties and mixins are available for styling:
 
 
 
-##&lt;paper-item-body&gt;
+## &lt;paper-item-body&gt;
 
 Use `<paper-item-body>` in a `<paper-item>` or `<paper-icon-item>` to make two- or
 three- line items. It is a flex item that is a vertical flexbox.

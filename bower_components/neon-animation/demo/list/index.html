@@ -16,19 +16,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="list-demo.html">
 
   </head>
-  <style is="custom-style">
-    body {
-      @apply(--layout-fullbleed);
-    }
+  <custom-style>
+    <style is="custom-style">
+      body {
+        @apply --layout-fullbleed;
+      }
 
-    list-demo {
-      @apply(--layout-fit);
-    }
-  </style>
+      list-demo {
+        @apply --layout-fit;
+      }
+    </style>
+  </custom-style>
   <body>
     <list-demo></list-demo>
   </body>

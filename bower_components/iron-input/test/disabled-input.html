@@ -12,7 +12,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="disabled-input">
   <template>
-    <input is="iron-input" bind-value="{{myValue}}" invalid="{{myInvalid}}" disabled id="input">
+    <iron-input bind-value="{{myValue}}" invalid="{{myInvalid}}" id="input">
+      <input disabled>
+    </iron-input>
   </template>
 </dom-module>
 

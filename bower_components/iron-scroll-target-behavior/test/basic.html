@@ -17,6 +17,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
 
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="x-scrollable.html">
   <link rel="import" href="x-nested-scrollable.html">
 
@@ -92,6 +94,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           xScroll.scrollTarget = 'temporaryScrollingRegion';
           assert.equal(xScroll.scrollTarget, scrollingRegion);
           done();
+        });
+      });
+
+      test('toggleScrollListener', function(done) {
+        flush(function() {
+          xScroll._scrollHandler = sinon.spy();
+          xScroll.scrollTarget = 'temporaryScrollingRegion';
+          xScroll.scroll(0, 100);
+          xScroll.toggleScrollListener(true);
+          setTimeout(function() {
+            assert.isTrue(xScroll._scrollHandler.called, '_scrollHandler should be called');
+            xScroll._scrollHandler.reset();
+            assert.isFalse(xScroll._scrollHandler.called);
+            xScroll.toggleScrollListener(false);
+            xScroll.scroll(0, 200);
+            setTimeout(function() {
+              assert.isFalse(xScroll._scrollHandler.called, '_scrollHandler should not be called');
+              done();
+            }, 100);
+          }, 100);
         });
       });
     });

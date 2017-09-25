@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background: var(--color-two);
       }
     </style>
-    
+
     <div id="header" class="header"></div>
 
     <div class="body">
@@ -58,43 +58,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties: {
 
       sharedElements: {
-        value: function() {
-          return {
-            'hero': this.$.header
-          }
-        }
+        type: Object
       },
 
       animationConfig: {
-        value: function() {
-          var squares = Polymer.dom(this.root).querySelectorAll('.square');
-          var squaresArray = Array.prototype.slice.call(squares);
-          return {
-            'entry': [{
-              name: 'hero-animation',
-              id: 'hero',
-              toPage: this
-            }, {
-              name: 'cascaded-animation',
-              animation: 'transform-animation',
-              transformFrom: 'translateY(100%)',
-              nodes: squaresArray
-            }],
-
-            'exit': [{
-              name: 'slide-up-animation',
-              node: this.$.header
-            }, {
-              name: 'cascaded-animation',
-              animation: 'transform-animation',
-              transformTo: 'translateY(60vh)',
-              nodes: squaresArray
-            }]
-          };
-        }
+        type: Object
       }
-    }
+    },
 
+    attached: function() {
+      if (this.animationConfig) {
+        return;
+      }
+
+      this.sharedElements = { 'hero': this.$.header };
+      var squares = Polymer.dom(this.root).querySelectorAll('.square');
+      var squaresArray = Array.prototype.slice.call(squares);
+      this.animationConfig = {
+        'entry': [{
+          name: 'hero-animation',
+          id: 'hero',
+          toPage: this
+        }, {
+          name: 'cascaded-animation',
+          animation: 'transform-animation',
+          transformFrom: 'translateY(100%)',
+          nodes: squaresArray
+        }],
+
+        'exit': [{
+          name: 'slide-up-animation',
+          node: this.$.header
+        }, {
+          name: 'cascaded-animation',
+          animation: 'transform-animation',
+          transformTo: 'translateY(60vh)',
+          nodes: squaresArray
+        }]
+      };
+    }
   });
 
 </script>

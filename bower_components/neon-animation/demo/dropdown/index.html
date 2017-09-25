@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="../../neon-animated-pages.html">
     <link rel="import" href="../../neon-animations.html">
     <link rel="import" href="animated-dropdown.html">
@@ -25,28 +26,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
 
-    <template is="dom-bind">
+    <dom-bind>
+      <template is="dom-bind">
 
-      <button dropdown-id="dropdown" on-click="_onButtonClick">dropdown</button>
-      <br>
-      <animated-dropdown id="dropdown" on-click="_onDropdownClick">Hello world!</animated-dropdown>
+        <button dropdown-id="dropdown" on-click="_onButtonClick">dropdown</button>
+        <br>
+        <animated-dropdown id="dropdown" on-click="_onDropdownClick">Hello world!</animated-dropdown>
 
-    </template>
+      </template>
+    </dom-bind>
 
     <script>
 
-      var scope = document.querySelector('template[is="dom-bind"]');
+      var scope1 = document.querySelector('template[is="dom-bind"]');
+      var scope2 = document.querySelector('dom-bind');
 
-      scope._onButtonClick = function(event) {
+      scope1._onButtonClick = function(event) {
         var dropdown = document.querySelector('#' + event.target.getAttribute('dropdown-id'));
         if (dropdown) {
           dropdown.show();
         }
       };
 
-      scope._onDropdownClick = function(event) {
+      scope1._onDropdownClick = function(event) {
         event.target.hide();
       };
+
+      scope2._onButtonClick = scope1._onButtonClick;
+      scope2._onDropdownClick = scope1._onDropdownClick;
 
     </script>
 

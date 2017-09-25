@@ -61,44 +61,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       sharedElements: {
-        type: Object,
-        value: function() {
-          return {
-            'hero': this.$.card,
-            'ripple': this.$.fixed
-          }
-        }
+        type: Object
       },
 
       animationConfig: {
-        type: Object,
-        value: function() {
-          return {
-            'entry': [{
-              name: 'ripple-animation',
-              id: 'ripple',
-              toPage: this,
-            }, {
-              name: 'hero-animation',
-              id: 'hero',
-              toPage: this,
-              timing: {
-                delay: 150
-              }
-            }],
-            'exit': [{
-              name: 'fade-out-animation',
-              node: this.$.fixed
-            }, {
-              name: 'transform-animation',
-              transformFrom: 'none',
-              transformTo: 'translate(0px,-200vh) scale(0.9,1)',
-              node: this.$.card
-            }]
-          }
-        }
+        type: Object
+      }
+    },
+
+    attached: function() {
+      if (this.animationConfig) {
+        return;
       }
 
+      this.sharedElements = {
+        'hero': this.$.card,
+        'ripple': this.$.fixed
+      };
+
+      this.animationConfig = {
+        'entry': [{
+          name: 'ripple-animation',
+          id: 'ripple',
+          toPage: this,
+        }, {
+          name: 'hero-animation',
+          id: 'hero',
+          toPage: this,
+          timing: {
+            delay: 150
+          }
+        }],
+        'exit': [{
+          name: 'fade-out-animation',
+          node: this.$.fixed
+        }, {
+          name: 'transform-animation',
+          transformFrom: 'none',
+          transformTo: 'translate(0px,-200vh) scale(0.9,1)',
+          node: this.$.card
+        }]
+      };
     },
 
     _computeCardClass: function(color) {

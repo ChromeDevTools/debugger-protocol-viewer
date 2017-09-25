@@ -18,8 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 displayed when the `<paper-input-container>` is `invalid`.
 
     <paper-input-container>
-      <input is="iron-input" pattern="[0-9]*">
-      <paper-input-error>Only numbers are allowed!</paper-input-error>
+      <input pattern="[0-9]*">
+      <paper-input-error slot="add-on">Only numbers are allowed!</paper-input-error>
     </paper-input-container>
 
 ### Styling
@@ -39,10 +39,10 @@ Custom property | Description | Default
         display: inline-block;
         visibility: hidden;
 
-        color: var(--paper-input-container-invalid-color, --error-color);
+        color: var(--paper-input-container-invalid-color, var(--error-color));
 
-        @apply(--paper-font-caption);
-        @apply(--paper-input-error);
+        @apply --paper-font-caption;
+        @apply --paper-input-error;
         position: absolute;
         left:0;
         right:0;
@@ -53,7 +53,7 @@ Custom property | Description | Default
       };
     </style>
 
-    <content></content>
+    <slot></slot>
   </template>
 </dom-module>
 

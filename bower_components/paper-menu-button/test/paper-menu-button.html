@@ -16,11 +16,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
   <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../paper-menu-button.html">
-  <link rel="import" href="../../test-fixture/test-fixture.html">
 
 </head>
 <body>
@@ -28,8 +26,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="TrivialMenuButton">
     <template>
       <paper-menu-button no-animations>
-        <span class="dropdown-trigger">trigger</span>
-        <span class="dropdown-content">content</span>
+        <span slot="dropdown-trigger">trigger</span>
+        <span slot="dropdown-content">content</span>
       </paper-menu-button>
     </template>
   </test-fixture>
@@ -37,12 +35,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="TwoMenuButtons">
     <template>
       <paper-menu-button no-animations>
-        <span class="dropdown-trigger">trigger</span>
-        <span class="dropdown-content">content</span>
+        <span slot="dropdown-trigger">trigger</span>
+        <span slot="dropdown-content">content</span>
       </paper-menu-button>
       <paper-menu-button no-animations>
-        <span class="dropdown-trigger">trigger</span>
-        <span class="dropdown-content">content</span>
+        <span slot="dropdown-trigger">trigger</span>
+        <span slot="dropdown-content">content</span>
       </paper-menu-button>
     </template>
   </test-fixture>
@@ -55,8 +53,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       setup(function() {
         menuButton = fixture('TrivialMenuButton');
-        trigger = Polymer.dom(menuButton).querySelector('.dropdown-trigger');
-        content = Polymer.dom(menuButton).querySelector('.dropdown-content');
+        trigger = Polymer.dom(menuButton).querySelector('[slot="dropdown-trigger"]');
+        content = Polymer.dom(menuButton).querySelector('[slot="dropdown-content"]');
       });
 
       test('opens when trigger is clicked', function(done) {
@@ -86,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             MockInteractions.tap(trigger);
           });
         });
-        
+
         MockInteractions.tap(trigger);
       });
 
@@ -107,6 +105,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         expect(menuButton.hasAttribute('aria-haspopup')).to.be.equal(true);
       });
 
+      test('closes on iron-activate if close-on-activate is true', function(done) {
+        menuButton.closeOnActivate = true;
+
+        menuButton.addEventListener('paper-dropdown-open', function() {
+          menuButton.addEventListener('paper-dropdown-close', function() {
+            done();
+          });
+
+          content.dispatchEvent(new CustomEvent('iron-activate', {
+            bubbles: true,
+            cancelable: true
+          }));
+        });
+
+        MockInteractions.tap(trigger);
+      });
+
+      test('allowOutsideScroll propagates to <iron-dropdown>', function() {
+        menuButton.allowOutsideScroll = false;
+        expect(menuButton.$.dropdown.allowOutsideScroll).to.be.equal(false);
+        menuButton.allowOutsideScroll = true;
+        expect(menuButton.$.dropdown.allowOutsideScroll).to.be.equal(true);
+      });
+
+      test('restoreFocusOnClose propagates to <iron-dropdown>', function() {
+        menuButton.restoreFocusOnClose = false;
+        expect(menuButton.$.dropdown.restoreFocusOnClose).to.be.equal(false);
+        menuButton.restoreFocusOnClose = true;
+        expect(menuButton.$.dropdown.restoreFocusOnClose).to.be.equal(true);
+      });
+
     });
 
     suite('when there are two buttons', function() {
@@ -119,8 +148,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var buttons = fixture('TwoMenuButtons');
         menuButton = buttons[0];
         otherButton = buttons[1];
-        trigger = Polymer.dom(menuButton).querySelector('.dropdown-trigger');
-        otherTrigger = Polymer.dom(otherButton).querySelector('.dropdown-trigger');
+        trigger = Polymer.dom(menuButton).querySelector('[slot="dropdown-trigger"]');
+        otherTrigger = Polymer.dom(otherButton).querySelector('[slot="dropdown-trigger"]');
       });
 
       test('closes current and opens other', function(done) {
@@ -150,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           Polymer.Base.async(function() {
             MockInteractions.tap(otherTrigger);
           });
-          
+
 
           Polymer.Base.async(function() {
             expect(firstClosed).to.be.equal(true);

@@ -20,19 +20,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         background: black;
         visibility: hidden;
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
 
       .toolbar {
         background: #9c27b0;
         height: 72px;
         z-index: 1;
-        @apply(--shadow-elevation-2dp);
+        @apply --shadow-elevation-2dp;
       }
 
       animated-grid {
         height: calc(100% - 72px);
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
     </style>
 
@@ -56,20 +56,20 @@ Polymer({
   properties: {
 
     animationConfig: {
-      type: Object,
-      value: function() {
-        return {
-          'entry': [{
-            name: 'slide-from-top-animation',
-            node: this.$.toolbar
-          }, {
-            animatable: this.$.grid,
-            type: 'entry'
-          }]
-        };
-      }
+      type: Object
     }
+  },
 
+  attached: function() {
+    this.animationConfig = this.animationConfig || {
+      'entry': [{
+        name: 'slide-from-top-animation',
+        node: this.$.toolbar
+      }, {
+        animatable: this.$.grid,
+        type: 'entry'
+      }]
+    };
   },
 
   show: function() {

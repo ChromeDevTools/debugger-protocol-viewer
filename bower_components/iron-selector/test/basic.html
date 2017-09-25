@@ -68,8 +68,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s1;
 
-      setup(function () {
+      setup(function(done) {
         s1 = fixture('defaults');
+
+        s1.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s1.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('to nothing selected', function() {
@@ -101,8 +106,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s2;
 
-      setup(function () {
+      setup(function(done) {
         s2 = fixture('basic');
+
+        s2.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s2.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('honors the attrForSelected attribute', function(done) {
@@ -167,7 +177,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('`selectIndex()` selects an item with the given index', function() {
-          assert.equal(s2.selectedItem, undefined);
+          // This selector has attributes `selected` and `attr-for-selected`
+          // matching this item.
+          assert.equal(s2.selectedItem, s2.items[2]);
 
           s2.selectIndex(1);
           assert.equal(s2.selected, 'item1');
@@ -186,8 +198,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       suite('items changing', function() {
         var s1;
 
-        setup(function() {
+        setup(function(done) {
           s1 = fixture('defaults');
+
+          s1.addEventListener('iron-items-changed', function onIronItemsChanged() {
+            s1.removeEventListener('iron-items-changed', onIronItemsChanged);
+            done();
+          });
         });
 
         test('cause iron-items-changed to fire', function(done) {
@@ -217,42 +234,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('updates selected item', function(done) {
-          s1.addEventListener('iron-items-changed', function firstListener() {
-            s1.removeEventListener('iron-items-changed', firstListener);
-            var firstElementChild = Polymer.dom(s1).firstElementChild;
+          s1.selected = 0;
+
+          var firstElementChild = Polymer.dom(s1).firstElementChild;
+          expect(firstElementChild).to.be.equal(s1.selectedItem);
+          expect(firstElementChild.classList.contains('iron-selected'))
+              .to.be.eql(true);
+
+          s1.addEventListener('iron-items-changed', function() {
+            firstElementChild = Polymer.dom(s1).firstElementChild;
             expect(firstElementChild).to.be.equal(s1.selectedItem);
             expect(firstElementChild.classList.contains('iron-selected'))
                 .to.be.eql(true);
-            Polymer.dom(s1).removeChild(s1.selectedItem);
-
-            s1.addEventListener('iron-items-changed', function() {
-              firstElementChild = Polymer.dom(s1).firstElementChild;
-              expect(firstElementChild).to.be.equal(s1.selectedItem);
-              expect(firstElementChild.classList.contains('iron-selected'))
-                  .to.be.eql(true);
-              done();
-            });
+            done();
           });
-          s1.selected = 0;
+
+          Polymer.dom(s1).removeChild(s1.selectedItem);
         });
       });
 
       suite('dynamic selector', function() {
+        // NOTE(bicknellr): Polymer 2 only upgrades elements once they have been
+        // connected to the document. This test now connects the selector
+        // *first* and appends the child afterwards.
         test('selects dynamically added child automatically', function(done) {
+          // Create the selector, set selected, connect to force upgrade.
           var selector = document.createElement('iron-selector');
-          var child = document.createElement('div');
-
           selector.selected = '0';
-          child.textContent = 'Item 0';
-
-          Polymer.dom(selector).appendChild(child);
           document.body.appendChild(selector);
 
-          Polymer.Base.async(function() {
+          // Create and append a new item which should become selected.
+          var child = document.createElement('div');
+          child.textContent = 'Item 0';
+          Polymer.dom(selector).appendChild(child);
+
+          selector.addEventListener('iron-items-changed', function onIronItemsChanged() {
+            selector.removeEventListener('iron-items-changed', onIronItemsChanged);
+
             assert.equal(child.className, 'iron-selected');
             document.body.removeChild(selector);
             done();
-          }, 1);
+          });
         });
       });
     });

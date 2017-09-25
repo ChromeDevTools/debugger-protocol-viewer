@@ -32,28 +32,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="basic">
     <template>
       <paper-input-container>
-        <label id="l">label</label>
-        <input id="i">
+        <label slot="label" id="l">label</label>
+        <input slot="input" id="i">
       </paper-input-container>
     </template>
   </test-fixture>
 
-  <test-fixture id="prefix">
+  <test-fixture id="prefix-1">
     <template>
       <paper-input-container>
         <div prefix>$</div>
-        <label id="l">label</label>
-        <input is="iron-input" id="i">
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i">
       </paper-input-container>
     </template>
   </test-fixture>
 
-  <test-fixture id="prefix-has-value">
+  <test-fixture id="prefix-2">
     <template>
       <paper-input-container>
         <div prefix>$</div>
-        <label id="l">label</label>
-        <input is="iron-input" id="i" value="foo">
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i">
+          <input>
+        </iron-input>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="prefix-has-value-1">
+    <template>
+      <paper-input-container>
+        <div prefix>$</div>
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" bind-value="foo">
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="prefix-has-value-2">
+    <template>
+      <paper-input-container>
+        <div prefix>$</div>
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i" bind-value="foo">
+          <input>
+        </iron-input>
       </paper-input-container>
     </template>
   </test-fixture>
@@ -61,8 +85,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="has-value">
     <template>
       <paper-input-container>
-        <label id="l">label</label>
-        <input id="i" value="value">
+        <label slot="label" id="l">label</label>
+        <input slot="input" id="i" value="value">
       </paper-input-container>
     </template>
   </test-fixture>
@@ -70,8 +94,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="no-float-has-value">
     <template>
       <paper-input-container no-label-float>
-        <label id="l">label</label>
-        <input id="i" value="value">
+        <label slot="label" id="l">label</label>
+        <input slot="input" id="i" value="value">
       </paper-input-container>
     </template>
   </test-fixture>
@@ -79,46 +103,109 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="always-float">
     <template>
       <paper-input-container always-float-label>
-        <label id="l">label</label>
-        <input id="i" value="value">
+        <label slot="label" id="l">label</label>
+        <input slot="input" id="i" value="value">
       </paper-input-container>
     </template>
   </test-fixture>
 
-  <test-fixture id="auto-validate-numbers">
+  <test-fixture id="auto-validate-numbers-1">
     <template>
       <paper-input-container auto-validate>
-        <label id="l">label</label>
-        <input is="iron-input" id="i" pattern="[0-9]*">
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" pattern="[0-9]*">
       </paper-input-container>
     </template>
   </test-fixture>
 
-  <test-fixture id="manual-validate-numbers">
+  <test-fixture id="auto-validate-numbers-2">
+    <template>
+      <paper-input-container auto-validate>
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i">
+          <input pattern="[0-9]*">
+        </iron-input>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="manual-validate-numbers-1">
+    <template>
+      <paper-input-container>
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" pattern="[0-9]*">
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="manual-validate-numbers-2">
+    <template>
+      <paper-input-container>
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i">
+          <input pattern="[0-9]*">
+        </iron-input>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="required-validate-1">
     <template>
       <paper-input-container>
         <label id="l">label</label>
-        <input is="iron-input" id="i" pattern="[0-9]*">
+        <input is="iron-input" id="i" slot="input" required>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+  <test-fixture id="required-validate-2">
+    <template>
+      <paper-input-container>
+        <label id="l">label</label>
+        <iron-input id="i" slot="input">
+          <input required>
+        </iron-input>
       </paper-input-container>
     </template>
   </test-fixture>
 
   <letters-only></letters-only>
 
-  <test-fixture id="auto-validate-validator">
+  <test-fixture id="auto-validate-validator-1">
     <template>
       <paper-input-container auto-validate>
-        <label id="l">label</label>
-        <input is="iron-input" id="i" pattern="[0-9]*" validator="letters-only">
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" validator="letters-only" pattern="[0-9]*">
       </paper-input-container>
     </template>
   </test-fixture>
 
-  <test-fixture id="auto-validate-validator-has-invalid-value">
+  <test-fixture id="auto-validate-validator-2">
     <template>
       <paper-input-container auto-validate>
-        <label id="l">label</label>
-        <input is="iron-input" id="i" validator="letters-only" value="123123">
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i" validator="letters-only">
+          <input pattern="[0-9]*">
+        </iron-input>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="auto-validate-validator-has-invalid-value-1">
+    <template>
+      <paper-input-container auto-validate>
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" validator="letters-only" bind-value="123123">
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="auto-validate-validator-has-invalid-value-2">
+    <template>
+      <paper-input-container auto-validate>
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i" validator="letters-only" bind-value="123123">
+          <input>
+        </iron-input>
       </paper-input-container>
     </template>
   </test-fixture>
@@ -133,7 +220,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('basic', function() {
       test('can be created imperatively', function() {
         var container = document.createElement('paper-input-container');
-        var input = document.createElement('input', 'iron-input');
+        var input = document.createElement('input');
         input.className = 'paper-input-input';
         input.id = 'input';
 
@@ -175,7 +262,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('label is floated correctly with a prefix', function(done) {
-        var container = fixture('prefix');
+        var container = Polymer.Element ? fixture('prefix-2') : fixture('prefix-1');
         var label = Polymer.dom(container).querySelector('#l');
         var input = Polymer.dom(container).querySelector('#i');
 
@@ -192,7 +279,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('label is floated correctly with a prefix and prefilled value', function(done) {
-        var container = fixture('prefix-has-value');
+        var container = Polymer.Element ?
+            fixture('prefix-has-value-2') : fixture('prefix-has-value-1');
         var label = Polymer.dom(container).querySelector('#l');
 
         // The label floats, and it is not indented.
@@ -244,56 +332,115 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
+      test('focused class added to input content', function(done) {
+        var container = fixture('basic');
+        var input = Polymer.dom(container).querySelector('#i');
+        var inputContent = Polymer.dom(container.root).querySelector('.input-content');
+        assert.isFalse(inputContent.classList.contains('focused'), 'input content does not have class "focused" when input is not focused');
+        MockInteractions.focus(input);
+        requestAnimationFrame(function() {
+          assert.isTrue(inputContent.classList.contains('focused'), 'input content has class "focused" when input is focused');
+          done();
+        });
+      });
+
     });
 
     suite('validation', function() {
 
-      test('styled when the input is set to an invalid value with auto-validate', function() {
-        var container = fixture('auto-validate-numbers');
-        var input = Polymer.dom(container).querySelector('#i');
-        var inputContent = Polymer.dom(container.root).querySelector('.input-content');
-        var line = Polymer.dom(container.root).querySelector('.underline');
+      test('styled when the input is set to an invalid value with auto-validate', function(done) {
+        var container = Polymer.Element ?
+            fixture('auto-validate-numbers-2') :
+            fixture('auto-validate-numbers-1');
 
-        input.bindValue = 'foobar';
+        // Mutation observer is async, so wait one tick.
+        Polymer.Base.async(function() {
+          var input = Polymer.dom(container).querySelector('#i');
+          var inputContent = Polymer.dom(container.root).querySelector('.input-content');
+          var line = Polymer.dom(container.root).querySelector('.underline');
 
-        assert.isTrue(container.invalid, 'invalid is true');
-        assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
-        assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          input.bindValue = 'foobar';
+
+          assert.isTrue(container.invalid, 'invalid is true');
+          assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
+          assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          done();
+        }, 1);
       });
 
-      test('styled when the input is set to an invalid value with auto-validate, with validator', function() {
-        var container = fixture('auto-validate-validator');
-        var input = Polymer.dom(container).querySelector('#i');
-        var inputContent = Polymer.dom(container.root).querySelector('.input-content');
-        var line = Polymer.dom(container.root).querySelector('.underline');
+      test('styled when the input is set to an invalid value with auto-validate, with validator', function(done) {
+        var container = Polymer.Element ?
+            fixture('auto-validate-validator-2') :
+            fixture('auto-validate-validator-1');
 
-        input.bindValue = '123123';
+        // Mutation observer is async, so wait one tick.
+        Polymer.Base.async(function() {
+          var input = Polymer.dom(container).querySelector('#i');
+          var inputContent = Polymer.dom(container.root).querySelector('.input-content');
+          var line = Polymer.dom(container.root).querySelector('.underline');
 
-        assert.isTrue(container.invalid, 'invalid is true');
-        assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
-        assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          input.bindValue = '123123';
+
+          assert.isTrue(container.invalid, 'invalid is true');
+          assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
+          assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          done();
+        }, 1);
       });
 
-      test('styled when the input is set initially to an invalid value with auto-validate, with validator', function() {
-        var container = fixture('auto-validate-validator-has-invalid-value');
-        assert.isTrue(container.invalid, 'invalid is true');
-        assert.isTrue(Polymer.dom(container.root).querySelector('.underline').classList.contains('is-invalid'), 'underline has is-invalid class');
+      test('styled when the input is set initially to an invalid value with auto-validate, with validator', function(done) {
+        var container = Polymer.Element ?
+            fixture('auto-validate-validator-has-invalid-value-2') :
+            fixture('auto-validate-validator-has-invalid-value-1');
+
+        // Mutation observer is async, so wait one tick.
+        Polymer.Base.async(function() {
+          assert.isTrue(container.invalid, 'invalid is true');
+          assert.isTrue(Polymer.dom(container.root).querySelector('.underline').classList.contains('is-invalid'), 'underline has is-invalid class');
+          done();
+        }, 1);
       });
 
-      test('styled when the input is set to an invalid value with manual validation', function() {
-        var container = fixture('manual-validate-numbers');
-        var input = Polymer.dom(container).querySelector('#i');
-        var inputContent = Polymer.dom(container.root).querySelector('.input-content');
-        var line = Polymer.dom(container.root).querySelector('.underline');
+      test('styled when the input is set to an invalid value with manual validation', function(done) {
+        var container = Polymer.Element ?
+            fixture('manual-validate-numbers-2') :
+            fixture('manual-validate-numbers-1');
 
-        input.bindValue = 'foobar';
-        input.validate();
+        // Mutation observer is async, so wait one tick.
+        Polymer.Base.async(function() {
+          var input = Polymer.dom(container).querySelector('#i');
+          var inputContent = Polymer.dom(container.root).querySelector('.input-content');
+          var line = Polymer.dom(container.root).querySelector('.underline');
 
-        assert.isTrue(container.invalid, 'invalid is true');
-        assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
-        assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          input.bindValue = 'foobar';
+          input.validate();
+
+          assert.isTrue(container.invalid, 'invalid is true');
+          assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
+          assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          done();
+        }, 1);
       });
 
+      test('styled when the input is manually validated and required', function(done) {
+        var container = Polymer.Element ?
+            fixture('required-validate-2') :
+            fixture('required-validate-1');
+
+        // Mutation observer is async, so wait one tick.
+        Polymer.Base.async(function() {
+          var input = Polymer.dom(container).querySelector('#i');
+          var inputContent = Polymer.dom(container.root).querySelector('.input-content');
+          var line = Polymer.dom(container.root).querySelector('.underline');
+          assert.isFalse(container.invalid, 'invalid is false');
+          input.validate();
+
+          assert.isTrue(container.invalid, 'invalid is true');
+          assert.isTrue(inputContent.classList.contains('is-invalid'), 'label has invalid styling when input is invalid');
+          assert.isTrue(line.classList.contains('is-invalid'), 'underline has invalid styling when input is invalid');
+          done();
+        }, 1);
+      });
     });
 
   </script>

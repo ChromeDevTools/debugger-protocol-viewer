@@ -15,17 +15,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
 
-  <link rel="import" href="helpers.html">
-  <link rel="import" href="x-list.html">
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="fixtures/helpers.html">
+  <link rel="import" href="fixtures/x-list.html">
 
 </head>
 <body>
+  <!-- Issue: web-component-tester/issues/505 -->
+  <script>void(0)</script>
 
   <test-fixture id="trivialList">
     <template>
-      <x-list hidden></x-list>
+      <x-list style="display: none;"></x-list>
     </template>
   </test-fixture>
 
@@ -51,10 +55,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('iron-resize', function(done) {
         list.items = buildDataSet(100);
         list.fire('iron-resize');
-
         assert.notEqual(getFirstItemFromList(list).textContent, '0');
-        Polymer.RenderStatus.whenReady(function() {
-          container.removeAttribute('hidden');
+        setTimeout(function() {
+          container.style.display = '';
           assert.notEqual(getFirstItemFromList(list).textContent, '0');
           list.fire('iron-resize');
           flush(function() {
@@ -62,7 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.equal(getFirstItemFromList(list).textContent, '0');
             done();
           });
-        });
+        }, 100);
       });
 
     });

@@ -25,8 +25,8 @@ Material design: [Dropdown buttons](https://www.google.com/design/spec/component
 another element that represents "content", to create a dropdown menu that
 displays the "content" when the "trigger" is clicked.
 
-The child element with the class `dropdown-trigger` will be used as the
-"trigger" element. The child element with the class `dropdown-content` will be
+The child element assigned to the `dropdown-trigger` slot will be used as the
+"trigger" element. The child element assigned to the `dropdown-content` slot will be
 used as the "content" element.
 
 The `paper-menu-button` is sensitive to its content's `iron-select` events. If
@@ -36,12 +36,12 @@ will close automatically.
 Example:
 
     <paper-menu-button>
-      <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-      <paper-menu class="dropdown-content">
+      <paper-icon-button icon="menu" slot="dropdown-trigger"></paper-icon-button>
+      <paper-listbox slot="dropdown-content">
         <paper-item>Share</paper-item>
         <paper-item>Settings</paper-item>
         <paper-item>Help</paper-item>
-      </paper-menu>
+      </paper-listbox>
     </paper-menu-button>
 
 ### Styling
@@ -69,28 +69,28 @@ Custom property | Description | Default
         padding: 8px;
         outline: none;
 
-        @apply(--paper-menu-button);
+        @apply --paper-menu-button;
       }
 
       :host([disabled]) {
         cursor: auto;
         color: var(--disabled-text-color);
 
-        @apply(--paper-menu-button-disabled);
+        @apply --paper-menu-button-disabled;
       }
 
       iron-dropdown {
-        @apply(--paper-menu-button-dropdown);
+        @apply --paper-menu-button-dropdown;
       }
 
       .dropdown-content {
-        @apply(--shadow-elevation-2dp);
+        @apply --shadow-elevation-2dp;
 
         position: relative;
         border-radius: 2px;
-        background-color: var(--paper-menu-button-dropdown-background, --primary-background-color);
+        background-color: var(--paper-menu-button-dropdown-background, var(--primary-background-color));
 
-        @apply(--paper-menu-button-content);
+        @apply --paper-menu-button-content;
       }
 
       :host([vertical-align="top"]) .dropdown-content {
@@ -104,10 +104,14 @@ Custom property | Description | Default
         margin-bottom: -10px;
         margin-top: 20px;
       }
+
+      #trigger {
+        cursor: pointer;
+      }
     </style>
 
     <div id="trigger" on-tap="toggle">
-      <content select=".dropdown-trigger"></content>
+      <slot name="dropdown-trigger"></slot>
     </div>
 
     <iron-dropdown
@@ -115,15 +119,19 @@ Custom property | Description | Default
       opened="{{opened}}"
       horizontal-align="[[horizontalAlign]]"
       vertical-align="[[verticalAlign]]"
+      dynamic-align="[[dynamicAlign]]"
       horizontal-offset="[[horizontalOffset]]"
       vertical-offset="[[verticalOffset]]"
+      no-overlap="[[noOverlap]]"
       open-animation-config="[[openAnimationConfig]]"
       close-animation-config="[[closeAnimationConfig]]"
       no-animations="[[noAnimations]]"
       focus-target="[[_dropdownContent]]"
+      allow-outside-scroll="[[allowOutsideScroll]]"
+      restore-focus-on-close="[[restoreFocusOnClose]]"
       on-iron-overlay-canceled="__onIronOverlayCanceled">
-      <div class="dropdown-content">
-        <content id="content" select=".dropdown-content"></content>
+      <div slot="dropdown-content" class="dropdown-content">
+        <slot id="content" name="dropdown-content"></slot>
       </div>
     </iron-dropdown>
   </template>
@@ -131,6 +139,11 @@ Custom property | Description | Default
   <script>
     (function() {
       'use strict';
+
+      var config = {
+        ANIMATION_CUBIC_BEZIER: 'cubic-bezier(.3,.95,.5,1)',
+        MAX_ANIMATION_TIME_MS: 400
+      };
 
       var PaperMenuButton = Polymer({
         is: 'paper-menu-button',
@@ -184,6 +197,16 @@ Custom property | Description | Default
           },
 
           /**
+           * If true, the `horizontalAlign` and `verticalAlign` properties will
+           * be considered preferences instead of strict requirements when
+           * positioning the dropdown and may be changed if doing so reduces
+           * the area of the dropdown falling outside of `fitInto`.
+           */
+          dynamicAlign: {
+            type: Boolean
+          },
+
+          /**
            * A pixel value that will be added to the position calculated for the
            * given `horizontalAlign`. Use a negative value to offset to the
            * left, or a positive value to offset to the right.
@@ -206,6 +229,14 @@ Custom property | Description | Default
           },
 
           /**
+           * If true, the dropdown will be positioned so that it doesn't overlap
+           * the button.
+           */
+          noOverlap: {
+            type: Boolean
+          },
+
+          /**
            * Set to true to disable animations when opening and closing the
            * dropdown.
            */
@@ -219,6 +250,15 @@ Custom property | Description | Default
            * a selection has been made.
            */
           ignoreSelect: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * Set to true to enable automatically closing the dropdown after an
+           * item has been activated, even if the selection did not change.
+           */
+          closeOnActivate: {
             type: Boolean,
             value: false
           },
@@ -241,14 +281,14 @@ Custom property | Description | Default
                 timing: {
                   delay: 100,
                   duration: 150,
-                  easing: PaperMenuButton.ANIMATION_CUBIC_BEZIER
+                  easing: config.ANIMATION_CUBIC_BEZIER
                 }
               }, {
                 name: 'paper-menu-grow-height-animation',
                 timing: {
                   delay: 100,
                   duration: 275,
-                  easing: PaperMenuButton.ANIMATION_CUBIC_BEZIER
+                  easing: config.ANIMATION_CUBIC_BEZIER
                 }
               }];
             }
@@ -271,7 +311,7 @@ Custom property | Description | Default
                 timing: {
                   delay: 100,
                   duration: 50,
-                  easing: PaperMenuButton.ANIMATION_CUBIC_BEZIER
+                  easing: config.ANIMATION_CUBIC_BEZIER
                 }
               }, {
                 name: 'paper-menu-shrink-height-animation',
@@ -281,6 +321,25 @@ Custom property | Description | Default
                 }
               }];
             }
+          },
+
+          /**
+           * By default, the dropdown will constrain scrolling on the page
+           * to itself when opened.
+           * Set to true in order to prevent scroll from being constrained
+           * to the dropdown when it opens.
+           */
+          allowOutsideScroll: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * Whether focus should be restored to the button when the menu closes.
+           */
+          restoreFocusOnClose: {
+            type: Boolean,
+            value: true
           },
 
           /**
@@ -298,6 +357,7 @@ Custom property | Description | Default
         },
 
         listeners: {
+          'iron-activate': '_onIronActivate',
           'iron-select': '_onIronSelect'
         },
 
@@ -305,7 +365,13 @@ Custom property | Description | Default
          * The content element that is contained by the menu button, if any.
          */
         get contentElement() {
-          return Polymer.dom(this.$.content).getDistributedNodes()[0];
+          // Polymer 2.x returns slot.assignedNodes which can contain text nodes.
+          var nodes = Polymer.dom(this.$.content).getDistributedNodes();
+          for (var i = 0, l = nodes.length; i < l; i++) {
+            if (nodes[i].nodeType === Node.ELEMENT_NODE) {
+              return nodes[i];
+            }
+          }
         },
 
         /**
@@ -347,6 +413,18 @@ Custom property | Description | Default
          */
         _onIronSelect: function(event) {
           if (!this.ignoreSelect) {
+            this.close();
+          }
+        },
+
+        /**
+         * Closes the dropdown when an `iron-activate` event is received if
+         * `closeOnActivate` is true.
+         *
+         * @param {CustomEvent} event A CustomEvent of type 'iron-activate'.
+         */
+        _onIronActivate: function(event) {
+          if (this.closeOnActivate) {
             this.close();
           }
         },
@@ -397,8 +475,9 @@ Custom property | Description | Default
         }
       });
 
-      PaperMenuButton.ANIMATION_CUBIC_BEZIER = 'cubic-bezier(.3,.95,.5,1)';
-      PaperMenuButton.MAX_ANIMATION_TIME_MS = 400;
+      Object.keys(config).forEach(function (key) {
+        PaperMenuButton[key] = config[key];
+      });
 
       Polymer.PaperMenuButton = PaperMenuButton;
     })();

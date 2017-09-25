@@ -17,7 +17,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-
+    
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="my-animatable.html">
     <link rel="import" href="my-dialog.html">
 
@@ -28,32 +29,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   </style>
   <body>
+    <dom-bind>
+      <template is="dom-bind">
 
-    <template is="dom-bind">
+        <button on-click="_onCircleButtonClick">toggle circle</button>
+        <button on-click="_onDialogButtonClick">toggle dialog</button>
 
-      <button on-click="_onCircleButtonClick">toggle circle</button>
-      <button on-click="_onDialogButtonClick">toggle dialog</button>
+        <div style="text-align: center">
+          <my-dialog>Hello World!</my-dialog>
+        </div>
 
-      <div style="text-align: center">
-        <my-dialog>Hello World!</my-dialog>
-      </div>
+        <my-animatable></my-animatable>
 
-      <my-animatable></my-animatable>
-
-    </template>
+      </template>
+    </dom-bind>
 
     <script>
 
-      var scope = document.querySelector('template[is="dom-bind"]');
+      var scope1 = document.querySelector('template[is="dom-bind"]');
+      var scope2 = document.querySelector('dom-bind');
 
-      scope._onCircleButtonClick = function(event) {
+      scope1._onCircleButtonClick = function(event) {
         var node = document.querySelector('my-animatable');
         if (node) {
           node.animate();
         }
       };
 
-      scope._onDialogButtonClick = function(event) {
+      scope1._onDialogButtonClick = function(event) {
         var node = document.querySelector('my-dialog');
         if (node) {
           if (node.opened) {
@@ -63,6 +66,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       };
+
+     scope2._onCircleButtonClick = scope1._onCircleButtonClick;
+     scope2._onDialogButtonClick = scope1._onDialogButtonClick;
 
     </script>
 

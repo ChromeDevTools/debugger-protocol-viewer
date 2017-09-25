@@ -50,6 +50,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       function update() {
+        if (Polymer.Element) {
+          console.warn('IronFormElementBehavior is deprecated in Polymer 2.0');
+          return;
+        }
         var output = document.getElementById('output');
         var elements = document.getElementById('form').formElements;
         document.getElementById('output').innerHTML = '';

@@ -14,19 +14,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../paper-styles/typography.html">
 
 <!--
-`<paper-input-container>` is a container for a `<label>`, an `<input is="iron-input">` or
-`<iron-autogrow-textarea>` and optional add-on elements such as an error message or character
+`<paper-input-container>` is a container for a `<label>`, an `<iron-input>` or
+`<textarea>` and optional add-on elements such as an error message or character
 counter, used to implement Material Design text fields.
 
 For example:
 
     <paper-input-container>
-      <label>Your name</label>
-      <input is="iron-input">
+      <label slot="label">Your name</label>
+      <iron-input slot="input">
+        <input>
+      </iron-input>
+      // In Polymer 1.0, you would use `<input is="iron-input" slot="input">` instead of the above.
     </paper-input-container>
 
+You can style the nested <input> however you want; if you want it to look like a
+Material Design input, you can style it with the --paper-input-container-shared-input-style mixin.
+
 Do not wrap `<paper-input-container>` around elements that already include it, such as `<paper-input>`.
-Doing so may cause events to bounce infintely between the container and its contained element.
+Doing so may cause events to bounce infinitely between the container and its contained element.
 
 ### Listening for input changes
 
@@ -42,8 +48,8 @@ compound input field like a social security number input. The custom input eleme
 `Polymer.IronValidatableBehavior` if it is validatable.
 
     <paper-input-container attr-for-value="ssn-value">
-      <label>Social security number</label>
-      <ssn-input class="paper-input-input"></ssn-input>
+      <label slot="label">Social security number</label>
+      <ssn-input slot="input" class="paper-input-input"></ssn-input>
     </paper-input-container>
 
 
@@ -68,10 +74,13 @@ These are child elements of a `<paper-input-container>` with the `prefix`
 or `suffix` attribute, and are displayed inline with the input, before or after.
 
     <paper-input-container>
-      <div prefix>$</div>
-      <label>Total</label>
-      <input is="iron-input">
-      <paper-icon-button suffix icon="clear"></paper-icon-button>
+      <div slot="prefix">$</div>
+      <label slot="label">Total</label>
+      <iron-input slot="input">
+        <input>
+      </iron-input>
+      // In Polymer 1.0, you would use `<input is="iron-input" slot="input">` instead of the above.
+      <paper-icon-button slot="suffix" icon="clear"></paper-icon-button>
     </paper-input-container>
 
 ### Styling
@@ -90,6 +99,11 @@ Custom property | Description | Default
 `--paper-input-container-label-focus` | Mixin applied to the label when the input is focused | `{}`
 `--paper-input-container-label-floating` | Mixin applied to the label when floating | `{}`
 `--paper-input-container-input` | Mixin applied to the input | `{}`
+`--paper-input-container-input-focus` | Mixin applied to the input when focused | `{}`
+`--paper-input-container-input-invalid` | Mixin applied to the input when invalid | `{}`
+`--paper-input-container-input-webkit-spinner` | Mixin applied to the webkit spinner | `{}`
+`--paper-input-container-input-webkit-clear` | Mixin applied to the webkit clear button | `{}`
+`--paper-input-container-ms-clear` | Mixin applied to the Internet Explorer clear button | `{}`
 `--paper-input-container-underline` | Mixin applied to the underline | `{}`
 `--paper-input-container-underline-focus` | Mixin applied to the underline when the input is focused | `{}`
 `--paper-input-container-underline-disabled` | Mixin applied to the underline when the input is disabled | `{}`
@@ -107,10 +121,27 @@ This element is `display:block` by default, but you can set the `inline` attribu
         display: block;
         padding: 8px 0;
 
-        @apply(--paper-input-container);
+        --paper-input-container-shared-input-style: {
+          position: relative; /* to make a stacking context */
+          outline: none;
+          box-shadow: none;
+          padding: 0;
+          width: 100%;
+          max-width: 100%;
+          background: transparent;
+          border: none;
+          color: var(--paper-input-container-input-color, var(--primary-text-color));
+          -webkit-appearance: none;
+          text-align: inherit;
+          vertical-align: bottom;
+
+          @apply --paper-font-subhead;
+        };
+
+        @apply --paper-input-container;
       }
 
-      :host[inline] {
+      :host([inline]) {
         display: inline-block;
       }
 
@@ -118,29 +149,36 @@ This element is `display:block` by default, but you can set the `inline` attribu
         pointer-events: none;
         opacity: 0.33;
 
-        @apply(--paper-input-container-disabled);
+        @apply --paper-input-container-disabled;
+      }
+
+      :host([hidden]) {
+        display: none !important;
+      }
+
+      [hidden] {
+        display: none !important;
       }
 
       .floated-label-placeholder {
-        @apply(--paper-font-caption);
+        @apply --paper-font-caption;
       }
 
       .underline {
+        height: 2px;
         position: relative;
       }
 
       .focused-line {
-        @apply(--layout-fit);
-
-        background: var(--paper-input-container-focus-color, --primary-color);
-        height: 2px;
+        @apply --layout-fit;
+        border-bottom: 2px solid var(--paper-input-container-focus-color, var(--primary-color));
 
         -webkit-transform-origin: center center;
         transform-origin: center center;
         -webkit-transform: scale3d(0,1,1);
         transform: scale3d(0,1,1);
 
-        @apply(--paper-input-container-underline-focus);
+        @apply --paper-input-container-underline-focus;
       }
 
       .underline.is-highlighted .focused-line {
@@ -149,73 +187,65 @@ This element is `display:block` by default, but you can set the `inline` attribu
         -webkit-transition: -webkit-transform 0.25s;
         transition: transform 0.25s;
 
-        @apply(--paper-transition-easing);
+        @apply --paper-transition-easing;
       }
 
       .underline.is-invalid .focused-line {
-        background: var(--paper-input-container-invalid-color, --error-color);
+        border-color: var(--paper-input-container-invalid-color, var(--error-color));
         -webkit-transform: none;
         transform: none;
         -webkit-transition: -webkit-transform 0.25s;
         transition: transform 0.25s;
 
-        @apply(--paper-transition-easing);
+        @apply --paper-transition-easing;
       }
 
       .unfocused-line {
-        @apply(--layout-fit);
-
-        background: var(--paper-input-container-color, --secondary-text-color);
-        height: 1px;
-
-        @apply(--paper-input-container-underline);
+        @apply --layout-fit;
+        border-bottom: 1px solid var(--paper-input-container-color, var(--secondary-text-color));
+        @apply --paper-input-container-underline;
       }
 
       :host([disabled]) .unfocused-line {
         border-bottom: 1px dashed;
-        border-color: var(--paper-input-container-color, --secondary-text-color);
-        background: transparent;
-
-        @apply(--paper-input-container-underline-disabled);
+        border-color: var(--paper-input-container-color, var(--secondary-text-color));
+        @apply --paper-input-container-underline-disabled;
       }
 
-      .label-and-input-container {
-        @apply(--layout-flex-auto);
-        @apply(--layout-relative);
-
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .input-content {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-
+      .input-wrapper {
+        @apply --layout-horizontal;
+        @apply --layout-center;
         position: relative;
       }
 
-      .input-content ::content label,
-      .input-content ::content .paper-input-label {
+      .input-content {
+        @apply --layout-flex-auto;
+        @apply --layout-relative;
+        max-width: 100%;
+      }
+
+      .input-content ::slotted(label),
+      .input-content ::slotted(.paper-input-label) {
         position: absolute;
         top: 0;
         right: 0;
         left: 0;
         width: 100%;
         font: inherit;
-        color: var(--paper-input-container-color, --secondary-text-color);
+        color: var(--paper-input-container-color, var(--secondary-text-color));
         -webkit-transition: -webkit-transform 0.25s, width 0.25s;
         transition: transform 0.25s, width 0.25s;
         -webkit-transform-origin: left top;
         transform-origin: left top;
 
-        @apply(--paper-font-common-nowrap);
-        @apply(--paper-font-subhead);
-        @apply(--paper-input-container-label);
-        @apply(--paper-transition-easing);
+        @apply --paper-font-common-nowrap;
+        @apply --paper-font-subhead;
+        @apply --paper-input-container-label;
+        @apply --paper-transition-easing;
       }
 
-      .input-content.label-is-floating ::content label,
-      .input-content.label-is-floating ::content .paper-input-label {
+      .input-content.label-is-floating ::slotted(label),
+      .input-content.label-is-floating ::slotted(.paper-input-label) {
         -webkit-transform: translateY(-75%) scale(0.75);
         transform: translateY(-75%) scale(0.75);
 
@@ -223,11 +253,11 @@ This element is `display:block` by default, but you can set the `inline` attribu
         original space now available */
         width: 133%;
 
-        @apply(--paper-input-container-label-floating);
+        @apply --paper-input-container-label-floating;
       }
 
-      :host-context([dir="rtl"]) .input-content.label-is-floating ::content label,
-      :host-context([dir="rtl"]) .input-content.label-is-floating ::content .paper-input-label {
+      :host-context([dir="rtl"]) .input-content.label-is-floating ::slotted(label),
+      :host-context([dir="rtl"]) .input-content.label-is-floating ::slotted(.paper-input-label) {
         /* TODO(noms): Figure out why leaving the width at 133% before the animation
          * actually makes
          * it wider on the right side, not left side, as you would expect in RTL */
@@ -236,63 +266,75 @@ This element is `display:block` by default, but you can set the `inline` attribu
         transform-origin: right top;
       }
 
-      .input-content.label-is-highlighted ::content label,
-      .input-content.label-is-highlighted ::content .paper-input-label {
-        color: var(--paper-input-container-focus-color, --primary-color);
+      .input-content.label-is-highlighted ::slotted(label),
+      .input-content.label-is-highlighted ::slotted(.paper-input-label) {
+        color: var(--paper-input-container-focus-color, var(--primary-color));
 
-        @apply(--paper-input-container-label-focus);
+        @apply --paper-input-container-label-focus;
       }
 
-      .input-content.is-invalid ::content label,
-      .input-content.is-invalid ::content .paper-input-label {
-        color: var(--paper-input-container-invalid-color, --error-color);
+      .input-content.is-invalid ::slotted(label),
+      .input-content.is-invalid ::slotted(.paper-input-label) {
+        color: var(--paper-input-container-invalid-color, var(--error-color));
       }
 
-      .input-content.label-is-hidden ::content label,
-      .input-content.label-is-hidden ::content .paper-input-label {
+      .input-content.label-is-hidden ::slotted(label),
+      .input-content.label-is-hidden ::slotted(.paper-input-label) {
         visibility: hidden;
       }
 
-      .input-content ::content input,
-      .input-content ::content textarea,
-      .input-content ::content iron-autogrow-textarea,
-      .input-content ::content .paper-input-input {
-        position: relative; /* to make a stacking context */
-        outline: none;
-        box-shadow: none;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        background: transparent;
-        border: none;
-        color: var(--paper-input-container-input-color, --primary-text-color);
-        -webkit-appearance: none;
-        text-align: inherit;
-
-        @apply(--paper-font-subhead);
-        @apply(--paper-input-container-input);
+      .input-content ::slotted(iron-input) {
+        @apply --paper-input-container-shared-input-style;
+      }
+      
+      .input-content ::slotted(input),
+      .input-content ::slotted(textarea),
+      .input-content ::slotted(iron-autogrow-textarea),
+      .input-content ::slotted(.paper-input-input) {
+        @apply --paper-input-container-shared-input-style;
+        @apply --paper-input-container-input;
       }
 
-      ::content [prefix] {
-        @apply(--paper-font-subhead);
-
-        @apply(--paper-input-prefix);
-        @apply(--layout-flex-none);
+      .input-content ::slotted(input)::-webkit-outer-spin-button,
+      .input-content ::slotted(input)::-webkit-inner-spin-button {
+        @apply --paper-input-container-input-webkit-spinner;
+      }
+      
+      .input-content.focused ::slotted(input),
+      .input-content.focused ::slotted(textarea),
+      .input-content.focused ::slotted(iron-autogrow-textarea),
+      .input-content.focused ::slotted(.paper-input-input) {
+        @apply --paper-input-container-input-focus;
       }
 
-      ::content [suffix] {
-        @apply(--paper-font-subhead);
+      .input-content.is-invalid ::slotted(input),
+      .input-content.is-invalid ::slotted(textarea),
+      .input-content.is-invalid ::slotted(iron-autogrow-textarea),
+      .input-content.is-invalid ::slotted(.paper-input-input) {
+        @apply --paper-input-container-input-invalid;
+      }
+      
+      .prefix ::slotted(*) {
+        display: inline-block;
+        @apply --paper-font-subhead;
+        @apply --layout-flex-none;
+        @apply --paper-input-prefix;
+      }
 
-        @apply(--paper-input-suffix);
-        @apply(--layout-flex-none);
+      .suffix ::slotted(*) {
+        display: inline-block;
+        @apply --paper-font-subhead;
+        @apply --layout-flex-none;
+
+        @apply --paper-input-suffix;
       }
 
       /* Firefox sets a min-width on the input, which can cause layout issues */
-      .input-content ::content input {
+      .input-content ::slotted(input) {
         min-width: 0;
       }
 
-      .input-content ::content textarea {
+      .input-content ::slotted(textarea) {
         resize: none;
       }
 
@@ -300,27 +342,26 @@ This element is `display:block` by default, but you can set the `inline` attribu
         position: relative;
       }
 
-      .add-on-content.is-invalid ::content * {
-        color: var(--paper-input-container-invalid-color, --error-color);
+      .add-on-content.is-invalid ::slotted(*) {
+        color: var(--paper-input-container-invalid-color, var(--error-color));
       }
 
-      .add-on-content.is-highlighted ::content * {
-        color: var(--paper-input-container-focus-color, --primary-color);
+      .add-on-content.is-highlighted ::slotted(*) {
+        color: var(--paper-input-container-focus-color, var(--primary-color));
       }
     </style>
 
-    <template is="dom-if" if="[[!noLabelFloat]]">
-      <div class="floated-label-placeholder">&nbsp;</div>
-    </template>
+    <div class="floated-label-placeholder" aria-hidden="true" hidden="[[noLabelFloat]]">&nbsp;</div>
 
-    <div class$="[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]]">
-      <content select="[prefix]" id="prefix"></content>
+    <div class="input-wrapper">
+      <span class="prefix"><slot name="prefix"></slot></span>
 
-      <div class="label-and-input-container" id="labelAndInputContainer">
-        <content select=":not([add-on]):not([prefix]):not([suffix])"></content>
+      <div class$="[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]]" id="labelAndInputContainer">
+        <slot name="label"></slot>
+        <slot name="input"></slot>
       </div>
 
-      <content select="[suffix]"></content>
+      <span class="suffix"><slot name="suffix"></slot></span>
     </div>
 
     <div class$="[[_computeUnderlineClass(focused,invalid)]]">
@@ -329,7 +370,7 @@ This element is `display:block` by default, but you can set the `inline` attribu
     </div>
 
     <div class$="[[_computeAddOnContentClass(focused,invalid)]]">
-      <content id="addOnContent" select="[add-on]"></content>
+      <slot name="add-on"></slot>
     </div>
   </template>
 </dom-module>
@@ -406,7 +447,7 @@ This element is `display:block` by default, but you can set the `inline` attribu
 
       _inputSelector: {
         type: String,
-        value: 'input,textarea,.paper-input-input'
+        value: 'input,iron-input,textarea,.paper-input-input'
       },
 
       _boundOnFocus: {
@@ -475,7 +516,7 @@ This element is `display:block` by default, but you can set the `inline` attribu
       }
 
       // Only validate when attached if the input already has a value.
-      if (this._inputElementValue != '') {
+      if (this._inputElementValue && this._inputElementValue != '') {
         this._handleValueAndAutoValidate(this._inputElement);
       } else {
         this._handleValue(this._inputElement);
@@ -509,6 +550,20 @@ This element is `display:block` by default, but you can set the `inline` attribu
     },
 
     _onValueChanged: function(event) {
+      var input = event.target;
+
+      // Problem: if the input is required but has no text entered, we should
+      // only validate it on blur (so that an empty form doesn't come up red
+      // immediately; however, in this handler, we don't know whether this is
+      // the booting up value or a value in the future. I am assuming that the
+      // case  we care about manifests itself when the value is undefined.
+      // If this causes future problems, we need to do something like track whether
+      // the iron-input-ready event has fired, and this handler came before that.
+
+      if (input.value === undefined) {
+        return;
+      }
+
       this._handleValueAndAutoValidate(event.target);
     },
 
@@ -530,8 +585,9 @@ This element is `display:block` by default, but you can set the `inline` attribu
     },
 
     _handleValueAndAutoValidate: function(inputElement) {
-      if (this.autoValidate) {
+      if (this.autoValidate && inputElement) {
         var valid;
+
         if (inputElement.validate) {
           valid = inputElement.validate(this._inputElementValue);
         } else {
@@ -585,11 +641,20 @@ This element is `display:block` by default, but you can set the `inline` attribu
           if (label) {
             this.$.labelAndInputContainer.style.position = 'relative';
           }
+          if (invalid) {
+            cls += ' is-invalid';
+          }
         }
       } else {
         if (_inputHasContent) {
           cls += ' label-is-hidden';
         }
+        if (invalid) {
+          cls += ' is-invalid';
+        }
+      }
+      if (focused) {
+        cls += ' focused';
       }
       return cls;
     },

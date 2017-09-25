@@ -63,6 +63,7 @@ suite('Polymer.IronA11yKeysBehavior', function() {
   var keys;
 
   suiteSetup(function() {
+    /** @polymerBehavior */
     var KeysTestBehavior = [Polymer.IronA11yKeysBehavior, {
       properties: {
         keyCount: {
@@ -128,6 +129,7 @@ suite('Polymer.IronA11yKeysBehavior', function() {
       }
     });
 
+    /** @polymerBehavior */
     var XA11yBehavior = {
       keyBindings: {
         'enter': '_keyHandler'
@@ -171,15 +173,13 @@ suite('Polymer.IronA11yKeysBehavior', function() {
       MockInteractions.pressSpace(keys);
 
       expect(keys.keyCount).to.be.equal(1);
+    });
 
-      MockInteractions.pressAndReleaseKeyOn(keys, 27, [], 'Esc');
-      expect(keys.keyCount).to.be.equal(2);
+    test('keyEventTarget can be null, and disables listeners', function() {
+      keys.keyEventTarget = null;
+      MockInteractions.pressSpace(keys);
 
-      MockInteractions.pressAndReleaseKeyOn(keys, 27, [], 'Escape');
-      expect(keys.keyCount).to.be.equal(3);
-
-      MockInteractions.pressAndReleaseKeyOn(keys, 27, []);
-      expect(keys.keyCount).to.be.equal(4);
+      expect(keys.keyCount).to.be.equal(0);
     });
 
     test('trigger the handler when the specified key is pressed together with a modifier', function() {
@@ -191,10 +191,20 @@ suite('Polymer.IronA11yKeysBehavior', function() {
     });
 
     test('handles special character @', function() {
-      var event = new CustomEvent('keydown');
-      event.key = '@';
-      keys.dispatchEvent(event);
+      MockInteractions.pressAndReleaseKeyOn(keys, undefined, [], '@');
+
       expect(keys.keyCount).to.be.equal(1);
+    });
+
+    test('handles variations of Esc key', function() {
+      MockInteractions.pressAndReleaseKeyOn(keys, undefined, [], 'Esc');
+      expect(keys.keyCount).to.be.equal(1);
+
+      MockInteractions.pressAndReleaseKeyOn(keys, undefined, [], 'Escape');
+      expect(keys.keyCount).to.be.equal(2);
+
+      MockInteractions.pressAndReleaseKeyOn(keys, 27, [], '');
+      expect(keys.keyCount).to.be.equal(3);
     });
 
     test('do not trigger the handler for non-specified keys', function() {
@@ -282,6 +292,14 @@ suite('Polymer.IronA11yKeysBehavior', function() {
         event.key = 'ArrowUp';
         expect(keys.keyboardEventMatchesKeys(event, 'up')).to.be.equal(true);
       });
+
+      test('can handle function keys', function() {
+        var event = new CustomEvent('keydown');
+        event.keyCode = 112;
+        expect(keys.keyboardEventMatchesKeys(event, 'f1')).to.be.equal(true);
+        event.keyCode = 123;
+        expect(keys.keyboardEventMatchesKeys(event, 'f12')).to.be.equal(true);
+      });
     });
 
     suite('matching keyboard events to top row and number pad digit keys', function() {
@@ -321,8 +339,7 @@ suite('Polymer.IronA11yKeysBehavior', function() {
 
       event.ctrlKey = true;
       event.shiftKey = true;
-      event.key = 'å';
-      event.keyCode = event.code = 65;
+      event.key = 'A';
 
       keys.dispatchEvent(event);
 
@@ -420,6 +437,15 @@ suite('Polymer.IronA11yKeysBehavior', function() {
       expect(keys.keyCount).to.be.equal(1);
       expect(shiftASpy.called).to.be.true;
       expect(aSpy.called).to.be.false;
+    });
+  });
+
+  suite('remove key behavior with null target', function () {
+    test('add and remove a iron-a11y-keys-behavior', function () {
+      var element = document.createElement('x-a11y-basic-keys');
+      element.keyEventTarget = null;
+      document.body.appendChild(element);
+      document.body.removeChild(element);
     });
   });
 

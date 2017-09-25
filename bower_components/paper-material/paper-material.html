@@ -33,11 +33,14 @@ Example:
     <style include="paper-material-shared-styles"></style>
     <style>
       :host([animated]) {
-        @apply(--shadow-transition);
+        @apply --shadow-transition;
+      }
+      :host {
+        @apply --paper-material;
       }
     </style>
 
-    <content></content>
+    <slot></slot>
   </template>
 </dom-module>
 <script>

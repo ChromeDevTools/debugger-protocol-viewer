@@ -19,75 +19,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../paper-item/paper-item.html">
-  <link rel="import" href="../../iron-collapse/iron-collapse.html">
   <link rel="import" href="../paper-listbox.html">
-  <link rel="import" href="../../paper-styles/demo-pages.html">
-
-  <style is="custom-style">
-    .horizontal-section {
-      padding: 0 !important;
-    }
-
-    .avatar {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #ccc;
-    }
-
-    paper-item {
-      --paper-item: {
-        cursor: pointer;
-      };
-    }
-
-    .sublist {
-      padding-left: 20px;
-      padding-right: 20px;
-
-    }
-  </style>
 </head>
 <body unresolved>
-  <div class="horizontal-section-container">
-    <div>
-      <h4>Standard</h4>
-      <div class="horizontal-section">
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      code {
+        background-color: #eee;
+        color: #222;
+        border-radius: 2px;
+        padding: 2px;
+      }
+
+      paper-listbox {
+        border: 1px dotted #ccc;
+      }
+
+      paper-item {
+        cursor: pointer;
+      }
+    </style>
+  </custom-style>
+
+  <div class="vertical-section-container centered">
+    <h3>Initially, no item is selected.</h3>
+    <demo-snippet>
+      <template>
         <paper-listbox>
           <paper-item>Inbox</paper-item>
           <paper-item>Starred</paper-item>
           <paper-item>Sent mail</paper-item>
           <paper-item>Drafts</paper-item>
         </paper-listbox>
-      </div>
-    </div>
+      </template>
+    </demo-snippet>
+  </div>
 
-    <div>
-      <h4>Pre-selected</h4>
-      <div class="horizontal-section">
+  <div class="vertical-section-container centered">
+    <h3>
+      Use <code>selected</code> to specity an item to be selected by default.
+    </h3>
+    <demo-snippet>
+      <template>
         <paper-listbox selected="0">
           <paper-item>Inbox</paper-item>
           <paper-item disabled>Starred</paper-item>
           <paper-item>Sent mail</paper-item>
           <paper-item>Drafts</paper-item>
         </paper-listbox>
-      </div>
-    </div>
+      </template>
+    </demo-snippet>
+  </div>
 
-    <div>
-      <h4>Multi-select</h4>
-      <div class="horizontal-section">
+  <div class="vertical-section-container centered">
+    <h3>
+      Use <code>multi</code> to allow multiple items to be selected.
+    </h3>
+    <demo-snippet>
+      <template>
         <paper-listbox multi>
           <paper-item>Bold</paper-item>
           <paper-item>Italic</paper-item>
           <paper-item>Underline</paper-item>
           <paper-item>Strikethrough</paper-item>
         </paper-listbox>
-      </div>
-    </div>
+      </template>
+    </demo-snippet>
+  </div>
+
+  <div class="vertical-section-container centered">
+    <h3>
+      Use <code>attr-for-selected</code> (from <code>IronSelectableBehavior</code>)
+      to select items by attribute value, rather than index.
+    </h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template is="dom-bind">
+            <p>"[[itemName]]" is selected.</p>
+            <paper-listbox attr-for-selected="item-name" selected="{{itemName}}" fallback-selection="None">
+              <paper-item item-name="None">None</paper-item>
+              <paper-item item-name="Bold">Bold</paper-item>
+              <paper-item item-name="Italic">Italic</paper-item>
+              <paper-item item-name="Underline">Underline</paper-item>
+              <paper-item item-name="Strikethrough">Strikethrough</paper-item>
+            </paper-listbox>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
   </div>
 </body>
 </html>

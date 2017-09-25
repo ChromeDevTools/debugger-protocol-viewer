@@ -19,20 +19,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <title>iron-a11y-announcer demo</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../paper-styles/demo-pages.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="x-announces.html">
-
+  <link rel="import" href="../iron-a11y-announcer.html">
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      input {
+        margin-right: 20px;
+      }
+    </style>
+  </custom-style>
 </head>
 <body>
-  <div class="horizontal-section-container">
-    <div>
-      <div class="vertical-section">
-        <span>Note: in order to hear the announcements, be sure to turn on your favorite screen reader!</span>
-        <x-announces>Hello, my name is Ava.</x-announces>
-        <x-announces>This true sentence is false.</x-announces>
-        <x-announces>Are you paying attention?</x-announces>
-      </div>
-    </div>
+  <div class="vertical-section-container centered">
+    <p><b>Note</b>: in order to hear the announcements, be sure to turn on your favorite screen reader!</p>
+
+    <h4>Announcer used directly on the main document</h4>
+    <demo-snippet>
+      <template>
+        <input id="input" value="Pizza is delicious">
+        <paper-button raised onclick="_announce()">Announce</paper-button>
+
+        <script>
+          window.addEventListener('WebComponentsReady', function() {
+            // Initialize the announcer.
+            Polymer.IronA11yAnnouncer.requestAvailability();
+
+            // Optional; for testing, set the mode to assertive to announce immediately.
+            Polymer.IronA11yAnnouncer.instance.mode = 'assertive';
+          });
+
+          function _announce() {
+            Polymer.IronA11yAnnouncer.instance.fire('iron-announce', {
+              text: input.value.trim()
+            }, {
+              bubbles: true
+            });
+          }
+        </script>
+      </template>
+    </demo-snippet>
+
+    <h4>Announcer used inside a custom element</h4>
+    <demo-snippet>
+      <template>
+        <x-announces message="Hello, my name is Ava"></x-announces>
+        <x-announces message="This true sentence is false."></x-announces>
+        <x-announces message="Are you paying attention?"></x-announces>
+      </template>
+    </demo-snippet>
   </div>
 </body>
 </html>

@@ -52,7 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * The value for this input. If you're using PaperInputBehavior to
        * implement your own paper-input-like element, bind this to
-       * the `<input is="iron-input">`'s `bindValue`
+       * the `<iron-input>`'s `bindValue`
        * property, or the value property of your input that is `notify:true`.
        */
       value: {
@@ -85,15 +85,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       /**
-       * Set to true to prevent the user from entering invalid input. If you're
-       * using PaperInputBehavior to  implement your own paper-input-like element,
-       * bind this to `<input is="iron-input">`'s `preventInvalidInput` property.
-       */
-      preventInvalidInput: {
-        type: Boolean
-      },
-
-      /**
        * Set this to specify the pattern allowed by `preventInvalidInput`. If
        * you're using PaperInputBehavior to implement your own paper-input-like
        * element, bind this to the `<input is="iron-input">`'s `allowedPattern`
@@ -104,9 +95,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       /**
-       * The type of the input. The supported types are `text`, `number` and `password`.
+       * The type of the input. The supported types are the
+       * [native input's types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_<input>_types).
        * If you're using PaperInputBehavior to implement your own paper-input-like element,
-       * bind this to the `<input is="iron-input">`'s `type` property.
+       * bind this to the (Polymer 1) `<input is="iron-input">`'s or (Polymer 2)
+       * `<iron-input>`'s `type` property.
        */
       type: {
         type: String
@@ -212,7 +205,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * element, bind this to the `<input is="iron-input">`'s `autofocus` property.
        */
       autofocus: {
-        type: Boolean
+        type: Boolean,
+        observer: '_autofocusChanged'
       },
 
       /**
@@ -252,7 +246,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /**
        * The maximum (numeric or date-time) input value.
-       * Can be a String (e.g. `"2000-1-1"`) or a Number (e.g. `2`).
+       * Can be a String (e.g. `"2000-01-01"`) or a Number (e.g. `2`).
        * If you're using PaperInputBehavior to implement your own paper-input-like
        * element, bind this to the `<input is="iron-input">`'s `max` property.
        */
@@ -397,7 +391,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return this.inputElement;
     },
 
-    registered: function() {
+    created: function() {
       // These types have some default placeholder text; overlapping
       // the label on top of it looks terrible. Auto-float the label in this case.
       this._typesThatHaveText = ["date", "datetime", "datetime-local", "month",
@@ -407,7 +401,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     attached: function() {
       this._updateAriaLabelledBy();
 
-      if (this.inputElement &&
+      // In the 2.0 version of the element, this is handled in `onIronInputReady`,
+      // i.e. after the native input has finished distributing. In the 1.0 version,
+      // the input is in the shadow tree, so it's already available.
+      if (!Polymer.Element && this.inputElement &&
           this._typesThatHaveText.indexOf(this.inputElement.type) !== -1) {
         this.alwaysFloatLabel = true;
       }
@@ -423,7 +420,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     _onAddonAttached: function(event) {
-      var target = event.path ? event.path[0] : event.target;
+      var target = Polymer.dom(event).rootTarget;
       if (target.id) {
         this._ariaDescribedBy = this._appendStringWithSpace(this._ariaDescribedBy, target.id);
       } else {
@@ -446,14 +443,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * Forward focus to inputElement. Overriden from IronControlState.
      */
     _focusBlurHandler: function(event) {
-      if (this._shiftTabPressed)
-        return;
-
       Polymer.IronControlState._focusBlurHandler.call(this, event);
 
       // Forward the focus to the nested input.
-      if (this.focused)
+      if (this.focused && !this._shiftTabPressed && this._focusableElement) {
         this._focusableElement.focus();
+      }
     },
 
     /**
@@ -532,8 +527,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           cancelable: event.cancelable
         });
       }
+    },
+
+    _autofocusChanged: function() {
+      // Firefox doesn't respect the autofocus attribute if it's applied after
+      // the page is loaded (Chrome/WebKit do respect it), preventing an
+      // autofocus attribute specified in markup from taking effect when the
+      // element is upgraded. As a workaround, if the autofocus property is set,
+      // and the focus hasn't already been moved elsewhere, we take focus.
+      if (this.autofocus && this._focusableElement) {
+
+        // In IE 11, the default document.activeElement can be the page's
+        // outermost html element, but there are also cases (under the
+        // polyfill?) in which the activeElement is not a real HTMLElement, but
+        // just a plain object. We identify the latter case as having no valid
+        // activeElement.
+        var activeElement = document.activeElement;
+        var isActiveElementValid = activeElement instanceof HTMLElement;
+
+        // Has some other element has already taken the focus?
+        var isSomeElementActive = isActiveElementValid &&
+            activeElement !== document.body &&
+            activeElement !== document.documentElement; /* IE 11 */
+        if (!isSomeElementActive) {
+          // No specific element has taken the focus yet, so we can take it.
+          this._focusableElement.focus();
+        }
+      }
     }
-  }
+  };
 
   /** @polymerBehavior */
   Polymer.PaperInputBehavior = [

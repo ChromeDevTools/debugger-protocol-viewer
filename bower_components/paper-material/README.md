@@ -12,12 +12,13 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build Status](https://travis-ci.org/PolymerElements/paper-material.svg?branch=master)](https://travis-ci.org/PolymerElements/paper-material)
+[![Build status](https://travis-ci.org/PolymerElements/paper-material.svg?branch=master)](https://travis-ci.org/PolymerElements/paper-material)
 
-_[Demo and API Docs](https://elements.polymer-project.org/elements/paper-material)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/paper-material)_
 
+⚠️ As of the 2.0 release, this element is **deprecated** in favour of the shared styles in [`PolymerElements/paper-styles`](https://github.com/PolymerElements/paper-styles/blob/master/element-styles/paper-material-styles.html). Please see the implementation of [`PolymerElements/paper-button`](https://github.com/PolymerElements/paper-button/blob/master/paper-button.html#L114) for an example.
 
-##&lt;paper-material&gt;
+## &lt;paper-material&gt;
 
 Material design: [Cards](https://www.google.com/design/spec/components/cards.html)
 
@@ -31,5 +32,3 @@ Example:
   ... content ...
 </paper-material>
 ```
-
-

@@ -8,27 +8,8 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../iron-resizable-behavior.html">
-
-<script>
-
-  Polymer({
-
-    is: 'x-resizer-parent',
-
-    behaviors: [
-      Polymer.IronResizableBehavior
-    ],
-
-    listeners: {
-      'core-resize': 'resizeHandler'
-    },
-
-    resizeHandler: function() {
-    }
-
-  });
-
-</script>
+<link rel="import" href="x-resizer-parent.html">
+<link rel="import" href="x-resizable.html">
 
 <script>
 
@@ -42,36 +23,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Polymer.IronResizableBehavior
     ],
 
-    listeners: {
-      'core-resize': 'resizeHandler'
-    },
-
-    resizeHandler: function() {
-    },
-
     resizerShouldNotify: function(el) {
       return (el == this.active);
-    }
-
-  });
-
-</script>
-
-<script>
-
-  Polymer({
-
-    is: 'x-resizable',
-
-    behaviors: [
-      Polymer.IronResizableBehavior
-    ],
-
-    listeners: {
-      'core-resize': 'resizeHandler'
-    },
-
-    resizeHandler: function() {
     }
 
   });
@@ -142,6 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </script>
 <script>
+  /** @polymerBehavior */
   Polymer.ObserveIronResizeBehavior = {
     properties: {
       ironResizeCount: {

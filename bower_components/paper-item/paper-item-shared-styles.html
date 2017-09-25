@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .paper-item {
-        @apply(--paper-font-subhead);
+        @apply --paper-font-subhead;
         border:none;
         outline: none;
         background: white;
@@ -39,31 +39,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host(.iron-selected), .paper-item.iron-selected {
         font-weight: var(--paper-item-selected-weight, bold);
 
-        @apply(--paper-item-selected);
+        @apply --paper-item-selected;
       }
 
       :host([disabled]), .paper-item[disabled] {
-        color: var(--paper-item-disabled-color, --disabled-text-color);
+        color: var(--paper-item-disabled-color, var(--disabled-text-color));
 
-        @apply(--paper-item-disabled);
+        @apply --paper-item-disabled;
       }
 
       :host(:focus), .paper-item:focus {
         position: relative;
         outline: 0;
 
-        @apply(--paper-item-focused);
+        @apply --paper-item-focused;
       }
 
       :host(:focus):before, .paper-item:focus:before {
-        @apply(--layout-fit);
+        @apply --layout-fit;
 
         background: currentColor;
         content: '';
         opacity: var(--dark-divider-opacity);
         pointer-events: none;
 
-        @apply(--paper-item-focused-before);
+        @apply --paper-item-focused-before;
       }
     </style>
   </template>

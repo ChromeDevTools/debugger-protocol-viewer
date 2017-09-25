@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../web-animations.html">
   <link rel="import" href="../neon-animated-pages.html">
   <link rel="import" href="../neon-animatable.html">
   <link rel="import" href="../animations/slide-from-left-animation.html">
@@ -66,12 +67,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var animatedPages = fixture('notify-resize');
         var resizables = Polymer.dom(animatedPages).children;
         var recieves = {};
-        resizables.forEach(function(page) {
+        for (var i = 0; i < resizables.length; i++) {
+          var page = resizables[i];
           page.addEventListener('iron-resize', function(event) {
             var pageName = event.currentTarget.tagName;
             recieves[pageName] = pageName in recieves ? recieves[pageName] + 1 : 1;
           });
-        });
+        }
         animatedPages.selected = 2;
         setTimeout(function() {
           assert.deepEqual(recieves, {

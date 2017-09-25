@@ -19,46 +19,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../paper-styles/demo-pages.html">
     <link rel="import" href="../iron-selector.html">
-
-    <style is="custom-style">
-
-      iron-selector > * {
-        padding: 8px;
-      }
-
-      .horizontal-section {
-        padding: 0;
-      }
-
-      .iron-selected {
-        background-color: var(--google-blue-500);
-        color: white;
-      }
-
-    </style>
+    <link rel="import" href="../../paper-styles/color.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 
   </head>
   <body unresolved>
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        iron-selector > * {
+          padding: 8px;
+        }
 
-    <div class="horizontal center-justified layout">
-      <div>
-        <h3>Basic</h3>
-        <div class="horizontal-section">
-          <iron-selector selected="0">
+        .iron-selected {
+          background-color: var(--google-blue-500);
+          color: white;
+        }
+      </style>
+    </custom-style>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic</h3>
+      <demo-snippet>
+        <template>
+          <iron-selector selected="3">
             <div>Item 0</div>
             <div>Item 1</div>
             <div>Item 2</div>
             <div>Item 3</div>
             <div>Item 4</div>
           </iron-selector>
-        </div>
-      </div>
+        </template>
+      </demo-snippet>
 
-      <div>
-        <h3>Multi-select</h3>
-        <div class="horizontal-section">
+      <h3>Use <code>multi</code> to enable multiple selection.</h3>
+      <demo-snippet>
+        <template>
           <iron-selector multi selected-values='[0,2]'>
             <div>Item 0</div>
             <div>Item 1</div>
@@ -66,26 +63,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div>Item 3</div>
             <div>Item 4</div>
           </iron-selector>
-        </div>
-      </div>
+        </template>
+      </demo-snippet>
 
-      <div>
-        <h3>Example with attr-for-selected</h3>
-        <div class="horizontal-section">
-          <iron-selector selected="foo" attr-for-selected="name">
+      <h3>
+        Use <code>attr-for-selected</code> to specify the attribute of the
+        selectable elements containing the selection key.
+      </h3>
+      <demo-snippet>
+        <template>
+          <iron-selector selected="bar" attr-for-selected="name">
             <div name="foo">Foo</div>
             <div name="bar">Bar</div>
             <div name="baz">Baz</div>
             <div name="qux">Qux</div>
             <div name="quux">Quux</div>
           </iron-selector>
-        </div>
-      </div>
+        </template>
+      </demo-snippet>
 
-      <div>
-        <h3>Example with fallback-selection</h3>
-        <div class="horizontal-section">
-          <iron-selector selected="non-existing" attr-for-selected="name" fallback-selection="default">
+      <h3>
+        Use <code>fallback-selection</code> to provide an option to be selected
+        when all options are deselected or all selected options are invalid.
+      </h3>
+      <demo-snippet>
+        <template>
+          <iron-selector multi selected="an-unknown-key" attr-for-selected="name" fallback-selection="default">
             <div name="foo">Foo</div>
             <div name="bar">Bar</div>
             <div name="baz">Baz</div>
@@ -93,8 +96,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div name="quux">Quux</div>
             <div name="default">Default</div>
           </iron-selector>
-        </div>
-      </div>
+        </template>
+      </demo-snippet>
     </div>
 
   </body>

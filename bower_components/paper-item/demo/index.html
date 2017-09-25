@@ -30,23 +30,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../paper-item-body.html">
   <link rel="import" href="../../paper-styles/color.html">
 
-  <style is="custom-style" include="demo-pages-shared-styles">
-    div[role="listbox"] {
-      border: 1px solid #e5e5e5;
-    }
-    .avatar {
-      display: inline-block;
-      box-sizing: border-box;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--paper-amber-500);
-    }
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      div[role="listbox"] {
+        border: 1px solid #e5e5e5;
+      }
+      .avatar {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--paper-amber-500);
+      }
 
-    .blue {
-      background-color: var(--paper-light-blue-300);
-    }
-  </style>
+      .blue {
+        background-color: var(--paper-light-blue-300);
+      }
+    </style>
+  </custom-style>
 </head>
 <body unresolved>
   <div class="vertical-section-container centered">
@@ -65,17 +67,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <h3>They can be styled using custom properties</h3>
     <demo-snippet>
       <template>
-        <style is="custom-style">
-          paper-item.fancy {
-            --paper-item-focused: {
-              background: var(--paper-amber-500);
-              font-weight: bold;
-            };
-            --paper-item-focused-before: {
-              opacity: 0;
-            };
-          }
-        </style>
+        <custom-style>
+          <style is="custom-style">
+            paper-item.fancy {
+              --paper-item-focused: {
+                background: var(--paper-amber-500);
+                font-weight: bold;
+              };
+              --paper-item-focused-before: {
+                opacity: 0;
+              };
+            }
+          </style>
+        </custom-style>
         <div role="listbox">
           <paper-item class="fancy">Inbox</paper-item>
           <paper-item class="fancy">Starred</paper-item>
@@ -84,32 +88,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </demo-snippet>
 
-    <h3>To add a leading element, use a paper-icon-item with an <i>item-icon</i> attribute. This
-    leading image can be an iron-icon, or any other regular element.</h3>
+    <h3>To add a leading element, use a paper-icon-item with a <code>slot="item-icon"</code>
+    attribute in webcomponents v1. This leading image can be an iron-icon, or any other regular element.</h3>
     <demo-snippet>
       <template>
         <div role="listbox">
           <paper-icon-item>
-            <iron-icon icon="inbox" item-icon></iron-icon>
+            <iron-icon icon="inbox" slot="item-icon"></iron-icon>
             Inbox
           </paper-icon-item>
           <paper-icon-item>
-            <iron-icon icon="star" item-icon></iron-icon>
+            <iron-icon icon="star" slot="item-icon"></iron-icon>
             Starred
           </paper-icon-item>
           <paper-icon-item>
-            <div class="avatar blue" item-icon></div>
+            <div class="avatar blue" slot="item-icon"></div>
             Alphonso Engelking
           </paper-icon-item>
           <paper-icon-item>
-            <div class="avatar" item-icon></div>
+            <div class="avatar" slot="item-icon"></div>
             Angela Decker
           </paper-icon-item>
         </div>
       </template>
     </demo-snippet>
 
-    <h3>For two-line items, use a paper-icon-body inside a paper-item or paper-icon-item</h3>
+    <h3>For two-line items, use a paper-item-body inside a paper-item or paper-icon-item</h3>
     <demo-snippet>
       <template>
         <div role="listbox">
@@ -120,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-item-body>
           </paper-item>
           <paper-icon-item>
-            <iron-icon icon="communication:phone" item-icon>
+            <iron-icon icon="communication:phone" slot="item-icon">
             </iron-icon>
             <paper-item-body two-line>
               <div>(650) 555-1234</div>
@@ -128,7 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-item-body>
           </paper-icon-item>
           <paper-icon-item>
-            <div class="avatar blue" item-icon></div>
+            <div class="avatar blue" slot="item-icon"></div>
             <paper-item-body two-line>
               <div>Alphonso Engelking</div>
               <div secondary>Change photo</div>
@@ -143,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template>
         <div role="listbox">
           <paper-icon-item>
-            <div class="avatar blue" item-icon></div>
+            <div class="avatar blue" slot="item-icon"></div>
             <paper-item-body two-line>
               <div>Photos</div>
               <div secondary>Jan 9, 2014</div>
@@ -152,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-icon-button>
           </paper-icon-item>
           <paper-icon-item>
-            <div class="avatar" item-icon></div>
+            <div class="avatar" slot="item-icon"></div>
             <paper-item-body two-line>
               <div>Recipes</div>
               <div secondary>Jan 17, 2014</div>
@@ -167,12 +171,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <h3>Paper-items can be used as links</h3>
     <demo-snippet>
       <template>
-        <style is="custom-style">
-          .paper-item-link {
-            color: inherit;
-            text-decoration: none;
-          }
-        </style>
+        <custom-style>
+          <style is="custom-style">
+            .paper-item-link {
+              color: inherit;
+              text-decoration: none;
+            }
+          </style>
+        </custom-style>
         <div role="listbox">
           <a class="paper-item-link" href="#inbox" tabindex="-1">
             <paper-item>Inbox</paper-item>

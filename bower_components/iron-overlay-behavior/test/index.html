@@ -21,10 +21,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       WCT.loadSuites([
-        'iron-overlay-behavior.html',
-        'iron-overlay-behavior.html?dom=shadow',
-        'iron-overlay-backdrop.html',
-        'iron-overlay-backdrop.html?dom=shadow',
+        'iron-overlay-behavior.html?wc-shadydom=true&wc-ce=true', //shady
+        'iron-focusables-helper.html?wc-shadydom=true&wc-ce=true', //shady
+        'iron-overlay-backdrop.html?wc-shadydom=true&wc-ce=true', //shady
+        'iron-overlay-behavior.html?dom=shadow', //shadow
+        'iron-focusables-helper.html?dom=shadow', //shadow
+        'iron-overlay-backdrop.html?dom=shadow', //shadow
       ]);
     </script>
 

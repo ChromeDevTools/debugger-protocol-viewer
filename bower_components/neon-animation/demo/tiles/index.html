@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="../../neon-animated-pages.html">
     <link rel="import" href="../../neon-animations.html">
@@ -25,44 +26,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="import" href="circles-page.html">
     <link rel="import" href="squares-page.html">
 
-    <style is="custom-style">
-      body {
-        overflow: hidden;
-        @apply(--layout-fullbleed);
-      }
-      neon-animated-pages {
-        height: 100%;
-      }
+    <custom-style>
+      <style is="custom-style">
+        body {
+          overflow: hidden;
+          @apply --layout-fullbleed;
+        }
+        neon-animated-pages {
+          height: 100%;
+        }
 
-      :root {
-        --color-one: var(--paper-cyan-300);
-        --color-two: var(--paper-orange-500);
-      }
-    </style>
+        :root {
+          --color-one: var(--paper-cyan-300);
+          --color-two: var(--paper-orange-500);
+        }
+      </style>
+    </custom-style>
 
   </head>
   <body>
+    <dom-bind>
+      <template is="dom-bind">
 
-    <template is="dom-bind">
+        <neon-animated-pages id="pages" selected="0">
+          <circles-page on-circle-click="_onCircleClick"></circles-page>
+          <squares-page on-click="_onSquaresClick"></squares-page>
+        </neon-animated-pages>
 
-      <neon-animated-pages id="pages" selected="0">
-        <circles-page on-circle-click="_onCircleClick"></circles-page>
-        <squares-page on-click="_onSquaresClick"></squares-page>
-      </neon-animated-pages>
-
-    </template>
+      </template>
+    </dom-bind>
 
     <script>
 
-      var scope = document.querySelector('template[is="dom-bind"]');
+      var scope1 = document.querySelector('template[is="dom-bind"]');
+      var scope2 = document.querySelector('dom-bind');
 
-      scope._onCircleClick = function(event) {
+      var _onCircleClick = function(event) {
         this.$.pages.selected = 1;
       };
 
-      scope._onSquaresClick = function(event) {
+      var _onSquaresClick = function(event) {
         this.$.pages.selected = 0;
       };
+
+      scope1._onCircleClick = _onCircleClick;
+      scope1._onSquaresClick = _onSquaresClick;
+      scope2._onCircleClick = _onCircleClick;
+      scope2._onSquaresClick = _onSquaresClick;
 
     </script>
 

@@ -20,12 +20,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../paper-icon-button.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-      paper-icon-button {
-        margin-left: 10px;
-        margin-right: 10px;
-      }
-    </style>
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        paper-icon-button {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+      </style>
+    </custom-style>
   </head>
   <body unresolved>
     <div class="vertical-section-container centered">
@@ -48,23 +50,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h3>Buttons can be styled using regular CSS and custom properties</h3>
       <demo-snippet class="centered-demo">
         <template>
-          <style is="custom-style">
-            paper-icon-button.pink {
-              color: var(--paper-pink-500);
-              --paper-icon-button-ink-color: var(--paper-indigo-500);
-            }
-            paper-icon-button.pink:hover {
-              background-color: var(--paper-pink-500);
-              color: white;
-            }
-            paper-icon-button.blue {
-              --paper-icon-button-ink-color: var(--paper-orange-500);
-              background-color: var(--paper-light-blue-500);
-              color: white;
-              border-radius: 3px;
-              padding: 2px;
-            }
-          </style>
+          <custom-style>
+            <style is="custom-style">
+              paper-icon-button.pink {
+                color: var(--paper-pink-500);
+                --paper-icon-button-ink-color: var(--paper-indigo-500);
+              }
+              paper-icon-button.pink:hover {
+                background-color: var(--paper-pink-500);
+                color: white;
+              }
+              paper-icon-button.blue {
+                --paper-icon-button-ink-color: var(--paper-orange-500);
+                background-color: var(--paper-light-blue-500);
+                color: white;
+                border-radius: 3px;
+                padding: 2px;
+              }
+            </style>
+          </custom-style>
           <paper-icon-button icon="favorite" title="heart" class="pink"></paper-icon-button>
           <paper-icon-button icon="flight-takeoff" title="take off" class="blue"></paper-icon-button>
         </template>
@@ -73,12 +77,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h3>Buttons can be resized</h3>
       <demo-snippet class="centered-demo">
         <template>
-          <style is="custom-style">
-            paper-icon-button.giant {
-              width: 100px;
-              height: 100px;
-            }
-          </style>
+          <custom-style>
+            <style is="custom-style">
+              paper-icon-button.giant {
+                width: 100px;
+                height: 100px;
+              }
+            </style>
+          </custom-style>
           <paper-icon-button icon="alarm-on" title="wake up" class="giant"></paper-icon-button>
         </template>
       </demo-snippet>
@@ -89,13 +95,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a href="https://www.polymer-project.org" tabindex="-1">
             <paper-icon-button icon="polymer"></paper-icon-button>
           </a>
-          <style>
-            a paper-icon-button,
-            a:active paper-icon-button,
-            a:visited paper-icon-button {
-              color: #000000;
-            }
-          </style>
+          <custom-style>
+            <style is="custom-style">
+              a paper-icon-button,
+              a:active paper-icon-button,
+              a:visited paper-icon-button {
+                color: #000000;
+              }
+            </style>
+          </custom-style>
         </template>
       </demo-snippet>
     </div>

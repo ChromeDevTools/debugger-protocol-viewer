@@ -17,7 +17,7 @@ thing! https://github.com/PolymerLabs/tedium/issues
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-autogrow-textarea)_
 
 
-##&lt;iron-autogrow-textarea&gt;
+## &lt;iron-autogrow-textarea&gt;
 
 `iron-autogrow-textarea` is an element containing a textarea that grows in height as more
 lines of input are entered. Unless an explicit height or the `maxRows` property is set, it will
@@ -29,8 +29,9 @@ Example:
 <iron-autogrow-textarea></iron-autogrow-textarea>
 ```
 
-Because the `textarea`'s `value` property is not observable, you should use
-this element's `bind-value` instead for imperative updates.
+### Changes in 2.0
+- `bind-value` is deprecated, and just mirrors the `value` property 
+- corrected the behaviour of `validate()`
 
 ### Styling
 

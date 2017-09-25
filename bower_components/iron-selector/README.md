@@ -1,23 +1,9 @@
-
-<!---
-
-This README is automatically generated from the comments in these files:
-iron-multi-selectable.html  iron-selectable.html  iron-selector.html
-
-Edit those files, and our readme bot will duplicate them over here!
-Edit this file, and the bot will squash your changes :)
-
-The bot does some handling of markdown. Please file a bug if it does the wrong
-thing! https://github.com/PolymerLabs/tedium/issues
-
--->
-
 [![Build status](https://travis-ci.org/PolymerElements/iron-selector.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-selector)
 
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-selector)_
 
 
-##&lt;iron-selector&gt;
+## &lt;iron-selector&gt;
 
   `iron-selector` is an element which can be used to manage a list of elements
   that can be selected.  Tapping on the item will make the item selected.  The `selected` indicates
@@ -84,8 +70,32 @@ _[Demo and API docs](https://elements.polymer-project.org/elements/iron-selector
   </iron-selector>
 ```
 
+### Notable breaking changes between 1.x and 2.x (hybrid):
 
+#### IronSelectableBehavior
 
-<!-- No docs for Polymer.IronMultiSelectableBehavior found. -->
+- IronSelectableBehavior no longer updates its list of items synchronously
+  when it is connected to avoid triggering a situation introduced in the
+  Custom Elements v1 spec that might cause custom element reactions to be
+  called later than expected.
 
-<!-- No docs for Polymer.IronSelectableBehavior found. -->
+  If you are using an element with IronSelectableBehavior and ...
+  1. are reading or writing properties of the element that depend on its
+     items (`items`, `selectedItems`, etc.)
+  1. are performing these accesses after the element is created or connected
+    (attached) either **synchronously** or **after a timeout**
+
+  ... you should wait for the element to dispatch an `iron-items-changed`
+  event instead.
+- `Polymer.dom.flush()` no longer triggers the observer used by
+  IronSelectableBehavior to watch for changes to its items. You can call
+  `forceSynchronousItemUpdate` instead or, preferably, listen for the
+  `iron-items-changed` event.
+
+#### IronMultiSelectableBehavior
+
+- All breaking changes to IronSelectableBehavior listed above apply to
+  IronMultiSelectableBehavior.
+- `selectedValues` and `selectedItems` now have empty arrays as default
+  values. This may cause bindings or observers of these properties to
+  trigger at start up when they previously had not.

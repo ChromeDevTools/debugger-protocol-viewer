@@ -23,7 +23,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
-
   <iron-meta key="info" value="foo/bar"></iron-meta>
 
   <script>
@@ -31,13 +30,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('basic', function() {
 
       test('byKey', function() {
-        var meta = document.createElement('iron-meta');
-        assert.equal(meta.byKey('info'), 'foo/bar');
+        var meta = new Polymer.IronMeta({
+          key: 'info'
+        });
+
+        expect(meta.value).to.be.eql('foo/bar');
       });
 
       test('list', function() {
-        var meta = document.createElement('iron-meta');
-        assert.equal(meta.list.length, 1);
+        assert.equal(document.querySelector('iron-meta').list.length, 1);
       });
 
     });

@@ -15,8 +15,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
       }
 
       .circle {
@@ -54,26 +54,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties: {
 
       animationConfig: {
-        value: function() {
-          var circles = Polymer.dom(this.root).querySelectorAll('.circle');
-          var circlesArray = Array.prototype.slice.call(circles);
-          return {
-            'entry': [{
-              name: 'cascaded-animation',
-              animation: 'scale-up-animation',
-              nodes: circlesArray
-            }],
-
-            'exit': [{
-              name: 'hero-animation',
-              id: 'hero',
-              fromPage: this
-            }, {
-              name: 'cascaded-animation',
-              animation: 'scale-down-animation'
-            }]
-          };
-        }
+        type: Object
       }
     },
 
@@ -81,8 +62,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       'click': '_onClick'
     },
 
+    attached: function() {
+      if (this.animationConfig) {
+        return;
+      }
+
+      var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+      var circlesArray = Array.prototype.slice.call(circles);
+      this.animationConfig = {
+        'entry': [{
+          name: 'cascaded-animation',
+          animation: 'scale-up-animation',
+          nodes: circlesArray
+        }],
+
+        'exit': [{
+          name: 'hero-animation',
+          id: 'hero',
+          fromPage: this
+        }, {
+          name: 'cascaded-animation',
+          animation: 'scale-down-animation'
+        }]
+      };
+    },
+
     _onClick: function(event) {
-      var target = event.target;
+      var target = Polymer.dom(event).rootTarget;
+
       if (target.classList.contains('circle')) {
         // configure the page animation
         this.sharedElements = {
@@ -91,13 +98,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         var nodesToScale = [];
         var circles = Polymer.dom(this.root).querySelectorAll('.circle');
+
         for (var node, index = 0; node = circles[index]; index++) {
           if (node !== event.target) {
             nodesToScale.push(node);
           }
         }
-        this.animationConfig['exit'][1].nodes = nodesToScale;
 
+        this.animationConfig['exit'][1].nodes = nodesToScale;
         this.fire('circle-click');
       }
     }

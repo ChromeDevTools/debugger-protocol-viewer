@@ -18,14 +18,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 `<paper-icon-item>` is a convenience element to make an item with icon. It is an interactive list
 item with a fixed-width icon area, according to Material Design. This is useful if the icons are of
 varying widths, but you want the item bodies to line up. Use this like a `<paper-item>`. The child
-node with the attribute `item-icon` is placed in the icon area.
+node with the slot name `item-icon` is placed in the icon area.
 
     <paper-icon-item>
-      <iron-icon icon="favorite" item-icon></iron-icon>
+      <iron-icon icon="favorite" slot="item-icon"></iron-icon>
       Favorite
     </paper-icon-item>
     <paper-icon-item>
-      <div class="avatar" item-icon></div>
+      <div class="avatar" slot="item-icon"></div>
       Avatar
     </paper-icon-item>
 
@@ -51,27 +51,27 @@ Custom property               | Description                                    |
     <style include="paper-item-shared-styles"></style>
     <style>
       :host {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        @apply(--paper-font-subhead);
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --paper-font-subhead;
 
-        @apply(--paper-item);
-        @apply(--paper-icon-item);
+        @apply --paper-item;
+        @apply --paper-icon-item;
       }
 
       .content-icon {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
 
         width: var(--paper-item-icon-width, 56px);
-        @apply(--paper-item-icon);
+        @apply --paper-item-icon;
       }
     </style>
 
     <div id="contentIcon" class="content-icon">
-      <content select="[item-icon]"></content>
+      <slot name="item-icon"></slot>
     </div>
-    <content></content>
+    <slot></slot>
   </template>
 
   <script>
