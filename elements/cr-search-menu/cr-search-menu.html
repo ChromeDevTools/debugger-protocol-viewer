@@ -88,7 +88,7 @@
     <p class="empty-state-message" hidden$="[[!empty_]]">
       No matches. Try another search.
     </p>
-    <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty]]">
+    <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty_]]">
       <iron-list id="ironList" items="[[renderItems]]" as="match">
         <template>
           <div class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
@@ -231,7 +231,10 @@
       var target = document.querySelector(this.selectorForElementToLayOver);
       if (target) {
         this.setPositionAndSize(target.getBoundingClientRect());
-        this.$.ironList.updateViewportBoundaries();
+        this.debounce('_iron-resize', function() {
+          this.$.ironList.updateViewportBoundaries();
+          this.$.ironList.fire('iron-resize');
+        }.bind(this), 50);
       }
     },
 
@@ -270,7 +273,10 @@
           }, this);
         }, this);
       }
-      this._setRenderItems(items);
+      
+      this.debounce('_iron-rerender', function() {
+        this._setRenderItems(items);
+      }.bind(this), 50);
     },
 
     handleRenderItemsChange_: function() {
