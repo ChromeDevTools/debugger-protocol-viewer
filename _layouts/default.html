@@ -12,9 +12,9 @@
 
   <link rel="import" href="{{ site.baseurl }}/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-  <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-header-layout/app-header-layout.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-header/app-header.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-toolbar/app-toolbar.html">
+  <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-header-layout/app-header-layout.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/app-layout/app-drawer/app-drawer.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/paper-styles/paper-styles-classes.html">
   <link rel="import" href="{{ site.baseurl }}/bower_components/paper-icon-button/paper-icon-button.html">
@@ -84,6 +84,9 @@ window.addEventListener('load', function() {
   btn.addEventListener('inactive', function() {
     toolbar.classList.remove('search-active');
   }, false);
+});
+window.addEventListener('WebComponentsReady', function() {
+  document.querySelector('app-header-layout').resetLayout();
 });
 </script>
 <script>
