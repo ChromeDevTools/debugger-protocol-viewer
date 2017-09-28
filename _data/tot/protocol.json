@@ -6179,7 +6179,7 @@
                             "description": "Ids of the search result nodes."
                         }
                     ],
-                    "description": "Returns search results from given <code>fromIndex</code> to given <code>toIndex</code> from the sarch with the given identifier.",
+                    "description": "Returns search results from given <code>fromIndex</code> to given <code>toIndex</code> from the search with the given identifier.",
                     "experimental": true
                 },
                 {
