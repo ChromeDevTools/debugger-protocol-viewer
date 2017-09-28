@@ -12797,7 +12797,7 @@
                         {
                             "name": "exceptionId",
                             "type": "integer",
-                            "description": "The id of revoked exception, as reported in <code>exceptionUnhandled</code>."
+                            "description": "The id of revoked exception, as reported in <code>exceptionThrown</code>."
                         }
                     ]
                 },
