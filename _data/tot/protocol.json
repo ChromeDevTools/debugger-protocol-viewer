@@ -11350,6 +11350,7 @@
                                 "worker",
                                 "violation",
                                 "intervention",
+                                "recommendation",
                                 "other"
                             ],
                             "description": "Log entry source."
@@ -11404,6 +11405,15 @@
                             "type": "string",
                             "optional": true,
                             "description": "Identifier of the worker associated with this entry."
+                        },
+                        {
+                            "name": "args",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Runtime.RemoteObject"
+                            },
+                            "optional": true,
+                            "description": "Call arguments."
                         }
                     ]
                 },
