@@ -10453,11 +10453,6 @@
                             "description": "<code>Animation</code>'s current time."
                         },
                         {
-                            "name": "source",
-                            "$ref": "AnimationEffect",
-                            "description": "<code>Animation</code>'s source animation node."
-                        },
-                        {
                             "name": "type",
                             "type": "string",
                             "enum": [
@@ -10466,6 +10461,12 @@
                                 "WebAnimation"
                             ],
                             "description": "Animation type of <code>Animation</code>."
+                        },
+                        {
+                            "name": "source",
+                            "$ref": "AnimationEffect",
+                            "optional": true,
+                            "description": "<code>Animation</code>'s source animation node."
                         },
                         {
                             "name": "cssId",
@@ -10519,6 +10520,7 @@
                         {
                             "name": "backendNodeId",
                             "$ref": "DOM.BackendNodeId",
+                            "optional": true,
                             "description": "<code>AnimationEffect</code>'s target node."
                         },
                         {
