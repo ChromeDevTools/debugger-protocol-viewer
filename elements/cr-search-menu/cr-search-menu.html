@@ -275,7 +275,7 @@
           }, this);
         }, this);
       }
-      
+
       this.debounce('_iron-rerender', function() {
         this._setRenderItems(items);
       }.bind(this), 50);
@@ -291,7 +291,6 @@
 
     setPositionAndSize: function(rect) {
       this.style.left = rect.left + 'px';
-      this.style.top = rect.top + 'px';
       this.style.width = rect.width + 'px';
 
       // TODO: Make more 'phisticated. Handle mobile.
