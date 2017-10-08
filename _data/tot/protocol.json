@@ -13216,6 +13216,13 @@
                             "description": "Regex pattern for the URLs of the resources to set breakpoints on. Either <code>url</code> or <code>urlRegex</code> must be specified."
                         },
                         {
+                            "name": "scriptHash",
+                            "type": "string",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Script hash of the resources to set breakpoint on."
+                        },
+                        {
                             "name": "columnNumber",
                             "type": "integer",
                             "optional": true,
