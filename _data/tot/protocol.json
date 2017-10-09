@@ -3823,7 +3823,7 @@
                 },
                 {
                     "name": "setRequestInterceptionEnabled",
-                    "description": "Sets the requests to intercept that match a the provided patterns.",
+                    "description": "Sets the requests to intercept that match a the provided patterns and optionally resource types.",
                     "parameters": [
                         {
                             "name": "enabled",
@@ -3838,6 +3838,15 @@
                                 "type": "string"
                             },
                             "description": "URLs matching any of these patterns will be forwarded and wait for the corresponding continueInterceptedRequest call. Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed. Escape character is backslash. If omitted equivalent to ['*'] (intercept all)."
+                        },
+                        {
+                            "name": "resourceTypes",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "Page.ResourceType"
+                            },
+                            "description": "If set, only requests for matching resource types will be intercepted."
                         }
                     ],
                     "experimental": true
