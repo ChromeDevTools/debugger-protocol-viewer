@@ -88,15 +88,14 @@ This element has `role="listitem"` by default. Depending on usage, it may be mor
     <style include="paper-item-shared-styles"></style>
     <style>
       :host {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        @apply(--paper-font-subhead);
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --paper-font-subhead;
 
-        @apply(--paper-item);
+        @apply --paper-item;
       }
     </style>
-
-    <content></content>
+    <slot></slot>
   </template>
 
   <script>

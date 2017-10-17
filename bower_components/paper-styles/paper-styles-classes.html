@@ -8,7 +8,15 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<!--
+Note that these files probably don't do what you expect them to do. None have
+a `<style is=custom-style include="..."` type of style include, which mean
+these styles will only apply to the main document, regardless of where
+you import this file.
+
+For a set of styles that can be applied to an element,
+check paper-styles.html.
+-->
 
 <link rel="import" href="classes/typography.html">
 <link rel="import" href="classes/shadow.html">

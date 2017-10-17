@@ -10,17 +10,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../font-roboto/roboto.html">
 
 <!--
-Typographic styles are provided matching the Material Design standard styles:
-http://www.google.com/design/spec/style/typography.html#typography-standard-styles
+Note that this file probably doesn't do what you expect it to do. It's not
+a `<style is=custom-style include="..."` type of style include, which mean
+these styles will only apply to the main document, regardless of where
+you import this file.
 
-To make use of them, apply a `paper-font-<style>` class to elements, matching
-the font style you wish it to inherit.
-
-  <header class="paper-font-display2">Hey there!</header>
-
-Note that these are English/Latin centric styles. You may need to further adjust
-line heights and weights for CJK typesetting. See the notes in the Material
-Design typography section.
+For a set of styles that can be applied to an element, check paper-styles/typography.html.
 -->
 <style>
 

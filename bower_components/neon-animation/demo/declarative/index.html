@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="../../../paper-styles/typography.html">
     <link rel="import" href="../../../paper-styles/color.html">
@@ -25,106 +26,123 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="import" href="../../neon-animatable.html">
     <link rel="import" href="../../neon-animations.html">
 
-    <style is="custom-style">
-      body {
-        overflow: hidden;
-        @apply(--layout-fullbleed);
-        @apply(--layout-vertical);
-      }
+    <custom-style>
+      <style is="custom-style">
+        body {
+          overflow: hidden;
+          height: 100vh;
+          margin: 0px;
+        }
 
-      .toolbar {
-        position: relative;
+        dom-bind {
+          height: 100%;
+        }
 
-        padding: 8px;
+        .toolbar {
+          position: relative;
 
-        background-color: white;
+          padding: 8px;
 
-        z-index: 12;
-      }
+          background-color: white;
 
-      neon-animated-pages {
-        @apply(--layout-flex);
-      }
+          z-index: 12;
+        }
 
-      neon-animatable {
-        color: white;
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
-        @apply(--paper-font-display4);
-      }
+        neon-animated-pages {
+          height: 100%;
+          @apply --layout-flex;
+        }
 
-      neon-animatable:nth-child(1) {
-        background: var(--paper-red-500);
-      }
+        neon-animatable {
+          color: white;
+          @apply --layout-horizontal;
+          @apply --layout-center-center;
+          @apply --paper-font-display4;
+        }
+        
+        /* in shady polymer1 slot element is first child */
+        neon-animatable:nth-child(1),
+        neon-animatable:nth-child(6) {
+          background: var(--paper-red-500);
+        }
 
-      neon-animatable:nth-child(2) {
-        background: var(--paper-blue-500);
-      }
+        neon-animatable:nth-child(2) {
+          background: var(--paper-blue-500);
+        }
 
-      neon-animatable:nth-child(3) {
-        background: var(--paper-orange-500);
-      }
+        neon-animatable:nth-child(3) {
+          background: var(--paper-orange-500);
+        }
 
-      neon-animatable:nth-child(4) {
-        background: var(--paper-green-500);
-      }
+        neon-animatable:nth-child(4) {
+          background: var(--paper-green-500);
+        }
 
-      neon-animatable:nth-child(5) {
-        background: var(--paper-purple-500);
-      }
+        neon-animatable:nth-child(5) {
+          background: var(--paper-purple-500);
+        }
 
-    </style>
+      </style>
+    </custom-style>
 
   </head>
   <body>
+    <dom-bind>
+      <template is="dom-bind">
+        <div class="toolbar">
+          <button on-click="_onPrevClick">&#8678;</button>
+          <button on-click="_onNextClick">&#8680;</button>
+          <button on-click="_onUpClick">&#8679;</button>
+          <button on-click="_onDownClick">&#8681;</button>
+        </div>
 
-    <template is="dom-bind">
+        <neon-animated-pages id="pages" selected="[[selected]]" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
+          <neon-animatable>1</neon-animatable>
+          <neon-animatable>2</neon-animatable>
+          <neon-animatable>3</neon-animatable>
+          <neon-animatable>4</neon-animatable>
+          <neon-animatable>5</neon-animatable>
+        </neon-animated-pages>
 
-      <div class="toolbar">
-        <button on-click="_onPrevClick">&#8678;</button>
-        <button on-click="_onNextClick">&#8680;</button>
-        <button on-click="_onUpClick">&#8679;</button>
-        <button on-click="_onDownClick">&#8681;</button>
-      </div>
-
-      <neon-animated-pages id="pages" selected="[[selected]]" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
-        <neon-animatable>1</neon-animatable>
-        <neon-animatable>2</neon-animatable>
-        <neon-animatable>3</neon-animatable>
-        <neon-animatable>4</neon-animatable>
-        <neon-animatable>5</neon-animatable>
-      </neon-animated-pages>
-
-    </template>
+      </template>
+    </dom-bind>
 
     <script>
 
-      var scope = document.querySelector('template[is="dom-bind"]');
-      scope.selected = 0;
+      var scope1 = document.querySelector('template[is="dom-bind"]');
+      var scope2 = document.querySelector('dom-bind');
 
-      scope._onPrevClick = function() {
+      scope1.selected = 0;
+      scope2.selected = 0;
+
+      scope1._onPrevClick = function() {
         this.entryAnimation = 'slide-from-left-animation';
         this.exitAnimation = 'slide-right-animation';
         this.selected = this.selected === 0 ? 4 : (this.selected - 1);
       }
 
-      scope._onNextClick = function() {
+      scope1._onNextClick = function() {
         this.entryAnimation = 'slide-from-right-animation';
         this.exitAnimation = 'slide-left-animation';
         this.selected = this.selected === 4 ? 0 : (this.selected + 1);
       }
 
-      scope._onUpClick = function() {
+      scope1._onUpClick = function() {
         this.entryAnimation = 'slide-from-top-animation';
         this.exitAnimation = 'slide-down-animation';
         this.selected = this.selected === 4 ? 0 : (this.selected + 1);
       }
 
-      scope._onDownClick = function() {
+      scope1._onDownClick = function() {
         this.entryAnimation = 'slide-from-bottom-animation';
         this.exitAnimation = 'slide-up-animation';
         this.selected = this.selected === 0 ? 4 : (this.selected - 1);
       }
+
+      scope2._onPrevClick = scope1._onPrevClick;
+      scope2._onNextClick = scope1._onNextClick;
+      scope2._onUpClick = scope1._onUpClick;
+      scope2._onDownClick = scope1._onDownClick;
 
     </script>
 

@@ -17,7 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: inline-block;
         position: relative;
         text-align: left;
-        cursor: pointer;
 
         /* NOTE(cdata): Both values are needed, since some phones require the
          * value to be `transparent`.
@@ -34,11 +33,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           cursor: pointer;
         };
 
-        @apply(--paper-dropdown-menu);
+        @apply --paper-dropdown-menu;
       }
 
       :host([disabled]) {
-        @apply(--paper-dropdown-menu-disabled);
+        @apply --paper-dropdown-menu-disabled;
       }
 
       :host([noink]) paper-ripple {
@@ -55,24 +54,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         bottom: 8px;
         right: 0px;
 
-        @apply(--paper-dropdown-menu-ripple);
+        @apply --paper-dropdown-menu-ripple;
       }
 
       paper-menu-button {
         display: block;
         padding: 0;
 
-        @apply(--paper-dropdown-menu-button);
+        @apply --paper-dropdown-menu-button;
       }
 
       paper-input {
-        @apply(--paper-dropdown-menu-input);
+        @apply --paper-dropdown-menu-input;
       }
 
       iron-icon {
         color: var(--disabled-text-color);
 
-        @apply(--paper-dropdown-menu-icon);
+        @apply --paper-dropdown-menu-icon;
       }
     </style>
   </template>

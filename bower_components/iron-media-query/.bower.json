@@ -1,6 +1,6 @@
 {
   "name": "iron-media-query",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "description": "Lets you bind to a CSS media query",
   "authors": [
     "The Polymer Authors"
@@ -19,23 +19,39 @@
   "homepage": "https://github.com/PolymerElements/iron-media-query",
   "ignore": [],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0"
+    "polymer": "Polymer/polymer#1.9 - 2"
   },
   "devDependencies": {
-    "paper-styles": "polymerelements/paper-styles#^1.0.2",
-    "web-component-tester": "polymer/web-component-tester#^3.4.0",
-    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+    "paper-styles": "polymerelements/paper-styles#1 - 2",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "variants": {
+    "1.x": {
+      "dependencies": {
+        "polymer": "Polymer/polymer#^1.9"
+      },
+      "devDependencies": {
+        "paper-styles": "polymerelements/paper-styles#^1.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+        "web-component-tester": "Polymer/web-component-tester#^4.0.0"
+      },
+      "resolutions": {
+        "webcomponentsjs": "^0.7"
+      }
+    }
   },
   "main": "iron-media-query.html",
-  "_release": "1.0.8",
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0"
+  },
+  "_release": "2.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.8",
-    "commit": "3f916be171af7a3e03eb019acdfea71055d3c744"
+    "tag": "v2.0.0",
+    "commit": "05355eb5dfbaf0f35ec26a85baf63e7928e076c5"
   },
-  "_source": "git://github.com/PolymerElements/iron-media-query.git",
-  "_target": "^1.0.0",
+  "_source": "https://github.com/PolymerElements/iron-media-query.git",
+  "_target": "1 - 2",
   "_originalSource": "PolymerElements/iron-media-query"
 }

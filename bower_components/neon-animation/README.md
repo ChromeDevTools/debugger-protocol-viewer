@@ -1,3 +1,8 @@
+## Changes in 2.0
+* ⚠️ This Element is now deprecated ⚠️
+  * Please use the web animations api or CSS animations
+* Web animations polyfill is now a dev dependency
+
 # neon-animation
 
 `neon-animation` is a suite of elements and behaviors to implement pluggable animated transitions for Polymer Elements using [Web Animations](https://w3c.github.io/web-animations/).

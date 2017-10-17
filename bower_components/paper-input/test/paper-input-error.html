@@ -28,16 +28,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
 
   <paper-input-container id="container">
-    <input is="iron-input">
-    <paper-input-error>error</paper-input-error>
+    <input slot="input">
+    <paper-input-error slot="add-on">error</paper-input-error>
   </paper-input-container>
 
-  <test-fixture id="auto-validate-numbers">
+  <test-fixture id="auto-validate-numbers-1">
     <template>
       <paper-input-container auto-validate attr-for-value="bind-value">
-        <label id="l">label</label>
-        <input is="iron-input" id="i" pattern="[0-9]*">
-        <paper-input-error id="e">error</paper-input-error>
+        <label slot="label" id="l">label</label>
+        <input is="iron-input" slot="input" id="i" pattern="[0-9]*">
+        <paper-input-error id="e" slot="add-on">error</paper-input-error>
+      </paper-input-container>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="auto-validate-numbers-2">
+    <template>
+      <paper-input-container auto-validate attr-for-value="bind-value">
+        <label slot="label" id="l">label</label>
+        <iron-input slot="input" id="i">
+          <input pattern="[0-9]*">
+        </iron-input>
+        <paper-input-error id="e" slot="add-on">error</paper-input-error>
       </paper-input-container>
     </template>
   </test-fixture>
@@ -46,13 +58,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     suite('basic', function() {
 
-      test('error message only appears when input is invalid', function() {
-        var container = fixture('auto-validate-numbers');
+      test('error message only appears when input is invalid', function(done) {
+        var container = Polymer.Element ?
+            fixture('auto-validate-numbers-2') :
+            fixture('auto-validate-numbers-1');
         var input = Polymer.dom(container).querySelector('#i');
         var error = Polymer.dom(container).querySelector('#e');
-        assert.equal(getComputedStyle(error).visibility, 'hidden', 'error is visibility:hidden');
-        input.bindValue = 'foobar';
-        assert.notEqual(getComputedStyle(error).visibility, 'hidden', 'error is not visibility:hidden');
+
+        // Need to wait a tick to stamp the error message.
+        Polymer.Base.async(function() {
+          assert.equal(getComputedStyle(error).visibility, 'hidden', 'error is visibility:hidden');
+          input.bindValue = 'foobar';
+          assert.equal(getComputedStyle(error).visibility, 'visible', 'error is visibility:visible');
+          done();
+        }, 1);
       });
 
       test('error message add on is registered', function() {

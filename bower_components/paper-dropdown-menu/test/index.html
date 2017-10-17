@@ -15,10 +15,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
   <script>
     WCT.loadSuites([
-      'paper-dropdown-menu.html',
-      'paper-dropdown-menu.html?dom=shadow',
-      'paper-dropdown-menu-light.html',
-      'paper-dropdown-menu-light.html?dom=shadow'
+      'paper-dropdown-menu.html?wc-shadydom=true&wc-ce=true', // shady
+      'paper-dropdown-menu-light.html?wc-shadydom=true&wc-ce=true', // shady
+      'paper-dropdown-menu.html?dom=shadow', // shadow
+      'paper-dropdown-menu-light.html?dom=shadow' // shadow
     ]);
   </script>
 

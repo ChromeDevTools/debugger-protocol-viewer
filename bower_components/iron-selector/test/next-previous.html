@@ -63,8 +63,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     suite('next/previous', function() {
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test1');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('selectNext', function() {
@@ -97,8 +102,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     suite('next/previous attrForSelected', function() {
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test2');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('selectNext', function() {

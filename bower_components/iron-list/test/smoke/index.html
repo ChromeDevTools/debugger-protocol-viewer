@@ -20,81 +20,80 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../../polymer/polymer.html">
-  <link rel="import" href="../../../paper-styles/paper-styles.html">
+  <link rel="import" href="../../../paper-styles/demo-pages.html">
 
   <link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../../iron-list.html">
   <link rel="import" href="dummy-data.html">
 
   <dom-module id="x-app">
-    <style>
-
-      :host {
-        display: block;
-        font-family: sans-serif;
-        @apply(--layout-horizontal);
-      }
-
-      iron-list {
-        @apply(--layout-flex);
-        height: 100%;
-      }
-
-      .item {
-        display: block;
-        padding: 8px;
-        border-bottom: 1px solid gray;
-        @apply(--layout-horizontal);
-      }
-
-      .item img {
-        height: 40px;
-        width: 40px;
-      }
-
-      .picture {
-        @apply(--layout-vertical);
-      }
-
-      #about {
-        color: lightgray;
-        font-style: italic;
-        font-size: 0.8em;
-      }
-
-      #last {
-        font-weight: bold;
-        font-size: 1.2em;
-      }
-
-      .padded {
-        @apply(--layout-flex);
-      }
-
-      .padded > * {
-        padding: 8px;
-      }
-
-      #index {
-        text-align: center;
-        padding-top: 8px;
-      }
-      #options {
-        background: white;
-        border-radius: 10px;
-        border: 1px solid gray;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        z-index: 10;
-        padding: 5px;
-      }
-      #friends {
-        height: 20px;
-      }
-
-    </style>
     <template>
+      <style>
+        :host {
+          display: block;
+          font-family: sans-serif;
+          @apply --layout-horizontal;
+        }
+
+        iron-list {
+          @apply --layout-flex;
+          height: 100%;
+        }
+
+        .item {
+          display: block;
+          padding: 8px;
+          border-bottom: 1px solid gray;
+          @apply --layout-horizontal;
+        }
+
+        .item img {
+          height: 40px;
+          width: 40px;
+        }
+
+        .picture {
+          @apply --layout-vertical;
+        }
+
+        #about {
+          color: lightgray;
+          font-style: italic;
+          font-size: 0.8em;
+        }
+
+        #last {
+          font-weight: bold;
+          font-size: 1.2em;
+        }
+
+        .padded {
+          @apply --layout-flex;
+        }
+
+        .padded > * {
+          padding: 8px;
+        }
+
+        #index {
+          text-align: center;
+          padding-top: 8px;
+        }
+        #options {
+          background: white;
+          border-radius: 10px;
+          border: 1px solid gray;
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          z-index: 10;
+          padding: 5px;
+        }
+        #friends {
+          height: 20px;
+        }
+      </style>
+
       <div id="options">
         <input value="{{separator::input}}" style="width:20px;">
         <label><input type="checkbox" checked="{{showing::change}}">Show friends</label>
@@ -104,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template>
           <div class="item">
             <div class="picture">
-              <img src="{{pictureForItem(item)}}">
+              <img src="[[pictureForItem(item, index)]]">
               <div>{{item.index}}</div>
             </div>
             <div class="padded">
@@ -127,18 +126,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
         </template>
       </iron-list>
+     
 
       <iron-list id="list2" items="{{data}}">
         <template>
           <div class="item">
             <div class="picture">
-              <img src="{{pictureForItem(item)}}">
+              <img src="[[pictureForItem(item, index)]]">
               <div>{{item.index}}</div>
             </div>
             <div class="padded">
               <div>
                 <input placeholder="name.last" value="{{item.name.last::input}}">
-                <span>{{separator}}</span>
+                <span><input value="{{separator::input}}" size="1"></span>
                 <input placeholder="name.first" value="{{item.name.first::input}}">
               </div>
               <div>{{item.about}}</div>
@@ -169,16 +169,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         properties: {
           data: {
+            type: Array,
             value: window.dummyData
           },
           separator: {
+            type: String,
             value: '|'
           },
           showing: {
+            type: Boolean,
             value: false
           }
         },
-        pictureForItem: function(item) {
+        pictureForItem: function(item, index) {
+          if (item == null || index == null) {
+            console.log('bad');
+            return '';
+          }
           return item.picture + '/' + item.guid.slice(0,6);
         },
         iconForItem: function(item) {
@@ -190,14 +197,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   </script>
 
-  <style is="custom-style">
-    body, x-app {
-      @apply(--layout-fit);
-    }
-  </style>
-
+  <custom-style>
+    <style is="custom-style">
+      body, x-app {
+        @apply --layout-fit;
+      }
+    </style>
+  </custom-style>
 </head>
-<body unresolved>
+<body>
 
   <x-app></x-app>
 

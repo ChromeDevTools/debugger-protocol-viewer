@@ -150,7 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
           });
 
-          suite('container = separate', function(done) {
+          suite('container = separate', function() {
 
             setup(function() {
               ripple = fixture('ShadowBasic');
@@ -177,6 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           function getTextLocation(ripple) {
             // build a Range to get the BCR of a given text node
             var r = document.createRange();
+            Polymer.dom.flush();
             r.selectNode(Polymer.dom(ripple.$.content).getDistributedNodes()[0]);
             return MockInteractions.middleOfNode(r);
           }

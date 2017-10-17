@@ -58,15 +58,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
 suite('<iron-meta>', function () {
   suite('basic behavior', function () {
+
+    window.metas = [];
     var meta;
 
     setup(function () {
       meta = fixture('TrivialMeta');
+      meta.id = 'meta' + metas.length;
+      metas.push(meta);
     });
 
-    teardown(function () {
-      meta.key = null;
-    });
+    teardown(function() {
+      meta.value = null;
+    })
 
     test('uses itself as the default value', function () {
       expect(meta.value).to.be.equal(meta);
@@ -98,7 +102,7 @@ suite('<iron-meta>', function () {
 
     teardown(function () {
       metas.forEach(function (meta) {
-        meta.key = null;
+        meta.value = null;
       });
     });
 
@@ -110,7 +114,7 @@ suite('<iron-meta>', function () {
     });
 
     test('can be unregistered individually', function () {
-      metas[0].key = null;
+      metas[0].value = null;
 
       expect(metas[0].list.length).to.be.equal(2);
       expect(metas[0].list).to.be.deep.equal([metas[1], metas[2]])
@@ -180,12 +184,22 @@ suite('<iron-meta>', function () {
     });
   });
 
-  suite('singleton', function () {
+  suite('imperative usage', function () {
+    var meta;
 
-    test('only one ironmeta created', function () {
-      var first = Polymer.IronMeta.getIronMeta();
-      var second = Polymer.IronMeta.getIronMeta();
-      expect(first).to.be.equal(second);
+    setup(function() {
+      meta = fixture('TrivialMeta');
+    });
+
+    teardown(function() {
+      meta.value = null;
+    });
+
+    test('gets value by type and key', function() {
+      expect(new Polymer.IronMeta({
+        type: meta.type,
+        key: meta.key
+      }).value).to.be.equal(meta.value);
     });
   });
 });

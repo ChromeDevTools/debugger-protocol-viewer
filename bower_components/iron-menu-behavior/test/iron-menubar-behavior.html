@@ -58,6 +58,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
+      function waitForIronItemsChanged(selector, callback) {
+        selector.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          selector.removeEventListener('iron-items-changed', onIronItemsChanged);
+          callback();
+        })
+      }
 
       suite('menubar a11y tests', function() {
 
@@ -99,21 +105,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('last activated item in a multi select menubar is focused', function(done) {
           var menubar = fixture('multi');
-          menubar.selected = 0;
-          menubar.items[1].click();
-          Polymer.Base.async(function() {
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[1], 'document.activeElement is last activated item');
-            done();
+          waitForIronItemsChanged(menubar, function() {
+            menubar.selected = 0;
+            menubar.items[1].click();
+            Polymer.Base.async(function() {
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[1], 'document.activeElement is last activated item');
+              done();
+            });
           });
         });
 
         test('deselection in a multi select menubar focuses deselected item', function(done) {
           var menubar = fixture('multi');
-          menubar.selected = 0;
-          menubar.items[0].click();
-          Polymer.Base.async(function() {
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[0], 'document.activeElement is last activated item');
-            done();
+          waitForIronItemsChanged(menubar, function() {
+            menubar.selected = 0;
+            menubar.items[0].click();
+            Polymer.Base.async(function() {
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[0], 'document.activeElement is last activated item');
+              done();
+            });
           });
         });
 
@@ -124,33 +134,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           test('left key moves to the next item', function() {
             var rtlContainer = fixture('rtl');
             var menubar = rtlContainer.querySelector('test-menubar');
-            menubar.selected = 0;
-            menubar.items[1].click();
+            waitForIronItemsChanged(menubar, function(done) {
+              menubar.selected = 0;
+              menubar.items[1].click();
 
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[1]);
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[1]);
 
-            MockInteractions.pressAndReleaseKeyOn(menubar, LEFT);
+              MockInteractions.pressAndReleaseKeyOn(menubar, LEFT);
 
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[2],
-                '`document.activeElement` should be the next item.');
-            assert.equal(menubar.selected, 1,
-                '`menubar.selected` should not change.');
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[2],
+                  '`document.activeElement` should be the next item.');
+              assert.equal(menubar.selected, 1,
+                  '`menubar.selected` should not change.');
+
+              done();
+            });
           });
 
           test('right key moves to the previous item', function() {
             var rtlContainer = fixture('rtl');
             var menubar = rtlContainer.querySelector('test-menubar');
-            menubar.selected = 0;
-            menubar.items[1].click();
+            waitForIronItemsChanged(menubar, function() {
+              menubar.selected = 0;
+              menubar.items[1].click();
 
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[1]);
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[1]);
 
-            MockInteractions.pressAndReleaseKeyOn(menubar, RIGHT);
+              MockInteractions.pressAndReleaseKeyOn(menubar, RIGHT);
 
-            assert.equal(Polymer.dom(document).activeElement, menubar.items[0],
-                '`document.activeElement` should be the previous item');
-            assert.equal(menubar.selected, 1,
-                '`menubar.selected` should not change.');
+              assert.equal(Polymer.dom(document).activeElement, menubar.items[0],
+                  '`document.activeElement` should be the previous item');
+              assert.equal(menubar.selected, 1,
+                  '`menubar.selected` should not change.');
+
+              done();
+            });
           });
         });
 

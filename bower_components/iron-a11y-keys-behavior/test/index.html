@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>Tests</title>
 
-    <script src="../../webcomponentsjs/webcomponents.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
   </head>
 
@@ -19,10 +18,10 @@
     <script>
       // Load and run all tests (.html, .js) as one suite:
       WCT.loadSuites([
-        'basic-test.html',
-        'basic-test.html?dom=shadow'
+        'basic-test.html?wc-shadydom=true&wc-ce=true', //shady
+        'basic-test.html?dom=shadow' //shadow
       ]);
     </script>
-  
+
 
 </body></html>

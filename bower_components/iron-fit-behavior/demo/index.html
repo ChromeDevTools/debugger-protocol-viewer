@@ -23,16 +23,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 
-  <style is="custom-style" include="demo-pages-shared-styles">
+  <custom-style><style is="custom-style" include="demo-pages-shared-styles">
     .centered {
-      min-width: 500px;
+      min-width: 600px;
     }
     demo-snippet {
       --demo-snippet-code: {
         max-height: 250px;
       }
     }
-  </style>
+  </style></custom-style>
 
 </head>
 
@@ -50,9 +50,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: inline-block;
           box-sizing: border-box;
           border: 1px solid;
-          width: 100px;
-          padding: 20px 0;
-          margin: 5px;
+          width: 120px;
+          padding: 26px 0;
+          margin: 8px;
         }
 
         #myFit {
@@ -68,12 +68,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           border-radius: 5px;
           border-width: 1px;
         }
-        
         button.selected {
           background-color: #b3e5fc;
         }
       </style>
-      <template is="dom-bind">
+      <dom-bind><template is="dom-bind">
         <template is="dom-repeat" items="[[containers]]">
           <div class="target" on-tap="updatePositionTarget">Target</div>
         </template>
@@ -95,27 +94,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <button on-tap="toggleDynamicAlign">dynamic align</button>
         </simple-fit>
         <script>
-          var defaultTarget = Polymer.dom(myFit).parentNode;
+
           var template = document.querySelector('template[is="dom-bind"]');
 
           template.containers = new Array(30);
 
           template.updatePositionTarget = function(e) {
             var target = Polymer.dom(e).rootTarget;
-            target = myFit.positionTarget === target ? defaultTarget : target;
+            target = myFit.positionTarget === target ? myFit._defaultPositionTarget : target;
             myFit.positionTarget.style.backgroundColor = '';
             target.style.backgroundColor = 'orange';
             myFit.positionTarget = target;
-            template.refit();
-          };
-
-          template._raf = null;
-          template.refit = function() {
-            template._raf && window.cancelAnimationFrame(template._raf);
-            template._raf = window.requestAnimationFrame(function() {
-              template._raf = null;
-              myFit.refit();
-            });
+            refit();
           };
 
           template.updateAlign = function(e) {
@@ -134,30 +124,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 toggleClass(children[i], 'selected', children[i] === target);
               }
             }
-            template.refit();
+            refit();
           };
 
           template.toggleNoOverlap = function(e) {
             myFit.noOverlap = !myFit.noOverlap;
             toggleClass(Polymer.dom(e).rootTarget, 'selected', myFit.noOverlap);
-            template.refit();
+            refit();
           };
 
           template.toggleDynamicAlign = function(e) {
             myFit.dynamicAlign = !myFit.dynamicAlign;
             toggleClass(Polymer.dom(e).rootTarget, 'selected', myFit.dynamicAlign);
-            template.refit();
+            refit();
           };
 
+          // Support hybrid mode
+          var templatev1 = document.querySelector('dom-bind');
+          templatev1.containers = template.containers;
+          templatev1.updatePositionTarget = template.updatePositionTarget;
+          templatev1.updateAlign = template.updateAlign;
+          templatev1.toggleNoOverlap = template.toggleNoOverlap;
+          templatev1.toggleDynamicAlign = template.toggleDynamicAlign;
+
           // Listen for resize and scroll on window.
-          window.addEventListener('resize', template.refit);
-          window.addEventListener('scroll', template.refit);
+          window.addEventListener('resize', refit);
+          window.addEventListener('scroll', refit);
+
+          var _raf = null;
+          function refit() {
+            _raf && window.cancelAnimationFrame(_raf);
+            _raf = window.requestAnimationFrame(function() {
+              _raf = null;
+              myFit.refit();
+            });
+          }
 
           function toggleClass(element, cssClass, condition) {
             element.classList[condition ? 'add' : 'remove'](cssClass);
           }
         </script>
-      </template>
+      </template></dom-bind>
     </template>
   </demo-snippet>
 

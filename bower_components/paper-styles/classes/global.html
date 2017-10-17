@@ -7,19 +7,17 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+
 <link rel="import" href="../paper-styles-classes.html">
 
 <!--
-A set of base styles that are applied to the document and standard elements that
-match the Material Design spec.
+Note that this file probably doesn't do what you expect it to do. It's not
+a `<style is=custom-style include="..."` type of style include, which mean
+these styles will only apply to the main document, regardless of where
+you import this file.
 -->
-<style>
-/*
-Note that there is a lot of style duplication here. The hope is that the Polymer
-0.8 styling solution will allow for inheritance of properties so that we can
-eventually avoid it.
-*/
 
+<style>
 /* Mixins */
 
 /* [paper-font] */

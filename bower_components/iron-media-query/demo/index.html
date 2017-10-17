@@ -26,67 +26,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <div class="vertical-section vertical-section-container centered">
     <h1>&lt;iron-media-query&gt;</h1>
 
-    <template is="dom-bind">
-      <style>
-        .item {
-          margin: 8px;
-          border: 1px solid #ddd;
-        }
+    <dom-bind>
+      <template is="dom-bind">
+        <style>
+          .item {
+            margin: 8px;
+            border: 1px solid #ddd;
+          }
 
-        .item .title {
-          font-weight: bold;
-          font-size: 1.2em;
-          background-color: #eee;
-          padding: 8px;
-        }
+          .item .title {
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #eee;
+            padding: 8px;
+          }
 
-        .item[wide-layout] .title {
-          float: left;
-          margin: 0 8px 4px 0;
-          font-size: 1.4em;
-        }
+          .item[wide-layout] .title {
+            float: left;
+            margin: 0 8px 4px 0;
+            font-size: 1.4em;
+          }
 
-        .item .description {
-          padding: 8px;
-        }
+          .item .description {
+            padding: 8px;
+          }
 
-        .item::after {
-          content: '';
-          display: block;
-          clear: both;
-        }
-      </style>
+          .item::after {
+            content: '';
+            display: block;
+            clear: both;
+          }
+        </style>
 
-      <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
-      <iron-media-query full query="print" query-matches="{{print}}"></iron-media-query>
+        <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
+        <iron-media-query full query="print" query-matches="{{print}}"></iron-media-query>
 
-      <div class="item" wide-layout$="{{wide}}">
-        <div class="title">Resize the window</div>
-        <div class="description">
-          <template is="dom-if" if="{{!wide}}">
-            The viewport is less than 600px wide, so the items' titles will
-            not float.
-          </template>
-          <template is="dom-if" if="{{wide}}">
-            The viewport is at least 600px, so the items' titles will float
-            to the left.
-          </template>
-          Here's another sentence; it's not very long.
+        <div class="item" wide-layout$="{{wide}}">
+          <div class="title">Resize the window</div>
+          <div class="description">
+            <template is="dom-if" if="{{!wide}}">
+              The viewport is less than 600px wide, so the items' titles will
+              not float.
+            </template>
+            <template is="dom-if" if="{{wide}}">
+              The viewport is at least 600px, so the items' titles will float
+              to the left.
+            </template>
+            Here's another sentence; it's not very long.
+          </div>
         </div>
-      </div>
-      <div class="item" wide-layout$="{{wide}}">
-        <div class="title"><code>print</code> example</div>
-        <div class="description">
-          <a href="http://polymer-project.org">
-            This link's destination is visible when this page is printed.
-          </a>
-          <template is="dom-if" if="{{print}}">
-            (http://polymer-project.org)
-          </template>
-          This is another sentence which is meant to help fill this box.
+        <div class="item" wide-layout$="{{wide}}">
+          <div class="title"><code>print</code> example</div>
+          <div class="description">
+            <a href="http://polymer-project.org">
+              This link's destination is visible when this page is printed.
+            </a>
+            <template is="dom-if" if="{{print}}">
+              (http://polymer-project.org)
+            </template>
+            This is another sentence which is meant to help fill this box.
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </dom-bind>
   </div>
 
   </body>

@@ -22,7 +22,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../iron-icon/iron-icon.html">
   <link rel="import" href="../../iron-icons/iron-icons.html">
-  <link rel="import" href="../../iron-input/iron-input.html">
   <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../../paper-styles/color.html">
   <link rel="import" href="../paper-input-container.html">
@@ -31,47 +30,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../paper-textarea.html">
   <link rel="import" href="ssn-input.html">
 
-  <style is="custom-style" include="demo-pages-shared-styles">
-    paper-input {
-      display: block;
-    }
-
-    demo-snippet.horizontal {
-      --demo-snippet-demo: {
-        @apply(--layout-horizontal);
-        @apply(--layout-justified);
-        @apply(--layout-wrap);
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      paper-input {
+        display: block;
       }
-    }
-    demo-snippet.horizontal paper-input {
-      display: inline-block;
-    }
 
-    button {
-      width: 70px;
-    }
+      button {
+        width: 70px;
+      }
 
-    #inputForValidation {
-      display: inline-block;
-      width: calc(100% - 75px);
-    }
+      paper-icon-button {
+        color: var(--paper-red-300);
+        --paper-icon-button-ink-color: var(--paper-red-a100);
+        width: 23px; /* 15px + 2*4px for padding */
+        height: 23px;
+        padding: 0px 4px;
+      }
 
-    .vertical-section-container {
-      max-width: 600px;
-    }
+      iron-icon {
+        padding-right: 5px;
+      }
 
-    paper-icon-button {
-      color: var(--paper-red-300);
-      --paper-icon-button-ink-color: var(--paper-red-a100);
-      width: 23px; /* 15px + 2*4px for padding */
-      height: 23px;
-      padding: 0px 4px;
-    }
+      #inputForValidation {
+        display: inline-block;
+        width: calc(100% - 75px);
+      }
 
-    iron-icon {
-      padding-right: 5px;
-    }
-  </style>
+      demo-snippet.horizontal {
+        --demo-snippet-demo: {
+          @apply --layout-horizontal;
+          @apply --layout-justified;
+          @apply --layout-wrap;
+        }
+      }
+      demo-snippet.horizontal paper-input {
+        display: inline-block;
+      }
+    </style>
+  </custom-style>
 </head>
 <body unresolved>
   <div class="vertical-section-container centered">
@@ -79,9 +76,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet>
       <template>
         <paper-input label="text input"></paper-input>
+        <paper-input label="text input" value="pre-filled"></paper-input>
         <paper-textarea label="autoresizing textarea input"></paper-textarea>
         <paper-input label="password input" type="password"></paper-input>
-        <paper-input label="disabled input" disabled></paper-input>
+        <paper-input label="disabled input" disabled value="batman"></paper-input>
       </template>
     </demo-snippet>
 
@@ -108,8 +106,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template>
         <paper-input label="this input requires some text" required auto-validate error-message="needs some text!"></paper-input>
         <paper-input label="this input requires letters only" auto-validate pattern="[a-zA-Z]*" error-message="letters only!"></paper-input>
+        <paper-input label="this input requires letters only" auto-validate pattern="[a-zA-Z]*" error-message="letters only!" value="pre-filled 123"></paper-input>
         <paper-input label="this input will only let you type letters" auto-validate allowed-pattern="[a-zA-Z]"></paper-input>
         <paper-input id="inputForValidation" required label="this input is manually validated" pattern="[a-zA-Z]*" error-message="letters only!"></paper-input>
+
         <button onclick="validate()">Validate!</button>
       </template>
     </demo-snippet>
@@ -118,12 +118,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet class="horizontal">
       <template>
         <paper-input label="total" type="number">
-          <div prefix>$</div>
+          <div slot="prefix">$</div>
         </paper-input>
+
         <paper-input label="username" id="inputWithButton">
-          <iron-icon icon="mail" prefix></iron-icon>
-          <div suffix>@email.com</div>
-          <paper-icon-button suffix onclick="clearInput()"
+          <iron-icon icon="mail" slot="prefix"></iron-icon>
+          <div slot="suffix">@email.com</div>
+          <paper-icon-button slot="suffix" onclick="clearInput()"
               icon="clear" alt="clear" title="clear">
           </paper-icon-button>
         </paper-input>
@@ -134,9 +135,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet>
       <template>
         <paper-input-container always-float-label auto-validate attr-for-value="value">
-          <label>Social Security Number</label>
-          <ssn-input class="paper-input-input"></ssn-input>
-          <paper-input-error>SSN invalid!</paper-input-error>
+          <label slot="label">Social Security Number</label>
+          <ssn-input class="paper-input-input" slot="input"></ssn-input>
+          <paper-input-error slot="add-on">SSN invalid!</paper-input-error>
         </paper-input-container>
       </template>
     </demo-snippet>

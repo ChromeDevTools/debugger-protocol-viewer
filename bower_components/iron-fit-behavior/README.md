@@ -1,23 +1,9 @@
-
-<!---
-
-This README is automatically generated from the comments in these files:
-iron-fit-behavior.html
-
-Edit those files, and our readme bot will duplicate them over here!
-Edit this file, and the bot will squash your changes :)
-
-The bot does some handling of markdown. Please file a bug if it does the wrong
-thing! https://github.com/PolymerLabs/tedium/issues
-
--->
-
 [![Build status](https://travis-ci.org/PolymerElements/iron-fit-behavior.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-fit-behavior)
 
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-fit-behavior)_
 
 
-##Polymer.IronFitBehavior
+## Polymer.IronFitBehavior
 
 `Polymer.IronFitBehavior` fits an element in another element using `max-height` and `max-width`, and
 optionally centers it in the window or another element.

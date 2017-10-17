@@ -1,6 +1,6 @@
 {
   "name": "iron-behaviors",
-  "version": "1.0.16",
+  "version": "2.0.0",
   "description": "Provides a set of behaviors for the iron elements",
   "private": true,
   "authors": [
@@ -16,17 +16,38 @@
   ],
   "license": "http://polymer.github.io/LICENSE.txt",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0",
-    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.0"
+    "polymer": "Polymer/polymer#1.9 - 2",
+    "iron-a11y-keys-behavior": "polymerelements/iron-a11y-keys-behavior#1 - 2"
   },
   "devDependencies": {
-    "paper-styles": "polymerelements/paper-styles#^1.0.2",
-    "paper-input": "polymerelements/paper-input#^1.0.0",
-    "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
-    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
-    "test-fixture": "polymerelements/test-fixture#^1.0.0",
-    "web-component-tester": "^4.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+    "paper-styles": "polymerelements/paper-styles#1 - 2",
+    "paper-input": "polymerelements/paper-input#1 - 2",
+    "iron-test-helpers": "polymerelements/iron-test-helpers#1 - 2",
+    "iron-component-page": "polymerelements/iron-component-page#1 - 2",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   },
-  "ignore": []
+  "ignore": [],
+  "variants": {
+    "1.x": {
+      "dependencies": {
+        "polymer": "Polymer/polymer#^1.9",
+        "iron-a11y-keys-behavior": "polymerelements/iron-a11y-keys-behavior#^1.0.0"
+      },
+      "devDependencies": {
+        "paper-styles": "polymerelements/paper-styles#^1.0.0",
+        "paper-input": "polymerelements/paper-input#^1.0.0",
+        "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
+        "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+        "web-component-tester": "Polymer/web-component-tester#^4.0.0"
+      },
+      "resolutions": {
+        "webcomponentsjs": "^0.7"
+      }
+    }
+  },
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0"
+  }
 }

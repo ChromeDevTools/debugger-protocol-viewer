@@ -1,6 +1,6 @@
 {
   "name": "iron-meta",
-  "version": "1.1.1",
+  "version": "2.0.2",
   "keywords": [
     "web-components",
     "polymer"
@@ -16,24 +16,43 @@
     "url": "git://github.com/PolymerElements/iron-meta.git"
   },
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0"
+    "polymer": "Polymer/polymer#1.9 - 2"
   },
   "devDependencies": {
-    "paper-styles": "polymerelements/paper-styles#^1.0.4",
-    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
-    "test-fixture": "polymerelements/test-fixture#^1.0.0",
-    "web-component-tester": "*",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+    "paper-styles": "polymerelements/paper-styles#1 - 2",
+    "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "variants": {
+    "1.x": {
+      "dependencies": {
+        "polymer": "Polymer/polymer#^1.9"
+      },
+      "devDependencies": {
+        "paper-styles": "polymerelements/paper-styles#^1.0.0",
+        "test-fixture": "polymerelements/test-fixture#^1.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+        "web-component-tester": "Polymer/web-component-tester#^4.0.0"
+      },
+      "resolutions": {
+        "webcomponentsjs": "^0.7"
+      }
+    }
   },
   "main": "iron-meta.html",
-  "homepage": "https://github.com/polymerelements/iron-meta",
-  "_release": "1.1.1",
+  "ignore": [],
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0"
+  },
+  "homepage": "https://github.com/PolymerElements/iron-meta",
+  "_release": "2.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.1.1",
-    "commit": "e171ee234b482219c9514e6f9551df48ef48bd9f"
+    "tag": "v2.0.2",
+    "commit": "d98128f771ede383b9b5c5c5f1f63feb056b2786"
   },
-  "_source": "git://github.com/polymerelements/iron-meta.git",
-  "_target": "^1.0.0",
-  "_originalSource": "polymerelements/iron-meta"
+  "_source": "https://github.com/PolymerElements/iron-meta.git",
+  "_target": "1 - 2",
+  "_originalSource": "PolymerElements/iron-meta"
 }

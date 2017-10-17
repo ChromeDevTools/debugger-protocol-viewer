@@ -8,31 +8,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../iron-a11y-announcer.html">
+<link rel="import" href="../../paper-button/paper-button.html">
 
 <dom-module id="x-announces">
-  <style>
-    :host {
-      display: block;
-      position: relative;
-      padding: 1em 0;
-    }
-
-    paper-button {
-      background: #4285f4;
-      color: #fff;
-    }
-  </style>
   <template>
-    <paper-button on-tap="_onTapAnnounce" raised>Announce</paper-button>
-    <span id="content" aria-hidden="true">
-      <content></content>
-    </span>
+    <style>
+      :host {
+        display: block;
+        padding: 1em 0;
+        font-family: inherit;
+      }
+    </style>
+
+    <span>[[message]]</span>
+    <paper-button raised on-tap="_onTapAnnounce">Announce</paper-button>
+
   </template>
   <script>
     Polymer({
       is: 'x-announces',
+
+      hostAttributes: {
+        'aria-hidden': 'true'
+      },
+
+      properties: {
+        message: {
+          type: String
+        }
+      },
 
       attached: function() {
         Polymer.IronA11yAnnouncer.requestAvailability();
@@ -40,7 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _onTapAnnounce: function() {
         this.fire('iron-announce', {
-          text: this.$.content.textContent.trim()
+          text: this.message.trim()
         }, {
           bubbles: true
         });

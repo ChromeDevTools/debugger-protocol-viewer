@@ -124,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       setup(function() {
         lightDOM = fixture('LightDOM');
-        input = document.querySelector('#input');
+        input = Polymer.dom(lightDOM).querySelector('#input');
         lightDescendantShadowInput = Polymer.dom(lightDOM)
             .querySelector('nested-focusable').$.input;
       });
@@ -132,7 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('should not fire the focus event', function() {
         var nFocusEvents = 0;
 
-        lightDOM.addEventListener('focus', function() {
+        lightDOM.addEventListener('focus', function(event) {
           nFocusEvents += 1;
         });
 
@@ -144,7 +144,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('should not fire the focus event from shadow descendants', function() {
         var nFocusEvents = 0;
 
-        lightDOM.addEventListener('focus', function() {
+        lightDOM.addEventListener('focus', function(event) {
           nFocusEvents += 1;
         });
 

@@ -6,44 +6,43 @@
 <link rel="import" href="../cr-search-menu/cr-search-menu.html">
 
 <dom-module id="cr-search-control">
-
-  <style>
-    :host {
-      display: block;
-    }
-    :host([input-active]) {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-    }
-    :host([input-active]) paper-icon-button {
-      @apply(--layout-flex-none);
-      color: black;
-    }
-    :host([input-active]) #search-input-container {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-    }
-    input {
-      display: inline-block;
-      font-size: 24px;
-      font-weight: 200;
-      font-family: Roboto;
-      background-color: #3F51B5;
-      border-style: none;
-      color: white;
-      padding: 10px 18px;
-      @apply(--layout-flex);
-      border-bottom: 1px solid transparent;
-      border-radius: 0;
-    }
-    input:focus {
-      transition: border-color 0.4s ease;
-      border-bottom: 1px solid #4BBDA8;
-      outline: none;
-    }
-  </style>
-
   <template>
+    <style>
+      :host {
+        display: block;
+      }
+      :host([input-active]) {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      :host([input-active]) paper-icon-button {
+        @apply --layout-flex-none;
+        color: black;
+      }
+      :host([input-active]) #search-input-container {
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+      }
+      input[type="search"] {
+        -webkit-appearance: textfield;
+        display: inline-block;
+        font-size: 24px;
+        font-weight: 200;
+        font-family: Roboto;
+        background-color: #3F51B5;
+        border-style: none;
+        color: white;
+        padding: 10px 18px;
+        @apply --layout-flex;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+      }
+      input:focus {
+        transition: border-color 0.4s ease;
+        border-bottom: 1px solid #4BBDA8;
+        outline: none;
+      }
+    </style>
     <iron-ajax id="ajax"
         url="{{protocolSrc}}"
         handle-as="json"
@@ -54,7 +53,7 @@
         on-active-changed="handleButtonActiveChange_"></paper-icon-button>
     <div id="search-input-container" hidden$="{{!inputActive}}">
       <input id="input" value="{{searchText::input}}" autocapitalize="off"
-          autocorrect="off" placeholder="Search..." type="search">
+          autocorrect="off" placeholder="Search..." type="search" />
     </div>
     <cr-search-menu id="resultsMenu"></cr-search-menu>
   </template>

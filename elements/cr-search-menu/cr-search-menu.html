@@ -7,114 +7,112 @@
 <link rel="import" href="../cr-html-echo/cr-html-echo.html">
 
 <dom-module id="cr-search-menu">
-
-  <style>
-    :host {
-      display: block;
-      position: absolute;
-      width: 700px;
-      height: 600px;
-      border: 1px solid #ccc;
-      box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.15);
-      background-color: white;
-    }
-    /* Prevent jank while scrolling. */
-    :host([scrolling]) .search-match {
-      pointer-events: none;
-      background-color: transparent;
-    }
-    iron-list {
-      padding: 11px 0;
-      width: 100%;
-    }
-    .match-info {
-      @apply(--layout-vertical);
-      flex: 1 auto;
-    }
-    .search-match {
-      padding: 8px 16px;
-      text-decoration: none;
-      font-weight: 200;
-      @apply(--layout-horizontal);
-      width: 100%;
-      cursor: pointer;
-    }
-    iron-icon {
-      width: 36px;
-      height: 36px;
-      padding-right: 10px;
-      fill: #4e4e4e;
-      -ms-flex-shrink: 0;
-      -webkit-flex-shrink: 0;
-      flex-shrink: 0;
-    }
-    .match-label {
-      @apply(--layout-horizontal);
-    }
-    .match-description {
-      @apply(--layout-flex-auto);
-      margin-top: 3px;
-    }
-    .label {
-      @apply(--layout-flex-auto);
-      font-size: 18px;
-    }
-    a {
-      text-decoration: none;
-      color: #383838;
-    }
-    .domain-tag {
-      @apply(--layout-flex-none);
-      text-align: right;
-    }
-    .label .type, .domain-label {
-      color: #3A3A3A;
-      font-size: 14px;
-    }
-    .search-match:hover, .search-match--active {
-      background-color: #E8F0FF;
-    }
-    .empty-state-message {
-      margin: 0;
-      padding: 35px;
-      text-align: center;
-    }
-    .scroller {
-      height: 100%;
-      overflow: auto;
-    }
-  </style>
-
   <template>
-      <content select=".header"></content>
-      <p class="empty-state-message" hidden$="{{!empty_}}">
-        No matches. Try another search.
-      </p>
-      <div class="scroller" on-scroll="handleScroll_">
-        <iron-list items="[[renderItems]]" as="match">
-          <template>
-            <div class$="search-match {{highlightedClass(match.selected)}}" role="menuitem" on-click="activateItem_">
-              <iron-icon icon="{{match.icon}}"></iron-icon>
-              <div class="match-info">
-                <div class="match-label">
-                  <div class="label">
-                    <a href="[[match.href]]">[[match.label]]</a>
-                    <span class="type">[[match.typeLabel]]</span>
-                  </div>
-                  <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
-                    <span class="domain-label">Domain</span>
-                    <a href="[[match.domainHref]]">[[match.domain]]</a>
-                  </div>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        width: 700px;
+        height: 600px;
+        border: 1px solid #ccc;
+        box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.15);
+        background-color: white;
+      }
+      /* Prevent jank while scrolling. */
+      :host([scrolling]) .search-match {
+        pointer-events: none;
+        background-color: transparent;
+      }
+      iron-list {
+        padding: 11px 0;
+        width: 100%;
+      }
+      .match-info {
+        @apply --layout-vertical;
+        flex: 1 auto;
+      }
+      .search-match {
+        padding: 8px 16px;
+        text-decoration: none;
+        font-weight: 200;
+        @apply --layout-horizontal;
+        width: 100%;
+        cursor: pointer;
+      }
+      iron-icon {
+        width: 36px;
+        height: 36px;
+        padding-right: 10px;
+        fill: #4e4e4e;
+        -ms-flex-shrink: 0;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+      }
+      .match-label {
+        @apply --layout-horizontal;
+      }
+      .match-description {
+        @apply --layout-flex-auto;
+        margin-top: 3px;
+      }
+      .label {
+        @apply --layout-flex-auto;
+        font-size: 18px;
+      }
+      a {
+        text-decoration: none;
+        color: #383838;
+      }
+      .domain-tag {
+        @apply --layout-flex-none;
+        text-align: right;
+      }
+      .label .type, .domain-label {
+        color: #3A3A3A;
+        font-size: 14px;
+      }
+      .search-match:hover, .search-match--active {
+        background-color: #E8F0FF;
+      }
+      .empty-state-message {
+        margin: 0;
+        padding: 35px;
+        text-align: center;
+      }
+      .scroller {
+        height: 100%;
+        overflow: auto;
+      }
+    </style>
+    <slot name="header"></slot>
+    <p class="empty-state-message" hidden$="[[!empty_]]">
+      No matches. Try another search.
+    </p>
+    <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty_]]">
+      <iron-list id="ironList" items="[[renderItems]]" as="match">
+        <template>
+          <div class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
+            <iron-icon icon="[[match.icon]]"></iron-icon>
+            <div class="match-info">
+              <div class="match-label">
+                <div class="label">
+                  <a href="[[match.href]]">[[match.label]]</a>
+                  <span class="type">[[match.typeLabel]]</span>
                 </div>
-                <div class="match-description">
-                  <cr-html-echo html="{{match.description}}"></cr-html-echo>
+                <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
+                  <span class="domain-label">Domain</span>
+                  <a href="[[match.domainHref]]">[[match.domain]]</a>
                 </div>
               </div>
+              <div class="match-description">
+                <cr-html-echo html="{{match.description}}"></cr-html-echo>
+              </div>
             </div>
-          </template>
-        </iron-list>
-      </div>
-      <content select=".footer"></content>
+          </div>
+        </template>
+      </iron-list>
+    </div>
+    <slot name="footer"></slot>
   </template>
 
 </dom-module>
@@ -147,7 +145,7 @@
       },
       selectorForElementToLayOver: {
         type: String,
-        value: '#mainPanel'
+        value: '.content'
       },
       scrolling: {
         type: Boolean,
@@ -156,6 +154,15 @@
       highlightedResultIdx: {
         type: Number,
         value: -1
+      },
+      /** @override */
+      opened: {
+        type: Boolean,
+        value: false
+      },
+      empty_: {
+        type: Boolean,
+        empty: false
       }
     },
 
@@ -164,14 +171,12 @@
       'handleOpened_(opened)'
     ],
 
-    /** @override */
-    opened: true,
-
-    empty_: false,
-
     handleOpened_: function(opened) {
       if (opened) {
         this.updatePosition();
+      } else {
+        var target = document.querySelector(this.selectorForElementToLayOver);
+        target.style.display = 'block';
       }
     },
 
@@ -227,9 +232,12 @@
 
     updatePosition: function() {
       var target = document.querySelector(this.selectorForElementToLayOver);
-      if (target) {
-        this.setPositionAndSize(target.getBoundingClientRect());
-      }
+      this.setPositionAndSize(target.getBoundingClientRect());
+      target.style.display = 'none';
+      this.debounce('_iron-resize', function() {
+        this.$.ironList.updateViewportBoundaries();
+        this.$.ironList.fire('iron-resize');
+      }.bind(this), 50);
     },
 
     activateItem_: function(e) {
@@ -244,10 +252,10 @@
 
     renderItems_: function(keywordsModel, searchString) {
       this.highlightedResultIdx = -1;
+      var items = [];
 
       if (keywordsModel) {
         var matches = keywordsModel.getMatches(searchString.toLowerCase());
-        var items = [];
         matches.forEach(function(keywordMatch) {
           //
           keywordMatch.pageReferences.forEach(function(ref) {
@@ -266,8 +274,11 @@
             items.push(itemModel);
           }, this);
         }, this);
-        this._setRenderItems(items);
       }
+
+      this.debounce('_iron-rerender', function() {
+        this._setRenderItems(items);
+      }.bind(this), 50);
     },
 
     handleRenderItemsChange_: function() {
@@ -280,7 +291,6 @@
 
     setPositionAndSize: function(rect) {
       this.style.left = rect.left + 'px';
-      this.style.top = rect.top + 'px';
       this.style.width = rect.width + 'px';
 
       // TODO: Make more 'phisticated. Handle mobile.

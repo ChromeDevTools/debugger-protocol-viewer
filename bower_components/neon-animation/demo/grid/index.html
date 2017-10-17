@@ -18,45 +18,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
 
+    <link rel="import" href="../../web-animations.html">
     <link rel="import" href="../../neon-animated-pages.html">
     <link rel="import" href="../../neon-animations.html">
     <link rel="import" href="animated-grid.html">
     <link rel="import" href="fullsize-page-with-card.html">
 
-    <style is="custom-style">
-      body {
-        overflow: hidden;
-        @apply(--layout-fullbleed);
-      }
+    <custom-style>
+      <style is="custom-style">
+        body {
+          overflow: hidden;
+          @apply --layout-fullbleed;
+        }
 
-      neon-animated-pages {
-        height: 100%;
-      }
-    </style>
+        neon-animated-pages {
+          height: 100%;
+        }
+      </style>
+    </custom-style>
 
   </head>
   <body>
-
-    <template is="dom-bind">
-      <neon-animated-pages id="pages" selected="0">
-        <animated-grid on-tile-click="_onTileClick"></animated-grid>
-        <fullsize-page-with-card id="fullsize-card" on-click="_onFullsizeClick">
-        </fullsize-page-with-card>
-      </neon-animated-pages>
-    </template>
+    <dom-bind>
+      <template is="dom-bind">
+        <neon-animated-pages id="pages" selected="0">
+          <animated-grid on-tile-click="_onTileClick"></animated-grid>
+          <fullsize-page-with-card id="fullsize-card" on-click="_onFullsizeClick">
+          </fullsize-page-with-card>
+        </neon-animated-pages>
+      </template>
+    </dom-bind>
 
     <script>
 
-      var scope = document.querySelector('template[is="dom-bind"]');
+      var scope1 = document.querySelector('template[is="dom-bind"]');
+      var scope2 = document.querySelector('dom-bind');
 
-      scope._onTileClick = function(event) {
+      var _onTileClick = function(event) {
         this.$['fullsize-card'].color = event.detail.data.color;
         this.$.pages.selected = 1;
       };
 
-      scope._onFullsizeClick = function(event) {
+      var _onFullsizeClick = function(event) {
         this.$.pages.selected = 0;
       };
+
+      scope1._onTileClick = _onTileClick;
+      scope1._onFullsizeClick = _onFullsizeClick;
+      scope2._onTileClick = _onTileClick;
+      scope2._onFullsizeClick = _onFullsizeClick;
 
     </script>
 

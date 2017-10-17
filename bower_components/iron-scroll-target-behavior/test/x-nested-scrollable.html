@@ -12,22 +12,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="x-scrollable.html">
 
 <dom-module id="x-nested-scrollable">
-
-  <style>
-
-    :host {
-      display: block;
-    }
-
-    #xRegion {
-      width: 100px;
-      height: 100px;
-      overflow: auto;
-    }
-
-  </style>
-
   <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #xRegion {
+        width: 100px;
+        height: 100px;
+        overflow: auto;
+      }
+    </style>
+
     <div id="xRegion">
       <x-scrollable id="xScrollable" scroll-target="xRegion"></x-scrollable>
     </div>

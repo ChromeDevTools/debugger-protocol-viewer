@@ -2,6 +2,11 @@
     --font-stack: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
 body {
   background: #fafafa;
   font-family: var(--font-stack);
@@ -29,7 +34,11 @@ paper-material {
   background: white;
 }
 
-paper-menu a {
+paper-listbox {
+  overflow-y: auto;
+}
+
+paper-listbox a, iron-selector a {
   text-decoration: none;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -48,25 +57,41 @@ paper-menu a {
   padding: 0 16px;
 }
 
-paper-menu a:hover {
+paper-listbox a:hover, iron-selector a:hover {
   background: hsl(0,0%, 98%);
 }
 
-paper-menu a.iron-selected {
+paper-listbox a.iron-selected, iron-selector a.iron-selected {
   border-right: 5px solid #4bbda8;
 }
 
-#drawer paper-toolbar {
-  background: hsl(0, 0%, 82%);
+#drawer paper-dropdown-menu {
+  padding: 0 16px;
+  width: calc(100% - 32px);
+  background: hsl(0, 0%, 82%)
 }
 
-#drawer paper-dropdown-menu {
-  width: 100%;
+#domainContainer {
+  display: block;
+  overflow-y: auto;
+  height: 100%;
+}
+
+#versions {
+  --paper-listbox-background-color: #c5cae9;
 }
 
 #drawerToolbar {
   height: 64px;
   min-height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+#mainToolbar {
+  background: #3f51b5;
+  color: white;
 }
 
 #mainToolbar .title {
@@ -304,8 +329,7 @@ h4:hover .permalink {
     padding-right: 8px;
   }
 
-
-  #mainContainer .content {
+  .content {
     padding: 48px 10px;
   }
 
@@ -319,9 +343,11 @@ h4:hover .permalink {
   body {
     font-size: 13px
   }
-  #mainContainer .content {
+
+  .content {
     padding: 18px 0px;
   }
+
   paper-material {
     padding-left: 8px;
     padding-right: 8px;
@@ -340,17 +366,24 @@ h4:hover .permalink {
     padding-right: 22px;
   }
 
-  #drawer.paper-drawer-panel > [drawer] {
+  #drawer {
     border-right: 1px solid rgba(0, 0, 0, 0.14);
   }
 
-  #mainContainer .content {
+  .content {
     padding: 48px 20px;
   }
 
   #mainToolbar .title {
     font-size: 26px;
     line-height: 26px;
+  }
+}
+
+/* <app-drawer> by default shown */
+@media (min-width: 641px) {
+  #paperToggle {
+    display: none;
   }
 }
 

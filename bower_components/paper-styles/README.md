@@ -17,7 +17,7 @@ thing! https://github.com/PolymerLabs/tedium/issues
 _[Demo and API docs](https://elements.polymer-project.org/elements/paper-styles)_
 
 
-##&lt;paper-styles&gt;
+## &lt;paper-styles&gt;
 
 The `<paper-styles>` component provides simple ways to use Material Design CSS styles
 in your application. The following imports are available:
@@ -42,8 +42,9 @@ Material Design [font](http://www.google.com/design/spec/style/typography.html#t
 used in the PolymerElements demo pages
 
 
-
 We recommend importing each of these individual files, and using the style mixins
 available in each ones, rather than the aggregated `paper-styles.html` as a whole.
 
+## Changes in 2.0
+- removed deprecated `/deep/` styles. Files removed: `classes/shadow-layout.html`, `demo.css`.
 

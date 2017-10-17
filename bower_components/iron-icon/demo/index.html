@@ -14,35 +14,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../iron-icon.html">
   <link rel="import" href="../../iron-iconset/iron-iconset.html">
-  <link href="../../paper-styles/demo-pages.html" rel="import">
-
-  <style is="custom-style">
-    .vertical-section h4 {
-      border-left: 3px solid var(--paper-grey-300);
-      padding-left: 10px;
-    }
-
-    .vertical-section h4:hover {
-      border-left-color: var(--google-blue-700);
-    }
-  </style>
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 </head>
-<body>
+<body unresolved>
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
+  </custom-style>
+
   <div class="vertical-section-container centered">
-    <h4>This demo is for a single &lt;iron-icon&gt;. If you're looking for the
-      whole set of available icons, check out the <a href="/elements/iron-icons?view=demo:demo/index.html">&lt;iron-icons&gt; demo.</a></h5>
+    <h3>
+      This demo is for a single &lt;iron-icon&gt;. If you're looking for the
+      whole set of available icons, check out the
+      <a href="https://www.webcomponents.org/element/PolymerElements/iron-icons/demo/demo/index.html" target="_top">&lt;iron-icons&gt;
+      demo.</a>
+    </h3>
 
-    <div class="vertical-section">
-      <!-- iron-icon using a iron-iconset as its icon source -->
-      <iron-iconset name="example" icons="location" src="location.png" size="24" width="24"></iron-iconset>
+    <h3><code>iron-icon</code> using a iron-iconset as its icon source.</h3>
+    <demo-snippet>
+      <template>
+        <iron-iconset name="example" icons="location" src="location.png" size="24" width="24"></iron-iconset>
 
-      <h4>&lt;iron-icon icon="example:location"&gt;</h4>
-      <iron-icon icon="example:location"></iron-icon>
+        <iron-icon icon="example:location"></iron-icon>
+      </template>
+    </demo-snippet>
 
-      <!-- iron-icon using an image url as its icon source -->
-      <h4>&lt;iron-icon src="location.png"&gt;</h4>
-      <iron-icon src="location.png"></iron-icon>
-    </div>
+    <h3><code>iron-icon</code> using an image url as its icon source.</h3>
+    <demo-snippet>
+      <template>
+        <iron-icon src="location.png"></iron-icon>
+      </template>
+    </demo-snippet>
   </div>
 </body>
 </html>

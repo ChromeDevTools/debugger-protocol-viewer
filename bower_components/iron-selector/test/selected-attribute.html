@@ -72,8 +72,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s;
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('custom selectedAttribute', function() {
@@ -93,8 +98,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s;
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test-attr-change');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('changing selectedAttribute', function() {
@@ -109,8 +119,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s;
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test-attr-change-multi');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('changing selectedAttribute', function() {

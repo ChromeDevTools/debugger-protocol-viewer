@@ -17,7 +17,7 @@ thing! https://github.com/PolymerLabs/tedium/issues
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-validatable-behavior)_
 
 
-##Polymer.IronValidatableBehavior
+## Polymer.IronValidatableBehavior
 
 `Use Polymer.IronValidatableBehavior` to implement an element that validates user input.
 Use the related `Polymer.IronValidatorBehavior` to add custom validation logic to an iron-input.
@@ -33,6 +33,10 @@ To implement the custom validation logic of your element, you must override
 the protected `_getValidity()` method of this behaviour, rather than `validate()`.
 See [this](https://github.com/PolymerElements/iron-form/blob/master/demo/simple-element.html)
 for an example.
+
+### Changes in 2.0
+- `validate()` no longer requires a `value` paramer to be passed, and will use the element's `value` property if it exists
+- `validatorType` and `validatorName` were unused and have been removed
 
 ### Accessibility
 

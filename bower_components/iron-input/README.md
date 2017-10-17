@@ -17,10 +17,25 @@ thing! https://github.com/PolymerLabs/tedium/issues
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-input)_
 
 
-##&lt;iron-input&gt;
+## &lt;iron-input&gt;
 
 `<iron-input>` adds two-way binding and custom validators using `Polymer.IronValidatorBehavior`
 to `<input>`.
+
+### Changes in 2.0
+Since type-extensions are not available in 2.0, `<iron-input` is a wrapper against a native `input`:
+
+```html
+<iron-input>
+  <input>
+</iron-input>
+ ```
+
+Other changes:
+- `prevent-invalid-input` and `allowed-pattern` had to be always used together; deleted `prevent-invalid-input`, so that only 
+`allowed-pattern` is needed
+- added an `auto-validate` property
+- Note: imperatively setting the `value` attribute on the native `<input>` is not supported -- the native `input` does not fire an event in this case, so this update cannot be observed, and `bind-value` cannot be updated.
 
 ### Two-way binding
 
@@ -34,7 +49,9 @@ By default you can only get notified of changes to an `input`'s `value` due to u
 for two-way data binding. `bind-value` will notify if it is changed either by user input or by script.
 
 ```html
-<input is="iron-input" bind-value="{{myValue}}">
+<iron-input bind-value="{{bindValue}}">
+  <input value="{{value::input}}">
+</iron-input>
 ```
 
 ### Custom validators
@@ -42,7 +59,9 @@ for two-way data binding. `bind-value` will notify if it is changed either by us
 You can use custom validators that implement `Polymer.IronValidatorBehavior` with `<iron-input>`.
 
 ```html
-<input is="iron-input" validator="my-custom-validator">
+<iron-input auto-validate validator="my-custom-validator">
+  <input placeholder="only 'cat' is valid">
+ </iron-input>
 ```
 
 ### Stopping invalid input
@@ -53,7 +72,9 @@ is separate from validation, and `allowed-pattern` does not affect how the input
 
 ```html
 <!-- only allow characters that match [0-9] -->
-<input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]">
+<iron-input allowed-pattern="[0-9]">
+  <input pattern="\d{5}">
+</iron-input>
 ```
 
 

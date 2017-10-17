@@ -57,19 +57,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-  <!--
-  NOTE(cdata): Enable test-fixture when polymer/polymer#2495 is resolved
-  -->
-  <!--<test-fixture id="repeatedItems">
-    <template>-->
-      <iron-selector multi id="repeatedItems">
+  <test-fixture id="repeatedItems-polymer1">
+    <template>
+      <iron-selector multi>
         <template is="dom-repeat" items='["foo", "bar", "baz"]'>
           <div>[[item]]</div>
         </template>
         <div>vim</div>
       </iron-selector>
-    <!--</template>
-  </test-fixture>-->
+    </template>
+  </test-fixture>
+
+  <test-fixture id="repeatedItems-polymer2">
+    <template>
+      <iron-selector multi>
+        <dom-repeat items='["foo", "bar", "baz"]'>
+          <template>
+            <div>[[item]]</div>
+          </template>
+        </dom-repeat>
+        <div>vim</div>
+      </iron-selector>
+    </template>
+  </test-fixture>
 
   <script>
 
@@ -77,9 +87,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       var s;
 
-      setup(function () {
+      setup(function(done) {
         s = fixture('test');
-        t = Polymer.dom(s).querySelector('[is="dom-repeat"]');
+
+        s.addEventListener('iron-items-changed', function onIronItemsChanged() {
+          s.removeEventListener('iron-items-changed', onIronItemsChanged);
+          done();
+        });
       });
 
       test('honors the multi attribute', function() {
@@ -87,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('has sane defaults', function() {
-        assert.equal(s.selectedValues, undefined);
+        assert.deepEqual(s.selectedValues, []);
         assert.equal(s.selectedClass, 'iron-selected');
         assert.equal(s.items.length, 5);
       });
@@ -269,55 +283,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('selects from items created by dom-repeat', function(done) {
-        var selectEventCounter = 0;
-        var firstChild;
+        var selector;
+        var domRepeat;
+        if (Polymer.Element) {
+          selector = fixture('repeatedItems-polymer2');
+          // `observeNodes` callbacks in Polymer 2.x are no longer called
+          // synchronously after a DOM change / upgrade.
+          selector.forceSynchronousItemUpdate();
+          domRepeat = selector.querySelector('dom-repeat');
+        } else {
+          selector = fixture('repeatedItems-polymer1');
+          domRepeat = selector.querySelector('template[is=dom-repeat]');
+        }
 
-        s = document.querySelector('#repeatedItems');
-        s.addEventListener('iron-select', function(e) {
-          selectEventCounter++;
-        });
+        domRepeat.render();
+        // See the note in `forceSynchronousItemUpdate`.
+        selector.forceSynchronousItemUpdate();
 
         // NOTE(cdata): I guess `dom-repeat` doesn't stamp synchronously..
         Polymer.Base.async(function() {
-          firstChild = Polymer.dom(s).querySelector('div');
+          var firstChild = Polymer.dom(selector).querySelector('div');
           MockInteractions.tap(firstChild);
 
-          assert.equal(s.selectedItems[0].textContent, 'foo');
+          assert.equal(selector.selectedItems[0].textContent, 'foo');
           done();
         });
       });
 
-      test('updates selection when dom changes', function(done) {
-        var selectEventCounter = 0;
+      test('updates selection when dom changes', function() {
+        var firstChild = Polymer.dom(s).querySelector(':first-child');
+        var lastChild = Polymer.dom(s).querySelector(':last-child');
 
-        s = fixture('test');
+        MockInteractions.tap(firstChild);
+        MockInteractions.tap(lastChild);
 
-        Polymer.Base.async(function() {
-          var firstChild = Polymer.dom(s).querySelector(':first-child');
-          var lastChild = Polymer.dom(s).querySelector(':last-child');
+        expect(s.selectedItems.length).to.be.equal(2);
 
-          MockInteractions.tap(firstChild);
-          MockInteractions.tap(lastChild);
+        Polymer.dom(s).removeChild(lastChild);
 
-          expect(s.selectedItems.length).to.be.equal(2);
+        Polymer.dom.flush();
+        // See the note in `forceSynchronousItemUpdate`.
+        s.forceSynchronousItemUpdate();
 
-          Polymer.dom(s).removeChild(lastChild);
-
-          Polymer.dom.flush();
-
-          expect(s.selectedItems.length).to.be.equal(1);
-          expect(s.selectedItems[0]).to.be.equal(firstChild);
-
-          done();
-        });
-
+        expect(s.selectedItems.length).to.be.equal(1);
+        expect(s.selectedItems[0]).to.be.equal(firstChild);
       });
 
       suite('`select()` and `selectIndex()`', function() {
         var selector;
 
-        setup(function() {
+        setup(function(done) {
           selector = fixture('valueById');
+
+          selector.addEventListener('iron-items-changed', function onIronItemsChanged() {
+            selector.removeEventListener('iron-items-changed', onIronItemsChanged);
+            done();
+          });
         });
 
         test('`select()` selects an item with the given value', function() {

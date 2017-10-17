@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
     <script src="../../web-component-tester/browser.js"></script>
     <link rel="import" href="test-fit.html">
@@ -88,12 +88,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-sizing: border-box;
       }
 
+      .sizer {
+        width: 9999px;
+        height: 9999px;
+      }
+
     </style>
 
   </head>
   <body>
 
     <div class="constrain"></div>
+
+    <test-fixture id="basic">
+      <template>
+        <test-fit>
+          Basic
+        </test-fit>
+      </template>
+    </test-fixture>
 
     <test-fixture id="absolute">
       <template>
@@ -170,6 +183,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
+    <test-fixture id="scrollable">
+      <template>
+        <test-fit auto-fit-on-attach class="scrolling">
+          scrollable
+          <div class="sizer"></div>
+        </test-fit>
+      </template>
+    </test-fixture>
+
     <template id="ipsum">
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </template>
@@ -187,6 +209,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       function intersects(r1, r2) {
         return !(r2.left >= r1.right || r2.right <= r1.left || r2.top >= r1.bottom || r2.bottom <= r1.top);
       }
+
+      suite('basic', function() {
+
+        var el;
+        setup(function() {
+          el = fixture('basic');
+        });
+
+        test('position() works without autoFitOnAttach', function() {
+          el.verticalAlign = 'top';
+          el.horizontalAlign = 'left';
+          el.position();
+          var rect = el.getBoundingClientRect();
+          assert.equal(rect.top, 0, 'top ok');
+          assert.equal(rect.left, 0, 'left ok');
+        });
+
+        test('constrain() works without autoFitOnAttach', function() {
+          el.constrain();
+          var style = getComputedStyle(el);
+          assert.equal(style.maxWidth, window.innerWidth + 'px', 'maxWidth ok');
+          assert.equal(style.maxHeight, window.innerHeight + 'px', 'maxHeight ok');
+        });
+
+        test('center() works without autoFitOnAttach', function() {
+          el.center();
+          var rect = el.getBoundingClientRect();
+          assert.closeTo(rect.left - (window.innerWidth - rect.right), 0, 5, 'centered horizontally');
+          assert.closeTo(rect.top - (window.innerHeight - rect.bottom), 0, 5, 'centered vertically');
+        });
+
+      });
 
       suite('manual positioning', function() {
 
@@ -362,6 +416,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.isTrue(rect.height <= window.innerHeight, 'height is less than or equal to viewport height');
         });
 
+        test('scrolling sizingTarget preserves scrolling position', function() {
+          el = fixture('scrollable');
+          el.scrollTop = 20;
+          el.scrollLeft = 20;
+          el.refit();
+          assert.equal(el.scrollTop, 20, 'scrollTop ok');
+          assert.equal(el.scrollLeft, 20, 'scrollLeft ok');
+        });
+
       });
 
       suite('fit to element', function() {
@@ -400,6 +463,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var crect = constrain.getBoundingClientRect();
           assert.closeTo(rect.left - crect.left - (crect.right - rect.right), 0, 5, 'centered horizontally in fitInto');
           assert.closeTo(rect.top - crect.top - (crect.bottom - rect.bottom), 0, 5, 'centered vertically in fitInto');
+        });
+
+        test('positioned element fits in another element', function() {
+          var constrain = document.querySelector('.constrain');
+          // element's positionTarget is `body`, and fitInto is `constrain`.
+          var el = fixture('sized-xy');
+          el.verticalAlign = 'top';
+          el.horizontalAlign = 'left';
+          el.fitInto = constrain;
+          el.refit();
+          var rect = el.getBoundingClientRect();
+          var crect = constrain.getBoundingClientRect();
+          assert.equal(rect.top, crect.top, 'top ok');
+          assert.equal(rect.left, crect.left, 'left ok');
         });
 
       });
@@ -477,6 +554,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.equal(rect.height, elRect.height, 'no cropping');
           });
 
+          test('element is kept in viewport', function() {
+            el.verticalAlign = 'top';
+            // Make it go out of screen
+            el.verticalOffset = -1000;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.top, 0, 'top in viewport');
+            assert.isTrue(rect.height < elRect.height, 'reduced size');
+          });
+
+          test('negative verticalOffset does not crop element', function() {
+            // Push to the bottom of the screen.
+            parent.style.top = (window.innerHeight - 50) +'px';
+            el.verticalAlign = 'top';
+            el.verticalOffset = -10;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.top, window.innerHeight - 60, 'top ok');
+            assert.equal(rect.bottom, window.innerHeight, 'bottom ok');
+          });
+
           test('max-height is updated', function() {
             parent.style.top = '-10px';
             el.verticalAlign = 'top';
@@ -492,6 +590,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             el.style.minHeight = elRect.height + 'px';
             el.refit();
             var rect = el.getBoundingClientRect();
+            assert.equal(rect.top, 0, 'top ok');
             assert.equal(rect.height, elRect.height, 'min-height ok');
             assert.isTrue(intersects(rect, fitRect), 'partially visible');
           });
@@ -550,6 +649,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.equal(rect.height, elRect.height, 'no cropping');
           });
 
+          test('element is kept in viewport', function() {
+            el.verticalAlign = 'bottom';
+            // Make it go out of screen
+            el.verticalOffset = 1000;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.top, 0, 'top in viewport');
+            assert.isTrue(rect.height < elRect.height, 'reduced size');
+          });
+
           test('element max-height is updated', function() {
             parent.style.top = (100 - parentRect.height) + 'px';
             el.verticalAlign = 'bottom';
@@ -565,6 +674,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             el.style.minHeight = elRect.height + 'px';
             el.refit();
             var rect = el.getBoundingClientRect();
+            assert.equal(rect.top, 0, 'top ok');
             assert.equal(rect.height, elRect.height, 'min-height ok');
             assert.isTrue(intersects(rect, fitRect), 'partially visible');
           });
@@ -674,6 +784,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.equal(rect.width, elRect.width, 'no cropping');
           });
 
+          test('element is kept in viewport', function() {
+            el.horizontalAlign = 'left';
+            // Make it go out of screen.
+            el.horizontalOffset = -1000;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.left, 0, 'left in viewport');
+            assert.isTrue(rect.width < elRect.width, 'reduced size');
+          });
+
+          test('negative horizontalOffset does not crop element', function() {
+            // Push to the bottom of the screen.
+            parent.style.left = (window.innerWidth - 50) +'px';
+            el.horizontalAlign = 'left';
+            el.horizontalOffset = -10;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.left, window.innerWidth - 60, 'left ok');
+            assert.equal(rect.right, window.innerWidth, 'right ok');
+          });
+
           test('element max-width is updated', function() {
             parent.style.left = '-10px';
             el.horizontalAlign = 'left';
@@ -689,6 +820,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             el.horizontalAlign = 'left';
             el.refit();
             var rect = el.getBoundingClientRect();
+            assert.equal(rect.left, 0, 'left ok');
             assert.equal(rect.width, elRect.width, 'min-width ok');
             assert.isTrue(intersects(rect, fitRect), 'partially visible');
           });
@@ -751,6 +883,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             assert.equal(rect.width, elRect.width, 'no cropping');
           });
 
+          test('element is kept in viewport', function() {
+            el.horizontalAlign = 'right';
+            // Make it go out of screen.
+            el.horizontalOffset = 1000;
+            el.refit();
+            var rect = el.getBoundingClientRect();
+            assert.equal(rect.left, 0, 'left in viewport');
+            assert.isTrue(rect.width < elRect.width, 'reduced width');
+          });
+
           test('element max-width is updated', function() {
             parent.style.left = (100 - parentRect.width) + 'px';
             el.horizontalAlign = 'right';
@@ -766,6 +908,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             el.style.minWidth = elRect.width + 'px';
             el.refit();
             var rect = el.getBoundingClientRect();
+            assert.equal(rect.left, 0, 'left ok');
             assert.equal(rect.width, elRect.width, 'min-width ok');
             assert.isTrue(intersects(rect, fitRect), 'partially visible');
           });

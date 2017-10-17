@@ -12,31 +12,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-styles/color.html">
 
 <dom-module id="simple-fit">
-
-  <style>
-    :host {
-      background-color: var(--paper-light-blue-500);
-      color: white;
-      text-align: center;
-    }
-  </style>
-
   <template>
-    <content></content>
+    <style>
+      :host {
+        background-color: var(--paper-light-blue-500);
+        color: white;
+        text-align: center;
+      }
+    </style>
+    <slot></slot>
   </template>
-
+  <script>
+    Polymer({
+      is: 'simple-fit',
+      behaviors: [
+        Polymer.IronFitBehavior
+      ]
+    });
+  </script>
 </dom-module>
-
-<script>
-
-  Polymer({
-
-    is: 'simple-fit',
-
-    behaviors: [
-      Polymer.IronFitBehavior
-    ]
-
-  });
-
-</script>

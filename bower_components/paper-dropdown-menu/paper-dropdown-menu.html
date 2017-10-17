@@ -34,7 +34,7 @@ displayed instead.
 Example:
 
     <paper-dropdown-menu label="Your favourite pastry">
-      <paper-listbox class="dropdown-content">
+      <paper-listbox slot="dropdown-content">
         <paper-item>Croissant</paper-item>
         <paper-item>Donut</paper-item>
         <paper-item>Financier</paper-item>
@@ -44,7 +44,7 @@ Example:
 
 This example renders a dropdown menu with 4 options.
 
-The child element with the class `dropdown-content` is used as the dropdown
+The child element with the slot `dropdown-content` is used as the dropdown
 menu. This can be a [`paper-listbox`](paper-listbox), or any other or
 element that acts like an [`iron-selector`](iron-selector).
 
@@ -85,18 +85,23 @@ respectively.
     <style include="paper-dropdown-menu-shared-styles"></style>
 
     <!-- this div fulfills an a11y requirement for combobox, do not remove -->
-    <div role="button"></div>
+    <span role="button"></span>
     <paper-menu-button
       id="menuButton"
       vertical-align="[[verticalAlign]]"
       horizontal-align="[[horizontalAlign]]"
+      dynamic-align="[[dynamicAlign]]"
       vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat)]]"
       disabled="[[disabled]]"
       no-animations="[[noAnimations]]"
       on-iron-select="_onIronSelect"
       on-iron-deselect="_onIronDeselect"
-      opened="{{opened}}">
-      <div class="dropdown-trigger">
+      opened="{{opened}}"
+      close-on-activate
+      allow-outside-scroll="[[allowOutsideScroll]]"
+      restore-focus-on-close="[[restoreFocusOnClose]]">
+      <!-- support hybrid mode: user might be using paper-menu-button 1.x which distributes via <content> -->
+      <div class="dropdown-trigger" slot="dropdown-trigger">
         <paper-ripple></paper-ripple>
         <!-- paper-input has type="text" for a11y, do not remove -->
         <paper-input
@@ -110,10 +115,11 @@ respectively.
           always-float-label="[[alwaysFloatLabel]]"
           no-label-float="[[noLabelFloat]]"
           label="[[label]]">
-          <iron-icon icon="paper-dropdown-menu:arrow-drop-down" suffix></iron-icon>
+          <!-- support hybrid mode: user might be using paper-input 1.x which distributes via <content> -->
+          <iron-icon icon="paper-dropdown-menu:arrow-drop-down" suffix slot="suffix"></iron-icon>
         </paper-input>
       </div>
-      <content id="content" select=".dropdown-content"></content>
+      <slot id="content" name="dropdown-content" slot="dropdown-content"></slot>
     </paper-menu-button>
   </template>
 
@@ -145,7 +151,7 @@ respectively.
 
           /**
            * The last selected item. An item is selected if the dropdown menu has
-           * a child with class `dropdown-content`, and that child triggers an
+           * a child with slot `dropdown-content`, and that child triggers an
            * `iron-select` event with the selected `item` in the `detail`.
            *
            * @type {?Object}
@@ -199,6 +205,17 @@ respectively.
           },
 
           /**
+           * By default, the dropdown will constrain scrolling on the page
+           * to itself when opened.
+           * Set to true in order to prevent scroll from being constrained
+           * to the dropdown when it opens.
+           */
+          allowOutsideScroll: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
            * Set to true to disable the floating label. Bind this to the
            * `<paper-input-container>`'s `noLabelFloat` property.
            */
@@ -242,7 +259,25 @@ respectively.
           verticalAlign: {
             type: String,
             value: 'top'
-          }
+          },
+
+          /**
+           * If true, the `horizontalAlign` and `verticalAlign` properties will
+           * be considered preferences instead of strict requirements when
+           * positioning the dropdown and may be changed if doing so reduces
+           * the area of the dropdown falling outside of `fitInto`.
+           */
+          dynamicAlign: {
+            type: Boolean
+          },
+            
+          /**
+           * Whether focus should be restored to the dropdown when the menu closes.
+           */
+          restoreFocusOnClose: {
+            type: Boolean,
+            value: true
+          },
         },
 
         listeners: {
@@ -279,7 +314,13 @@ respectively.
          * The content element that is contained by the dropdown menu, if any.
          */
         get contentElement() {
-          return Polymer.dom(this.$.content).getDistributedNodes()[0];
+          // Polymer 2.x returns slot.assignedNodes which can contain text nodes.
+          var nodes = Polymer.dom(this.$.content).getDistributedNodes();
+          for (var i = 0, l = nodes.length; i < l; i++) {
+            if (nodes[i].nodeType === Node.ELEMENT_NODE) {
+              return nodes[i];
+            }
+          }
         },
 
         /**
@@ -336,7 +377,7 @@ respectively.
           if (!selectedItem) {
             value = '';
           } else {
-            value = selectedItem.label || selectedItem.textContent.trim();
+            value = selectedItem.label || selectedItem.getAttribute('label') || selectedItem.textContent.trim();
           }
 
           this._setValue(value);
