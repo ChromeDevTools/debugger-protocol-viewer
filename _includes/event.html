@@ -1,6 +1,6 @@
 {% assign event = include.event %}
 {% assign domain = include.domain %}
-{% capture permalink %}{{ site.baseurl }}{{ page.url }}#event-{{event.name}}{% endcapture %}
+{% capture permalink %}{{ page.url }}#event-{{event.name}}{% endcapture %}
 
 <div class="event">
   <h4 class="event-name monospace" id="event-{{event.name}}">

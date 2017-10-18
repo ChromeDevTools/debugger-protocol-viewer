@@ -1,5 +1,5 @@
 {% assign type = include.type %}
-{% capture permalink %}{{ site.baseurl }}{{ page.url }}#type-{{type.id}}{% endcapture %}
+{% capture permalink %}{{ page.url }}#type-{{type.id}}{% endcapture %}
 
 <div class="type">
   <h4 class="type-name monospace" id="type-{{type.id}}">{{type.id}}<a href="{{permalink}}" class="permalink">#</a></h4>

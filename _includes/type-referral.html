@@ -7,7 +7,7 @@ domain (OtherDomain.SomeType -> OtherDomain/#type-SomeType).
 
 {% if referral contains '.' %}
   {% assign url = referral | replace:'.','/#type-' %}
-  <a href='{{ site.baseurl }}/{{ page.category }}/{{ url }}'>{{ referral }}</a>
+  <a href='{{ page.category }}/{{ url }}'>{{ referral }}</a>
 {% else %}
-  <a href='{{ site.baseurl }}{{ page.url }}#type-{{ referral }}'>{{ referral }}</a>
+  <a href='{{ page.url }}#type-{{ referral }}'>{{ referral }}</a>
 {% endif %}
