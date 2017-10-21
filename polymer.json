@@ -1,0 +1,23 @@
+{
+  "entrypoint": "index.html",
+  "sources": [
+    "elements/**/*",
+    "images/**/*",
+    "styles/**/*"
+  ],
+  "extraDependencies": [
+    "tot/**/*",
+    "v8/**/*",
+    "search_index/**/*",
+    "1-2/**/*",
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  },
+  "builds": [
+    {
+      "preset": "es6-bundled"
+    }
+  ]
+}

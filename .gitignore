@@ -1,3 +1,4 @@
 .idea/
 _site/
 .jekyll-metadata
+node_modules/
