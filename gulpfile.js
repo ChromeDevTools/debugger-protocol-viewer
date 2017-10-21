@@ -104,6 +104,7 @@ function build() {
 
         // Now let's generate the HTTP/2 Push Manifest
         buildStream = buildStream.pipe(polymerProject.addPushManifest());
+        buildStream = buildStream.pipe(polymerProject.updateBaseTag('/devtools-protocol/'));
 
         // Okay, time to pipe to the build directory
         buildStream = buildStream.pipe(gulp.dest(buildDirectory));

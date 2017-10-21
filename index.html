@@ -7,35 +7,35 @@
     <!-- {% if page.title %} - {{ page.title }}{% endif %} -->
   </title>
 
-  <base href="/devtools-protocol/" />
+  <base href="/" />
 
   <meta name="theme-color" content="#303F9F">
 
-  <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="/bower_components/web-animations-js/web-animations-next.min.js"></script>
+  <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="bower_components/web-animations-js/web-animations-next.min.js"></script>
 
-  <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-  <link rel="import" href="/bower_components/iron-location/iron-location.html">
-  <link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-  <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
-  <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
-  <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
-  <link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
-  <link rel="import" href="/bower_components/paper-styles/paper-styles-classes.html">
-  <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
-  <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
-  <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-  <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
-  <link rel="import" href="/bower_components/paper-item/paper-item.html">
-  <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
-  <link rel="import" href="/bower_components/iron-selector/iron-selector.html">
-  <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+  <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+  <link rel="import" href="bower_components/iron-location/iron-location.html">
+  <link rel="import" href="bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+  <link rel="import" href="bower_components/app-layout/app-header/app-header.html">
+  <link rel="import" href="bower_components/app-layout/app-toolbar/app-toolbar.html">
+  <link rel="import" href="bower_components/app-layout/app-header-layout/app-header-layout.html">
+  <link rel="import" href="bower_components/app-layout/app-drawer/app-drawer.html">
+  <link rel="import" href="bower_components/paper-styles/paper-styles-classes.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+  <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+  <link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+  <link rel="import" href="bower_components/paper-item/paper-item.html">
+  <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="bower_components/iron-selector/iron-selector.html">
+  <link rel="import" href="bower_components/iron-pages/iron-pages.html">
 
-  <link rel="import" href="/elements/cr-search-control/cr-search-control.html">
-  <link rel="import" href="/elements/cr-domain/cr-domain.html">
+  <link rel="import" href="elements/cr-search-control/cr-search-control.html">
+  <link rel="import" href="elements/cr-domain/cr-domain.html">
 
-  <link href="/styles/protocol.css" rel="stylesheet">
-  <link rel="import" href="/styles/custom-paper-material-styles.html">
+  <link href="styles/protocol.css" rel="stylesheet">
+  <link rel="import" href="styles/custom-paper-material-styles.html">
   <custom-style>
     <style is="custom-style" include="custom-paper-material-styles">
       [unresolved] > * {
@@ -333,7 +333,7 @@
         for (const link of domainContainer.querySelectorAll('a')) {
           if (link.classList.contains(domain)) {
             link.style.display = 'flex';
-            link.href = domain + '/' + link.textContent;
+            link.href = `/${domain}/${link.dataset.title}`;
           } else {
             link.style.display = 'none';
           }
@@ -344,7 +344,7 @@
 
       async function updateLocationBindings(newLocation) {
         // 18 is length of "/devtools-protocol"
-        let newPage = newLocation.substring(18);
+        let newPage = newLocation.startsWith('/devtools-protocol') ? newLocation.substring(18) : newLocation;
         // Cut off start slash if it exists
         if (newPage.startsWith('/')) {
           newPage = newPage.substring(1);
