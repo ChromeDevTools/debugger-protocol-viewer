@@ -14,6 +14,8 @@ const del = require('del');
 const gulp = require('gulp');
 const gulpif = require('gulp-if');
 const mergeStream = require('merge-stream');
+// Enable logging for the build process
+// require('plylog').setVerbose();
 const polymerBuild = require('polymer-build');
 
 // Here we add tools that will be used to process our source files.
@@ -28,7 +30,7 @@ const htmlMinifier = require('gulp-html-minifier');
 const swPrecacheConfig = require('./sw-precache-config.js');
 const polymerJson = require('./polymer.json');
 const polymerProject = new polymerBuild.PolymerProject(polymerJson);
-const buildDirectory = 'build';
+const buildDirectory = '_site';
 
 /**
  * Waits for the given ReadableStream
@@ -98,7 +100,7 @@ function build() {
         // If you want bundling, pass the stream to polymerProject.bundler.
         // This will bundle dependencies into your fragments so you can lazy
         // load them.
-        buildStream = buildStream.pipe(polymerProject.bundler());
+        // buildStream = buildStream.pipe(polymerProject.bundler());
 
         // Now let's generate the HTTP/2 Push Manifest
         buildStream = buildStream.pipe(polymerProject.addPushManifest());

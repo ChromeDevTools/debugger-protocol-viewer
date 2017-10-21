@@ -1,3 +1,4 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="cr-domain-experimental.html">
 
 <dom-module id="cr-domain-param">
@@ -125,7 +126,7 @@
           <h6>Array element:</h6>
           [[param.items.description]]
           <template is="dom-repeat" items="[[param.items.properties]]">
-            <cr-domain-param item="[[item]]" version="[[version]]" domain="[[domain]]"></cr-domain-param>
+            <cr-domain-param param="[[item]]" version="[[version]]" domain="[[domain]]"></cr-domain-param>
           </template>
           <span>[[_computeParamEnum(param.items.enum)]]</span>
         </div>

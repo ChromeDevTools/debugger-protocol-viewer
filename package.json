@@ -21,6 +21,7 @@
     "polymer-build": "^2.1.0"
   },
   "scripts": {
-    "build": "bundle exec jekyll build && cd _site && ../node_modules/.bin/gulp build"
+    "build": "gulp build",
+    "serve": "polymer serve -p 8000 --proxy-path devtools-protocol --proxy-target http://localhost:8000/"
   }
 }

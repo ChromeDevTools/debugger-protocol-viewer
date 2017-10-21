@@ -71,16 +71,16 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "8.0.44"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.44.tgz#5c39800fda4b76dab39a5f28fda676fc500015ac"
+  version "8.0.46"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.46.tgz#6e1766b2d0ed06631d5b5f87bb8e72c8dbb6888e"
 
 "@types/node@^4.2.3":
-  version "4.2.20"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-4.2.20.tgz#3f7dceff43e07cfff4407fc3495d98a533b32267"
+  version "4.2.21"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-4.2.21.tgz#4f537f1ccf974193436828a9f312164bd7d7e699"
 
 "@types/node@^6.0.0", "@types/node@^6.0.41", "@types/node@^6.0.77":
-  version "6.0.89"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.89.tgz#154be0e6a823760cd6083aa8c48f952e2e63e0b0"
+  version "6.0.90"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.90.tgz#0ed74833fa1b73dcdb9409dcb1c97ec0a8b13b02"
 
 "@types/parse5@^2.2.32", "@types/parse5@^2.2.34":
   version "2.2.34"
@@ -3800,8 +3800,8 @@ polymer-build@^2.1.0:
     vinyl-fs "^2.4.4"
 
 polymer-bundler@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/polymer-bundler/-/polymer-bundler-3.1.0.tgz#a029c93471d4f13c66cbc94858265693c16d004d"
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/polymer-bundler/-/polymer-bundler-3.1.1.tgz#8bb6cbb40684120f1841eb1fe0ffeed605e6fa88"
   dependencies:
     clone "^2.1.0"
     command-line-args "^3.0.1"
@@ -3869,8 +3869,8 @@ punycode@^1.4.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
 q@^1.1.2:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/q/-/q-1.5.0.tgz#dd01bac9d06d30e6f219aecb8253ee9ebdc308f1"
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
 
 qs@~6.4.0:
   version "6.4.0"
