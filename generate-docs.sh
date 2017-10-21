@@ -37,11 +37,25 @@ js_date_line=$(git log --no-color --max-count=1 -- js_protocol.json | grep -E -o
 # => into viewer
 cd $local_script_path
 
-# we no longer printing the most recent protocol git hashes. 
+# we no longer printing the most recent protocol git hashes.
 # we can restore this when the devtools-protocol repo starts includes that data
 
 cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > _versions/tot.html.new
 cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > _versions/tot.html
 rm -f _versions/tot.html.new
+
+git checkout -b gh-pages
+sed -i -- 's/_site/#_site/g' .gitignore
+
+git commit --amend --all -m "Update build"
+
+# Check out previous branch
+git checkout -
+
+git push dtprotocol git push dtprotocol gh-pages:gh-pages
+
+git branch -D gh-pages
+
+sed -i -- 's/#_site/_site/g' .gitignore
 
 set +x
