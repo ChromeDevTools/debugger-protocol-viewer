@@ -102,13 +102,13 @@
                 [ [[param.items.type]] ]
               </span>
               <span hidden$="[[param.items.type]]">
-                <a href$="[[_computeUrl(category, referral)]]">[[referral]]</a>
+                <a href$="[[_computeUrl(version, domain, referral)]]">[[referral]]</a>
               </span>
             </span>
           </span>
           <span hidden$="[[param.type]]">
             <span class="param-type" hidden$="[[!referral]]">
-              <a href$="[[_computeUrl(category, referral)]]">[[referral]]</a>
+              <a href$="[[_computeUrl(version, domain, referral)]]">[[referral]]</a>
             </span>
           </span>
           <span class="param-description">
@@ -125,7 +125,7 @@
           <h6>Array element:</h6>
           [[param.items.description]]
           <template is="dom-repeat" items="[[param.items.properties]]">
-            <cr-domain-param item="[[item]]"></cr-domain-param>
+            <cr-domain-param item="[[item]]" version="[[version]]" domain="[[domain]]"></cr-domain-param>
           </template>
           <span>[[_computeParamEnum(param.items.enum)]]</span>
         </div>
@@ -142,7 +142,8 @@
             type: String,
             computed: '_computeReferral(param)'
           },
-          category: String
+          version: String,
+          domain: String
         }
       }
       _computeReferral(param) {
@@ -152,14 +153,14 @@
         return param['$ref'];
       }
       _hasType(param) {
-        console.log(param.type)
         return param.type !== 'false';
       }
-      _computeUrl(category, referral) {
+      _computeUrl(version, domain, referral) {
+        // Referral points to a different domain
         if (referral.indexOf('.') !== -1) {
-          return `${category}/${referral.replace('.', '#type-')}`;
+          return `${version}/${referral.replace('.', '#type-')}`;
         }
-        return `${category}#type-${referral}`;
+        return `${version}/${domain}#type-${referral}`;
       }
       _computeParamEnum(paramEnum) {
         return paramEnum && paramEnum.join(', ') || '';

@@ -30,7 +30,12 @@
         <h3 id="methods">Methods</h3>
         <div class="paper-material" elevation="1">
           <template is="dom-repeat" items="[[domain.commands]]">
-            <cr-domain-details domain="[[domain.domain]]" details="[[item]]" version="[[version]]"></cr-domain-details>
+            <cr-domain-details
+                domain="[[domain.domain]]"
+                details="[[item]]"
+                version="[[version]]"
+                type="method"
+            ></cr-domain-details>
           </template>
         </div>
       </div>
@@ -39,7 +44,12 @@
         <h3 id="events">Events</h3>
         <div class="paper-material" elevation="1">
           <template is="dom-repeat" items="[[domain.events]]">
-            <cr-domain-details domain="[[domain.domain]]" details="[[item]]" version="[[version]]"></cr-domain-details>
+            <cr-domain-details
+                domain="[[domain.domain]]"
+                details="[[item]]"
+                version="[[version]]"
+                type="event"
+            ></cr-domain-details>
           </template>
         </div>
       </div>
@@ -48,7 +58,12 @@
         <h3 id="types">Types</h3>
         <div class="paper-material" elevation="1">
           <template is="dom-repeat" items="[[domain.types]]">
-            <cr-domain-details details="[[item]]" version="[[version]]"></cr-domain-details>
+            <cr-domain-details
+                domain="[[domain.domain]]"
+                details="[[item]]"
+                version="[[version]]"
+                type="type"
+            ></cr-domain-details>
           </template>
         </div>
       </div>

@@ -76,9 +76,9 @@
     <div class="details">
       <h4 class="details-name monospace" id$="details-[[name]]">
         <span>
-          <span class="domain-dot" hidden$="[[!domain]]">[[domain]].</span>[[name]]
+          <span class="domain-dot" hidden$="[[_filterType(type)]]">[[domain]].</span>[[name]]
         </span>
-        <a href$="[[version]]/[[domain]]#details-[[details.name]]" class="permalink">#</a>
+        <a href$="[[version]]/[[domain]]#[[type]]-[[details.name]]" class="permalink">#</a>
       </h4>
 
       <p class="details-description">
@@ -88,16 +88,28 @@
 
       <div hidden$="[[!properties]]">
         <h5>[[properties.name]]</h5>
-        <template is="dom-repeat" items="[[properties.values]]">
-          <cr-domain-param param="[[item]]" category="[[version]]/[[domain]]"></cr-domain-param>
-        </template>
+        <dl class="parameter-list">
+          <template is="dom-repeat" items="[[properties.values]]">
+            <cr-domain-param
+                param="[[item]]"
+                version="[[version]]"
+                domain="[[domain]]"
+                type="[[type]]"
+            ></cr-domain-param>
+          </template>
+        </dl>
       </div>
 
       <div hidden$="[[!details.returns.length]]">
         <h5>Return object</h5>
         <dl class="parameter-list">
           <template is="dom-repeat" items="[[details.returns]]">
-            <cr-domain-param param="[[item]]" category="[[version]]/[[domain]]"></cr-domain-param>
+            <cr-domain-param
+                param="[[item]]"
+                version="[[version]]"
+                domain="[[domain]]"
+                type="[[type]]"
+            ></cr-domain-param>
           </template>
         </dl>
       </div>
@@ -115,12 +127,10 @@
       static get is() { return 'cr-domain-details'; }
       static get properties() {
         return {
-          domain: {
-            type: String,
-            value: ''
-          },
+          domain: String,
           details: Object,
           version: String,
+          type: String,
           name: {
             type: String,
             computed: '_computeName(details)'
@@ -150,6 +160,9 @@
       }
       _computeDetailsEnum(details) {
         return details.enum && details.enum.join(', ');
+      }
+      _filterType(type) {
+        return type === 'type';
       }
     });
   </script>
