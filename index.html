@@ -352,6 +352,8 @@
         }
       }
 
+      let domainSelectionPromise;
+
       async function updateLocationBindings(newLocation) {
         // 18 is length of "/devtools-protocol"
         let newPage = newLocation.substring(18);
@@ -381,13 +383,41 @@
         if (index !== -1) {
           const newDomain = newPage.substring(index + 1);
 
-          const result = await fetch('_data/' + newVersion + '/protocol.json');
-          const versionData = await result.json();
-          crDomain.domain = versionData.domains.find(d => d.domain === newDomain);
-          domainContainer.selected = newDomain;
-          crDomain.version = newVersion;
-          mainSelector.selected = 'domain';
+          domainSelectionPromise = new Promise(async (resolve) => {
+            const result = await fetch('_data/' + newVersion + '/protocol.json');
+            const versionData = await result.json();
+            crDomain.domain = versionData.domains.find(d => d.domain === newDomain);
+            domainContainer.selected = newDomain;
+            crDomain.version = newVersion;
+            mainSelector.selected = 'domain';
+
+            window.requestAnimationFrame(() => {
+              resolve();
+              domainSelectionPromise = undefined;
+            });
+          });
+
         }
+      }
+
+      const domainElement = document.querySelector('cr-domain');
+
+      function processHashUpdate() {
+        function scrollIntoView() {
+          for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
+            if (`${details.type}-${details.name}` === location.hash) {
+              details.scrollIntoView();
+              break;
+            }
+          }
+        }
+        window.requestAnimationFrame(() => {
+          if (domainSelectionPromise) {
+            domainSelectionPromise.then(scrollIntoView);
+          } else {
+            scrollIntoView();
+          }
+        });
       }
 
       const location = document.getElementById('location');
@@ -395,7 +425,12 @@
         updateLocationBindings(e.detail.value);
       });
 
+      location.addEventListener('hash-changed', (e) => {
+        processHashUpdate();
+      });
+
       updateLocationBindings(location.path);
+      processHashUpdate();
     })();
   </script>
   <script>
