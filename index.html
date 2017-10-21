@@ -109,8 +109,8 @@
       </iron-selector>
     </app-drawer>
 
-    <app-header-layout mode="waterfall">
-      <app-header slot="header" fixed>
+    <div class="header-layout">
+      <app-header>
         <app-toolbar id="mainToolbar">
           <paper-icon-button id="paperToggle"
               icon="menu" drawer-toggle></paper-icon-button>
@@ -120,8 +120,7 @@
               - {{ page.version }}
             {% endif %} -->
           </div>
-          <cr-search-control id="searchButton"
-              protocol-src="search_index/page.json"></cr-search-control>
+          <cr-search-control id="searchButton"></cr-search-control>
         </app-toolbar>
       </app-header>
 
@@ -312,23 +311,12 @@
           </section>
         </iron-pages>
       </main>
-    </app-header-layout>
+    </div>
   </app-drawer-layout>
   <script>
     (function() {
-      window.addEventListener('load', function() {
-        var btn = document.getElementById('searchButton');
-        var toolbar = document.getElementById('mainToolbar');
-        btn.addEventListener('active', function() {
-          toolbar.classList.add('search-active');
-        }, false);
-        btn.addEventListener('inactive', function() {
-          toolbar.classList.remove('search-active');
-        }, false);
-      });
-      window.addEventListener('WebComponentsReady', function() {
-        document.querySelector('app-header-layout').resetLayout();
-      });
+      const searchButton = document.getElementById('searchButton');
+      const toolbar = document.getElementById('mainToolbar');
       const listbox = document.getElementById('versions').querySelector('paper-listbox');
       const mainSelector = document.getElementById('main-selector');
       const domainContainer = document.getElementById('domainContainer');
@@ -358,7 +346,7 @@
         // 18 is length of "/devtools-protocol"
         let newPage = newLocation.substring(18);
         // Cut off start slash if it exists
-        if (newPage[0] === '/') {
+        if (newPage.startsWith('/')) {
           newPage = newPage.substring(1);
         }
         let index, newVersion = newPage;
@@ -379,9 +367,13 @@
         }
 
         updateDomainSelectorLinks(newVersion);
+        searchButton.protocolSrc = `search_index/${newVersion}.json`;
 
         if (index !== -1) {
-          const newDomain = newPage.substring(index + 1);
+          let newDomain = newPage.substring(index + 1);
+          if (newDomain.endsWith('/')) {
+            newDomain = newDomain.substring(0, newDomain.length - 1);
+          }
 
           domainSelectionPromise = new Promise(async (resolve) => {
             const result = await fetch('_data/' + newVersion + '/protocol.json');
@@ -396,7 +388,6 @@
               domainSelectionPromise = undefined;
             });
           });
-
         }
       }
 
@@ -406,7 +397,7 @@
         function scrollIntoView() {
           for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
             if (`${details.type}-${details.name}` === location.hash) {
-              details.scrollIntoView();
+              details.scrollIntoView({behavior: 'smooth', block: 'start'});
               break;
             }
           }
@@ -431,6 +422,15 @@
 
       updateLocationBindings(location.path);
       processHashUpdate();
+
+      window.addEventListener('load', function() {
+        searchButton.addEventListener('active', function() {
+          toolbar.classList.add('search-active');
+        }, false);
+        searchButton.addEventListener('inactive', function() {
+          toolbar.classList.remove('search-active');
+        }, false);
+      });
     })();
   </script>
   <script>

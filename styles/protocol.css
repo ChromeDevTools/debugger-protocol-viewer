@@ -79,6 +79,16 @@ paper-listbox a.iron-selected, iron-selector a.iron-selected {
   border-right: 5px solid #4bbda8;
 }
 
+.header-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+main {
+  overflow-y: auto;
+}
+
 #drawer paper-dropdown-menu {
   padding: 0 16px;
   width: calc(100% - 32px);
