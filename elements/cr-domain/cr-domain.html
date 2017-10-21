@@ -1,0 +1,68 @@
+<link rel="import" href="cr-domain-experimental.html">
+<link rel="import" href="cr-domain-details.html">
+<link rel="import" href="/styles/custom-paper-material-styles.html">
+
+<dom-module id="cr-domain">
+  <template>
+    <style include="custom-paper-material-styles">
+    </style>
+    <div id="header">
+      <div class="paper-material" elevation="1" class="heading-domain">
+        <h2 class="heading"><span>[[domain.domain]]</span> Domain</h2>
+
+        <p class="description" hidden$="[[!domain.description]]" inner-h-t-m-l="[[domain.description]]">
+        </p>
+        <cr-domain-experimental item="[[domain]]"></cr-domain-experimental>
+      </div>
+
+      <div hidden$="[[!domain.commands.length]]">
+        <h3 id="methods">Methods</h3>
+        <div class="paper-material" elevation="1">
+          <template is="dom-repeat" items="[[domain.commands]]">
+            <cr-domain-details domain="[[domain.domain]]" details="[[item]]" version="[[version]]"></cr-domain-details>
+          </template>
+        </div>
+      </div>
+
+      <div hidden$="[[!domain.events.length]]">
+        <h3 id="events">Events</h3>
+        <div class="paper-material" elevation="1">
+          <template is="dom-repeat" items="[[domain.events]]">
+            <cr-domain-details domain="[[domain.domain]]" details="[[item]]" version="[[version]]"></cr-domain-details>
+          </template>
+        </div>
+      </div>
+
+      <div hidden$="[[!domain.types.length]]">
+        <h3 id="types">Types</h3>
+        <div class="paper-material" elevation="1">
+          <template is="dom-repeat" items="[[domain.types]]">
+            <cr-domain-details details="[[item]]" version="[[version]]"></cr-domain-details>
+          </template>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    customElements.define('cr-domain', class extends Polymer.Element {
+      static get is() { return 'cr-domain'; }
+      static get properties() {
+        return {
+          domain: {
+            type: Object,
+            observer: '_domainChanged'
+          },
+          data: Array,
+          version: String
+        }
+      }
+      _domainChanged(newDomain) {
+        if (newDomain.experimental) {
+          this.$.header.classList.add('domain-experimental');
+        } else {
+          this.$.header.classList.remove('domain-experimental');
+        }
+      }
+    });
+  </script>
+</dom-module>

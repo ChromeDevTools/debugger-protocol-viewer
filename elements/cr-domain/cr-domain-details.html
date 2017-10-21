@@ -1,0 +1,140 @@
+<link rel="import" href="cr-domain-experimental.html">
+<link rel="import" href="cr-domain-param.html">
+
+<dom-module id="cr-domain-details">
+  <template>
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+
+      span.domain-dot {
+          color: #ababab;
+      }
+
+      .details-name, .event-name {
+          display: flex;
+      }
+
+      :host, .type {
+        display: block;
+        border-bottom: solid var(--divider-color) 1px;
+        padding-bottom: 15px;
+      }
+
+      :host(:last-of-type, .type:last-of-type) {
+        border-bottom: none;
+      }
+
+      .permalink {
+        margin-left: 5px;
+        vertical-align: top;
+        text-decoration: none;
+        opacity: 0;
+      }
+
+      .permalink:hover {
+        text-decoration: underline;
+      }
+
+      a {
+        color: var(--default-primary-color);
+      }
+
+      h4 {
+        margin: 18px 0;
+      }
+
+      h4:hover .permalink {
+        opacity: 1;
+      }
+
+      h5 {
+        color: gray;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 1rem 0 0;
+      }
+    </style>
+    <div class="details">
+      <h4 class="details-name monospace" id$="details-[[name]]">
+        <span>
+          <span class="domain-dot" hidden$="[[!domain]]">[[domain]].</span>[[name]]
+        </span>
+        <a href$="[[version]]/[[domain]]#details-[[details.name]]" class="permalink">#</a>
+      </h4>
+
+      <p class="details-description">
+        <span inner-h-t-m-l="[[details.description]]"></span> <cr-domain-experimental item="[[details]]"></cr-domain-experimental>
+      </p>
+      <p hidden$="[[!details.type]]"class="type-type">Type: <strong>[[details.type]]</strong></p>
+
+      <div hidden$="[[!properties]]">
+        <h5>[[properties.name]]</h5>
+        <template is="dom-repeat" items="[[properties.values]]">
+          <cr-domain-param param="[[item]]" category="[[version]]/[[domain]]"></cr-domain-param>
+        </template>
+      </div>
+
+      <div hidden$="[[!details.returns.length]]">
+        <h5>Return object</h5>
+        <dl class="parameter-list">
+          <template is="dom-repeat" items="[[details.returns]]">
+            <cr-domain-param param="[[item]]" category="[[version]]/[[domain]]"></cr-domain-param>
+          </template>
+        </dl>
+      </div>
+
+      <div hidden$="[[!details.enum.length]]">
+        <h5>Allowed values</h5>
+        <p>
+          [[_computeDetailsEnum(details)]].
+        </p>
+      </div>
+    </div>
+  </template>
+  <script>
+    customElements.define('cr-domain-details', class extends Polymer.Element {
+      static get is() { return 'cr-domain-details'; }
+      static get properties() {
+        return {
+          domain: {
+            type: String,
+            value: ''
+          },
+          details: Object,
+          version: String,
+          name: {
+            type: String,
+            computed: '_computeName(details)'
+          },
+          properties: {
+            type: Object,
+            computed: '_computeProperties(details)'
+          }
+        }
+      }
+      _computeName(details) {
+        return details.name || details.id;
+      }
+      _computeProperties(details) {
+        if (details.parameters) {
+          return {
+            name: 'parameters',
+            values: details.parameters
+          };
+        } else if (details.properties) {
+          return {
+            name: 'properties',
+            values: details.properties
+          };
+        }
+        return undefined;
+      }
+      _computeDetailsEnum(details) {
+        return details.enum && details.enum.join(', ');
+      }
+    });
+  </script>
+</dom-module>

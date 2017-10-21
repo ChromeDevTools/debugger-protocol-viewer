@@ -32,6 +32,8 @@
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "app-layout": "polymerelements/app-layout#^2.0.0",
-    "web-animations-js": "web-animations/web-animations-js#^2.3.1"
+    "web-animations-js": "web-animations/web-animations-js#^2.3.1",
+    "iron-location": "polymerelements/iron-location#^2.0.2",
+    "iron-pages": "polymerelements/iron-pages#^2.0.0"
   }
 }
