@@ -117,7 +117,12 @@ function build() {
         // If you want bundling, pass the stream to polymerProject.bundler.
         // This will bundle dependencies into your fragments so you can lazy
         // load them.
-        buildStream = buildStream.pipe(polymerProject.bundler());
+        //
+        // TODO(Timvdlippe): The bundler removes the base tag from the document.
+        // This breaks all fetches. Disable the bundler for now until we can
+        // retain the base tag.
+        //
+        // buildStream = buildStream.pipe(polymerProject.bundler());
 
         // Now let's generate the HTTP/2 Push Manifest
         buildStream = buildStream.pipe(polymerProject.addPushManifest());
