@@ -91,24 +91,24 @@
     <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty_]]">
       <iron-list id="ironList" items="[[renderItems]]" as="match">
         <template>
-          <div class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
+          <a href$="[[computeMatchHref_(match)]]" class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
             <iron-icon icon="[[match.icon]]"></iron-icon>
             <div class="match-info">
               <div class="match-label">
                 <div class="label">
-                  <a href="[[match.href]]">[[match.label]]</a>
+                  <span>[[match.label]]</span>
                   <span class="type">[[match.typeLabel]]</span>
                 </div>
-                <div class="domain-tag" hidden$="{{isDomainType_(match.type)}}">
+                <div class="domain-tag" hidden$="[[isDomainType_(match.type)]]">
                   <span class="domain-label">Domain</span>
-                  <a href="[[match.domainHref]]">[[match.domain]]</a>
+                  <span>[[match.domain]]</span>
                 </div>
               </div>
               <div class="match-description">
-                <cr-html-echo html="{{match.description}}"></cr-html-echo>
+                <cr-html-echo html="[[match.description]]"></cr-html-echo>
               </div>
             </div>
-          </div>
+          </a>
         </template>
       </iron-list>
     </div>
@@ -176,7 +176,9 @@
         this.updatePosition();
       } else {
         var target = document.querySelector(this.selectorForElementToLayOver);
-        target.style.display = 'block';
+        if (target) {
+          target.style.display = 'block';
+        }
       }
     },
 
@@ -241,13 +243,7 @@
     },
 
     activateItem_: function(e) {
-      var anchor = e.target.tagName === 'A' ?
-          e.target : e.currentTarget.querySelector('a');
-      var href = anchor && anchor.href;
       this.fire('item-activate');
-      if (href) {
-        window.location.href = href;
-      }
     },
 
     renderItems_: function(keywordsModel, searchString) {
@@ -285,13 +281,21 @@
       this.empty_ = !this.renderItems.length;
     },
 
+    computeMatchHref_: function(match) {
+      if (this.isDomainType_(match.type)) {
+        return match.domainHref;
+      }
+      return match.href;
+    },
+
     isDomainType_: function(type) {
-      return type == this.Type.DOMAIN;
+      return type === this.Type.DOMAIN;
     },
 
     setPositionAndSize: function(rect) {
       this.style.left = rect.left + 'px';
       this.style.width = rect.width + 'px';
+      this.style.top = rect.top + 'px';
 
       // TODO: Make more 'phisticated. Handle mobile.
       var heightDiff = 30;

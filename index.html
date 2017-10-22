@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +31,6 @@
   <link rel="import" href="bower_components/iron-selector/iron-selector.html">
   <link rel="import" href="bower_components/iron-pages/iron-pages.html">
 
-  <link rel="import" href="elements/cr-search-control/cr-search-control.html">
   <link rel="import" href="elements/cr-domain/cr-domain.html">
 
   <link href="styles/protocol.css" rel="stylesheet">
@@ -44,6 +43,7 @@
     </style>
   </custom-style>
 
+  <link rel="import" href="elements/cr-search-control/cr-search-control.html">
   <!-- Start Single Page Apps for GitHub Pages -->
   <script type="text/javascript">
     // Single Page Apps for GitHub Pages
@@ -76,7 +76,7 @@
   </script>
   <!-- End Single Page Apps for GitHub Pages -->
 </head>
-<body unresolved class="fullbleed layout vertical">
+<body unresolved>
   <iron-location id="location"></iron-location>
 
   <app-drawer-layout id="paperDrawerPanel">
@@ -145,12 +145,9 @@
       <app-header>
         <app-toolbar id="mainToolbar">
           <paper-icon-button id="paperToggle"
-              icon="menu" drawer-toggle></paper-icon-button>
+              icon="menu" drawer-toggle aria-label="Open drawer menu"></paper-icon-button>
           <div main-title class="top title">
             Chrome DevTools Protocol Viewer
-            <!-- {% if page.version %}
-              - {{ page.version }}
-            {% endif %} -->
           </div>
           <cr-search-control id="searchButton"></cr-search-control>
         </app-toolbar>

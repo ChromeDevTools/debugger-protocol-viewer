@@ -170,13 +170,13 @@
     },
 
     listeners: {
-      'resultsMenu.item-activate': 'handleItemActivate_',
       'input.blur': 'handleBlur_'
     },
 
     attached: function() {
       // Attach Menu/Overlay to the body.
       document.body.appendChild(this.$.resultsMenu);
+      this.$.resultsMenu.addEventListener('item-activate', this.handleItemActivate_.bind(this));
     },
 
     setMenuOpen_: function(open) {
@@ -247,6 +247,8 @@
 
     handleItemActivate_: function(e) {
       this.setMenuOpen_(false);
+      this.inputActive = false;
+
     },
 
     handleBlur_: function() {
