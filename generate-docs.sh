@@ -2,7 +2,7 @@
 set -x
 
 # Machine-specific path, naturally
-protocol_repo_path="$HOME/code/pristine/devtools-protocol"
+protocol_repo_path="$HOME/Projects/devtools-protocol"
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 browser_protocol_path="$protocol_repo_path/json/browser_protocol.json"
@@ -20,7 +20,6 @@ fi
 cp $js_protocol_path $local_v8_protocol_path
 # merge and create all our data files
 node merge-protocol-files.js $browser_protocol_path $js_protocol_path > $local_tot_protocol_path
-node create-domain-files.js
 node create-search-index.js
 
 # get the latest change
@@ -44,18 +43,29 @@ cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > 
 cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > _versions/tot.html
 rm -f _versions/tot.html.new
 
-git checkout -b gh-pages
-sed -i -- 's/_site/#_site/g' .gitignore
+yarn run build
 
-git commit --amend --all -m "Update build"
+cd ..
 
-# Check out previous branch
-git checkout -
+git clone git@github.com:timvdlippe/devtools-protocol.git --single-branch devtools-temp
 
-git push dtprotocol git push dtprotocol gh-pages:gh-pages
+cd devtools-temp
 
-git branch -D gh-pages
+git checkout --orphan gh-pages
 
-sed -i -- 's/#_site/_site/g' .gitignore
+# remove all content
+git rm -rf -q .
+
+cp -R ../debugger-protocol-viewer/_site/{*,.nojekyll} ./
+
+git add .
+
+git commit -am 'seed gh-pages'
+
+git push -u origin gh-pages --force
+
+cd ..
+
+rm -rf devtools-temp
 
 set +x

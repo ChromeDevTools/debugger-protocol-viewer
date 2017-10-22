@@ -6,6 +6,10 @@
     "styles/**/*"
   ],
   "extraDependencies": [
+    "404.html",
+    ".nojekyll",
+    "_data/**/*",
+    "_versions/**/*",
     "search_index/**/*",
     "bower_components/webcomponentsjs/*.js"
   ],
