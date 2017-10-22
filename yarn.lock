@@ -1632,7 +1632,7 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
-event-stream@^3.0.20:
+event-stream@^3.0.20, event-stream@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
   dependencies:
@@ -2217,6 +2217,15 @@ gulp-imagemin@^3.4.0:
     imagemin-jpegtran "^5.0.2"
     imagemin-optipng "^5.2.1"
     imagemin-svgo "^5.2.2"
+
+gulp-json-minify@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/gulp-json-minify/-/gulp-json-minify-1.2.0.tgz#9b800606fe0502c192f5195842ca77b59a4a63f1"
+  dependencies:
+    event-stream "^3.3.4"
+    gulp-util "^3.0.8"
+    node-json-minify "^1.0.0"
+    through2 "^2.0.3"
 
 gulp-match@^1.0.3:
   version "1.0.3"
@@ -3401,6 +3410,10 @@ ncname@1.0.x:
   resolved "https://registry.yarnpkg.com/ncname/-/ncname-1.0.0.tgz#5b57ad18b1ca092864ef62b0b1ed8194f383b71c"
   dependencies:
     xml-char-classes "^1.0.0"
+
+node-json-minify@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-json-minify/-/node-json-minify-1.0.0.tgz#7bb3432f9658b6beb1d993fd5d53b3ca29d0d79c"
 
 node-pre-gyp@^0.6.36:
   version "0.6.38"

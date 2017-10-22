@@ -17,6 +17,7 @@
     "gulp-html-minifier": "^0.1.8",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^3.4.0",
+    "gulp-json-minify": "^1.2.0",
     "merge-stream": "^1.0.1",
     "polymer-build": "^2.1.0"
   },

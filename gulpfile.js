@@ -23,14 +23,29 @@ const imagemin = require('gulp-imagemin');
 
 // Additional plugins can be used to optimize your source files after splitting.
 // Before using each plugin, install with `npm i --save-dev <package-name>`
-const uglify = require('gulp-babel-minify');
+const babelMinify = require('gulp-babel-minify');
 const cssSlam = require('css-slam').gulp;
 const htmlMinifier = require('gulp-html-minifier');
+const jsonMinifiy = require('gulp-json-minify');
 
 const swPrecacheConfig = require('./sw-precache-config.js');
 const polymerJson = require('./polymer.json');
 const polymerProject = new polymerBuild.PolymerProject(polymerJson);
 const buildDirectory = '_site';
+
+function htmlMinify() {
+  return htmlMinifier({
+    collapseWhitespace : true,
+    removeComments : true,
+    removeAttributeQuotes : true,
+    removeRedundantAttributes : true,
+    useShortDoctype : true,
+    removeEmptyAttributes : true,
+    removeScriptTypeAttributes : true,
+    removeStyleLinkTypeAttributes : true,
+    removeOptionalTags : true
+  });
+}
 
 /**
  * Waits for the given ReadableStream
@@ -73,9 +88,10 @@ function build() {
           // Uncomment these lines to add a few more example optimizations to your
           // source files, but these are not included by default. For installation, see
           // the require statements at the beginning.
-          .pipe(gulpif(/\.js$/, uglify())) // Install gulp-uglify to use
+          .pipe(gulpif(/\.js$/, babelMinify())) // Install gulp-babelMinify to use
+          .pipe(gulpif(/\.json$/, jsonMinifiy()))
           .pipe(gulpif(/\.css$/, cssSlam())) // Install css-slam to use
-          .pipe(gulpif(/\.html$/, htmlMinifier())) // Install gulp-html-minifier to use
+          .pipe(gulpif(/\.html$/, htmlMinify())) // Install gulp-html-minifier to use
 
           // Remember, you need to rejoin any split inline code when you're done.
           .pipe(sourcesStreamSplitter.rejoin());
@@ -85,9 +101,10 @@ function build() {
         // any dependency-only optimizations here as well.
         let dependenciesStream = polymerProject.dependencies()
           .pipe(dependenciesStreamSplitter.split())
-          .pipe(gulpif(/\.js$/, uglify())) // Install gulp-uglify to use
+          .pipe(gulpif(/\.js$/, babelMinify())) // Install gulp-babelMinify to use
+          .pipe(gulpif(/\.json$/, jsonMinifiy()))
           .pipe(gulpif(/\.css$/, cssSlam())) // Install css-slam to use
-          .pipe(gulpif(/\.html$/, htmlMinifier())) // Install gulp-html-minifier to use
+          .pipe(gulpif(/\.html$/, htmlMinify())) // Install gulp-html-minifier to use
           .pipe(dependenciesStreamSplitter.rejoin());
 
 
@@ -100,7 +117,7 @@ function build() {
         // If you want bundling, pass the stream to polymerProject.bundler.
         // This will bundle dependencies into your fragments so you can lazy
         // load them.
-        // buildStream = buildStream.pipe(polymerProject.bundler());
+        buildStream = buildStream.pipe(polymerProject.bundler());
 
         // Now let's generate the HTTP/2 Push Manifest
         buildStream = buildStream.pipe(polymerProject.addPushManifest());
