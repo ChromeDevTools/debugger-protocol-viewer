@@ -9138,6 +9138,11 @@
                             "description": "Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the display."
                         },
                         {
+                            "name": "mainFrameContentUpdated",
+                            "type": "boolean",
+                            "description": "Whether the main frame submitted a new display frame in response to this BeginFrame."
+                        },
+                        {
                             "name": "screenshotData",
                             "type": "string",
                             "optional": true,
