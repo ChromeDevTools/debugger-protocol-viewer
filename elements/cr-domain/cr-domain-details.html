@@ -79,11 +79,11 @@
         <span>
           <span class="domain-dot" hidden$="[[_filterType(type)]]">[[domain]].</span>[[name]]
         </span>
-        <a href$="[[version]]/[[domain]]#[[type]]-[[details.name]]" class="permalink">#</a>
+        <a href$="[[version]]/[[domain]]#[[type]]-[[name]]" class="permalink">#</a>
       </h4>
 
       <p class="details-description">
-        <span inner-h-t-m-l="[[details.description]]"></span> <cr-domain-experimental item="[[details]]"></cr-domain-experimental>
+        <span hidden$="[[!details.description]]" inner-h-t-m-l="[[details.description]]"></span> <cr-domain-experimental item="[[details]]"></cr-domain-experimental>
       </p>
       <p hidden$="[[!details.type]]"class="type-type">Type: <strong>[[details.type]]</strong></p>
 

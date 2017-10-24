@@ -351,6 +351,7 @@
       const domainContainer = document.getElementById('domainContainer');
       const crDomain = document.querySelector('cr-domain');
       const domainSummary = document.getElementById('domain-summary');
+      const mainElement = document.querySelector('main');
 
       const domainToNameMapping = {
         '1-2': 'stable (1.2)',
@@ -405,18 +406,20 @@
           }
 
           domainSelectionPromise = new Promise(async (resolve) => {
+            mainSelector.selected = 'domain';
             const result = await fetch('_data/' + newVersion + '/protocol.json');
             const versionData = await result.json();
             crDomain.domain = versionData.domains.find(d => d.domain === newDomain);
             domainContainer.selected = newDomain;
             crDomain.version = newVersion;
-            mainSelector.selected = 'domain';
 
             window.requestAnimationFrame(() => {
               resolve();
               domainSelectionPromise = undefined;
             });
           });
+        } else {
+          mainElement.scrollTop = '0';
         }
       }
 
@@ -426,10 +429,12 @@
         function scrollIntoView() {
           for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
             if (`${details.type}-${details.name}` === location.hash) {
-              details.scrollIntoView({behavior: 'smooth', block: 'start'});
-              break;
+              details.scrollIntoView({behavior: 'instant', block: 'start'});
+              return;
             }
           }
+
+          mainElement.scrollTop = '0';
         }
         window.requestAnimationFrame(() => {
           if (domainSelectionPromise) {

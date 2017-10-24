@@ -227,7 +227,7 @@
       if(selectedItem) {
         this.fire('item-activate');
         if (selectedItem.href) {
-          window.location.href = selectedItem.href;
+          history.pushState({}, '', selectedItem.href);
         }
       }
     },
