@@ -3,9 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chrome DevTools Protocol Viewer
-    <!-- {% if page.title %} - {{ page.title }}{% endif %} -->
-  </title>
+  <title>Chrome DevTools Protocol Viewer</title>
 
   <base href="/" />
 
@@ -353,12 +351,22 @@
       const domainSummary = document.getElementById('domain-summary');
       const mainElement = document.querySelector('main');
 
+      /**
+       * Mapping from domain shortcut to its full name. Used for updating the title.
+       */
       const domainToNameMapping = {
         '1-2': 'stable (1.2)',
         'tot': 'latest (tip-of-tree)',
         'v8': 'v8-inspector (node)'
       }
 
+      const defaultTitle = 'Chrome DevTools Protocol Viewer';
+
+      /**
+       * Hide links based on the domain that we are showing. The classList of
+       * each link has the (multiple) domains it is documented for.
+       * @param  {String} domain The domain that we have currently selected
+       */
       function updateDomainSelectorLinks(domain) {
         for (const link of domainContainer.querySelectorAll('a')) {
           if (link.classList.contains(domain)) {
@@ -386,10 +394,13 @@
         listbox.selected = newVersion;
 
         if (['1-2', 'tot', 'v8'].indexOf(newVersion) === -1) {
+          document.title = defaultTitle;
           mainSelector.selected = newVersion;
           newVersion = 'tot';
-          // Show the summary page if no sub-category was selected
         } else if (index === -1) {
+          document.title = `${defaultTitle} - ${domainToNameMapping[newVersion]}`;
+
+          // Show the summary page if no sub-category was selected
           mainSelector.selected = 'domain-summary';
           fetch(`_versions/${newVersion}.html`)
             .then(result => result.text())
@@ -405,20 +416,34 @@
             newDomain = newDomain.substring(0, newDomain.length - 1);
           }
 
+          document.title = `${defaultTitle} - ${newDomain}`;
+
+          // If we are switching between domains, but do not select a sub-category
+          // scroll all the way to the top again.
+          if (!location.hash) {
+            mainElement.scrollTop = '0';
+          }
+
           domainSelectionPromise = new Promise(async (resolve) => {
             mainSelector.selected = 'domain';
+
             const result = await fetch('_data/' + newVersion + '/protocol.json');
             const versionData = await result.json();
+
             crDomain.domain = versionData.domains.find(d => d.domain === newDomain);
             domainContainer.selected = newDomain;
             crDomain.version = newVersion;
 
+            // Wait for one frame and then resolve this promise, to make sure
+            // all data and elements are rendered, such that we can correctly
+            // scroll into view.
             window.requestAnimationFrame(() => {
               resolve();
               domainSelectionPromise = undefined;
             });
           });
         } else {
+          // We have not selected any domain, so we have to show the summar at the top
           mainElement.scrollTop = '0';
         }
       }
@@ -434,9 +459,15 @@
             }
           }
 
+          // After the hash update, we have not found any match.
+          // Could be the case that the hash is empty,
+          // or there is simply no match. Anyways, scroll all the way to the top
           mainElement.scrollTop = '0';
         }
         window.requestAnimationFrame(() => {
+          // If we are still switching domains and fetching data (which is async)
+          // have to wait for that promise to resolve. Only then we have rendered
+          // data and can scroll to the correct element in the view
           if (domainSelectionPromise) {
             domainSelectionPromise.then(scrollIntoView);
           } else {
