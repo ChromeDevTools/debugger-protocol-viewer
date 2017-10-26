@@ -4384,6 +4384,11 @@
                             "$ref": "Request"
                         },
                         {
+                            "name": "frameId",
+                            "$ref": "Page.FrameId",
+                            "description": "The id of the frame that initiated the request."
+                        },
+                        {
                             "name": "resourceType",
                             "$ref": "Page.ResourceType",
                             "description": "How the requested resource will be used."
