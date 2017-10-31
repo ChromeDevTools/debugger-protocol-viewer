@@ -55,7 +55,6 @@
       <input id="input" value="{{searchText::input}}" autocapitalize="off"
           autocorrect="off" placeholder="Search..." type="search" />
     </div>
-    <cr-search-menu id="resultsMenu"></cr-search-menu>
   </template>
 
 </dom-module>
@@ -159,6 +158,9 @@
       ajaxResponse: {
         type: Object,
         observer: 'handleAjaxResponse_'
+      },
+      resultsMenu: {
+        type: HTMLElement
       }
     },
 
@@ -173,26 +175,20 @@
       'input.blur': 'handleBlur_'
     },
 
-    attached: function() {
-      // Attach Menu/Overlay to the body.
-      document.body.appendChild(this.$.resultsMenu);
-      this.$.resultsMenu.addEventListener('item-activate', this.handleItemActivate_.bind(this));
-    },
-
     setMenuOpen_: function(open) {
-      this.$.resultsMenu.opened = open;
+      this.fire('search-menu-selected', {open: open});
     },
 
     handleEnter_: function() {
-      this.$.resultsMenu.chooseHighlightedResult();
+      this.resultsMenu.chooseHighlightedResult();
     },
 
     handleUpArrow_: function() {
-      this.$.resultsMenu.highlightPreviousResult();
+      this.resultsMenu.highlightPreviousResult();
     },
 
     handleDownArrow_: function() {
-      this.$.resultsMenu.highlightNextResult();
+      this.resultsMenu.highlightNextResult();
     },
 
     handleSearchChange_: function() {
@@ -200,13 +196,13 @@
         return;
       }
       this.debounce('inputChange', function() {
-        this.$.resultsMenu.searchString = this.searchText;
+        this.resultsMenu.searchString = this.searchText;
         this.setMenuOpen_(!!this.searchText);
       }.bind(this), 70);
     },
 
     handleEsc_: function() {
-      if (this.$.resultsMenu.opened) {
+      if (this.resultsMenu.opened) {
         this.setMenuOpen_(false);
       } else {
         this.inputActive = false;
@@ -241,7 +237,7 @@
 
     handleAjaxResponse_: function() {
       // Set the keywords model (search index) onto the menu.
-      this.$.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
+      this.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
           this.ajaxResponse);
     },
 
@@ -252,7 +248,7 @@
     },
 
     handleBlur_: function() {
-      if (!this.$.resultsMenu.opened) {
+      if (!this.resultsMenu.opened) {
         this.$.searchButton.active = false;
       }
     }

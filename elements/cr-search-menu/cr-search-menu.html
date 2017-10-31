@@ -10,22 +10,20 @@
   <template>
     <style>
       :host {
-        display: block;
-        position: absolute;
-        width: 700px;
-        height: 600px;
-        border: 1px solid #ccc;
+        --border-width: 1px;
+        height: calc(100vh - 2 * var(--main-content-padding) - var(--header-height) - 2 * var(--border-width));
+        display: flex;
+        border: var(--border-width) solid #ccc;
         box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.15);
         background-color: white;
       }
-      /* Prevent jank while scrolling. */
-      :host([scrolling]) .search-match {
-        pointer-events: none;
-        background-color: transparent;
+      [hidden] {
+        display: none !important;
       }
       iron-list {
         padding: 11px 0;
         width: 100%;
+        flex: 1;
       }
       .match-info {
         @apply --layout-vertical;
@@ -79,39 +77,33 @@
         padding: 35px;
         text-align: center;
       }
-      .scroller {
-        height: 100%;
-        overflow: auto;
-      }
     </style>
     <slot name="header"></slot>
     <p class="empty-state-message" hidden$="[[!empty_]]">
       No matches. Try another search.
     </p>
-    <div class="scroller" on-scroll="handleScroll_" hidden$="[[empty_]]">
-      <iron-list id="ironList" items="[[renderItems]]" as="match">
-        <template>
-          <a href$="[[computeMatchHref_(match)]]" class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
-            <iron-icon icon="[[match.icon]]"></iron-icon>
-            <div class="match-info">
-              <div class="match-label">
-                <div class="label">
-                  <span>[[match.label]]</span>
-                  <span class="type">[[match.typeLabel]]</span>
-                </div>
-                <div class="domain-tag" hidden$="[[isDomainType_(match.type)]]">
-                  <span class="domain-label">Domain</span>
-                  <span>[[match.domain]]</span>
-                </div>
+    <iron-list id="ironList" items="[[renderItems]]" as="match" hidden$="[[empty_]]">
+      <template>
+        <a href$="[[computeMatchHref_(match)]]" class$="search-match [[highlightedClass(match.selected)]]" role="menuitem" on-click="activateItem_">
+          <iron-icon icon="[[match.icon]]"></iron-icon>
+          <div class="match-info">
+            <div class="match-label">
+              <div class="label">
+                <span>[[match.label]]</span>
+                <span class="type">[[match.typeLabel]]</span>
               </div>
-              <div class="match-description">
-                <cr-html-echo html="[[match.description]]"></cr-html-echo>
+              <div class="domain-tag" hidden$="[[isDomainType_(match.type)]]">
+                <span class="domain-label">Domain</span>
+                <span>[[match.domain]]</span>
               </div>
             </div>
-          </a>
-        </template>
-      </iron-list>
-    </div>
+            <div class="match-description">
+              <cr-html-echo html="[[match.description]]"></cr-html-echo>
+            </div>
+          </div>
+        </a>
+      </template>
+    </iron-list>
     <slot name="footer"></slot>
   </template>
 
@@ -124,10 +116,6 @@
 
   Polymer({
     is: 'cr-search-menu',
-
-    behaviors: [
-      Polymer.IronOverlayBehavior
-    ],
 
     properties: {
       keywordsModel: {
@@ -143,22 +131,9 @@
         value: [],
         observer: 'handleRenderItemsChange_'
       },
-      selectorForElementToLayOver: {
-        type: String,
-        value: '.content'
-      },
-      scrolling: {
-        type: Boolean,
-        reflectToAttribute: true
-      },
       highlightedResultIdx: {
         type: Number,
         value: -1
-      },
-      /** @override */
-      opened: {
-        type: Boolean,
-        value: false
       },
       empty_: {
         type: Boolean,
@@ -167,20 +142,8 @@
     },
 
     observers: [
-      'renderItems_(keywordsModel, searchString)',
-      'handleOpened_(opened)'
+      'renderItems_(keywordsModel, searchString)'
     ],
-
-    handleOpened_: function(opened) {
-      if (opened) {
-        this.updatePosition();
-      } else {
-        var target = document.querySelector(this.selectorForElementToLayOver);
-        if (target) {
-          target.style.display = 'block';
-        }
-      }
-    },
 
     highlightedClass: function (selected) {
       return selected ? 'search-match--active' : '';
@@ -232,22 +195,13 @@
       }
     },
 
-    updatePosition: function() {
-      var target = document.querySelector(this.selectorForElementToLayOver);
-      this.setPositionAndSize(target.getBoundingClientRect());
-      target.style.display = 'none';
-      this.debounce('_iron-resize', function() {
-        this.$.ironList.updateViewportBoundaries();
-        this.$.ironList.fire('iron-resize');
-      }.bind(this), 50);
-    },
-
     activateItem_: function(e) {
       this.fire('item-activate');
     },
 
     renderItems_: function(keywordsModel, searchString) {
       this.highlightedResultIdx = -1;
+
       var items = [];
 
       if (keywordsModel) {
@@ -292,25 +246,7 @@
       return type === this.Type.DOMAIN;
     },
 
-    setPositionAndSize: function(rect) {
-      this.style.left = rect.left + 'px';
-      this.style.width = rect.width + 'px';
-      this.style.top = rect.top + 'px';
-
-      // TODO: Make more 'phisticated. Handle mobile.
-      var heightDiff = 30;
-      this.style.height = rect.height - heightDiff + 'px';
-    },
-
     timeoutId_: null,
-
-    handleScroll_: function() {
-      this.scrolling = true;
-      this.timeoutId_ && this.cancelAsync(this.timeoutId_);
-      this.timeoutId_ = this.async(function() {
-        this.scrolling = false
-      }.bind(this), 150);
-    },
 
     Type: {
       DOMAIN: '0',

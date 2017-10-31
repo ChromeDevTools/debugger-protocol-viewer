@@ -21,6 +21,9 @@
   /* paper-listbox */
   --paper-listbox-background-color: #fff;
   --menu-link-color: #111111;
+
+  --header-height: 64px;
+  --main-content-padding: 48px;
 }
 
 #drawerToolbar {
@@ -172,14 +175,14 @@ p {
 /* Wide */
 @media (max-width: 980px) {
   #mainContainer .content {
-    padding: 48px 40px;
+    padding: var(--main-content-padding) 40px;
   }
 }
 
 /* Small */
 @media (max-width: 600px) {
   .content {
-    padding: 48px 10px;
+    padding: var(--main-content-padding) 10px;
   }
 
   #drawer .paper-toolbar {
@@ -205,7 +208,7 @@ p {
   }
 
   .content {
-    padding: 48px 20px;
+    padding: var(--main-content-padding) 20px;
   }
 
   #mainToolbar .title {

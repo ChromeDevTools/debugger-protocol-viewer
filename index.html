@@ -156,6 +156,7 @@
           <section data-url="404">
             Oops you hit a 404!
           </section>
+          <cr-search-menu data-url="search" id="searchMenu"></cr-search-menu>
           <section data-url="domain-summary" class="paper-material" elevation="1">
             <a href="https://github.com/ChromeDevTools/debugger-protocol-viewer" class="gh-badge"><img
               style=""
@@ -343,6 +344,7 @@
   <script>
     (function() {
       const searchButton = document.getElementById('searchButton');
+      const searchMenu = document.getElementById('searchMenu');
       const toolbar = document.getElementById('mainToolbar');
       const listbox = document.getElementById('versions').querySelector('paper-listbox');
       const mainSelector = document.getElementById('main-selector');
@@ -475,6 +477,20 @@
           }
         });
       }
+
+      searchButton.resultsMenu = searchMenu;
+
+      let lastSelected;
+      searchButton.addEventListener('active', () => {
+        lastSelected = mainSelector.selected;
+        mainSelector.selected = 'search';
+      });
+
+      searchButton.addEventListener('inactive', () => {
+        mainSelector.selected = lastSelected;
+      });
+
+      searchMenu.addEventListener('item-activate', searchButton.handleItemActivate_.bind(searchButton));
 
       const location = document.getElementById('location');
       location.addEventListener('path-changed', (e) => {
