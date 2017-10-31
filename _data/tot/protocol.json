@@ -322,6 +322,27 @@
                     "experimental": true
                 },
                 {
+                    "id": "FrameTree",
+                    "type": "object",
+                    "description": "Information about the Frame hierarchy.",
+                    "properties": [
+                        {
+                            "name": "frame",
+                            "$ref": "Frame",
+                            "description": "Frame information for this tree item."
+                        },
+                        {
+                            "name": "childFrames",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "FrameTree"
+                            },
+                            "description": "Child frames."
+                        }
+                    ]
+                },
+                {
                     "id": "ScriptIdentifier",
                     "type": "string",
                     "description": "Unique script identifier.",
@@ -813,6 +834,17 @@
                         }
                     ],
                     "experimental": true
+                },
+                {
+                    "name": "getFrameTree",
+                    "description": "Returns present frame tree structure.",
+                    "returns": [
+                        {
+                            "name": "frameTree",
+                            "$ref": "FrameTree",
+                            "description": "Present frame tree structure."
+                        }
+                    ]
                 },
                 {
                     "name": "getResourceContent",
