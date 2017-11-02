@@ -668,6 +668,18 @@
                     "experimental": true
                 },
                 {
+                    "name": "setLifecycleEventsEnabled",
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "type": "boolean",
+                            "description": "If true, starts emitting lifecycle events."
+                        }
+                    ],
+                    "description": "Controls whether page will emit lifecycle events.",
+                    "experimental": true
+                },
+                {
                     "name": "reload",
                     "parameters": [
                         {
@@ -723,6 +735,12 @@
                             "name": "frameId",
                             "$ref": "FrameId",
                             "description": "Frame id that will be navigated."
+                        },
+                        {
+                            "name": "loaderId",
+                            "$ref": "Network.LoaderId",
+                            "experimental": true,
+                            "description": "Loader id that will be used during navigation."
                         }
                     ],
                     "description": "Navigates current page to the given URL."
