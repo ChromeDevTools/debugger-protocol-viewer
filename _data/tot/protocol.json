@@ -93,7 +93,6 @@
         },
         {
             "domain": "Performance",
-            "experimental": true,
             "types": [
                 {
                     "id": "Metric",
@@ -345,14 +344,12 @@
                 {
                     "id": "ScriptIdentifier",
                     "type": "string",
-                    "description": "Unique script identifier.",
-                    "experimental": true
+                    "description": "Unique script identifier."
                 },
                 {
                     "id": "TransitionType",
                     "type": "string",
                     "description": "Transition type.",
-                    "experimental": true,
                     "enum": [
                         "link",
                         "typed",
@@ -398,8 +395,7 @@
                             "$ref": "TransitionType",
                             "description": "Transition type."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "ScreencastFrameMetadata",
@@ -461,8 +457,7 @@
                         "confirm",
                         "prompt",
                         "beforeunload"
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "AppManifestError",
@@ -489,25 +484,12 @@
                             "type": "integer",
                             "description": "Error column."
                         }
-                    ],
-                    "experimental": true
-                },
-                {
-                    "id": "NavigationResponse",
-                    "description": "Proceed: allow the navigation; Cancel: cancel the navigation; CancelAndIgnore: cancels the navigation and makes the requester of the navigation acts like the request was never made.",
-                    "type": "string",
-                    "enum": [
-                        "Proceed",
-                        "Cancel",
-                        "CancelAndIgnore"
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "LayoutViewport",
                     "type": "object",
                     "description": "Layout viewport position and dimensions.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "pageX",
@@ -535,7 +517,6 @@
                     "id": "VisualViewport",
                     "type": "object",
                     "description": "Visual viewport position, dimensions, and scale.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "offsetX",
@@ -578,7 +559,6 @@
                     "id": "Viewport",
                     "type": "object",
                     "description": "Viewport for capturing screenshot.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "x",
@@ -663,8 +643,7 @@
                             "description": "Identifier of the added script."
                         }
                     ],
-                    "description": "Evaluates given script in every frame upon creation (before loading frame's scripts).",
-                    "experimental": true
+                    "description": "Evaluates given script in every frame upon creation (before loading frame's scripts)."
                 },
                 {
                     "name": "removeScriptToEvaluateOnNewDocument",
@@ -674,8 +653,7 @@
                             "$ref": "ScriptIdentifier"
                         }
                     ],
-                    "description": "Removes given script from the list.",
-                    "experimental": true
+                    "description": "Removes given script from the list."
                 },
                 {
                     "name": "setAutoAttachToCreatedPages",
@@ -731,14 +709,12 @@
                             "name": "referrer",
                             "type": "string",
                             "optional": true,
-                            "experimental": true,
                             "description": "Referrer URL."
                         },
                         {
                             "name": "transitionType",
                             "$ref": "TransitionType",
                             "optional": true,
-                            "experimental": true,
                             "description": "Intended transition type."
                         }
                     ],
@@ -746,7 +722,6 @@
                         {
                             "name": "frameId",
                             "$ref": "FrameId",
-                            "experimental": true,
                             "description": "Frame id that will be navigated."
                         }
                     ],
@@ -754,8 +729,7 @@
                 },
                 {
                     "name": "stopLoading",
-                    "description": "Force the page stop all navigations and pending resource fetches.",
-                    "experimental": true
+                    "description": "Force the page stop all navigations and pending resource fetches."
                 },
                 {
                     "name": "getNavigationHistory",
@@ -774,8 +748,7 @@
                             "description": "Array of navigation history entries."
                         }
                     ],
-                    "description": "Returns navigation history for the current page.",
-                    "experimental": true
+                    "description": "Returns navigation history for the current page."
                 },
                 {
                     "name": "navigateToHistoryEntry",
@@ -786,8 +759,7 @@
                             "description": "Unique id of the entry to navigate to."
                         }
                     ],
-                    "description": "Navigates current page to the given history entry.",
-                    "experimental": true
+                    "description": "Navigates current page to the given history entry."
                 },
                 {
                     "name": "getCookies",
@@ -802,6 +774,7 @@
                         }
                     ],
                     "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
+                    "deprecated": true,
                     "experimental": true,
                     "redirect": "Network"
                 },
@@ -820,6 +793,7 @@
                         }
                     ],
                     "description": "Deletes browser cookie with given name, domain and path.",
+                    "deprecated": true,
                     "experimental": true,
                     "redirect": "Network"
                 },
@@ -1009,13 +983,15 @@
                             "description": "The viewport dimensions and scale. If not set, the override is cleared."
                         }
                     ],
-                    "redirect": "Emulation",
-                    "experimental": true
+                    "experimental": true,
+                    "deprecated": true,
+                    "redirect": "Emulation"
                 },
                 {
                     "name": "clearDeviceMetricsOverride",
                     "description": "Clears the overriden device metrics.",
                     "redirect": "Emulation",
+                    "deprecated": true,
                     "experimental": true
                 },
                 {
@@ -1041,12 +1017,14 @@
                             "description": "Mock accuracy"
                         }
                     ],
-                    "redirect": "Emulation"
+                    "redirect": "Emulation",
+                    "deprecated": true
                 },
                 {
                     "name": "clearGeolocationOverride",
                     "description": "Clears the overriden Geolocation Position and Error.",
-                    "redirect": "Emulation"
+                    "redirect": "Emulation",
+                    "deprecated": true
                 },
                 {
                     "name": "setDeviceOrientationOverride",
@@ -1069,12 +1047,14 @@
                         }
                     ],
                     "redirect": "DeviceOrientation",
+                    "deprecated": true,
                     "experimental": true
                 },
                 {
                     "name": "clearDeviceOrientationOverride",
                     "description": "Clears the overridden Device Orientation.",
                     "redirect": "DeviceOrientation",
+                    "deprecated": true,
                     "experimental": true
                 },
                 {
@@ -1098,6 +1078,7 @@
                     ],
                     "description": "Toggles mouse event-based touch event emulation.",
                     "experimental": true,
+                    "deprecated": true,
                     "redirect": "Emulation"
                 },
                 {
@@ -1124,8 +1105,7 @@
                             "name": "clip",
                             "$ref": "Viewport",
                             "optional": true,
-                            "description": "Capture the screenshot of a given region only.",
-                            "experimental": true
+                            "description": "Capture the screenshot of a given region only."
                         },
                         {
                             "name": "fromSurface",
@@ -1141,8 +1121,7 @@
                             "type": "string",
                             "description": "Base64-encoded image data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "printToPDF",
@@ -1227,8 +1206,7 @@
                             "type": "string",
                             "description": "Base64-encoded pdf data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "startScreencast",
@@ -1307,7 +1285,6 @@
                 },
                 {
                     "name": "getAppManifest",
-                    "experimental": true,
                     "returns": [
                         {
                             "name": "url",
@@ -1336,7 +1313,6 @@
                 {
                     "name": "getLayoutMetrics",
                     "description": "Returns metrics relating to the layouting of the page, such as viewport bounds/scale.",
-                    "experimental": true,
                     "returns": [
                         {
                             "name": "layoutViewport",
@@ -1358,7 +1334,6 @@
                 {
                     "name": "createIsolatedWorld",
                     "description": "Creates an isolated world for the given frame.",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "frameId",
@@ -1470,8 +1445,7 @@
                             "name": "stack",
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
-                            "description": "JavaScript stack trace of when frame was attached, only set if frame initiated from script.",
-                            "experimental": true
+                            "description": "JavaScript stack trace of when frame was attached, only set if frame initiated from script."
                         }
                     ]
                 },
@@ -1538,7 +1512,6 @@
                         {
                             "name": "reason",
                             "type": "string",
-                            "experimental": true,
                             "enum": [
                                 "formSubmissionGet",
                                 "formSubmissionPost",
@@ -1553,7 +1526,6 @@
                         {
                             "name": "url",
                             "type": "string",
-                            "experimental": true,
                             "description": "The destination URL for the scheduled navigation."
                         }
                     ],
@@ -1684,8 +1656,7 @@
                             "type": "boolean",
                             "description": "Whether or not window.open() was triggered by user gesture."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 }
             ]
         },
@@ -2232,7 +2203,6 @@
                 {
                     "name": "setScriptExecutionDisabled",
                     "description": "Switches script execution in the page.",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "value",
@@ -2244,7 +2214,6 @@
                 {
                     "name": "setGeolocationOverride",
                     "description": "Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position unavailable.",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "latitude",
@@ -2268,8 +2237,7 @@
                 },
                 {
                     "name": "clearGeolocationOverride",
-                    "description": "Clears the overriden Geolocation Position and Error.",
-                    "experimental": true
+                    "description": "Clears the overriden Geolocation Position and Error."
                 },
                 {
                     "name": "setTouchEmulationEnabled",
@@ -2341,8 +2309,7 @@
                             "type": "boolean",
                             "description": "True if emulation is supported."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "setVirtualTimePolicy",
@@ -2389,8 +2356,7 @@
                             "optional": true,
                             "description": "RGBA of the default background color. If not specified, any existing override will be cleared."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 }
             ],
             "events": [
@@ -2428,7 +2394,6 @@
         {
             "domain": "Security",
             "description": "Security",
-            "experimental": true,
             "types": [
                 {
                     "id": "CertificateId",
@@ -3079,8 +3044,7 @@
                         "inspector",
                         "subresource-filter",
                         "other"
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "Response",
@@ -3144,14 +3108,12 @@
                             "name": "remoteIPAddress",
                             "type": "string",
                             "optional": true,
-                            "experimental": true,
                             "description": "Remote IP address."
                         },
                         {
                             "name": "remotePort",
                             "type": "integer",
                             "optional": true,
-                            "experimental": true,
                             "description": "Remote port."
                         },
                         {
@@ -3201,7 +3163,6 @@
                     "id": "WebSocketRequest",
                     "type": "object",
                     "description": "WebSocket request data.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "headers",
@@ -3214,7 +3175,6 @@
                     "id": "WebSocketResponse",
                     "type": "object",
                     "description": "WebSocket response data.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "status",
@@ -3255,7 +3215,6 @@
                     "id": "WebSocketFrame",
                     "type": "object",
                     "description": "WebSocket frame data.",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "opcode",
@@ -3394,8 +3353,7 @@
                             "optional": true,
                             "description": "Cookie SameSite type."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "CookieParam",
@@ -3454,8 +3412,7 @@
                             "optional": true,
                             "description": "Cookie expiration date, session cookie if not set"
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "AuthChallenge",
@@ -3691,8 +3648,7 @@
                             "description": "Array of cookie objects."
                         }
                     ],
-                    "description": "Returns all browser cookies for the current URL. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
-                    "experimental": true
+                    "description": "Returns all browser cookies for the current URL. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field."
                 },
                 {
                     "name": "getAllCookies",
@@ -3706,8 +3662,7 @@
                             "description": "Array of cookie objects."
                         }
                     ],
-                    "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
-                    "experimental": true
+                    "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field."
                 },
                 {
                     "name": "deleteCookies",
@@ -3736,8 +3691,7 @@
                             "description": "If specified, deletes only cookies with the exact path."
                         }
                     ],
-                    "description": "Deletes browser cookies with matching name and url or domain/path pair.",
-                    "experimental": true
+                    "description": "Deletes browser cookies with matching name and url or domain/path pair."
                 },
                 {
                     "name": "setCookie",
@@ -3802,8 +3756,7 @@
                             "description": "True if successfully set cookie."
                         }
                     ],
-                    "description": "Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.",
-                    "experimental": true
+                    "description": "Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist."
                 },
                 {
                     "name": "setCookies",
@@ -3817,8 +3770,7 @@
                             "description": "Cookies to be set."
                         }
                     ],
-                    "description": "Sets given cookies.",
-                    "experimental": true
+                    "description": "Sets given cookies."
                 },
                 {
                     "name": "canEmulateNetworkConditions",
@@ -3829,8 +3781,7 @@
                             "type": "boolean",
                             "description": "True if emulation of network conditions is supported."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "emulateNetworkConditions",
@@ -4049,7 +4000,6 @@
                         {
                             "name": "wallTime",
                             "$ref": "TimeSinceEpoch",
-                            "experimental": true,
                             "description": "Timestamp."
                         },
                         {
@@ -4067,15 +4017,13 @@
                             "name": "type",
                             "$ref": "Page.ResourceType",
                             "optional": true,
-                            "experimental": true,
                             "description": "Type of this resource."
                         },
                         {
                             "name": "frameId",
                             "optional": true,
                             "$ref": "Page.FrameId",
-                            "description": "Frame identifier.",
-                            "experimental": true
+                            "description": "Frame identifier."
                         }
                     ]
                 },
@@ -4123,8 +4071,7 @@
                             "name": "frameId",
                             "optional": true,
                             "$ref": "Page.FrameId",
-                            "description": "Frame identifier.",
-                            "experimental": true
+                            "description": "Frame identifier."
                         }
                     ]
                 },
@@ -4209,8 +4156,7 @@
                             "name": "blockedReason",
                             "$ref": "BlockedReason",
                             "optional": true,
-                            "description": "The reason why loading was blocked, if any.",
-                            "experimental": true
+                            "description": "The reason why loading was blocked, if any."
                         }
                     ]
                 },
@@ -4231,7 +4177,6 @@
                         {
                             "name": "wallTime",
                             "$ref": "TimeSinceEpoch",
-                            "experimental": true,
                             "description": "UTC Timestamp."
                         },
                         {
@@ -4239,8 +4184,7 @@
                             "$ref": "WebSocketRequest",
                             "description": "WebSocket request data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketHandshakeResponseReceived",
@@ -4261,8 +4205,7 @@
                             "$ref": "WebSocketResponse",
                             "description": "WebSocket response data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketCreated",
@@ -4284,8 +4227,7 @@
                             "optional": true,
                             "description": "Request initiator."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketClosed",
@@ -4301,8 +4243,7 @@
                             "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketFrameReceived",
@@ -4323,8 +4264,7 @@
                             "$ref": "WebSocketFrame",
                             "description": "WebSocket response data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketFrameError",
@@ -4345,8 +4285,7 @@
                             "type": "string",
                             "description": "WebSocket frame error message."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "webSocketFrameSent",
@@ -4367,8 +4306,7 @@
                             "$ref": "WebSocketFrame",
                             "description": "WebSocket response data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "eventSourceMessageReceived",
@@ -4399,8 +4337,7 @@
                             "type": "string",
                             "description": "Message content."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "requestIntercepted",
@@ -5526,8 +5463,7 @@
                 {
                     "id": "BackendNodeId",
                     "type": "integer",
-                    "description": "Unique DOM node identifier used to reference a node that may not have been pushed to the front-end.",
-                    "experimental": true
+                    "description": "Unique DOM node identifier used to reference a node that may not have been pushed to the front-end."
                 },
                 {
                     "id": "BackendNode",
@@ -5548,7 +5484,6 @@
                             "$ref": "BackendNodeId"
                         }
                     ],
-                    "experimental": true,
                     "description": "Backend node with a friendly name."
                 },
                 {
@@ -5596,14 +5531,12 @@
                             "name": "parentId",
                             "$ref": "NodeId",
                             "optional": true,
-                            "description": "The id of the parent node if any.",
-                            "experimental": true
+                            "description": "The id of the parent node if any."
                         },
                         {
                             "name": "backendNodeId",
                             "$ref": "BackendNodeId",
-                            "description": "The BackendNodeId for this node.",
-                            "experimental": true
+                            "description": "The BackendNodeId for this node."
                         },
                         {
                             "name": "nodeType",
@@ -5659,8 +5592,7 @@
                             "name": "baseURL",
                             "type": "string",
                             "optional": true,
-                            "description": "Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion.",
-                            "experimental": true
+                            "description": "Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion."
                         },
                         {
                             "name": "publicId",
@@ -5714,8 +5646,7 @@
                             "name": "frameId",
                             "$ref": "Page.FrameId",
                             "optional": true,
-                            "description": "Frame ID for frame owner elements.",
-                            "experimental": true
+                            "description": "Frame ID for frame owner elements."
                         },
                         {
                             "name": "contentDocument",
@@ -5730,15 +5661,13 @@
                             "items": {
                                 "$ref": "Node"
                             },
-                            "description": "Shadow root list for given element host.",
-                            "experimental": true
+                            "description": "Shadow root list for given element host."
                         },
                         {
                             "name": "templateContent",
                             "$ref": "Node",
                             "optional": true,
-                            "description": "Content document fragment for template elements.",
-                            "experimental": true
+                            "description": "Content document fragment for template elements."
                         },
                         {
                             "name": "pseudoElements",
@@ -5747,8 +5676,7 @@
                                 "$ref": "Node"
                             },
                             "optional": true,
-                            "description": "Pseudo elements associated with this node.",
-                            "experimental": true
+                            "description": "Pseudo elements associated with this node."
                         },
                         {
                             "name": "importedDocument",
@@ -5763,15 +5691,13 @@
                                 "$ref": "BackendNode"
                             },
                             "optional": true,
-                            "description": "Distributed nodes for given insertion point.",
-                            "experimental": true
+                            "description": "Distributed nodes for given insertion point."
                         },
                         {
                             "name": "isSVG",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether the node is SVG.",
-                            "experimental": true
+                            "description": "Whether the node is SVG."
                         }
                     ],
                     "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
@@ -5812,13 +5738,11 @@
                     },
                     "minItems": 8,
                     "maxItems": 8,
-                    "description": "An array of quad vertices, x immediately followed by y for each point, points clock-wise.",
-                    "experimental": true
+                    "description": "An array of quad vertices, x immediately followed by y for each point, points clock-wise."
                 },
                 {
                     "id": "BoxModel",
                     "type": "object",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "content",
@@ -5862,7 +5786,6 @@
                 {
                     "id": "ShapeOutsideInfo",
                     "type": "object",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "bounds",
@@ -5891,7 +5814,6 @@
                 {
                     "id": "Rect",
                     "type": "object",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "x",
@@ -5933,15 +5855,13 @@
                             "name": "depth",
                             "type": "integer",
                             "optional": true,
-                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "experimental": true
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0."
                         },
                         {
                             "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
-                            "experimental": true
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false)."
                         }
                     ],
                     "returns": [
@@ -5960,15 +5880,13 @@
                             "name": "depth",
                             "type": "integer",
                             "optional": true,
-                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "experimental": true
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0."
                         },
                         {
                             "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
-                            "experimental": true
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false)."
                         }
                     ],
                     "returns": [
@@ -6017,15 +5935,13 @@
                             "name": "depth",
                             "type": "integer",
                             "optional": true,
-                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "experimental": true
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0."
                         },
                         {
                             "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes and shadow roots should be traversed when returning the sub-tree (default is false).",
-                            "experimental": true
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the sub-tree (default is false)."
                         }
                     ],
                     "description": "Requests that children of the node with given id are returned to the caller in form of <code>setChildNodes</code> events where not only immediate children are retrieved, but all children down to the specified depth."
@@ -6247,8 +6163,7 @@
                             "name": "includeUserAgentShadowDOM",
                             "type": "boolean",
                             "optional": true,
-                            "description": "True to search in user agent shadow DOM.",
-                            "experimental": true
+                            "description": "True to search in user agent shadow DOM."
                         }
                     ],
                     "returns": [
@@ -6547,8 +6462,7 @@
                             "description": "JavaScript object id of the node wrapper."
                         }
                     ],
-                    "description": "Focuses the given element.",
-                    "experimental": true
+                    "description": "Focuses the given element."
                 },
                 {
                     "name": "setFileInputFiles",
@@ -6580,8 +6494,7 @@
                             "description": "JavaScript object id of the node wrapper."
                         }
                     ],
-                    "description": "Sets files for the given file input element.",
-                    "experimental": true
+                    "description": "Sets files for the given file input element."
                 },
                 {
                     "name": "getBoxModel",
@@ -6612,8 +6525,7 @@
                             "description": "Box model for the node."
                         }
                     ],
-                    "description": "Returns boxes for the currently selected nodes.",
-                    "experimental": true
+                    "description": "Returns boxes for the given node."
                 },
                 {
                     "name": "getNodeForLocation",
@@ -6689,15 +6601,13 @@
                             "name": "depth",
                             "type": "integer",
                             "optional": true,
-                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "experimental": true
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0."
                         },
                         {
                             "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
-                            "experimental": true
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false)."
                         }
                     ],
                     "returns": [
@@ -7137,8 +7047,7 @@
                         {
                             "name": "length",
                             "type": "number",
-                            "description": "Size of the content (in characters).",
-                            "experimental": true
+                            "description": "Size of the content (in characters)."
                         }
                     ],
                     "description": "CSS stylesheet metainformation."
@@ -7205,8 +7114,7 @@
                             "description": "Indicates whether the rule was actually used by some element in the page."
                         }
                     ],
-                    "description": "CSS coverage information.",
-                    "experimental": true
+                    "description": "CSS coverage information."
                 },
                 {
                     "id": "SourceRange",
@@ -7412,7 +7320,6 @@
                                 "$ref": "MediaQuery"
                             },
                             "optional": true,
-                            "experimental": true,
                             "description": "Array of media queries."
                         }
                     ],
@@ -7436,8 +7343,7 @@
                             "description": "Whether the media query condition is satisfied."
                         }
                     ],
-                    "description": "Media query descriptor.",
-                    "experimental": true
+                    "description": "Media query descriptor."
                 },
                 {
                     "id": "MediaQueryExpression",
@@ -7471,8 +7377,7 @@
                             "description": "Computed length of media query expression (if applicable)."
                         }
                     ],
-                    "description": "Media query expression descriptor.",
-                    "experimental": true
+                    "description": "Media query expression descriptor."
                 },
                 {
                     "id": "PlatformFontUsage",
@@ -7494,8 +7399,7 @@
                             "description": "Amount of glyphs that were rendered with this font."
                         }
                     ],
-                    "description": "Information about amount of glyphs that were rendered with given font.",
-                    "experimental": true
+                    "description": "Information about amount of glyphs that were rendered with given font."
                 },
                 {
                     "id": "CSSKeyframesRule",
@@ -7566,29 +7470,6 @@
                         }
                     ],
                     "description": "A descriptor of operation to mutate style declaration text."
-                },
-                {
-                    "id": "InlineTextBox",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "boundingBox",
-                            "$ref": "DOM.Rect",
-                            "description": "The absolute position bounding box."
-                        },
-                        {
-                            "name": "startCharacterIndex",
-                            "type": "integer",
-                            "description": "The starting index in characters, for this post layout textbox substring."
-                        },
-                        {
-                            "name": "numCharacters",
-                            "type": "integer",
-                            "description": "The number of characters in this post layout textbox substring."
-                        }
-                    ],
-                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
-                    "experimental": true
                 }
             ],
             "commands": [
@@ -7722,8 +7603,7 @@
                             "description": "Usage statistics for every employed platform font."
                         }
                     ],
-                    "description": "Requests information about platform fonts which we used to render child TextNodes in the given node.",
-                    "experimental": true
+                    "description": "Requests information about platform fonts which we used to render child TextNodes in the given node."
                 },
                 {
                     "name": "getStyleSheetText",
@@ -7760,8 +7640,7 @@
                             "description": "Class name list."
                         }
                     ],
-                    "description": "Returns all class names from specified stylesheet.",
-                    "experimental": true
+                    "description": "Returns all class names from specified stylesheet."
                 },
                 {
                     "name": "setStyleSheetText",
@@ -7965,8 +7844,7 @@
                             }
                         }
                     ],
-                    "description": "Returns all media queries parsed by the rendering engine.",
-                    "experimental": true
+                    "description": "Returns all media queries parsed by the rendering engine."
                 },
                 {
                     "name": "setEffectivePropertyValueForNode",
@@ -7985,8 +7863,7 @@
                             "type": "string"
                         }
                     ],
-                    "description": "Find a rule with the given active property for the given node and set the new value for this property",
-                    "experimental": true
+                    "description": "Find a rule with the given active property for the given node and set the new value for this property"
                 },
                 {
                     "name": "getBackgroundColors",
@@ -8025,13 +7902,11 @@
                             "description": "The computed font size for the document body, as a computed CSS value string (e.g. '16px').",
                             "optional": true
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "startRuleUsageTracking",
-                    "description": "Enables the selector recording.",
-                    "experimental": true
+                    "description": "Enables the selector recording."
                 },
                 {
                     "name": "takeCoverageDelta",
@@ -8044,8 +7919,7 @@
                                 "$ref": "RuleUsage"
                             }
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "stopRuleUsageTracking",
@@ -8058,8 +7932,7 @@
                             }
                         }
                     ],
-                    "description": "The list of rules with an indication of whether these were used",
-                    "experimental": true
+                    "description": "The list of rules with an indication of whether these were used"
                 }
             ],
             "events": [
@@ -8272,6 +8145,28 @@
                     "description": "A Node in the DOM tree."
                 },
                 {
+                    "id": "InlineTextBox",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "startCharacterIndex",
+                            "type": "integer",
+                            "description": "The starting index in characters, for this post layout textbox substring."
+                        },
+                        {
+                            "name": "numCharacters",
+                            "type": "integer",
+                            "description": "The number of characters in this post layout textbox substring."
+                        }
+                    ],
+                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions."
+                },
+                {
                     "id": "LayoutTreeNode",
                     "type": "object",
                     "properties": [
@@ -8296,7 +8191,7 @@
                             "type": "array",
                             "optional": true,
                             "items": {
-                                "$ref": "CSS.InlineTextBox"
+                                "$ref": "InlineTextBox"
                             },
                             "description": "The post-layout inline text nodes, if any."
                         },
@@ -8388,7 +8283,6 @@
         {
             "domain": "IO",
             "description": "Input/Output operations for streams produced by DevTools.",
-            "experimental": true,
             "types": [
                 {
                     "id": "StreamHandle",
@@ -8545,8 +8439,7 @@
                             "optional": true,
                             "description": "Node the listener is added to (if any)."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 }
             ],
             "commands": [
@@ -8666,7 +8559,6 @@
                 },
                 {
                     "name": "getEventListeners",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "objectId",
@@ -8677,15 +8569,13 @@
                             "name": "depth",
                             "type": "integer",
                             "optional": true,
-                            "description": "The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
-                            "experimental": true
+                            "description": "The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0."
                         },
                         {
                             "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false). Reports listeners for all contexts if pierce is enabled.",
-                            "experimental": true
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false). Reports listeners for all contexts if pierce is enabled."
                         }
                     ],
                     "returns": [
@@ -8705,7 +8595,6 @@
         {
             "domain": "Target",
             "description": "Supports additional targets discovery and allows to attach to them.",
-            "experimental": true,
             "types": [
                 {
                     "id": "TargetID",
@@ -8718,7 +8607,8 @@
                 },
                 {
                     "id": "BrowserContextID",
-                    "type": "string"
+                    "type": "string",
+                    "experimental": true
                 },
                 {
                     "id": "TargetInfo",
@@ -8765,7 +8655,8 @@
                             "name": "port",
                             "type": "integer"
                         }
-                    ]
+                    ],
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -8804,7 +8695,8 @@
                             "type": "boolean",
                             "description": "Whether to attach to frames."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "setRemoteLocations",
@@ -8818,7 +8710,8 @@
                             },
                             "description": "List of remote locations."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "sendMessageToTarget",
@@ -8930,7 +8823,8 @@
                             "$ref": "BrowserContextID",
                             "description": "The id of the context created."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "disposeBrowserContext",
@@ -8946,7 +8840,8 @@
                             "name": "success",
                             "type": "boolean"
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "createTarget",
@@ -9490,7 +9385,6 @@
                 {
                     "id": "TouchPoint",
                     "type": "object",
-                    "experimental": true,
                     "properties": [
                         {
                             "name": "x",
@@ -9652,7 +9546,6 @@
                             "name": "location",
                             "type": "integer",
                             "optional": true,
-                            "experimental": true,
                             "description": "Whether the event was from the left or right side of the keyboard. 1=Left, 2=Right (default: 0)."
                         }
                     ],
@@ -9729,7 +9622,6 @@
                 },
                 {
                     "name": "dispatchTouchEvent",
-                    "experimental": true,
                     "parameters": [
                         {
                             "name": "type",
@@ -11575,7 +11467,6 @@
                 "Runtime",
                 "Network"
             ],
-            "experimental": true,
             "types": [
                 {
                     "id": "LogEntry",
@@ -11884,11 +11775,11 @@
         {
             "domain": "Browser",
             "description": "The Browser domain defines methods and events for browser managing.",
-            "experimental": true,
             "types": [
                 {
                     "id": "WindowID",
-                    "type": "integer"
+                    "type": "integer",
+                    "experimental": true
                 },
                 {
                     "id": "WindowState",
@@ -11899,7 +11790,8 @@
                         "maximized",
                         "fullscreen"
                     ],
-                    "description": "The state of the browser window."
+                    "description": "The state of the browser window.",
+                    "experimental": true
                 },
                 {
                     "id": "Bounds",
@@ -11936,7 +11828,8 @@
                             "optional": true,
                             "description": "The window state. Default to normal."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -11965,7 +11858,8 @@
                             "$ref": "Bounds",
                             "description": "Bounds information of the window. When window state is 'minimized', the restored window position and size are returned."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "getVersion",
@@ -12012,7 +11906,8 @@
                             "$ref": "Bounds",
                             "description": "New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 },
                 {
                     "name": "getWindowBounds",
@@ -12030,7 +11925,8 @@
                             "$ref": "Bounds",
                             "description": "Bounds information of the window. When window state is 'minimized', the restored window position and size are returned."
                         }
-                    ]
+                    ],
+                    "experimental": true
                 }
             ]
         },
