@@ -156,12 +156,9 @@ canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</p
 <h4 id="how-do-i-access-the-browser-target">How do I access the browser target?</h4>
 <p>The endpoint is exposed as <code>webSocketDebuggerUrl</code> in <code>/json/version</code>. Note the <code>browser</code> in the URL, rather than <code>page</code>. If Chrome was launched with <code>--remote-debugging-port=0</code> and chose an open port, the browser endpoint is written to both stderr and the <code>DevToolsActivePort</code> file in browser profile folder.</p>
 
-
 <h4 id="simultaneous">Does the protocol support multiple simultaneous clients?</h4>
 <p>
-  We currently do not support multiple clients connected to the protocol simultaneously.
-  This includes opening DevTools while another client is connected.
-  On the bug tracker, <a href="https://code.google.com/p/chromium/issues/detail?id=129539">crbug.com/129539</a> follows the issue; you can star it for email updates.
+  Yes, as of Chrome 63! See <a href="https://developers.google.com/web/updates/2017/10/devtools-release-notes#multi-client">Multi-client remote debugging support</a>.
 </p>
 <p>
   Upon disconnnection, the outgoing client will receive a <code>detached</code> event.
