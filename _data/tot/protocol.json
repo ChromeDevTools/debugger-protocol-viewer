@@ -1417,6 +1417,11 @@
                             "description": "Id of the frame."
                         },
                         {
+                            "name": "loaderId",
+                            "$ref": "Network.LoaderId",
+                            "description": "Loader identifier. Empty string if the request is fetched from worker."
+                        },
+                        {
                             "name": "name",
                             "type": "string"
                         },
@@ -3980,7 +3985,7 @@
                         {
                             "name": "loaderId",
                             "$ref": "LoaderId",
-                            "description": "Loader identifier. Empty string if the request is fetched form worker."
+                            "description": "Loader identifier. Empty string if the request is fetched from worker."
                         },
                         {
                             "name": "documentURL",
@@ -4050,7 +4055,7 @@
                         {
                             "name": "loaderId",
                             "$ref": "LoaderId",
-                            "description": "Loader identifier. Empty string if the request is fetched form worker."
+                            "description": "Loader identifier. Empty string if the request is fetched from worker."
                         },
                         {
                             "name": "timestamp",
