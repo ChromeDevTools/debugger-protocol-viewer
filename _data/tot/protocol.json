@@ -12553,6 +12553,11 @@
                             "description": "Creation frame of the Promise which produced the next synchronous trace when resolved, if available."
                         }
                     ]
+                },
+                {
+                    "id": "AsyncTaskId",
+                    "type": "string",
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -13527,11 +13532,31 @@
                     "description": "Continues execution until specific location is reached."
                 },
                 {
+                    "name": "pauseOnAsyncTask",
+                    "parameters": [
+                        {
+                            "name": "asyncTaskId",
+                            "$ref": "Runtime.AsyncTaskId",
+                            "description": "Debugger will pause when given async task is started."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
                     "name": "stepOver",
                     "description": "Steps over the statement."
                 },
                 {
                     "name": "stepInto",
+                    "parameters": [
+                        {
+                            "name": "breakOnAsyncCall",
+                            "type": "boolean",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Debugger will issue additional Debugger.paused notification if any async task is scheduled before next pause."
+                        }
+                    ],
                     "description": "Steps into the function call."
                 },
                 {
@@ -13544,7 +13569,7 @@
                 },
                 {
                     "name": "scheduleStepIntoAsync",
-                    "description": "Steps into next scheduled async task if any is scheduled before next pause. Returns success when async task is actually scheduled, returns error if no task were scheduled or another scheduleStepIntoAsync was called.",
+                    "description": "This method is deprecated - use Debugger.stepInto with breakOnAsyncCall and Debugger.pauseOnAsyncTask instead. Steps into next scheduled async task if any is scheduled before next pause. Returns success when async task is actually scheduled, returns error if no task were scheduled or another scheduleStepIntoAsync was called.",
                     "experimental": true
                 },
                 {
@@ -14097,6 +14122,13 @@
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
                             "description": "Async stack trace, if any."
+                        },
+                        {
+                            "name": "scheduledAsyncTaskId",
+                            "$ref": "Runtime.AsyncTaskId",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Scheduled async task id."
                         }
                     ],
                     "description": "Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria."
