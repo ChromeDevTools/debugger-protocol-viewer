@@ -187,15 +187,16 @@
 
     chooseHighlightedResult: function() {
       var selectedItem = this.renderItems[this.highlightedResultIdx];
-      if(selectedItem) {
-        this.fire('item-activate');
+      if (selectedItem) {
         if (selectedItem.href) {
           history.pushState({}, '', selectedItem.href);
+          this.fire('location-changed');
         }
+        this.activateItem_();
       }
     },
 
-    activateItem_: function(e) {
+    activateItem_: function() {
       this.fire('item-activate');
     },
 

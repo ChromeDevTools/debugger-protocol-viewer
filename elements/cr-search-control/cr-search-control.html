@@ -32,7 +32,6 @@
         background-color: #3F51B5;
         border-style: none;
         color: white;
-        padding: 10px 18px;
         @apply --layout-flex;
         border-bottom: 1px solid transparent;
         border-radius: 0;
@@ -226,6 +225,7 @@
         }
       } else {
         this.$.searchButton.icon = 'search';
+        this.$.searchButton.active = false;
       }
       this.fire(this.inputActive ? 'active' : 'inactive');
     },
