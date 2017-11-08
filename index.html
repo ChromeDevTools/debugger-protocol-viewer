@@ -399,11 +399,11 @@
         }
         listbox.selected = newVersion;
 
-        if (domainToNameMapping[newVersion]) {
+        if (!domainToNameMapping[newVersion]) {
           document.title = defaultTitle;
           mainSelector.selected = newVersion;
           newVersion = 'tot';
-        } else if (index === -1) {
+        } else if (index === -1 || !newVersion.substring(index)) {
           document.title = `${defaultTitle} - ${domainToNameMapping[newVersion]}`;
 
           // Show the summary page if no sub-category was selected
@@ -416,7 +416,7 @@
         updateDomainSelectorLinks(newVersion);
         searchButton.protocolSrc = `search_index/${newVersion}.json`;
 
-        if (index !== -1) {
+        if (index !== -1 && newPage.substring(index) !== '/') {
           let newDomain = newPage.substring(index + 1);
           if (newDomain.endsWith('/')) {
             newDomain = newDomain.substring(0, newDomain.length - 1);
