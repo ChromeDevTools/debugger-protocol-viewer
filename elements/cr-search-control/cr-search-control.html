@@ -221,20 +221,11 @@
           this.handleSearchChange_();
           this.$.searchButton.icon = 'icons:arrow-forward';
         }.bind(this), 50);
-        // Prepares the search index if not previously requested.
-        if (!this.ajaxResponse && this.requests.length === 0) {
-          this.prepareSearchIndex_();
-        }
       } else {
         this.$.searchButton.icon = 'search';
         this.$.searchButton.active = false;
       }
       this.fire(this.inputActive ? 'active' : 'inactive');
-    },
-
-    prepareSearchIndex_: function() {
-      // Execute AJAX call when the user clicks the search button.
-      this.$['ajax'].generateRequest();
     },
 
     handleAjaxResponse_: function() {
