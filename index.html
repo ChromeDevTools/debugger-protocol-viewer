@@ -140,16 +140,14 @@
     </app-drawer>
 
     <div class="header-layout">
-      <app-header>
-        <app-toolbar id="mainToolbar">
-          <paper-icon-button id="paperToggle"
-              icon="menu" drawer-toggle aria-label="Open drawer menu"></paper-icon-button>
-          <div main-title class="top title">
-            Chrome DevTools Protocol Viewer
-          </div>
-          <cr-search-control id="searchButton"></cr-search-control>
-        </app-toolbar>
-      </app-header>
+      <app-toolbar id="mainToolbar">
+        <paper-icon-button id="paperToggle"
+            icon="menu" drawer-toggle aria-label="Open drawer menu"></paper-icon-button>
+        <div main-title class="top title">
+          Chrome DevTools Protocol Viewer
+        </div>
+        <cr-search-control id="searchButton"></cr-search-control>
+      </app-toolbar>
 
       <main class="content">
         <iron-pages id="main-selector" attr-for-selected="data-url" fallback-selection="404">
@@ -498,6 +496,7 @@
 
       const location = document.getElementById('location');
       location.addEventListener('path-changed', (e) => {
+        searchButton.inputActive = false;
         updateLocationBindings(e.detail.value);
       });
 
