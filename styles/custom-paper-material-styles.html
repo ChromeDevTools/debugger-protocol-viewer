@@ -2,15 +2,20 @@
 
 <dom-module id="custom-paper-material-styles">
   <template>
-    <style include="paper-material-styles">
+    <style>
       .paper-material {
+        display: block;
+        position: relative;
         border-radius: 2px;
         height: 100%;
         padding: 16px 0 16px 0;
         width: calc(98.66% - 16px);
         margin: 16px auto;
         background: white;
+
+        @apply --shadow-elevation-2dp;
       }
+
       /* Small */
       @media (max-width: 600px) {
         .paper-material {
