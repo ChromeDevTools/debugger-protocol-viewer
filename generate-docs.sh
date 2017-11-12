@@ -2,8 +2,8 @@
 set -x
 
 # Machine-specific path, naturally
-protocol_repo_path="$HOME/Projects/devtools-protocol"
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+protocol_repo_path="$local_script_path/../devtools-protocol"
 
 browser_protocol_path="$protocol_repo_path/json/browser_protocol.json"
 js_protocol_path="$protocol_repo_path/json/js_protocol.json"
@@ -50,7 +50,7 @@ yarn run build
 
 cd ..
 
-git clone git@github.com:timvdlippe/devtools-protocol.git --single-branch devtools-temp
+git clone git@github.com:ChromeDevTools/devtools-protocol.git --single-branch devtools-temp
 
 cd devtools-temp
 
