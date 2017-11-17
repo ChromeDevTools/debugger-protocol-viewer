@@ -901,7 +901,8 @@
       "description": "This domain emulates different environments for the page.",
       "dependencies": [
         "DOM",
-        "Page"
+        "Page",
+        "Runtime"
       ],
       "types": [
         {

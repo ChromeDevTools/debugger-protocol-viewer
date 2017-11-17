@@ -2068,7 +2068,8 @@
             "description": "This domain emulates different environments for the page.",
             "dependencies": [
                 "DOM",
-                "Page"
+                "Page",
+                "Runtime"
             ],
             "types": [
                 {
@@ -2347,7 +2348,7 @@
                         },
                         {
                             "name": "budget",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
                             "description": "If set, after this many virtual milliseconds have elapsed virtual time will be paused and a virtualTimeBudgetExpired event is sent."
                         },
@@ -2356,6 +2357,13 @@
                             "type": "integer",
                             "optional": true,
                             "description": "If set this specifies the maximum number of tasks that can be run before virtual is forced forwards to prevent deadlock."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "virtualTimeBase",
+                            "$ref": "Runtime.Timestamp",
+                            "description": "Absolute timestamp at which virtual time was first enabled (milliseconds since epoch)."
                         }
                     ],
                     "experimental": true
@@ -2397,7 +2405,7 @@
                     "parameters": [
                         {
                             "name": "virtualTimeElapsed",
-                            "type": "integer",
+                            "type": "number",
                             "description": "The amount of virtual time that has elapsed in milliseconds since virtual time was first enabled."
                         }
                     ],
@@ -2409,7 +2417,7 @@
                     "parameters": [
                         {
                             "name": "virtualTimeElapsed",
-                            "type": "integer",
+                            "type": "number",
                             "description": "The amount of virtual time that has elapsed in milliseconds since virtual time was first enabled."
                         }
                     ],
