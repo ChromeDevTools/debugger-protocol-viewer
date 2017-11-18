@@ -79,64 +79,66 @@
 
   <app-drawer-layout id="paperDrawerPanel">
     <app-drawer slot="drawer" id="drawer">
-      <paper-dropdown-menu id="versions" label="Version">
-        <paper-listbox slot="dropdown-content" attr-for-selected="name">
-          <a href="1-2" name="1-2">
-            <paper-item>stable (1.2)</paper-item>
-          </a>
-          <a href="tot" name="tot">
-            <paper-item>latest (tip-of-tree)</paper-item>
-          </a>
-          <a href="v8" name="v8">
-            <paper-item>v8-inspector (node)</paper-item>
-          </a>
-          <a href="" name="" class="homelink">
-            <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
-          </a>
-        </paper-listbox>
-      </paper-dropdown-menu>
-      <div id="drawerToolbar" class="paper-font-title">Domains</div>
-      <iron-selector id="domainContainer" attr-for-selected="data-title">
-        <a data-title="Accessibility" class="tot">Accessibility</a>
-        <a data-title="Animation" class="tot">Animation</a>
-        <a data-title="ApplicationCache" class="tot">ApplicationCache</a>
-        <a data-title="Audits" class="tot">Audits</a>
-        <a data-title="Browser" class="1-3 tot">Browser</a>
-        <a data-title="CacheStorage" class="tot">CacheStorage</a>
-        <a data-title="Console" class="tot v8">Console</a>
-        <a data-title="CSS" class="tot">CSS</a>
-        <a data-title="Database" class="tot">Database</a>
-        <a data-title="Debugger" class="1-2 1-3 tot v8">Debugger</a>
-        <a data-title="DeviceOrientation" class="tot">DeviceOrientation</a>
-        <a data-title="DOM" class="1-2 1-3 tot">DOM</a>
-        <a data-title="DOMDebugger" class="1-2 1-3 tot">DOMDebugger</a>
-        <a data-title="DOMSnapshot" class="tot">DOMSnapshot</a>
-        <a data-title="DOMStorage" class="tot">DOMStorage</a>
-        <a data-title="Emulation" class="1-2 1-3 tot">Emulation</a>
-        <a data-title="HeadlessExperimental" class="tot">HeadlessExperimental</a>
-        <a data-title="HeapProfiler" class="tot v8">HeapProfiler</a>
-        <a data-title="IndexedDB" class="tot">IndexedDB</a>
-        <a data-title="Input" class="1-2 1-3 tot">Input</a>
-        <a data-title="Inspector" class="tot">Inspector</a>
-        <a data-title="IO" class="1-3 tot">IO</a>
-        <a data-title="LayerTree" class="tot">LayerTree</a>
-        <a data-title="Log" class="1-3 tot">Log</a>
-        <a data-title="Memory" class="tot">Memory</a>
-        <a data-title="Network" class="1-2 1-3 tot">Network</a>
-        <a data-title="Overlay" class="tot">Overlay</a>
-        <a data-title="Page" class="1-2 1-3 tot">Page</a>
-        <a data-title="Performance" class="1-3 tot">Performance</a>
-        <a data-title="Profiler" class="1-2 1-3 tot v8">Profiler</a>
-        <a data-title="Runtime" class="1-2 1-3 tot v8">Runtime</a>
-        <a data-title="Schema" class="1-2 1-3 tot v8">Schema</a>
-        <a data-title="Security" class="1-3 tot">Security</a>
-        <a data-title="ServiceWorker" class="tot">ServiceWorker</a>
-        <a data-title="Storage" class="tot">Storage</a>
-        <a data-title="SystemInfo" class="tot">SystemInfo</a>
-        <a data-title="Target" class="tot">Target</a>
-        <a data-title="Tethering" class="1-3 tot">Tethering</a>
-        <a data-title="Tracing" class="tot">Tracing</a>
-      </iron-selector>
+      <div id="drawerContainer">
+        <paper-dropdown-menu id="versions" label="Version">
+          <paper-listbox slot="dropdown-content" attr-for-selected="name">
+            <a href="1-2" name="1-2">
+              <paper-item>stable (1.2)</paper-item>
+            </a>
+            <a href="tot" name="tot">
+              <paper-item>latest (tip-of-tree)</paper-item>
+            </a>
+            <a href="v8" name="v8">
+              <paper-item>v8-inspector (node)</paper-item>
+            </a>
+            <a href="" name="" class="homelink">
+              <paper-icon-button icon="home"></paper-icon-button><span>Home</span>
+            </a>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <div id="drawerToolbar" class="paper-font-title">Domains</div>
+        <iron-selector id="domainContainer" attr-for-selected="data-title">
+          <a data-title="Accessibility" class="tot">Accessibility</a>
+          <a data-title="Animation" class="tot">Animation</a>
+          <a data-title="ApplicationCache" class="tot">ApplicationCache</a>
+          <a data-title="Audits" class="tot">Audits</a>
+          <a data-title="Browser" class="1-3 tot">Browser</a>
+          <a data-title="CacheStorage" class="tot">CacheStorage</a>
+          <a data-title="Console" class="tot v8">Console</a>
+          <a data-title="CSS" class="tot">CSS</a>
+          <a data-title="Database" class="tot">Database</a>
+          <a data-title="Debugger" class="1-2 1-3 tot v8">Debugger</a>
+          <a data-title="DeviceOrientation" class="tot">DeviceOrientation</a>
+          <a data-title="DOM" class="1-2 1-3 tot">DOM</a>
+          <a data-title="DOMDebugger" class="1-2 1-3 tot">DOMDebugger</a>
+          <a data-title="DOMSnapshot" class="tot">DOMSnapshot</a>
+          <a data-title="DOMStorage" class="tot">DOMStorage</a>
+          <a data-title="Emulation" class="1-2 1-3 tot">Emulation</a>
+          <a data-title="HeadlessExperimental" class="tot">HeadlessExperimental</a>
+          <a data-title="HeapProfiler" class="tot v8">HeapProfiler</a>
+          <a data-title="IndexedDB" class="tot">IndexedDB</a>
+          <a data-title="Input" class="1-2 1-3 tot">Input</a>
+          <a data-title="Inspector" class="tot">Inspector</a>
+          <a data-title="IO" class="1-3 tot">IO</a>
+          <a data-title="LayerTree" class="tot">LayerTree</a>
+          <a data-title="Log" class="1-3 tot">Log</a>
+          <a data-title="Memory" class="tot">Memory</a>
+          <a data-title="Network" class="1-2 1-3 tot">Network</a>
+          <a data-title="Overlay" class="tot">Overlay</a>
+          <a data-title="Page" class="1-2 1-3 tot">Page</a>
+          <a data-title="Performance" class="1-3 tot">Performance</a>
+          <a data-title="Profiler" class="1-2 1-3 tot v8">Profiler</a>
+          <a data-title="Runtime" class="1-2 1-3 tot v8">Runtime</a>
+          <a data-title="Schema" class="1-2 1-3 tot v8">Schema</a>
+          <a data-title="Security" class="1-3 tot">Security</a>
+          <a data-title="ServiceWorker" class="tot">ServiceWorker</a>
+          <a data-title="Storage" class="tot">Storage</a>
+          <a data-title="SystemInfo" class="tot">SystemInfo</a>
+          <a data-title="Target" class="tot">Target</a>
+          <a data-title="Tethering" class="1-3 tot">Tethering</a>
+          <a data-title="Tracing" class="tot">Tracing</a>
+        </iron-selector>
+      </div>
     </app-drawer>
 
     <div class="header-layout">
