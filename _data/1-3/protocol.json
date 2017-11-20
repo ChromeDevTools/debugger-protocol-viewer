@@ -451,6 +451,13 @@
               "description": "Frame id that has navigated (or failed to navigate)"
             },
             {
+              "name": "loaderId",
+              "$ref": "Network.LoaderId",
+              "optional": true,
+              "description": "Loader identifier.",
+              "experimental": true
+            },
+            {
               "name": "errorText",
               "type": "string",
               "optional": true,
