@@ -12609,13 +12609,6 @@
                             "$ref": "StackTrace",
                             "optional": true,
                             "description": "Asynchronous JavaScript stack trace that preceded this stack, if available."
-                        },
-                        {
-                            "name": "promiseCreationFrame",
-                            "$ref": "CallFrame",
-                            "optional": true,
-                            "experimental": true,
-                            "description": "Creation frame of the Promise which produced the next synchronous trace when resolved, if available."
                         }
                     ]
                 },
