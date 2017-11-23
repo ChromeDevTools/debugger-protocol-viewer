@@ -12609,12 +12609,41 @@
                             "$ref": "StackTrace",
                             "optional": true,
                             "description": "Asynchronous JavaScript stack trace that preceded this stack, if available."
+                        },
+                        {
+                            "name": "parentId",
+                            "$ref": "StackTraceId",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Asynchronous JavaScript stack trace that preceded this stack, if available."
                         }
                     ]
                 },
                 {
                     "id": "AsyncTaskId",
                     "type": "string",
+                    "experimental": true
+                },
+                {
+                    "id": "UniqueDebuggerId",
+                    "type": "string",
+                    "description": "Unique identifier of current debugger.",
+                    "experimental": true
+                },
+                {
+                    "id": "StackTraceId",
+                    "type": "object",
+                    "description": "External stack trace comes from another debugger and can be resolved there. This allows to track cross-debugger calls. See <code>Runtime.StackTrace</code> and <code>Debugger.paused</code> for usages.",
+                    "properties": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "debuggerId",
+                            "$ref": "UniqueDebuggerId"
+                        }
+                    ],
                     "experimental": true
                 }
             ],
@@ -13410,6 +13439,14 @@
             "commands": [
                 {
                     "name": "enable",
+                    "returns": [
+                        {
+                            "name": "debuggerId",
+                            "$ref": "Runtime.UniqueDebuggerId",
+                            "experimental": true,
+                            "description": "Unique identifier of the debugger."
+                        }
+                    ],
                     "description": "Enables debugger for the given page. Clients should not assume that the debugging has been enabled until the result for this command is received."
                 },
                 {
@@ -13635,6 +13672,23 @@
                     "description": "Resumes JavaScript execution."
                 },
                 {
+                    "name": "getStackTrace",
+                    "parameters": [
+                        {
+                            "name": "stackTraceId",
+                            "$ref": "Runtime.StackTraceId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "stackTrace",
+                            "$ref": "Runtime.StackTrace"
+                        }
+                    ],
+                    "description": "Returns stack trace with given <code>stackTraceId</code>.",
+                    "experimental": true
+                },
+                {
                     "name": "searchInContent",
                     "parameters": [
                         {
@@ -13716,6 +13770,13 @@
                             "description": "Async stack trace, if any."
                         },
                         {
+                            "name": "asyncStackTraceId",
+                            "$ref": "Runtime.StackTraceId",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Async stack trace, if any."
+                        },
+                        {
                             "name": "exceptionDetails",
                             "optional": true,
                             "$ref": "Runtime.ExceptionDetails",
@@ -13746,6 +13807,13 @@
                             "name": "asyncStackTrace",
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
+                            "description": "Async stack trace, if any."
+                        },
+                        {
+                            "name": "asyncStackTraceId",
+                            "$ref": "Runtime.StackTraceId",
+                            "optional": true,
+                            "experimental": true,
                             "description": "Async stack trace, if any."
                         }
                     ],
@@ -14179,6 +14247,13 @@
                             "name": "asyncStackTrace",
                             "$ref": "Runtime.StackTrace",
                             "optional": true,
+                            "description": "Async stack trace, if any."
+                        },
+                        {
+                            "name": "asyncStackTraceId",
+                            "$ref": "Runtime.StackTraceId",
+                            "optional": true,
+                            "experimental": true,
                             "description": "Async stack trace, if any."
                         },
                         {
