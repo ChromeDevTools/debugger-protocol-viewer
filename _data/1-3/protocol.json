@@ -4822,49 +4822,6 @@
       ]
     },
     {
-      "domain": "Schema",
-      "description": "Provides information about the protocol schema.",
-      "types": [
-        {
-          "id": "Domain",
-          "type": "object",
-          "description": "Description of the protocol domain.",
-          "properties": [
-            {
-              "name": "name",
-              "type": "string",
-              "description": "Domain name."
-            },
-            {
-              "name": "version",
-              "type": "string",
-              "description": "Domain version."
-            }
-          ]
-        }
-      ],
-      "commands": [
-        {
-          "name": "getDomains",
-          "description": "Returns supported domains.",
-          "handlers": [
-            "browser",
-            "renderer"
-          ],
-          "returns": [
-            {
-              "name": "domains",
-              "type": "array",
-              "items": {
-                "$ref": "Domain"
-              },
-              "description": "List of supported domains."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "domain": "Runtime",
       "description": "Runtime domain exposes JavaScript runtime by means of remote evaluation and mirror objects. Evaluation results are returned as mirror object that expose object type, string representation and unique identifier that can be used for further object reference. Original objects are maintained in memory unless they are either explicitly released or are released along with the other objects in their object group.",
       "types": [
@@ -5295,7 +5252,6 @@
               "name": "userGesture",
               "type": "boolean",
               "optional": true,
-              "experimental": true,
               "description": "Whether execution should be treated as initiated by user in the UI."
             },
             {
@@ -5403,7 +5359,6 @@
               "name": "userGesture",
               "type": "boolean",
               "optional": true,
-              "experimental": true,
               "description": "Whether execution should be treated as initiated by user in the UI."
             },
             {
@@ -5640,6 +5595,44 @@
             }
           ],
           "description": "Runs script with given id in a given context."
+        },
+        {
+          "name": "queryObjects",
+          "parameters": [
+            {
+              "name": "prototypeObjectId",
+              "$ref": "RemoteObjectId",
+              "description": "Identifier of the prototype to return objects for."
+            }
+          ],
+          "returns": [
+            {
+              "name": "objects",
+              "$ref": "RemoteObject",
+              "description": "Array with objects."
+            }
+          ]
+        },
+        {
+          "name": "globalLexicalScopeNames",
+          "parameters": [
+            {
+              "name": "executionContextId",
+              "$ref": "ExecutionContextId",
+              "optional": true,
+              "description": "Specifies in which execution context to lookup global scope variables."
+            }
+          ],
+          "returns": [
+            {
+              "name": "names",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "Returns all let, const and class variables from global scope."
         }
       ],
       "events": [
@@ -5836,7 +5829,6 @@
               "name": "functionLocation",
               "$ref": "Location",
               "optional": true,
-              "experimental": true,
               "description": "Location in the source code."
             },
             {
@@ -5915,6 +5907,55 @@
             }
           ],
           "description": "Scope description."
+        },
+        {
+          "id": "SearchMatch",
+          "type": "object",
+          "description": "Search match for resource.",
+          "properties": [
+            {
+              "name": "lineNumber",
+              "type": "number",
+              "description": "Line number in resource content."
+            },
+            {
+              "name": "lineContent",
+              "type": "string",
+              "description": "Line with match content."
+            }
+          ]
+        },
+        {
+          "id": "BreakLocation",
+          "type": "object",
+          "properties": [
+            {
+              "name": "scriptId",
+              "$ref": "Runtime.ScriptId",
+              "description": "Script identifier as reported in the <code>Debugger.scriptParsed</code>."
+            },
+            {
+              "name": "lineNumber",
+              "type": "integer",
+              "description": "Line number in the script (0-based)."
+            },
+            {
+              "name": "columnNumber",
+              "type": "integer",
+              "optional": true,
+              "description": "Column number in the script (0-based)."
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "enum": [
+                "debuggerStatement",
+                "call",
+                "return"
+              ],
+              "optional": true
+            }
+          ]
         }
       ],
       "commands": [
@@ -5980,7 +6021,6 @@
               "name": "scriptHash",
               "type": "string",
               "optional": true,
-              "experimental": true,
               "description": "Script hash of the resources to set breakpoint on."
             },
             {
@@ -6053,6 +6093,39 @@
           "description": "Removes JavaScript breakpoint."
         },
         {
+          "name": "getPossibleBreakpoints",
+          "parameters": [
+            {
+              "name": "start",
+              "$ref": "Location",
+              "description": "Start of range to search possible breakpoint locations in."
+            },
+            {
+              "name": "end",
+              "$ref": "Location",
+              "optional": true,
+              "description": "End of range to search possible breakpoint locations in (excluding). When not specified, end of scripts is used as end of range."
+            },
+            {
+              "name": "restrictToFunction",
+              "type": "boolean",
+              "optional": true,
+              "description": "Only consider locations which are in the same (non-nested) function as start."
+            }
+          ],
+          "returns": [
+            {
+              "name": "locations",
+              "type": "array",
+              "items": {
+                "$ref": "BreakLocation"
+              },
+              "description": "List of the possible breakpoint locations."
+            }
+          ],
+          "description": "Returns possible locations for breakpoint. scriptId in start and end range locations should be the same."
+        },
+        {
           "name": "continueToLocation",
           "parameters": [
             {
@@ -6067,8 +6140,7 @@
                 "any",
                 "current"
               ],
-              "optional": true,
-              "experimental": true
+              "optional": true
             }
           ],
           "description": "Continues execution until specific location is reached."
@@ -6101,6 +6173,44 @@
         {
           "name": "resume",
           "description": "Resumes JavaScript execution."
+        },
+        {
+          "name": "searchInContent",
+          "parameters": [
+            {
+              "name": "scriptId",
+              "$ref": "Runtime.ScriptId",
+              "description": "Id of the script to search in."
+            },
+            {
+              "name": "query",
+              "type": "string",
+              "description": "String to search for."
+            },
+            {
+              "name": "caseSensitive",
+              "type": "boolean",
+              "optional": true,
+              "description": "If true, search is case sensitive."
+            },
+            {
+              "name": "isRegex",
+              "type": "boolean",
+              "optional": true,
+              "description": "If true, treats string parameter as regex."
+            }
+          ],
+          "returns": [
+            {
+              "name": "result",
+              "type": "array",
+              "items": {
+                "$ref": "SearchMatch"
+              },
+              "description": "List of search matches."
+            }
+          ],
+          "description": "Searches for given string in script content."
         },
         {
           "name": "setScriptSource",
@@ -6276,7 +6386,6 @@
               "name": "throwOnSideEffect",
               "type": "boolean",
               "optional": true,
-              "experimental": true,
               "description": "Whether to throw an exception if side effect cannot be ruled out during evaluation."
             }
           ],
@@ -6400,22 +6509,19 @@
               "name": "hasSourceURL",
               "type": "boolean",
               "optional": true,
-              "description": "True, if this script has sourceURL.",
-              "experimental": true
+              "description": "True, if this script has sourceURL."
             },
             {
               "name": "isModule",
               "type": "boolean",
               "optional": true,
-              "description": "True, if this script is ES6 module.",
-              "experimental": true
+              "description": "True, if this script is ES6 module."
             },
             {
               "name": "length",
               "type": "integer",
               "optional": true,
-              "description": "This script length.",
-              "experimental": true
+              "description": "This script length."
             },
             {
               "name": "stackTrace",
@@ -6486,22 +6592,19 @@
               "name": "hasSourceURL",
               "type": "boolean",
               "optional": true,
-              "description": "True, if this script has sourceURL.",
-              "experimental": true
+              "description": "True, if this script has sourceURL."
             },
             {
               "name": "isModule",
               "type": "boolean",
               "optional": true,
-              "description": "True, if this script is ES6 module.",
-              "experimental": true
+              "description": "True, if this script is ES6 module."
             },
             {
               "name": "length",
               "type": "integer",
               "optional": true,
-              "description": "This script length.",
-              "experimental": true
+              "description": "This script length."
             },
             {
               "name": "stackTrace",
@@ -6586,11 +6689,11 @@
               "description": "Async stack trace, if any."
             },
             {
-              "name": "scheduledAsyncTaskId",
-              "$ref": "Runtime.AsyncTaskId",
+              "name": "asyncCallStackTraceId",
+              "$ref": "Runtime.StackTraceId",
               "optional": true,
               "experimental": true,
-              "description": "Scheduled async task id."
+              "description": "Just scheduled async call will have this stack trace as parent stack during async execution. This field is available only after <code>Debugger.stepInto</code> call with <code>breakOnAsynCall</code> flag."
             }
           ],
           "description": "Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria."
@@ -6627,7 +6730,6 @@
               "name": "hitCount",
               "type": "integer",
               "optional": true,
-              "experimental": true,
               "description": "Number of samples where this node was on top of the call stack."
             },
             {
@@ -6652,7 +6754,6 @@
                 "$ref": "PositionTickInfo"
               },
               "optional": true,
-              "experimental": true,
               "description": "An array of source position ticks."
             }
           ]
@@ -6699,6 +6800,95 @@
               "description": "Time intervals between adjacent samples in microseconds. The first delta is relative to the profile startTime."
             }
           ]
+        },
+        {
+          "id": "PositionTickInfo",
+          "type": "object",
+          "description": "Specifies a number of samples attributed to a certain source position.",
+          "properties": [
+            {
+              "name": "line",
+              "type": "integer",
+              "description": "Source line number (1-based)."
+            },
+            {
+              "name": "ticks",
+              "type": "integer",
+              "description": "Number of samples attributed to the source line."
+            }
+          ]
+        },
+        {
+          "id": "CoverageRange",
+          "type": "object",
+          "description": "Coverage data for a source range.",
+          "properties": [
+            {
+              "name": "startOffset",
+              "type": "integer",
+              "description": "JavaScript script source offset for the range start."
+            },
+            {
+              "name": "endOffset",
+              "type": "integer",
+              "description": "JavaScript script source offset for the range end."
+            },
+            {
+              "name": "count",
+              "type": "integer",
+              "description": "Collected execution count of the source range."
+            }
+          ]
+        },
+        {
+          "id": "FunctionCoverage",
+          "type": "object",
+          "description": "Coverage data for a JavaScript function.",
+          "properties": [
+            {
+              "name": "functionName",
+              "type": "string",
+              "description": "JavaScript function name."
+            },
+            {
+              "name": "ranges",
+              "type": "array",
+              "items": {
+                "$ref": "CoverageRange"
+              },
+              "description": "Source ranges inside the function with coverage data."
+            },
+            {
+              "name": "isBlockCoverage",
+              "type": "boolean",
+              "description": "Whether coverage data for this function has block granularity."
+            }
+          ]
+        },
+        {
+          "id": "ScriptCoverage",
+          "type": "object",
+          "description": "Coverage data for a JavaScript script.",
+          "properties": [
+            {
+              "name": "scriptId",
+              "$ref": "Runtime.ScriptId",
+              "description": "JavaScript script id."
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "description": "JavaScript script name or url."
+            },
+            {
+              "name": "functions",
+              "type": "array",
+              "items": {
+                "$ref": "FunctionCoverage"
+              },
+              "description": "Functions contained in the script that has coverage data."
+            }
+          ]
         }
       ],
       "commands": [
@@ -6731,6 +6921,56 @@
               "description": "Recorded profile."
             }
           ]
+        },
+        {
+          "name": "startPreciseCoverage",
+          "parameters": [
+            {
+              "name": "callCount",
+              "type": "boolean",
+              "optional": true,
+              "description": "Collect accurate call counts beyond simple 'covered' or 'not covered'."
+            },
+            {
+              "name": "detailed",
+              "type": "boolean",
+              "optional": true,
+              "description": "Collect block-based coverage."
+            }
+          ],
+          "description": "Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters."
+        },
+        {
+          "name": "stopPreciseCoverage",
+          "description": "Disable precise code coverage. Disabling releases unnecessary execution count records and allows executing optimized code."
+        },
+        {
+          "name": "takePreciseCoverage",
+          "returns": [
+            {
+              "name": "result",
+              "type": "array",
+              "items": {
+                "$ref": "ScriptCoverage"
+              },
+              "description": "Coverage data for the current isolate."
+            }
+          ],
+          "description": "Collect coverage data for the current isolate, and resets execution counters. Precise code coverage needs to have started."
+        },
+        {
+          "name": "getBestEffortCoverage",
+          "returns": [
+            {
+              "name": "result",
+              "type": "array",
+              "items": {
+                "$ref": "ScriptCoverage"
+              },
+              "description": "Coverage data for the current isolate."
+            }
+          ],
+          "description": "Collect coverage data for the current isolate. The coverage data may be incomplete due to garbage collection."
         }
       ],
       "events": [

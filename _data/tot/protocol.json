@@ -12023,7 +12023,8 @@
         },
         {
             "domain": "Schema",
-            "description": "Provides information about the protocol schema.",
+            "description": "This domain is deprecated.",
+            "deprecated": true,
             "types": [
                 {
                     "id": "Domain",
@@ -12620,11 +12621,6 @@
                     ]
                 },
                 {
-                    "id": "AsyncTaskId",
-                    "type": "string",
-                    "experimental": true
-                },
-                {
                     "id": "UniqueDebuggerId",
                     "type": "string",
                     "description": "Unique identifier of current debugger.",
@@ -12633,7 +12629,7 @@
                 {
                     "id": "StackTraceId",
                     "type": "object",
-                    "description": "External stack trace comes from another debugger and can be resolved there. This allows to track cross-debugger calls. See <code>Runtime.StackTrace</code> and <code>Debugger.paused</code> for usages.",
+                    "description": "If <code>debuggerId</code> is set stack trace comes from another debugger and can be resolved there. This allows to track cross-debugger calls. See <code>Runtime.StackTrace</code> and <code>Debugger.paused</code> for usages.",
                     "properties": [
                         {
                             "name": "id",
@@ -12641,7 +12637,8 @@
                         },
                         {
                             "name": "debuggerId",
-                            "$ref": "UniqueDebuggerId"
+                            "$ref": "UniqueDebuggerId",
+                            "optional": true
                         }
                     ],
                     "experimental": true
@@ -12697,7 +12694,6 @@
                             "name": "userGesture",
                             "type": "boolean",
                             "optional": true,
-                            "experimental": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
                         },
                         {
@@ -12805,7 +12801,6 @@
                             "name": "userGesture",
                             "type": "boolean",
                             "optional": true,
-                            "experimental": true,
                             "description": "Whether execution should be treated as initiated by user in the UI."
                         },
                         {
@@ -13068,8 +13063,7 @@
                             "$ref": "RemoteObject",
                             "description": "Array with objects."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "name": "globalLexicalScopeNames",
@@ -13090,8 +13084,7 @@
                             }
                         }
                     ],
-                    "description": "Returns all let, const and class variables from global scope.",
-                    "experimental": true
+                    "description": "Returns all let, const and class variables from global scope."
                 }
             ],
             "events": [
@@ -13304,7 +13297,6 @@
                             "name": "functionLocation",
                             "$ref": "Location",
                             "optional": true,
-                            "experimental": true,
                             "description": "Location in the source code."
                         },
                         {
@@ -13399,8 +13391,7 @@
                             "type": "string",
                             "description": "Line with match content."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "BreakLocation",
@@ -13432,8 +13423,7 @@
                             ],
                             "optional": true
                         }
-                    ],
-                    "experimental": true
+                    ]
                 }
             ],
             "commands": [
@@ -13499,7 +13489,6 @@
                             "name": "scriptHash",
                             "type": "string",
                             "optional": true,
-                            "experimental": true,
                             "description": "Script hash of the resources to set breakpoint on."
                         },
                         {
@@ -13602,8 +13591,7 @@
                             "description": "List of the possible breakpoint locations."
                         }
                     ],
-                    "description": "Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.",
-                    "experimental": true
+                    "description": "Returns possible locations for breakpoint. scriptId in start and end range locations should be the same."
                 },
                 {
                     "name": "continueToLocation",
@@ -13620,19 +13608,18 @@
                                 "any",
                                 "current"
                             ],
-                            "optional": true,
-                            "experimental": true
+                            "optional": true
                         }
                     ],
                     "description": "Continues execution until specific location is reached."
                 },
                 {
-                    "name": "pauseOnAsyncTask",
+                    "name": "pauseOnAsyncCall",
                     "parameters": [
                         {
-                            "name": "asyncTaskId",
-                            "$ref": "Runtime.AsyncTaskId",
-                            "description": "Debugger will pause when given async task is started."
+                            "name": "parentStackTraceId",
+                            "$ref": "Runtime.StackTraceId",
+                            "description": "Debugger will pause when async call with given stack trace is started."
                         }
                     ],
                     "experimental": true
@@ -13724,7 +13711,6 @@
                             "description": "List of search matches."
                         }
                     ],
-                    "experimental": true,
                     "description": "Searches for given string in script content."
                 },
                 {
@@ -13901,7 +13887,6 @@
                             "name": "throwOnSideEffect",
                             "type": "boolean",
                             "optional": true,
-                            "experimental": true,
                             "description": "Whether to throw an exception if side effect cannot be ruled out during evaluation."
                         }
                     ],
@@ -14071,22 +14056,19 @@
                             "name": "hasSourceURL",
                             "type": "boolean",
                             "optional": true,
-                            "description": "True, if this script has sourceURL.",
-                            "experimental": true
+                            "description": "True, if this script has sourceURL."
                         },
                         {
                             "name": "isModule",
                             "type": "boolean",
                             "optional": true,
-                            "description": "True, if this script is ES6 module.",
-                            "experimental": true
+                            "description": "True, if this script is ES6 module."
                         },
                         {
                             "name": "length",
                             "type": "integer",
                             "optional": true,
-                            "description": "This script length.",
-                            "experimental": true
+                            "description": "This script length."
                         },
                         {
                             "name": "stackTrace",
@@ -14157,22 +14139,19 @@
                             "name": "hasSourceURL",
                             "type": "boolean",
                             "optional": true,
-                            "description": "True, if this script has sourceURL.",
-                            "experimental": true
+                            "description": "True, if this script has sourceURL."
                         },
                         {
                             "name": "isModule",
                             "type": "boolean",
                             "optional": true,
-                            "description": "True, if this script is ES6 module.",
-                            "experimental": true
+                            "description": "True, if this script is ES6 module."
                         },
                         {
                             "name": "length",
                             "type": "integer",
                             "optional": true,
-                            "description": "This script length.",
-                            "experimental": true
+                            "description": "This script length."
                         },
                         {
                             "name": "stackTrace",
@@ -14257,11 +14236,11 @@
                             "description": "Async stack trace, if any."
                         },
                         {
-                            "name": "scheduledAsyncTaskId",
-                            "$ref": "Runtime.AsyncTaskId",
+                            "name": "asyncCallStackTraceId",
+                            "$ref": "Runtime.StackTraceId",
                             "optional": true,
                             "experimental": true,
-                            "description": "Scheduled async task id."
+                            "description": "Just scheduled async call will have this stack trace as parent stack during async execution. This field is available only after <code>Debugger.stepInto</code> call with <code>breakOnAsynCall</code> flag."
                         }
                     ],
                     "description": "Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria."
@@ -14395,7 +14374,6 @@
                             "name": "hitCount",
                             "type": "integer",
                             "optional": true,
-                            "experimental": true,
                             "description": "Number of samples where this node was on top of the call stack."
                         },
                         {
@@ -14420,7 +14398,6 @@
                                 "$ref": "PositionTickInfo"
                             },
                             "optional": true,
-                            "experimental": true,
                             "description": "An array of source position ticks."
                         }
                     ]
@@ -14471,7 +14448,6 @@
                 {
                     "id": "PositionTickInfo",
                     "type": "object",
-                    "experimental": true,
                     "description": "Specifies a number of samples attributed to a certain source position.",
                     "properties": [
                         {
@@ -14506,8 +14482,7 @@
                             "type": "integer",
                             "description": "Collected execution count of the source range."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "FunctionCoverage",
@@ -14532,8 +14507,7 @@
                             "type": "boolean",
                             "description": "Whether coverage data for this function has block granularity."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "ScriptCoverage",
@@ -14558,8 +14532,7 @@
                             },
                             "description": "Functions contained in the script that has coverage data."
                         }
-                    ],
-                    "experimental": true
+                    ]
                 },
                 {
                     "id": "TypeObject",
@@ -14669,13 +14642,11 @@
                             "description": "Collect block-based coverage."
                         }
                     ],
-                    "description": "Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters.",
-                    "experimental": true
+                    "description": "Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters."
                 },
                 {
                     "name": "stopPreciseCoverage",
-                    "description": "Disable precise code coverage. Disabling releases unnecessary execution count records and allows executing optimized code.",
-                    "experimental": true
+                    "description": "Disable precise code coverage. Disabling releases unnecessary execution count records and allows executing optimized code."
                 },
                 {
                     "name": "takePreciseCoverage",
@@ -14689,8 +14660,7 @@
                             "description": "Coverage data for the current isolate."
                         }
                     ],
-                    "description": "Collect coverage data for the current isolate, and resets execution counters. Precise code coverage needs to have started.",
-                    "experimental": true
+                    "description": "Collect coverage data for the current isolate, and resets execution counters. Precise code coverage needs to have started."
                 },
                 {
                     "name": "getBestEffortCoverage",
@@ -14704,8 +14674,7 @@
                             "description": "Coverage data for the current isolate."
                         }
                     ],
-                    "description": "Collect coverage data for the current isolate. The coverage data may be incomplete due to garbage collection.",
-                    "experimental": true
+                    "description": "Collect coverage data for the current isolate. The coverage data may be incomplete due to garbage collection."
                 },
                 {
                     "name": "startTypeProfile",
