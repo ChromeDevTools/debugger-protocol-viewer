@@ -29,18 +29,18 @@ node create-search-index.js
 # get the latest change
 # => into chromium
 cd $(dirname "$browser_protocol_path")
-br_commit_line=$(git log --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^commit.*")
-br_date_line=$(git log --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^Date.*")
+br_commit_line=$(git log --date=iso --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^commit.*")
+br_date_line=$(git log --date=iso --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^Date.*")
 
 cd $(dirname "$js_protocol_path")
-js_commit_line=$(git log --no-color --max-count=1 -- js_protocol.json | grep -E -o "^commit.*")
-js_date_line=$(git log --no-color --max-count=1 -- js_protocol.json | grep -E -o "^Date.*")
+js_commit_line=$(git log --date=iso --no-color --max-count=1 -- js_protocol.json | grep -E -o "^commit.*")
+js_date_line=$(git log --date=iso --no-color --max-count=1 -- js_protocol.json | grep -E -o "^Date.*")
 
 # copy it into the HTML file
 # => into viewer
 cd $local_script_path
 
-# we no longer printing the most recent protocol git hashes. 
+# we no longer printing the most recent protocol git hashes.
 # we can restore this when the devtools-protocol repo starts includes that data
 
 cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > _versions/tot.html.new
