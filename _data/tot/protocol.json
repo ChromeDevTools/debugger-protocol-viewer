@@ -10624,6 +10624,11 @@
                             "$ref": "SecurityState"
                         },
                         {
+                            "name": "title",
+                            "description": "Title describing the type of factor.",
+                            "type": "string"
+                        },
+                        {
                             "name": "summary",
                             "description": "Short phrase describing the type of factor.",
                             "type": "string"
