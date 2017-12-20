@@ -4489,57 +4489,9 @@
         {
           "name": "enable",
           "description": "Enables tracking security state changes."
-        },
-        {
-          "name": "handleCertificateError",
-          "description": "Handles a certificate error that fired a certificateError event.",
-          "parameters": [
-            {
-              "name": "eventId",
-              "description": "The ID of the event.",
-              "type": "integer"
-            },
-            {
-              "name": "action",
-              "description": "The action to take on the certificate error.",
-              "$ref": "CertificateErrorAction"
-            }
-          ]
-        },
-        {
-          "name": "setOverrideCertificateErrors",
-          "description": "Enable/disable overriding certificate errors. If enabled, all certificate error events need to\nbe handled by the DevTools client and should be answered with handleCertificateError commands.",
-          "parameters": [
-            {
-              "name": "override",
-              "description": "If true, certificate errors will be overridden.",
-              "type": "boolean"
-            }
-          ]
         }
       ],
       "events": [
-        {
-          "name": "certificateError",
-          "description": "There is a certificate error. If overriding certificate errors is enabled, then it should be\nhandled with the handleCertificateError command. Note: this event does not fire if the\ncertificate error has been allowed internally.",
-          "parameters": [
-            {
-              "name": "eventId",
-              "description": "The ID of the event.",
-              "type": "integer"
-            },
-            {
-              "name": "errorType",
-              "description": "The type of the error.",
-              "type": "string"
-            },
-            {
-              "name": "requestURL",
-              "description": "The url that was requested.",
-              "type": "string"
-            }
-          ]
-        },
         {
           "name": "securityStateChanged",
           "description": "The security state of the page changed.",
