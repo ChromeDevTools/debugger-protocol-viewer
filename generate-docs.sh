@@ -59,7 +59,7 @@ git checkout --orphan gh-pages
 # remove all content
 git rm -rf -q .
 
-cp -R ../debugger-protocol-viewer/_site/{*,.nojekyll} ./
+# cp -R ../debugger-protocol-viewer/devtools-protocol/{*,.nojekyll} ./
 
 git add .
 

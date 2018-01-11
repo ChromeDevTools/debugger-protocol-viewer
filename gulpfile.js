@@ -31,7 +31,7 @@ const jsonMinifiy = require('gulp-json-minify');
 const swPrecacheConfig = require('./sw-precache-config.js');
 const polymerJson = require('./polymer.json');
 const polymerProject = new polymerBuild.PolymerProject(polymerJson);
-const buildDirectory = '_site';
+const buildDirectory = 'devtools-protocol';
 
 function htmlMinify() {
   return htmlMinifier({

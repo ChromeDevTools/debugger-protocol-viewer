@@ -19,10 +19,11 @@
     "gulp-imagemin": "^3.4.0",
     "gulp-json-minify": "^1.2.0",
     "merge-stream": "^1.0.1",
-    "polymer-build": "^2.1.0"
+    "polymer-build": "^2.1.0",
+    "statikk": "^1.1.0"
   },
   "scripts": {
     "build": "gulp build",
-    "serve": "polymer serve -p 8000 --proxy-path devtools-protocol --proxy-target http://localhost:8000/"
+    "serve": "echo 'Open http://localhost:8000/devtools-protocol/'; statikk --port 8000 ."
   }
 }
