@@ -9,23 +9,22 @@ More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protoc
 Dependencies:
 
 ```sh
-bundle install
-bower install
+yarn
 ```
 
 Building:
 ```sh
-# compiles site to _site/ and watches for file changes
-bundle exec jekyll server --incremental
-# always use `bundle exec` to use the local version of jeykyll
+yarn build
 ```
-Generate latest up-to-date docs:
 
+```Serving:
+```sh
+yarn serve
+```
+
+Generate latest up-to-date docs:
 ```sh
 ./generate-docs.sh
-
-# to build (although gh-pages will do it on its own)..
-bundle exec jekyll build
 ```
 
 Deploying:
@@ -49,6 +48,10 @@ To add a new protocol version:
 1. Create `_data/VERSION_SLUG` folder and put `protocol.json` file there
 1. Create `_versions/VERSION_SLUG.html` file with protocol version description
 1. Build project
+
+## Adding new domains
+
+They must be manually added to `<div id="drawerToolbar" class="paper-font-title">Domains</div>` in `index.html`.
 
 ## History
 
