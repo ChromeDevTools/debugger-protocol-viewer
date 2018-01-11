@@ -24,7 +24,7 @@ yarn serve
 
 Generate latest up-to-date docs:
 ```sh
-./generate-docs.sh
+yarn prep
 ```
 
 Deploying:

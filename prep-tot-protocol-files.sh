@@ -46,29 +46,3 @@ cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > 
 cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > _versions/tot.html
 rm -f _versions/tot.html.new
 
-yarn run build
-
-# cd ..
-
-# git clone git@github.com:ChromeDevTools/devtools-protocol.git --single-branch devtools-temp
-
-# cd devtools-temp
-
-# git checkout --orphan gh-pages
-
-# # remove all content
-# git rm -rf -q .
-
-# cp -R ../debugger-protocol-viewer/devtools-protocol/{*,.nojekyll} ./
-
-# git add .
-
-# git commit -am 'seed gh-pages'
-
-# git push -u origin gh-pages --force
-
-# cd ..
-
-# rm -rf devtools-temp
-
-# set +x
