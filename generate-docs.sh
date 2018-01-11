@@ -48,27 +48,27 @@ rm -f _versions/tot.html.new
 
 yarn run build
 
-cd ..
+# cd ..
 
-git clone git@github.com:ChromeDevTools/devtools-protocol.git --single-branch devtools-temp
+# git clone git@github.com:ChromeDevTools/devtools-protocol.git --single-branch devtools-temp
 
-cd devtools-temp
+# cd devtools-temp
 
-git checkout --orphan gh-pages
+# git checkout --orphan gh-pages
 
-# remove all content
-git rm -rf -q .
+# # remove all content
+# git rm -rf -q .
 
 # cp -R ../debugger-protocol-viewer/devtools-protocol/{*,.nojekyll} ./
 
-git add .
+# git add .
 
-git commit -am 'seed gh-pages'
+# git commit -am 'seed gh-pages'
 
-git push -u origin gh-pages --force
+# git push -u origin gh-pages --force
 
-cd ..
+# cd ..
 
-rm -rf devtools-temp
+# rm -rf devtools-temp
 
-set +x
+# set +x
