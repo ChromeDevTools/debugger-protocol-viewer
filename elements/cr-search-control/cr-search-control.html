@@ -44,7 +44,6 @@
       }
     </style>
     <iron-ajax id="ajax"
-        auto
         url="{{protocolSrc}}"
         handle-as="json"
         active-requests="{{requests}}"
@@ -133,7 +132,8 @@
     ],
     properties: {
       protocolSrc: {
-        value: String
+        value: String,
+        observer: 'fireAjax_'
       },
       inputActive: {
         type: Boolean,
@@ -207,6 +207,12 @@
         this.setMenuOpen_(false);
       } else {
         this.inputActive = false;
+      }
+    },
+
+    fireAjax_: function() {
+      if (this.protocolSrc) {
+        this.$.ajax.generateRequest();
       }
     },
 

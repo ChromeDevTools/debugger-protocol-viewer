@@ -511,6 +511,10 @@
           toolbar.classList.remove('search-active');
         }, false);
       });
+
+      if ('serviceWorker' in window.navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+      }
     })();
   </script>
   <script>
