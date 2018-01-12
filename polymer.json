@@ -1,5 +1,6 @@
 {
   "entrypoint": "index.html",
+  "shell": "index-imports.html",
   "sources": [
     "elements/**/*",
     "images/**/*",
@@ -15,10 +16,5 @@
   ],
   "lint": {
     "rules": ["polymer-2"]
-  },
-  "builds": [
-    {
-      "preset": "es6-bundled"
-    }
-  ]
+  }
 }
