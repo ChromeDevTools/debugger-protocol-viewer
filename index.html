@@ -439,6 +439,12 @@
             const result = await fetch('_data/' + newVersion + '/protocol.json');
             const versionData = await result.json();
 
+            // confirm we have the dom elements present in the nav
+            const hardcodedDomains = Array.from(domainContainer.children).map(e => e.dataset.title);
+            versionData.domains.forEach(d => {
+              if (!hardcodedDomains.includes(d.domain)) console.error(`${d.domain} not present in domainContainer`);
+            });
+
             crDomain.domain = versionData.domains.find(d => d.domain === newDomain);
             domainContainer.selected = newDomain;
             crDomain.version = newVersion;
