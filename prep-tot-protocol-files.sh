@@ -28,12 +28,12 @@ node create-search-index.js
 # get the latest change
 # => into chromium
 cd $(dirname "$browser_protocol_path")
-br_commit_line=$(git log --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^commit.*")
-br_date_line=$(git log --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^Date.*")
+br_commit_line=$(git log --date=iso --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^commit.*")
+br_date_line=$(git log --date=iso --no-color --max-count=1 -- browser_protocol.json | grep -E -o "^Date.*")
 
 cd $(dirname "$js_protocol_path")
-js_commit_line=$(git log --no-color --max-count=1 -- js_protocol.json | grep -E -o "^commit.*")
-js_date_line=$(git log --no-color --max-count=1 -- js_protocol.json | grep -E -o "^Date.*")
+js_commit_line=$(git log --date=iso --no-color --max-count=1 -- js_protocol.json | grep -E -o "^commit.*")
+js_date_line=$(git log --date=iso --no-color --max-count=1 -- js_protocol.json | grep -E -o "^Date.*")
 
 # copy it into the HTML file
 # => into viewer
@@ -46,29 +46,3 @@ cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > 
 cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > _versions/tot.html
 rm -f _versions/tot.html.new
 
-yarn run build
-
-cd ..
-
-git clone git@github.com:ChromeDevTools/devtools-protocol.git --single-branch devtools-temp
-
-cd devtools-temp
-
-git checkout --orphan gh-pages
-
-# remove all content
-git rm -rf -q .
-
-cp -R ../debugger-protocol-viewer/_site/{*,.nojekyll} ./
-
-git add .
-
-git commit -am 'seed gh-pages'
-
-git push -u origin gh-pages --force
-
-cd ..
-
-rm -rf devtools-temp
-
-set +x
