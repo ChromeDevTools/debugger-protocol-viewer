@@ -28,7 +28,6 @@ const cssSlam = require('css-slam').gulp;
 const htmlMinifier = require('gulp-html-minifier');
 const jsonMinifiy = require('gulp-json-minify');
 
-const swPrecacheConfig = require('./sw-precache-config.js');
 const polymerJson = require('./polymer.json');
 const polymerProject = new polymerBuild.PolymerProject(polymerJson);
 const buildDirectory = 'devtools-protocol';
