@@ -5,7 +5,7 @@
  */
 
 const fs = require('fs');
-const tot = require('./_data/tot/protocol.json');
+const tot = JSON.parse(fs.readFileSync(__dirname + '/_data/tot/protocol.json', 'utf8'));
 
 
 const isNotExperimentalOrDeprecated = item => !item.experimental && !item.deprecated;
@@ -26,5 +26,5 @@ stableProtocol.domains.forEach(domain => {
 });
 
 // filter out command params, too?
-fs.writeFileSync('./_data/1-3/protocol.json', JSON.stringify(stableProtocol, null, 2));
+fs.writeFileSync(__dirname + '/_data/1-3/protocol.json', JSON.stringify(stableProtocol, null, 2));
 
