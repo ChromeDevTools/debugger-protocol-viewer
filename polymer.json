@@ -12,7 +12,8 @@
     "_data/**/*",
     "_versions/**/*",
     "search_index/**/*",
-    "bower_components/webcomponentsjs/*.js"
+    "bower_components/webcomponentsjs/*.js",
+    "bower_components/web-animations-js/web-animations-next.min.js"
   ],
   "lint": {
     "rules": ["polymer-2"]

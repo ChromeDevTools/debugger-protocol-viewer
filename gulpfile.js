@@ -28,7 +28,6 @@ const cssSlam = require('css-slam').gulp;
 const htmlMinifier = require('gulp-html-minifier');
 const jsonMinifiy = require('gulp-json-minify');
 
-const swPrecacheConfig = require('./sw-precache-config.js');
 const polymerJson = require('./polymer.json');
 const polymerProject = new polymerBuild.PolymerProject(polymerJson);
 const buildDirectory = 'devtools-protocol';
@@ -132,11 +131,24 @@ function build() {
       .then(() => {
         // Okay, now let's generate the Service Worker
         console.log('Generating the Service Worker...');
+        const staticFileGlobs = [
+            polymerJson.entrypoint,
+            polymerJson.shell,
+          ].concat(polymerJson.extraDependencies)
+          .concat(polymerJson.sources)
+          // Statikk can not handle `.nojekyll` requests
+          // Nonetheless, this file is only required to exist, so
+          // we can just ignore it for caching.
+          .filter(e => e !== '.nojekyll');
+
         return polymerBuild.addServiceWorker({
           project: polymerProject,
           buildRoot: buildDirectory,
           bundled: true,
-          swPrecacheConfig: swPrecacheConfig
+          swPrecacheConfig: {
+            staticFileGlobs,
+            navigateFallback: polymerJson.entrypoint
+          }
         });
       })
       .then(() => {
