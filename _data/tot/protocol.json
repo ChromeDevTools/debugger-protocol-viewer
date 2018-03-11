@@ -14214,14 +14214,8 @@
                 },
                 {
                     "id": "UnserializableValue",
-                    "description": "Primitive value which cannot be JSON-stringified.",
-                    "type": "string",
-                    "enum": [
-                        "Infinity",
-                        "NaN",
-                        "-Infinity",
-                        "-0"
-                    ]
+                    "description": "Primitive value which cannot be JSON-stringified. Includes values `-0`, `NaN`, `Infinity`,\n`-Infinity`, and bigint literals.",
+                    "type": "string"
                 },
                 {
                     "id": "RemoteObject",
@@ -14239,7 +14233,8 @@
                                 "string",
                                 "number",
                                 "boolean",
-                                "symbol"
+                                "symbol",
+                                "bigint"
                             ]
                         },
                         {
@@ -14355,7 +14350,8 @@
                                 "string",
                                 "number",
                                 "boolean",
-                                "symbol"
+                                "symbol",
+                                "bigint"
                             ]
                         },
                         {
@@ -14430,7 +14426,8 @@
                                 "number",
                                 "boolean",
                                 "symbol",
-                                "accessor"
+                                "accessor",
+                                "bigint"
                             ]
                         },
                         {
