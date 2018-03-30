@@ -4102,7 +4102,7 @@
             },
             {
               "name": "headerTemplate",
-              "description": "HTML template for the print header. Should be valid HTML markup with following\nclasses used to inject printing values into them:\n- date - formatted print date\n- title - document title\n- url - document location\n- pageNumber - current page number\n- totalPages - total pages in the document\n\nFor example, <span class=title></span> would generate span containing the title.",
+              "description": "HTML template for the print header. Should be valid HTML markup with following\nclasses used to inject printing values into them:\n- `date`: formatted print date\n- `title`: document title\n- `url`: document location\n- `pageNumber`: current page number\n- `totalPages`: total pages in the document\n\nFor example, `<span class=title></span>` would generate span containing the title.",
               "optional": true,
               "type": "string"
             },
