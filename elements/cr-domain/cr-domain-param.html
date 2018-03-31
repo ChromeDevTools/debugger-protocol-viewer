@@ -31,11 +31,11 @@
         font-weight: bold;
       }
 
-      .optional {
+      [optional] {
         opacity: .9;
       }
 
-      .optional:after {
+      [optional]:after {
         content: "optional";
         opacity: .6;
         font-size: 70%;
@@ -94,7 +94,7 @@
     </style>
     <div class="param">
       <div class="param-pair">
-        <dt class="param-name monospace {% if param.optional %}optional{% endif %}">[[param.name]]</dt>
+        <dt class="param-name monospace" optional$="[[param.optional]]">[[param.name]]</dt>
         <dd class="param-def">
           <span hidden$="[[!param.type]]" class="param-type">
             [[param.type]]
