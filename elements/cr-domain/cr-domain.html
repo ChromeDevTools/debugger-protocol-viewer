@@ -22,7 +22,8 @@
       <div class="paper-material" elevation="1" class="heading-domain">
         <h2 class="heading"><span>[[domain.domain]]</span> Domain</h2>
 
-        <p class="description" hidden$="[[!domain.description]]" inner-h-t-m-l="[[domain.description]]">
+        <p class="description" hidden$="[[!domain.description]]">
+            <cr-markdownish markdown="[[domain.description]]"></cr-markdownish>
         </p>
         <cr-domain-experimental item="[[domain]]"></cr-domain-experimental>
       </div>
