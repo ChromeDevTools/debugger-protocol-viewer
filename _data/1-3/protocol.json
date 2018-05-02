@@ -1548,7 +1548,7 @@
             },
             {
               "name": "offset",
-              "description": "Seek to the specified offset before reading (if not specificed, proceed with offset\nfollowing the last read).",
+              "description": "Seek to the specified offset before reading (if not specificed, proceed with offset\nfollowing the last read). Some types of streams may only support sequential reads.",
               "optional": true,
               "type": "integer"
             },
@@ -4646,6 +4646,12 @@
               "description": "Opener target Id",
               "optional": true,
               "$ref": "TargetID"
+            },
+            {
+              "name": "browserContextId",
+              "experimental": true,
+              "optional": true,
+              "$ref": "BrowserContextID"
             }
           ]
         }
