@@ -216,7 +216,7 @@
                         "relevant",
                         "root",
                         "autocomplete",
-                        "haspopup",
+                        "hasPopup",
                         "level",
                         "multiselectable",
                         "orientation",
