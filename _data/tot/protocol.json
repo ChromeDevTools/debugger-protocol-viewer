@@ -7557,6 +7557,7 @@
                         "origin",
                         "inspector",
                         "subresource-filter",
+                        "content-type",
                         "other"
                     ]
                 },
