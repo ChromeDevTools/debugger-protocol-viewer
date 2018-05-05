@@ -4724,7 +4724,7 @@
             },
             {
               "name": "browserContextId",
-              "description": "The browser context to create the page in.",
+              "description": "The browser context to create the page in (headless chrome only).",
               "optional": true,
               "$ref": "BrowserContextID"
             },
