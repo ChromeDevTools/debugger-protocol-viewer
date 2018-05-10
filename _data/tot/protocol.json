@@ -9490,6 +9490,7 @@
                         "EventSource",
                         "WebSocket",
                         "Manifest",
+                        "SignedExchange",
                         "Other"
                     ]
                 },
