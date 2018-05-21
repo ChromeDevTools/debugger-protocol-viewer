@@ -2668,6 +2668,7 @@
                 "parser",
                 "script",
                 "preload",
+                "SignedExchange",
                 "other"
               ]
             },
@@ -2679,7 +2680,7 @@
             },
             {
               "name": "url",
-              "description": "Initiator URL, set for Parser type or for Script type (when script is importing module).",
+              "description": "Initiator URL, set for Parser type or for Script type (when script is importing module) or for SignedExchange type.",
               "optional": true,
               "type": "string"
             },
