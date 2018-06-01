@@ -7015,6 +7015,18 @@
               "$ref": "ExceptionDetails"
             }
           ]
+        },
+        {
+          "name": "setAsyncCallStackDepth",
+          "description": "Enables or disables async call stacks tracking.",
+          "redirect": "Debugger",
+          "parameters": [
+            {
+              "name": "maxDepth",
+              "description": "Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async\ncall stacks (default).",
+              "type": "integer"
+            }
+          ]
         }
       ],
       "events": [
