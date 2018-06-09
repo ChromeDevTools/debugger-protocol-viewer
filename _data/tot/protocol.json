@@ -9693,6 +9693,8 @@
                         "WebSocket",
                         "Manifest",
                         "SignedExchange",
+                        "Ping",
+                        "CSPViolationReport",
                         "Other"
                     ]
                 },
