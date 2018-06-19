@@ -7591,7 +7591,8 @@
                         "origin",
                         "inspector",
                         "subresource-filter",
-                        "content-type"
+                        "content-type",
+                        "collapsed-by-client"
                     ]
                 },
                 {
