@@ -22,14 +22,14 @@
         // skip the work if we don't have markdown in it.
         const hasMarkdown = /(\n-)|`/.test(this.markdown);
         if (!hasMarkdown) {
-          Polymer.dom(this).innerHTML = this.markdown;
+          this.innerHTML = this.markdown;
           return;
         }
 
-        let text = this._escapeHtml(this.markdown);
+        const text = this._escapeHtml(this.markdown);
         let html = this._convertMarkdownLists(text);
         html = this._convertMarkdownCodeBlocks(html);
-        Polymer.dom(this).innerHTML = html;
+        this.innerHTML = html;
       },
 
       /**
@@ -54,6 +54,8 @@
           }
           html.push(line);
         }
+        if (inList) html.push('</ul>');
+
         return html.join('\n');
       },
 
