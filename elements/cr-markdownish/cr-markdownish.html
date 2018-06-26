@@ -1,0 +1,138 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="cr-markdownish">
+  <script>
+    Polymer({
+      is: 'cr-markdownish',
+      properties: {
+        /**
+         * The markdown source that should be rendered by this element.
+         */
+        markdown: {
+          type: String,
+          observer: 'render',
+        }
+      },
+      attached: function () {
+        this.render();
+      },
+      render: function () {
+        if (!this.markdown) return;
+
+        // skip the work if we don't have markdown in it.
+        const hasMarkdown = /(\n-)|`/.test(this.markdown);
+        if (!hasMarkdown) {
+          this.innerHTML = this.markdown;
+          return;
+        }
+
+        const text = this._escapeHtml(this.markdown);
+        let html = this._convertMarkdownLists(text);
+        html = this._convertMarkdownCodeBlocks(html);
+        this.innerHTML = html;
+      },
+
+      /**
+       * @param {string} text
+       * @return {!string}
+       */
+      _convertMarkdownLists(text) {
+        let inList = false;
+        let html = [];
+
+        for (const line of text.split(/\n/)) {
+          if (inList && line === '') {
+            inList = false;
+            html.push('</ul>');
+            continue;
+          }
+          if (line.startsWith('-')) {
+            if (!inList) html.push('<ul>');
+            inList = true;
+            html.push('  <li>' + line.replace(/^- /, ''));
+            continue;
+          }
+          html.push(line);
+        }
+        if (inList) html.push('</ul>');
+
+        return html.join('\n');
+      },
+
+      /**
+       * @param {!string} text
+       * @return {!Element}
+       */
+      _convertMarkdownCodeBlocks(text) {
+        const html = [];
+        const parts = text.split(/`(.*?)`/g); // Split on markdown code slashes
+        while (parts.length) {
+          // Pop off the same number of elements as there are capture groups.
+          const [preambleText, codeText] = parts.splice(0, 2);
+          html.push(preambleText);
+          if (codeText) {
+            html.push(`<code>${codeText}</code>`);
+          }
+        }
+        return html.join('');
+      },
+
+      /**
+       * Escape special characters in the given string of html.
+       *
+       * @param  {string} string The string to escape for inserting into HTML
+       * @return {string}
+       * @see https://github.com/component/escape-html/
+       */
+      _escapeHtml(string) {
+        const matchHtmlRegExp = /["'&<>]/;
+
+        var str = '' + string;
+        var match = matchHtmlRegExp.exec(str);
+
+        if (!match) {
+          return str;
+        }
+
+        var escape;
+        var html = '';
+        var index = 0;
+        var lastIndex = 0;
+
+        for (index = match.index; index < str.length; index++) {
+          switch (str.charCodeAt(index)) {
+            case 34: // "
+              escape = '"';
+              break;
+            case 38: // &
+              escape = '&amp;';
+              break;
+            case 39: // '
+              escape = '&#39;';
+              break;
+            case 60: // <
+              escape = '&lt;';
+              break;
+            case 62: // >
+              escape = '&gt;';
+              break;
+            default:
+              continue;
+          }
+
+          if (lastIndex !== index) {
+            html += str.substring(lastIndex, index);
+          }
+
+          lastIndex = index + 1;
+          html += escape;
+        }
+
+        return lastIndex !== index ?
+          html + str.substring(lastIndex, index) :
+          html;
+      }
+    });
+
+  </script>
+</dom-module>

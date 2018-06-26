@@ -113,8 +113,7 @@
             </span>
           </span>
           <span class="param-description">
-            <span inner-h-t-m-l="[[param.description]]" hidden$="[[!param.description]]"></span>
-
+            <cr-markdownish hidden$="[[!param.description]]" markdown=[[param.description]]></cr-markdownish>
             <span>[[_computeParamEnum(param.enum)]]</span>
             <cr-domain-experimental item="[[param]]"></cr-domain-experimental>
           </span>
