@@ -25,6 +25,7 @@
   },
   "scripts": {
     "build": "gulp build",
+    "watch": "gulp watch",
     "prep": "bash prep-tot-protocol-files.sh",
     "serve": "echo 'Open http://localhost:8000/devtools-protocol/'; statikk --port 8000 .",
     "deploy": "gh-pages --dist devtools-protocol --repo git@github.com:ChromeDevTools/devtools-protocol.git --dotfiles"

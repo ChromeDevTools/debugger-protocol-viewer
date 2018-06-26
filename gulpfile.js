@@ -159,4 +159,35 @@ function build() {
   });
 }
 
+
+function watch() {
+  return new Promise(resolve => {
+    const bundlerOpts = {
+      inlineCss: false,
+      inlineScripts: false,
+      enableScriptInlining: false,
+    };
+
+    const buildStream = mergeStream(polymerProject.sources(), polymerProject.dependencies())
+      .once('data', _ => console.log('Bundling...'))
+      .pipe(polymerProject.bundler(bundlerOpts))
+      .pipe(gulp.dest(buildDirectory));
+
+    return waitFor(buildStream).then(() => {
+      console.log('Watch complete!');
+      resolve();
+    });
+  });
+}
+
+
 gulp.task('build', build);
+
+gulp.task('watch', () => {
+  gulp.watch([
+    'elements/**/*',
+    '*.html',
+    'styles/**/*',
+  ]).on('change', watch);
+  return watch();
+});
