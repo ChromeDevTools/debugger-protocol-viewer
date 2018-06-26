@@ -56,7 +56,7 @@
       }
     </style>
   </custom-style>
-  <iron-location id="location"></iron-location>
+  <iron-location id="iron-location"></iron-location>
 
   <app-drawer-layout id="paperDrawerPanel">
     <app-drawer slot="drawer" id="drawer">
@@ -408,7 +408,7 @@
 
           // If we are switching between domains, but do not select a sub-category
           // scroll all the way to the top again.
-          if (!location.hash) {
+          if (!window.location.hash) {
             mainElement.scrollTop = '0';
           }
 
@@ -436,8 +436,8 @@
               domainSelectionPromise = undefined;
             });
           });
-        } else {
-          // We have not selected any domain, so we have to show the summar at the top
+        } else if (!window.location.hash) {
+          // We have not selected any domain, so we have to show the summary at the top
           mainElement.scrollTop = '0';
         }
       }
@@ -445,12 +445,20 @@
       const domainElement = document.querySelector('cr-domain');
 
       function processHashUpdate() {
+        hash = window.location.hash;
         function scrollIntoView() {
           for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
-            if (`${details.type}-${details.name}` === location.hash) {
+            if (`${details.type}-${details.name}` === hash) {
               details.scrollIntoView({behavior: 'instant', block: 'start'});
               return;
             }
+          }
+
+          const id = hash.replace(/^#/, '');
+          const elemMatch = document.querySelector(`#${id}, *[name="${id}]"`);
+          if (elemMatch) {
+            elemMatch.scrollIntoView({behavior: 'instant', block: 'start'});
+            return;
           }
 
           // After the hash update, we have not found any match.
@@ -486,7 +494,7 @@
         searchButton.handleItemActivate_();
       });
 
-      const location = document.getElementById('location');
+      const location = document.getElementById('iron-location');
       location.addEventListener('path-changed', (e) => {
         searchButton.inputActive = false;
         updateLocationBindings(e.detail.value);
