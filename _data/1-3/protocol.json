@@ -76,7 +76,8 @@
             },
             {
               "name": "backendNodeId",
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -120,18 +121,21 @@
             {
               "name": "nodeId",
               "description": "Node identifier that is passed into the rest of the DOM messages as the `nodeId`. Backend\nwill only push node with given `id` once. It is aware of all requested nodes and will only\nfire DOM events for nodes known to the client.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "parentId",
               "description": "The id of the parent node if any.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "The BackendNodeId for this node.",
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "nodeType",
@@ -165,7 +169,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "Node"
+                "$ref": "Node",
+                "type": "$ref"
               }
             },
             {
@@ -229,25 +234,29 @@
               "name": "pseudoType",
               "description": "Pseudo element type for this node.",
               "optional": true,
-              "$ref": "PseudoType"
+              "$ref": "PseudoType",
+              "type": "$ref"
             },
             {
               "name": "shadowRootType",
               "description": "Shadow root type.",
               "optional": true,
-              "$ref": "ShadowRootType"
+              "$ref": "ShadowRootType",
+              "type": "$ref"
             },
             {
               "name": "frameId",
               "description": "Frame ID for frame owner elements.",
               "optional": true,
-              "$ref": "Page.FrameId"
+              "$ref": "Page.FrameId",
+              "type": "$ref"
             },
             {
               "name": "contentDocument",
               "description": "Content document for frame owner elements.",
               "optional": true,
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             },
             {
               "name": "shadowRoots",
@@ -255,14 +264,16 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "Node"
+                "$ref": "Node",
+                "type": "$ref"
               }
             },
             {
               "name": "templateContent",
               "description": "Content document fragment for template elements.",
               "optional": true,
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             },
             {
               "name": "pseudoElements",
@@ -270,14 +281,16 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "Node"
+                "$ref": "Node",
+                "type": "$ref"
               }
             },
             {
               "name": "importedDocument",
               "description": "Import document for the HTMLImport links.",
               "optional": true,
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             },
             {
               "name": "distributedNodes",
@@ -285,7 +298,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "BackendNode"
+                "$ref": "BackendNode",
+                "type": "$ref"
               }
             },
             {
@@ -340,22 +354,26 @@
             {
               "name": "content",
               "description": "Content box",
-              "$ref": "Quad"
+              "$ref": "Quad",
+              "type": "$ref"
             },
             {
               "name": "padding",
               "description": "Padding box",
-              "$ref": "Quad"
+              "$ref": "Quad",
+              "type": "$ref"
             },
             {
               "name": "border",
               "description": "Border box",
-              "$ref": "Quad"
+              "$ref": "Quad",
+              "type": "$ref"
             },
             {
               "name": "margin",
               "description": "Margin box",
-              "$ref": "Quad"
+              "$ref": "Quad",
+              "type": "$ref"
             },
             {
               "name": "width",
@@ -371,7 +389,8 @@
               "name": "shapeOutside",
               "description": "Shape outside coordinates",
               "optional": true,
-              "$ref": "ShapeOutsideInfo"
+              "$ref": "ShapeOutsideInfo",
+              "type": "$ref"
             }
           ]
         },
@@ -383,7 +402,8 @@
             {
               "name": "bounds",
               "description": "Shape bounds",
-              "$ref": "Quad"
+              "$ref": "Quad",
+              "type": "$ref"
             },
             {
               "name": "shape",
@@ -440,19 +460,22 @@
               "name": "nodeId",
               "description": "Identifier of the node.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Identifier of the backend node.",
               "optional": true,
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "JavaScript object id of the node wrapper.",
               "optional": true,
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "depth",
@@ -471,7 +494,8 @@
             {
               "name": "node",
               "description": "Node description.",
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             }
           ]
         },
@@ -491,19 +515,22 @@
               "name": "nodeId",
               "description": "Identifier of the node.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Identifier of the backend node.",
               "optional": true,
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "JavaScript object id of the node wrapper.",
               "optional": true,
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ]
         },
@@ -514,7 +541,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to retrieve attibutes for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -536,26 +564,30 @@
               "name": "nodeId",
               "description": "Identifier of the node.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Identifier of the backend node.",
               "optional": true,
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "JavaScript object id of the node wrapper.",
               "optional": true,
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "model",
               "description": "Box model for the node.",
-              "$ref": "BoxModel"
+              "$ref": "BoxModel",
+              "type": "$ref"
             }
           ]
         },
@@ -580,7 +612,8 @@
             {
               "name": "root",
               "description": "Resulting node.",
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             }
           ]
         },
@@ -607,7 +640,8 @@
               "description": "Resulting node.",
               "type": "array",
               "items": {
-                "$ref": "Node"
+                "$ref": "Node",
+                "type": "$ref"
               }
             }
           ]
@@ -620,19 +654,22 @@
               "name": "nodeId",
               "description": "Identifier of the node.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Identifier of the backend node.",
               "optional": true,
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "JavaScript object id of the node wrapper.",
               "optional": true,
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -665,25 +702,29 @@
             {
               "name": "nodeId",
               "description": "Id of the node to move.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "targetNodeId",
               "description": "Id of the element to drop the moved node into.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "insertBeforeNodeId",
               "description": "Drop node before this one (if absent, the moved node becomes the last child of\n`targetNodeId`).",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "nodeId",
               "description": "New id of the moved node.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -694,7 +735,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to query upon.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "selector",
@@ -706,7 +748,8 @@
             {
               "name": "nodeId",
               "description": "Query selector result.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -717,7 +760,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to query upon.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "selector",
@@ -731,7 +775,8 @@
               "description": "Query selector result.",
               "type": "array",
               "items": {
-                "$ref": "NodeId"
+                "$ref": "NodeId",
+                "type": "$ref"
               }
             }
           ]
@@ -743,7 +788,8 @@
             {
               "name": "nodeId",
               "description": "Id of the element to remove attribute from.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -759,7 +805,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to remove.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -770,7 +817,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to get children for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "depth",
@@ -793,14 +841,16 @@
             {
               "name": "objectId",
               "description": "JavaScript object id to convert into node.",
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "nodeId",
               "description": "Node id for given object.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -812,13 +862,15 @@
               "name": "nodeId",
               "description": "Id of the node to resolve.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Backend identifier of the node to resolve.",
               "optional": true,
-              "$ref": "DOM.BackendNodeId"
+              "$ref": "DOM.BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectGroup",
@@ -831,7 +883,8 @@
             {
               "name": "object",
               "description": "JavaScript object wrapper for given node.",
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             }
           ]
         },
@@ -842,7 +895,8 @@
             {
               "name": "nodeId",
               "description": "Id of the element to set attribute for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -863,7 +917,8 @@
             {
               "name": "nodeId",
               "description": "Id of the element to set attributes for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "text",
@@ -894,19 +949,22 @@
               "name": "nodeId",
               "description": "Identifier of the node.",
               "optional": true,
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Identifier of the backend node.",
               "optional": true,
-              "$ref": "BackendNodeId"
+              "$ref": "BackendNodeId",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "JavaScript object id of the node wrapper.",
               "optional": true,
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ]
         },
@@ -917,7 +975,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to set name for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -929,7 +988,8 @@
             {
               "name": "nodeId",
               "description": "New node's id.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -940,7 +1000,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to set value for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "value",
@@ -956,7 +1017,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node to set markup for.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "outerHTML",
@@ -974,7 +1036,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node that has changed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -995,7 +1058,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node that has changed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -1011,7 +1075,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node that has changed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "characterData",
@@ -1027,7 +1092,8 @@
             {
               "name": "nodeId",
               "description": "Id of the node that has changed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "childNodeCount",
@@ -1043,17 +1109,20 @@
             {
               "name": "parentNodeId",
               "description": "Id of the node that has changed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "previousNodeId",
               "description": "If of the previous siblint.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "node",
               "description": "Inserted node data.",
-              "$ref": "Node"
+              "$ref": "Node",
+              "type": "$ref"
             }
           ]
         },
@@ -1064,12 +1133,14 @@
             {
               "name": "parentNodeId",
               "description": "Parent id.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "nodeId",
               "description": "Id of the node that has been removed.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             }
           ]
         },
@@ -1084,14 +1155,16 @@
             {
               "name": "parentId",
               "description": "Parent node id to populate with children.",
-              "$ref": "NodeId"
+              "$ref": "NodeId",
+              "type": "$ref"
             },
             {
               "name": "nodes",
               "description": "Child nodes array.",
               "type": "array",
               "items": {
-                "$ref": "Node"
+                "$ref": "Node",
+                "type": "$ref"
               }
             }
           ]
@@ -1144,7 +1217,8 @@
             {
               "name": "scriptId",
               "description": "Script id of the handler code.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "lineNumber",
@@ -1160,19 +1234,22 @@
               "name": "handler",
               "description": "Event handler function value.",
               "optional": true,
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "originalHandler",
               "description": "Event original handler function value.",
               "optional": true,
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "backendNodeId",
               "description": "Node the listener is added to (if any).",
               "optional": true,
-              "$ref": "DOM.BackendNodeId"
+              "$ref": "DOM.BackendNodeId",
+              "type": "$ref"
             }
           ]
         }
@@ -1185,7 +1262,8 @@
             {
               "name": "objectId",
               "description": "Identifier of the object to return listeners for.",
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "depth",
@@ -1206,7 +1284,8 @@
               "description": "Array of relevant listeners.",
               "type": "array",
               "items": {
-                "$ref": "EventListener"
+                "$ref": "EventListener",
+                "type": "$ref"
               }
             }
           ]
@@ -1218,12 +1297,14 @@
             {
               "name": "nodeId",
               "description": "Identifier of the node to remove breakpoint from.",
-              "$ref": "DOM.NodeId"
+              "$ref": "DOM.NodeId",
+              "type": "$ref"
             },
             {
               "name": "type",
               "description": "Type of the breakpoint to remove.",
-              "$ref": "DOMBreakpointType"
+              "$ref": "DOMBreakpointType",
+              "type": "$ref"
             }
           ]
         },
@@ -1263,12 +1344,14 @@
             {
               "name": "nodeId",
               "description": "Identifier of the node to set breakpoint on.",
-              "$ref": "DOM.NodeId"
+              "$ref": "DOM.NodeId",
+              "type": "$ref"
             },
             {
               "name": "type",
               "description": "Type of the operation to stop upon.",
-              "$ref": "DOMBreakpointType"
+              "$ref": "DOMBreakpointType",
+              "type": "$ref"
             }
           ]
         },
@@ -1364,7 +1447,8 @@
               "name": "color",
               "description": "RGBA of the default background color. If not specified, any existing override will be\ncleared.",
               "optional": true,
-              "$ref": "DOM.RGBA"
+              "$ref": "DOM.RGBA",
+              "type": "$ref"
             }
           ]
         },
@@ -1438,14 +1522,16 @@
               "name": "screenOrientation",
               "description": "Screen orientation override.",
               "optional": true,
-              "$ref": "ScreenOrientation"
+              "$ref": "ScreenOrientation",
+              "type": "$ref"
             },
             {
               "name": "viewport",
               "description": "If set, the visible area of the page will be overridden to this viewport. This viewport\nchange is not observed by the page, e.g. viewport-relative elements do not change positions.",
               "experimental": true,
               "optional": true,
-              "$ref": "Page.Viewport"
+              "$ref": "Page.Viewport",
+              "type": "$ref"
             }
           ]
         },
@@ -1556,7 +1642,8 @@
             {
               "name": "handle",
               "description": "Handle of the stream to close.",
-              "$ref": "StreamHandle"
+              "$ref": "StreamHandle",
+              "type": "$ref"
             }
           ]
         },
@@ -1567,7 +1654,8 @@
             {
               "name": "handle",
               "description": "Handle of the stream to read.",
-              "$ref": "StreamHandle"
+              "$ref": "StreamHandle",
+              "type": "$ref"
             },
             {
               "name": "offset",
@@ -1608,7 +1696,8 @@
             {
               "name": "objectId",
               "description": "Object id of a Blob object wrapper.",
-              "$ref": "Runtime.RemoteObjectId"
+              "$ref": "Runtime.RemoteObjectId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -1702,7 +1791,8 @@
               "name": "timestamp",
               "description": "Time at which the event occurred.",
               "optional": true,
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "text",
@@ -1807,7 +1897,8 @@
               "name": "timestamp",
               "description": "Time at which the event occurred.",
               "optional": true,
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "button",
@@ -1861,7 +1952,8 @@
               "description": "Active touch points on the touch device. One event per any changed point (compared to\nprevious touch event in a sequence) is generated, emulating pressing/moving/releasing points\none by one.",
               "type": "array",
               "items": {
-                "$ref": "TouchPoint"
+                "$ref": "TouchPoint",
+                "type": "$ref"
               }
             },
             {
@@ -1874,7 +1966,8 @@
               "name": "timestamp",
               "description": "Time at which the event occurred.",
               "optional": true,
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             }
           ]
         },
@@ -1943,7 +2036,8 @@
             {
               "name": "timestamp",
               "description": "Timestamp when this entry was added.",
-              "$ref": "Runtime.Timestamp"
+              "$ref": "Runtime.Timestamp",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -1961,13 +2055,15 @@
               "name": "stackTrace",
               "description": "JavaScript stack trace.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             },
             {
               "name": "networkRequestId",
               "description": "Identifier of the network request associated with this entry.",
               "optional": true,
-              "$ref": "Network.RequestId"
+              "$ref": "Network.RequestId",
+              "type": "$ref"
             },
             {
               "name": "workerId",
@@ -1981,7 +2077,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "Runtime.RemoteObject"
+                "$ref": "Runtime.RemoteObject",
+                "type": "$ref"
               }
             }
           ]
@@ -2035,7 +2132,8 @@
               "description": "Configuration for violations.",
               "type": "array",
               "items": {
-                "$ref": "ViolationSetting"
+                "$ref": "ViolationSetting",
+                "type": "$ref"
               }
             }
           ]
@@ -2053,7 +2151,8 @@
             {
               "name": "entry",
               "description": "The entry.",
-              "$ref": "LogEntry"
+              "$ref": "LogEntry",
+              "type": "$ref"
             }
           ]
         }
@@ -2271,7 +2370,8 @@
             {
               "name": "headers",
               "description": "HTTP request headers.",
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             },
             {
               "name": "postData",
@@ -2289,12 +2389,14 @@
               "name": "mixedContentType",
               "description": "The mixed content type of the request.",
               "optional": true,
-              "$ref": "Security.MixedContentType"
+              "$ref": "Security.MixedContentType",
+              "type": "$ref"
             },
             {
               "name": "initialPriority",
               "description": "Priority of the resource request at the time request is sent.",
-              "$ref": "ResourcePriority"
+              "$ref": "ResourcePriority",
+              "type": "$ref"
             },
             {
               "name": "referrerPolicy",
@@ -2347,7 +2449,8 @@
             {
               "name": "timestamp",
               "description": "Issuance date.",
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "hashAlgorithm",
@@ -2401,7 +2504,8 @@
             {
               "name": "certificateId",
               "description": "Certificate ID value.",
-              "$ref": "Security.CertificateId"
+              "$ref": "Security.CertificateId",
+              "type": "$ref"
             },
             {
               "name": "subjectName",
@@ -2424,25 +2528,29 @@
             {
               "name": "validFrom",
               "description": "Certificate valid from date.",
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "validTo",
               "description": "Certificate valid to (expiration) date",
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "signedCertificateTimestampList",
               "description": "List of signed certificate timestamps (SCTs).",
               "type": "array",
               "items": {
-                "$ref": "SignedCertificateTimestamp"
+                "$ref": "SignedCertificateTimestamp",
+                "type": "$ref"
               }
             },
             {
               "name": "certificateTransparencyCompliance",
               "description": "Whether the request complied with Certificate Transparency policy",
-              "$ref": "CertificateTransparencyCompliance"
+              "$ref": "CertificateTransparencyCompliance",
+              "type": "$ref"
             }
           ]
         },
@@ -2494,7 +2602,8 @@
             {
               "name": "headers",
               "description": "HTTP response headers.",
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             },
             {
               "name": "headersText",
@@ -2511,7 +2620,8 @@
               "name": "requestHeaders",
               "description": "Refined HTTP request headers that were actually transmitted over the network.",
               "optional": true,
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             },
             {
               "name": "requestHeadersText",
@@ -2562,7 +2672,8 @@
               "name": "timing",
               "description": "Timing information for the given request.",
               "optional": true,
-              "$ref": "ResourceTiming"
+              "$ref": "ResourceTiming",
+              "type": "$ref"
             },
             {
               "name": "protocol",
@@ -2573,13 +2684,15 @@
             {
               "name": "securityState",
               "description": "Security state of the request resource.",
-              "$ref": "Security.SecurityState"
+              "$ref": "Security.SecurityState",
+              "type": "$ref"
             },
             {
               "name": "securityDetails",
               "description": "Security details for the request.",
               "optional": true,
-              "$ref": "SecurityDetails"
+              "$ref": "SecurityDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -2591,7 +2704,8 @@
             {
               "name": "headers",
               "description": "HTTP request headers.",
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             }
           ]
         },
@@ -2613,7 +2727,8 @@
             {
               "name": "headers",
               "description": "HTTP response headers.",
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             },
             {
               "name": "headersText",
@@ -2625,7 +2740,8 @@
               "name": "requestHeaders",
               "description": "HTTP request headers.",
               "optional": true,
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             },
             {
               "name": "requestHeadersText",
@@ -2670,13 +2786,15 @@
             {
               "name": "type",
               "description": "Type of this resource.",
-              "$ref": "Page.ResourceType"
+              "$ref": "Page.ResourceType",
+              "type": "$ref"
             },
             {
               "name": "response",
               "description": "Cached response data.",
               "optional": true,
-              "$ref": "Response"
+              "$ref": "Response",
+              "type": "$ref"
             },
             {
               "name": "bodySize",
@@ -2706,7 +2824,8 @@
               "name": "stack",
               "description": "Initiator JavaScript stack trace, set for Script only.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -2776,7 +2895,8 @@
               "name": "sameSite",
               "description": "Cookie SameSite type.",
               "optional": true,
-              "$ref": "CookieSameSite"
+              "$ref": "CookieSameSite",
+              "type": "$ref"
             }
           ]
         },
@@ -2829,13 +2949,15 @@
               "name": "sameSite",
               "description": "Cookie SameSite type.",
               "optional": true,
-              "$ref": "CookieSameSite"
+              "$ref": "CookieSameSite",
+              "type": "$ref"
             },
             {
               "name": "expires",
               "description": "Cookie expiration date, session cookie if not set",
               "optional": true,
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             }
           ]
         }
@@ -2910,7 +3032,8 @@
               "name": "connectionType",
               "description": "Connection type if known.",
               "optional": true,
-              "$ref": "ConnectionType"
+              "$ref": "ConnectionType",
+              "type": "$ref"
             }
           ]
         },
@@ -2949,7 +3072,8 @@
               "description": "Array of cookie objects.",
               "type": "array",
               "items": {
-                "$ref": "Cookie"
+                "$ref": "Cookie",
+                "type": "$ref"
               }
             }
           ]
@@ -2974,7 +3098,8 @@
               "description": "Array of cookie objects.",
               "type": "array",
               "items": {
-                "$ref": "Cookie"
+                "$ref": "Cookie",
+                "type": "$ref"
               }
             }
           ]
@@ -2986,7 +3111,8 @@
             {
               "name": "requestId",
               "description": "Identifier of the network request to get content for.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -3009,7 +3135,8 @@
             {
               "name": "requestId",
               "description": "Identifier of the network request to get content for.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -3079,13 +3206,15 @@
               "name": "sameSite",
               "description": "Cookie SameSite type.",
               "optional": true,
-              "$ref": "CookieSameSite"
+              "$ref": "CookieSameSite",
+              "type": "$ref"
             },
             {
               "name": "expires",
               "description": "Cookie expiration date, session cookie if not set",
               "optional": true,
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -3105,7 +3234,8 @@
               "description": "Cookies to be set.",
               "type": "array",
               "items": {
-                "$ref": "CookieParam"
+                "$ref": "CookieParam",
+                "type": "$ref"
               }
             }
           ]
@@ -3117,7 +3247,8 @@
             {
               "name": "headers",
               "description": "Map with extra HTTP headers.",
-              "$ref": "Headers"
+              "$ref": "Headers",
+              "type": "$ref"
             }
           ]
         },
@@ -3154,12 +3285,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "dataLength",
@@ -3180,12 +3313,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "eventName",
@@ -3211,17 +3346,20 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "type",
               "description": "Resource type.",
-              "$ref": "Page.ResourceType"
+              "$ref": "Page.ResourceType",
+              "type": "$ref"
             },
             {
               "name": "errorText",
@@ -3238,7 +3376,8 @@
               "name": "blockedReason",
               "description": "The reason why loading was blocked, if any.",
               "optional": true,
-              "$ref": "BlockedReason"
+              "$ref": "BlockedReason",
+              "type": "$ref"
             }
           ]
         },
@@ -3249,12 +3388,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "encodedDataLength",
@@ -3276,7 +3417,8 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             }
           ]
         },
@@ -3287,12 +3429,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "loaderId",
               "description": "Loader identifier. Empty string if the request is fetched from worker.",
-              "$ref": "LoaderId"
+              "$ref": "LoaderId",
+              "type": "$ref"
             },
             {
               "name": "documentURL",
@@ -3302,40 +3446,47 @@
             {
               "name": "request",
               "description": "Request data.",
-              "$ref": "Request"
+              "$ref": "Request",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "wallTime",
               "description": "Timestamp.",
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "initiator",
               "description": "Request initiator.",
-              "$ref": "Initiator"
+              "$ref": "Initiator",
+              "type": "$ref"
             },
             {
               "name": "redirectResponse",
               "description": "Redirect response data.",
               "optional": true,
-              "$ref": "Response"
+              "$ref": "Response",
+              "type": "$ref"
             },
             {
               "name": "type",
               "description": "Type of this resource.",
               "optional": true,
-              "$ref": "Page.ResourceType"
+              "$ref": "Page.ResourceType",
+              "type": "$ref"
             },
             {
               "name": "frameId",
               "description": "Frame identifier.",
               "optional": true,
-              "$ref": "Page.FrameId"
+              "$ref": "Page.FrameId",
+              "type": "$ref"
             },
             {
               "name": "hasUserGesture",
@@ -3352,33 +3503,39 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "loaderId",
               "description": "Loader identifier. Empty string if the request is fetched from worker.",
-              "$ref": "LoaderId"
+              "$ref": "LoaderId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "type",
               "description": "Resource type.",
-              "$ref": "Page.ResourceType"
+              "$ref": "Page.ResourceType",
+              "type": "$ref"
             },
             {
               "name": "response",
               "description": "Response data.",
-              "$ref": "Response"
+              "$ref": "Response",
+              "type": "$ref"
             },
             {
               "name": "frameId",
               "description": "Frame identifier.",
               "optional": true,
-              "$ref": "Page.FrameId"
+              "$ref": "Page.FrameId",
+              "type": "$ref"
             }
           ]
         },
@@ -3389,12 +3546,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             }
           ]
         },
@@ -3405,7 +3564,8 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -3416,7 +3576,8 @@
               "name": "initiator",
               "description": "Request initiator.",
               "optional": true,
-              "$ref": "Initiator"
+              "$ref": "Initiator",
+              "type": "$ref"
             }
           ]
         },
@@ -3427,12 +3588,14 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "errorMessage",
@@ -3448,17 +3611,20 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "response",
               "description": "WebSocket response data.",
-              "$ref": "WebSocketFrame"
+              "$ref": "WebSocketFrame",
+              "type": "$ref"
             }
           ]
         },
@@ -3469,17 +3635,20 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "response",
               "description": "WebSocket response data.",
-              "$ref": "WebSocketFrame"
+              "$ref": "WebSocketFrame",
+              "type": "$ref"
             }
           ]
         },
@@ -3490,17 +3659,20 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "response",
               "description": "WebSocket response data.",
-              "$ref": "WebSocketResponse"
+              "$ref": "WebSocketResponse",
+              "type": "$ref"
             }
           ]
         },
@@ -3511,22 +3683,26 @@
             {
               "name": "requestId",
               "description": "Request identifier.",
-              "$ref": "RequestId"
+              "$ref": "RequestId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Timestamp.",
-              "$ref": "MonotonicTime"
+              "$ref": "MonotonicTime",
+              "type": "$ref"
             },
             {
               "name": "wallTime",
               "description": "UTC Timestamp.",
-              "$ref": "TimeSinceEpoch"
+              "$ref": "TimeSinceEpoch",
+              "type": "$ref"
             },
             {
               "name": "request",
               "description": "WebSocket request data.",
-              "$ref": "WebSocketRequest"
+              "$ref": "WebSocketRequest",
+              "type": "$ref"
             }
           ]
         }
@@ -3588,7 +3764,8 @@
             {
               "name": "loaderId",
               "description": "Identifier of the loader associated with this frame.",
-              "$ref": "Network.LoaderId"
+              "$ref": "Network.LoaderId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -3628,7 +3805,8 @@
             {
               "name": "frame",
               "description": "Frame information for this tree item.",
-              "$ref": "Frame"
+              "$ref": "Frame",
+              "type": "$ref"
             },
             {
               "name": "childFrames",
@@ -3636,7 +3814,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "FrameTree"
+                "$ref": "FrameTree",
+                "type": "$ref"
               }
             }
           ]
@@ -3693,7 +3872,8 @@
             {
               "name": "transitionType",
               "description": "Transition type.",
-              "$ref": "TransitionType"
+              "$ref": "TransitionType",
+              "type": "$ref"
             }
           ]
         },
@@ -3851,7 +4031,8 @@
             {
               "name": "identifier",
               "description": "Identifier of the added script.",
-              "$ref": "ScriptIdentifier"
+              "$ref": "ScriptIdentifier",
+              "type": "$ref"
             }
           ]
         },
@@ -3883,7 +4064,8 @@
               "name": "clip",
               "description": "Capture the screenshot of a given region only.",
               "optional": true,
-              "$ref": "Viewport"
+              "$ref": "Viewport",
+              "type": "$ref"
             },
             {
               "name": "fromSurface",
@@ -3908,7 +4090,8 @@
             {
               "name": "frameId",
               "description": "Id of the frame in which the isolated world should be created.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "worldName",
@@ -3927,7 +4110,8 @@
             {
               "name": "executionContextId",
               "description": "Execution context of the isolated world.",
-              "$ref": "Runtime.ExecutionContextId"
+              "$ref": "Runtime.ExecutionContextId",
+              "type": "$ref"
             }
           ]
         },
@@ -3951,7 +4135,8 @@
               "name": "errors",
               "type": "array",
               "items": {
-                "$ref": "AppManifestError"
+                "$ref": "AppManifestError",
+                "type": "$ref"
               }
             },
             {
@@ -3969,7 +4154,8 @@
             {
               "name": "frameTree",
               "description": "Present frame tree structure.",
-              "$ref": "FrameTree"
+              "$ref": "FrameTree",
+              "type": "$ref"
             }
           ]
         },
@@ -3980,17 +4166,20 @@
             {
               "name": "layoutViewport",
               "description": "Metrics relating to the layout viewport.",
-              "$ref": "LayoutViewport"
+              "$ref": "LayoutViewport",
+              "type": "$ref"
             },
             {
               "name": "visualViewport",
               "description": "Metrics relating to the visual viewport.",
-              "$ref": "VisualViewport"
+              "$ref": "VisualViewport",
+              "type": "$ref"
             },
             {
               "name": "contentSize",
               "description": "Size of scrollable area.",
-              "$ref": "DOM.Rect"
+              "$ref": "DOM.Rect",
+              "type": "$ref"
             }
           ]
         },
@@ -4008,7 +4197,8 @@
               "description": "Array of navigation history entries.",
               "type": "array",
               "items": {
-                "$ref": "NavigationEntry"
+                "$ref": "NavigationEntry",
+                "type": "$ref"
               }
             }
           ]
@@ -4049,26 +4239,30 @@
               "name": "transitionType",
               "description": "Intended transition type.",
               "optional": true,
-              "$ref": "TransitionType"
+              "$ref": "TransitionType",
+              "type": "$ref"
             },
             {
               "name": "frameId",
               "description": "Frame id to navigate, if not specified navigates the top frame.",
               "optional": true,
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "frameId",
               "description": "Frame id that has navigated (or failed to navigate)",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "loaderId",
               "description": "Loader identifier.",
               "optional": true,
-              "$ref": "Network.LoaderId"
+              "$ref": "Network.LoaderId",
+              "type": "$ref"
             },
             {
               "name": "errorText",
@@ -4216,7 +4410,8 @@
           "parameters": [
             {
               "name": "identifier",
-              "$ref": "ScriptIdentifier"
+              "$ref": "ScriptIdentifier",
+              "type": "$ref"
             }
           ]
         },
@@ -4227,7 +4422,8 @@
             {
               "name": "frameId",
               "description": "Frame id to set HTML for.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "html",
@@ -4247,7 +4443,8 @@
           "parameters": [
             {
               "name": "timestamp",
-              "$ref": "Network.MonotonicTime"
+              "$ref": "Network.MonotonicTime",
+              "type": "$ref"
             }
           ]
         },
@@ -4258,18 +4455,21 @@
             {
               "name": "frameId",
               "description": "Id of the frame that has been attached.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "parentFrameId",
               "description": "Parent frame identifier.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "stack",
               "description": "JavaScript stack trace of when frame was attached, only set if frame initiated from script.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             }
           ]
         },
@@ -4280,7 +4480,8 @@
             {
               "name": "frameId",
               "description": "Id of the frame that has been detached.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             }
           ]
         },
@@ -4291,7 +4492,8 @@
             {
               "name": "frame",
               "description": "Frame object.",
-              "$ref": "Frame"
+              "$ref": "Frame",
+              "type": "$ref"
             }
           ]
         },
@@ -4336,7 +4538,8 @@
             {
               "name": "type",
               "description": "Dialog type.",
-              "$ref": "DialogType"
+              "$ref": "DialogType",
+              "type": "$ref"
             },
             {
               "name": "hasBrowserHandler",
@@ -4358,12 +4561,14 @@
             {
               "name": "frameId",
               "description": "Id of the frame.",
-              "$ref": "FrameId"
+              "$ref": "FrameId",
+              "type": "$ref"
             },
             {
               "name": "loaderId",
               "description": "Loader identifier. Empty string if the request is fetched from worker.",
-              "$ref": "Network.LoaderId"
+              "$ref": "Network.LoaderId",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -4371,7 +4576,8 @@
             },
             {
               "name": "timestamp",
-              "$ref": "Network.MonotonicTime"
+              "$ref": "Network.MonotonicTime",
+              "type": "$ref"
             }
           ]
         },
@@ -4380,7 +4586,8 @@
           "parameters": [
             {
               "name": "timestamp",
-              "$ref": "Network.MonotonicTime"
+              "$ref": "Network.MonotonicTime",
+              "type": "$ref"
             }
           ]
         },
@@ -4454,7 +4661,8 @@
               "description": "Current values for run-time metrics.",
               "type": "array",
               "items": {
-                "$ref": "Metric"
+                "$ref": "Metric",
+                "type": "$ref"
               }
             }
           ]
@@ -4470,7 +4678,8 @@
               "description": "Current values of the metrics.",
               "type": "array",
               "items": {
-                "$ref": "Metric"
+                "$ref": "Metric",
+                "type": "$ref"
               }
             },
             {
@@ -4521,7 +4730,8 @@
             {
               "name": "securityState",
               "description": "Security state representing the severity of the factor being explained.",
-              "$ref": "SecurityState"
+              "$ref": "SecurityState",
+              "type": "$ref"
             },
             {
               "name": "title",
@@ -4541,7 +4751,8 @@
             {
               "name": "mixedContentType",
               "description": "The type of mixed content described by the explanation.",
-              "$ref": "MixedContentType"
+              "$ref": "MixedContentType",
+              "type": "$ref"
             },
             {
               "name": "certificate",
@@ -4586,12 +4797,14 @@
             {
               "name": "ranInsecureContentStyle",
               "description": "Security state representing a page that ran insecure content.",
-              "$ref": "SecurityState"
+              "$ref": "SecurityState",
+              "type": "$ref"
             },
             {
               "name": "displayedInsecureContentStyle",
               "description": "Security state representing a page that displayed insecure content.",
-              "$ref": "SecurityState"
+              "$ref": "SecurityState",
+              "type": "$ref"
             }
           ]
         },
@@ -4623,7 +4836,8 @@
             {
               "name": "securityState",
               "description": "Security state.",
-              "$ref": "SecurityState"
+              "$ref": "SecurityState",
+              "type": "$ref"
             },
             {
               "name": "schemeIsCryptographic",
@@ -4635,13 +4849,15 @@
               "description": "List of explanations for the security state. If the overall security state is `insecure` or\n`warning`, at least one corresponding explanation should be included.",
               "type": "array",
               "items": {
-                "$ref": "SecurityStateExplanation"
+                "$ref": "SecurityStateExplanation",
+                "type": "$ref"
               }
             },
             {
               "name": "insecureContentStatus",
               "description": "Information about insecure content on the page.",
-              "$ref": "InsecureContentStatus"
+              "$ref": "InsecureContentStatus",
+              "type": "$ref"
             },
             {
               "name": "summary",
@@ -4672,7 +4888,8 @@
           "properties": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             },
             {
               "name": "type",
@@ -4695,13 +4912,15 @@
               "name": "openerId",
               "description": "Opener target Id",
               "optional": true,
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             },
             {
               "name": "browserContextId",
               "experimental": true,
               "optional": true,
-              "$ref": "BrowserContextID"
+              "$ref": "BrowserContextID",
+              "type": "$ref"
             }
           ]
         }
@@ -4713,7 +4932,8 @@
           "parameters": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4723,7 +4943,8 @@
           "parameters": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             },
             {
               "name": "flatten",
@@ -4737,7 +4958,8 @@
             {
               "name": "sessionId",
               "description": "Id assigned to the session.",
-              "$ref": "SessionID"
+              "$ref": "SessionID",
+              "type": "$ref"
             }
           ]
         },
@@ -4747,7 +4969,8 @@
           "parameters": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -4782,7 +5005,8 @@
               "name": "browserContextId",
               "description": "The browser context to create the page in.",
               "optional": true,
-              "$ref": "BrowserContextID"
+              "$ref": "BrowserContextID",
+              "type": "$ref"
             },
             {
               "name": "enableBeginFrameControl",
@@ -4796,7 +5020,8 @@
             {
               "name": "targetId",
               "description": "The id of the page opened.",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4808,14 +5033,16 @@
               "name": "sessionId",
               "description": "Session to detach.",
               "optional": true,
-              "$ref": "SessionID"
+              "$ref": "SessionID",
+              "type": "$ref"
             },
             {
               "name": "targetId",
               "description": "Deprecated.",
               "deprecated": true,
               "optional": true,
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4828,7 +5055,8 @@
               "description": "The list of targets.",
               "type": "array",
               "items": {
-                "$ref": "TargetInfo"
+                "$ref": "TargetInfo",
+                "type": "$ref"
               }
             }
           ]
@@ -4845,14 +5073,16 @@
               "name": "sessionId",
               "description": "Identifier of the session.",
               "optional": true,
-              "$ref": "SessionID"
+              "$ref": "SessionID",
+              "type": "$ref"
             },
             {
               "name": "targetId",
               "description": "Deprecated.",
               "deprecated": true,
               "optional": true,
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4876,7 +5106,8 @@
             {
               "name": "sessionId",
               "description": "Identifier of a session which sends a message.",
-              "$ref": "SessionID"
+              "$ref": "SessionID",
+              "type": "$ref"
             },
             {
               "name": "message",
@@ -4887,7 +5118,8 @@
               "description": "Deprecated.",
               "deprecated": true,
               "optional": true,
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4897,7 +5129,8 @@
           "parameters": [
             {
               "name": "targetInfo",
-              "$ref": "TargetInfo"
+              "$ref": "TargetInfo",
+              "type": "$ref"
             }
           ]
         },
@@ -4907,7 +5140,8 @@
           "parameters": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             }
           ]
         },
@@ -4917,7 +5151,8 @@
           "parameters": [
             {
               "name": "targetId",
-              "$ref": "TargetID"
+              "$ref": "TargetID",
+              "type": "$ref"
             },
             {
               "name": "status",
@@ -4937,7 +5172,8 @@
           "parameters": [
             {
               "name": "targetInfo",
-              "$ref": "TargetInfo"
+              "$ref": "TargetInfo",
+              "type": "$ref"
             }
           ]
         }
@@ -4968,7 +5204,8 @@
             {
               "name": "scriptId",
               "description": "Script identifier as reported in the `Debugger.scriptParsed`.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "lineNumber",
@@ -4991,7 +5228,8 @@
             {
               "name": "callFrameId",
               "description": "Call frame identifier. This identifier is only valid while the virtual machine is paused.",
-              "$ref": "CallFrameId"
+              "$ref": "CallFrameId",
+              "type": "$ref"
             },
             {
               "name": "functionName",
@@ -5002,12 +5240,14 @@
               "name": "functionLocation",
               "description": "Location in the source code.",
               "optional": true,
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "location",
               "description": "Location in the source code.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -5019,19 +5259,22 @@
               "description": "Scope chain for this call frame.",
               "type": "array",
               "items": {
-                "$ref": "Scope"
+                "$ref": "Scope",
+                "type": "$ref"
               }
             },
             {
               "name": "this",
               "description": "`this` object for this call frame.",
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "returnValue",
               "description": "The value being returned, if the function is at return point.",
               "optional": true,
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             }
           ]
         },
@@ -5059,7 +5302,8 @@
             {
               "name": "object",
               "description": "Object representing the scope. For `global` and `with` scopes it represents the actual\nobject; for the rest of the scopes, it is artificial transient object enumerating scope\nvariables as its properties.",
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "name",
@@ -5070,13 +5314,15 @@
               "name": "startLocation",
               "description": "Location in the source code where scope starts",
               "optional": true,
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "endLocation",
               "description": "Location in the source code where scope ends",
               "optional": true,
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             }
           ]
         },
@@ -5104,7 +5350,8 @@
             {
               "name": "scriptId",
               "description": "Script identifier as reported in the `Debugger.scriptParsed`.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "lineNumber",
@@ -5138,7 +5385,8 @@
             {
               "name": "location",
               "description": "Location to continue to.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "targetCallFrames",
@@ -5163,7 +5411,8 @@
               "name": "debuggerId",
               "description": "Unique identifier of the debugger.",
               "experimental": true,
-              "$ref": "Runtime.UniqueDebuggerId"
+              "$ref": "Runtime.UniqueDebuggerId",
+              "type": "$ref"
             }
           ]
         },
@@ -5174,7 +5423,8 @@
             {
               "name": "callFrameId",
               "description": "Call frame identifier to evaluate on.",
-              "$ref": "CallFrameId"
+              "$ref": "CallFrameId",
+              "type": "$ref"
             },
             {
               "name": "expression",
@@ -5223,20 +5473,23 @@
               "description": "Terminate execution after timing out (number of milliseconds).",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.TimeDelta"
+              "$ref": "Runtime.TimeDelta",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "result",
               "description": "Object wrapper for the evaluation result.",
-              "$ref": "Runtime.RemoteObject"
+              "$ref": "Runtime.RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "Runtime.ExceptionDetails"
+              "$ref": "Runtime.ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -5247,13 +5500,15 @@
             {
               "name": "start",
               "description": "Start of range to search possible breakpoint locations in.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "end",
               "description": "End of range to search possible breakpoint locations in (excluding). When not specified, end\nof scripts is used as end of range.",
               "optional": true,
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "restrictToFunction",
@@ -5268,7 +5523,8 @@
               "description": "List of the possible breakpoint locations.",
               "type": "array",
               "items": {
-                "$ref": "BreakLocation"
+                "$ref": "BreakLocation",
+                "type": "$ref"
               }
             }
           ]
@@ -5280,7 +5536,8 @@
             {
               "name": "scriptId",
               "description": "Id of the script to get source for.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -5301,7 +5558,8 @@
           "parameters": [
             {
               "name": "breakpointId",
-              "$ref": "BreakpointId"
+              "$ref": "BreakpointId",
+              "type": "$ref"
             }
           ]
         },
@@ -5312,7 +5570,8 @@
             {
               "name": "callFrameId",
               "description": "Call frame identifier to evaluate on.",
-              "$ref": "CallFrameId"
+              "$ref": "CallFrameId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -5321,21 +5580,24 @@
               "description": "New stack trace.",
               "type": "array",
               "items": {
-                "$ref": "CallFrame"
+                "$ref": "CallFrame",
+                "type": "$ref"
               }
             },
             {
               "name": "asyncStackTrace",
               "description": "Async stack trace, if any.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             },
             {
               "name": "asyncStackTraceId",
               "description": "Async stack trace, if any.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTraceId"
+              "$ref": "Runtime.StackTraceId",
+              "type": "$ref"
             }
           ]
         },
@@ -5350,7 +5612,8 @@
             {
               "name": "scriptId",
               "description": "Id of the script to search in.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "query",
@@ -5376,7 +5639,8 @@
               "description": "List of search matches.",
               "type": "array",
               "items": {
-                "$ref": "SearchMatch"
+                "$ref": "SearchMatch",
+                "type": "$ref"
               }
             }
           ]
@@ -5399,7 +5663,8 @@
             {
               "name": "location",
               "description": "Location to set breakpoint in.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             },
             {
               "name": "condition",
@@ -5412,12 +5677,14 @@
             {
               "name": "breakpointId",
               "description": "Id of the created breakpoint for further reference.",
-              "$ref": "BreakpointId"
+              "$ref": "BreakpointId",
+              "type": "$ref"
             },
             {
               "name": "actualLocation",
               "description": "Location this breakpoint resolved into.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             }
           ]
         },
@@ -5465,14 +5732,16 @@
             {
               "name": "breakpointId",
               "description": "Id of the created breakpoint for further reference.",
-              "$ref": "BreakpointId"
+              "$ref": "BreakpointId",
+              "type": "$ref"
             },
             {
               "name": "locations",
               "description": "List of the locations this breakpoint resolved into upon addition.",
               "type": "array",
               "items": {
-                "$ref": "Location"
+                "$ref": "Location",
+                "type": "$ref"
               }
             }
           ]
@@ -5511,7 +5780,8 @@
             {
               "name": "scriptId",
               "description": "Id of the script to edit.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "scriptSource",
@@ -5532,7 +5802,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "CallFrame"
+                "$ref": "CallFrame",
+                "type": "$ref"
               }
             },
             {
@@ -5545,20 +5816,23 @@
               "name": "asyncStackTrace",
               "description": "Async stack trace, if any.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             },
             {
               "name": "asyncStackTraceId",
               "description": "Async stack trace, if any.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTraceId"
+              "$ref": "Runtime.StackTraceId",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details if any.",
               "optional": true,
-              "$ref": "Runtime.ExceptionDetails"
+              "$ref": "Runtime.ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -5590,12 +5864,14 @@
             {
               "name": "newValue",
               "description": "New variable value.",
-              "$ref": "Runtime.CallArgument"
+              "$ref": "Runtime.CallArgument",
+              "type": "$ref"
             },
             {
               "name": "callFrameId",
               "description": "Id of callframe that holds variable.",
-              "$ref": "CallFrameId"
+              "$ref": "CallFrameId",
+              "type": "$ref"
             }
           ]
         },
@@ -5629,12 +5905,14 @@
             {
               "name": "breakpointId",
               "description": "Breakpoint unique identifier.",
-              "$ref": "BreakpointId"
+              "$ref": "BreakpointId",
+              "type": "$ref"
             },
             {
               "name": "location",
               "description": "Actual breakpoint location.",
-              "$ref": "Location"
+              "$ref": "Location",
+              "type": "$ref"
             }
           ]
         },
@@ -5647,7 +5925,8 @@
               "description": "Call stack the virtual machine stopped on.",
               "type": "array",
               "items": {
-                "$ref": "CallFrame"
+                "$ref": "CallFrame",
+                "type": "$ref"
               }
             },
             {
@@ -5686,21 +5965,24 @@
               "name": "asyncStackTrace",
               "description": "Async stack trace, if any.",
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             },
             {
               "name": "asyncStackTraceId",
               "description": "Async stack trace, if any.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTraceId"
+              "$ref": "Runtime.StackTraceId",
+              "type": "$ref"
             },
             {
               "name": "asyncCallStackTraceId",
               "description": "Just scheduled async call will have this stack trace as parent stack during async execution.\nThis field is available only after `Debugger.stepInto` call with `breakOnAsynCall` flag.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTraceId"
+              "$ref": "Runtime.StackTraceId",
+              "type": "$ref"
             }
           ]
         },
@@ -5715,7 +5997,8 @@
             {
               "name": "scriptId",
               "description": "Identifier of the script parsed.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -5745,7 +6028,8 @@
             {
               "name": "executionContextId",
               "description": "Specifies script creation context.",
-              "$ref": "Runtime.ExecutionContextId"
+              "$ref": "Runtime.ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "hash",
@@ -5787,7 +6071,8 @@
               "description": "JavaScript top stack frame of where the script parsed event was triggered if available.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             }
           ]
         },
@@ -5798,7 +6083,8 @@
             {
               "name": "scriptId",
               "description": "Identifier of the script parsed.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -5828,7 +6114,8 @@
             {
               "name": "executionContextId",
               "description": "Specifies script creation context.",
-              "$ref": "Runtime.ExecutionContextId"
+              "$ref": "Runtime.ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "hash",
@@ -5877,7 +6164,8 @@
               "description": "JavaScript top stack frame of where the script parsed event was triggered if available.",
               "experimental": true,
               "optional": true,
-              "$ref": "Runtime.StackTrace"
+              "$ref": "Runtime.StackTrace",
+              "type": "$ref"
             }
           ]
         }
@@ -5903,7 +6191,8 @@
             {
               "name": "callFrame",
               "description": "Function location.",
-              "$ref": "Runtime.CallFrame"
+              "$ref": "Runtime.CallFrame",
+              "type": "$ref"
             },
             {
               "name": "hitCount",
@@ -5932,7 +6221,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "PositionTickInfo"
+                "$ref": "PositionTickInfo",
+                "type": "$ref"
               }
             }
           ]
@@ -5947,7 +6237,8 @@
               "description": "The list of profile nodes. First item is the root node.",
               "type": "array",
               "items": {
-                "$ref": "ProfileNode"
+                "$ref": "ProfileNode",
+                "type": "$ref"
               }
             },
             {
@@ -6034,7 +6325,8 @@
               "description": "Source ranges inside the function with coverage data.",
               "type": "array",
               "items": {
-                "$ref": "CoverageRange"
+                "$ref": "CoverageRange",
+                "type": "$ref"
               }
             },
             {
@@ -6052,7 +6344,8 @@
             {
               "name": "scriptId",
               "description": "JavaScript script id.",
-              "$ref": "Runtime.ScriptId"
+              "$ref": "Runtime.ScriptId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -6064,7 +6357,8 @@
               "description": "Functions contained in the script that has coverage data.",
               "type": "array",
               "items": {
-                "$ref": "FunctionCoverage"
+                "$ref": "FunctionCoverage",
+                "type": "$ref"
               }
             }
           ]
@@ -6086,7 +6380,8 @@
               "description": "Coverage data for the current isolate.",
               "type": "array",
               "items": {
-                "$ref": "ScriptCoverage"
+                "$ref": "ScriptCoverage",
+                "type": "$ref"
               }
             }
           ]
@@ -6129,7 +6424,8 @@
             {
               "name": "profile",
               "description": "Recorded profile.",
-              "$ref": "Profile"
+              "$ref": "Profile",
+              "type": "$ref"
             }
           ]
         },
@@ -6146,7 +6442,8 @@
               "description": "Coverage data for the current isolate.",
               "type": "array",
               "items": {
-                "$ref": "ScriptCoverage"
+                "$ref": "ScriptCoverage",
+                "type": "$ref"
               }
             }
           ]
@@ -6163,11 +6460,13 @@
             {
               "name": "location",
               "description": "Location of console.profileEnd().",
-              "$ref": "Debugger.Location"
+              "$ref": "Debugger.Location",
+              "type": "$ref"
             },
             {
               "name": "profile",
-              "$ref": "Profile"
+              "$ref": "Profile",
+              "type": "$ref"
             },
             {
               "name": "title",
@@ -6188,7 +6487,8 @@
             {
               "name": "location",
               "description": "Location of console.profile().",
-              "$ref": "Debugger.Location"
+              "$ref": "Debugger.Location",
+              "type": "$ref"
             },
             {
               "name": "title",
@@ -6278,7 +6578,8 @@
               "name": "unserializableValue",
               "description": "Primitive value which can not be JSON-stringified does not have `value`, but gets this\nproperty.",
               "optional": true,
-              "$ref": "UnserializableValue"
+              "$ref": "UnserializableValue",
+              "type": "$ref"
             },
             {
               "name": "description",
@@ -6290,20 +6591,23 @@
               "name": "objectId",
               "description": "Unique object identifier (for non-primitive values).",
               "optional": true,
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "preview",
               "description": "Preview containing abbreviated property values. Specified for `object` type values only.",
               "experimental": true,
               "optional": true,
-              "$ref": "ObjectPreview"
+              "$ref": "ObjectPreview",
+              "type": "$ref"
             },
             {
               "name": "customPreview",
               "experimental": true,
               "optional": true,
-              "$ref": "CustomPreview"
+              "$ref": "CustomPreview",
+              "type": "$ref"
             }
           ]
         },
@@ -6321,7 +6625,8 @@
               "name": "value",
               "description": "The value associated with the property.",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "writable",
@@ -6333,13 +6638,15 @@
               "name": "get",
               "description": "A function which serves as a getter for the property, or `undefined` if there is no getter\n(accessor descriptors only).",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "set",
               "description": "A function which serves as a setter for the property, or `undefined` if there is no setter\n(accessor descriptors only).",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "configurable",
@@ -6367,7 +6674,8 @@
               "name": "symbol",
               "description": "Property symbol object, if the property is of the `symbol` type.",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             }
           ]
         },
@@ -6385,7 +6693,8 @@
               "name": "value",
               "description": "The value associated with the property.",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             }
           ]
         },
@@ -6404,13 +6713,15 @@
               "name": "unserializableValue",
               "description": "Primitive value which can not be JSON-stringified.",
               "optional": true,
-              "$ref": "UnserializableValue"
+              "$ref": "UnserializableValue",
+              "type": "$ref"
             },
             {
               "name": "objectId",
               "description": "Remote object handle.",
               "optional": true,
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             }
           ]
         },
@@ -6427,7 +6738,8 @@
             {
               "name": "id",
               "description": "Unique id of the execution context. It can be used to specify in which execution context\nscript evaluation should be performed.",
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "origin",
@@ -6476,7 +6788,8 @@
               "name": "scriptId",
               "description": "Script ID of the exception location.",
               "optional": true,
-              "$ref": "ScriptId"
+              "$ref": "ScriptId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -6488,19 +6801,22 @@
               "name": "stackTrace",
               "description": "JavaScript stack trace if available.",
               "optional": true,
-              "$ref": "StackTrace"
+              "$ref": "StackTrace",
+              "type": "$ref"
             },
             {
               "name": "exception",
               "description": "Exception object if available.",
               "optional": true,
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "executionContextId",
               "description": "Identifier of the context where exception happened.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             }
           ]
         },
@@ -6527,7 +6843,8 @@
             {
               "name": "scriptId",
               "description": "JavaScript script id.",
-              "$ref": "ScriptId"
+              "$ref": "ScriptId",
+              "type": "$ref"
             },
             {
               "name": "url",
@@ -6562,21 +6879,24 @@
               "description": "JavaScript function name.",
               "type": "array",
               "items": {
-                "$ref": "CallFrame"
+                "$ref": "CallFrame",
+                "type": "$ref"
               }
             },
             {
               "name": "parent",
               "description": "Asynchronous JavaScript stack trace that preceded this stack, if available.",
               "optional": true,
-              "$ref": "StackTrace"
+              "$ref": "StackTrace",
+              "type": "$ref"
             },
             {
               "name": "parentId",
               "description": "Asynchronous JavaScript stack trace that preceded this stack, if available.",
               "experimental": true,
               "optional": true,
-              "$ref": "StackTraceId"
+              "$ref": "StackTraceId",
+              "type": "$ref"
             }
           ]
         }
@@ -6589,7 +6909,8 @@
             {
               "name": "promiseObjectId",
               "description": "Identifier of the promise.",
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "returnByValue",
@@ -6608,13 +6929,15 @@
             {
               "name": "result",
               "description": "Promise result. Will contain rejected value if promise was rejected.",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details if stack strace is available.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -6631,7 +6954,8 @@
               "name": "objectId",
               "description": "Identifier of the object to call function on. Either objectId or executionContextId should\nbe specified.",
               "optional": true,
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "arguments",
@@ -6639,7 +6963,8 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "CallArgument"
+                "$ref": "CallArgument",
+                "type": "$ref"
               }
             },
             {
@@ -6677,7 +7002,8 @@
               "name": "executionContextId",
               "description": "Specifies execution context which global object will be used to call function on. Either\nexecutionContextId or objectId should be specified.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "objectGroup",
@@ -6690,13 +7016,15 @@
             {
               "name": "result",
               "description": "Call result.",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -6723,7 +7051,8 @@
               "name": "executionContextId",
               "description": "Specifies in which execution context to perform script run. If the parameter is omitted the\nevaluation will be performed in the context of the inspected page.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -6731,13 +7060,15 @@
               "name": "scriptId",
               "description": "Id of the script.",
               "optional": true,
-              "$ref": "ScriptId"
+              "$ref": "ScriptId",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -6784,7 +7115,8 @@
               "name": "contextId",
               "description": "Specifies in which execution context to perform evaluation. If the parameter is omitted the\nevaluation will be performed in the context of the inspected page.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "returnByValue",
@@ -6823,20 +7155,23 @@
               "description": "Terminate execution after timing out (number of milliseconds).",
               "experimental": true,
               "optional": true,
-              "$ref": "TimeDelta"
+              "$ref": "TimeDelta",
+              "type": "$ref"
             }
           ],
           "returns": [
             {
               "name": "result",
               "description": "Evaluation result.",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -6847,7 +7182,8 @@
             {
               "name": "objectId",
               "description": "Identifier of the object to return properties for.",
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "ownProperties",
@@ -6876,7 +7212,8 @@
               "description": "Object properties.",
               "type": "array",
               "items": {
-                "$ref": "PropertyDescriptor"
+                "$ref": "PropertyDescriptor",
+                "type": "$ref"
               }
             },
             {
@@ -6885,14 +7222,16 @@
               "optional": true,
               "type": "array",
               "items": {
-                "$ref": "InternalPropertyDescriptor"
+                "$ref": "InternalPropertyDescriptor",
+                "type": "$ref"
               }
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -6904,7 +7243,8 @@
               "name": "executionContextId",
               "description": "Specifies in which execution context to lookup global scope variables.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             }
           ],
           "returns": [
@@ -6923,7 +7263,8 @@
             {
               "name": "prototypeObjectId",
               "description": "Identifier of the prototype to return objects for.",
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             },
             {
               "name": "objectGroup",
@@ -6936,7 +7277,8 @@
             {
               "name": "objects",
               "description": "Array with objects.",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             }
           ]
         },
@@ -6947,7 +7289,8 @@
             {
               "name": "objectId",
               "description": "Identifier of the object to release.",
-              "$ref": "RemoteObjectId"
+              "$ref": "RemoteObjectId",
+              "type": "$ref"
             }
           ]
         },
@@ -6973,13 +7316,15 @@
             {
               "name": "scriptId",
               "description": "Id of the script to run.",
-              "$ref": "ScriptId"
+              "$ref": "ScriptId",
+              "type": "$ref"
             },
             {
               "name": "executionContextId",
               "description": "Specifies in which execution context to perform script run. If the parameter is omitted the\nevaluation will be performed in the context of the inspected page.",
               "optional": true,
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "objectGroup",
@@ -7022,13 +7367,15 @@
             {
               "name": "result",
               "description": "Run result.",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -7080,24 +7427,28 @@
               "description": "Call arguments.",
               "type": "array",
               "items": {
-                "$ref": "RemoteObject"
+                "$ref": "RemoteObject",
+                "type": "$ref"
               }
             },
             {
               "name": "executionContextId",
               "description": "Identifier of the context where the call was made.",
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             },
             {
               "name": "timestamp",
               "description": "Call timestamp.",
-              "$ref": "Timestamp"
+              "$ref": "Timestamp",
+              "type": "$ref"
             },
             {
               "name": "stackTrace",
               "description": "Stack trace captured when the call was made.",
               "optional": true,
-              "$ref": "StackTrace"
+              "$ref": "StackTrace",
+              "type": "$ref"
             },
             {
               "name": "context",
@@ -7131,11 +7482,13 @@
             {
               "name": "timestamp",
               "description": "Timestamp of the exception.",
-              "$ref": "Timestamp"
+              "$ref": "Timestamp",
+              "type": "$ref"
             },
             {
               "name": "exceptionDetails",
-              "$ref": "ExceptionDetails"
+              "$ref": "ExceptionDetails",
+              "type": "$ref"
             }
           ]
         },
@@ -7146,7 +7499,8 @@
             {
               "name": "context",
               "description": "A newly created execution context.",
-              "$ref": "ExecutionContextDescription"
+              "$ref": "ExecutionContextDescription",
+              "type": "$ref"
             }
           ]
         },
@@ -7157,7 +7511,8 @@
             {
               "name": "executionContextId",
               "description": "Id of the destroyed context",
-              "$ref": "ExecutionContextId"
+              "$ref": "ExecutionContextId",
+              "type": "$ref"
             }
           ]
         },
@@ -7171,7 +7526,8 @@
           "parameters": [
             {
               "name": "object",
-              "$ref": "RemoteObject"
+              "$ref": "RemoteObject",
+              "type": "$ref"
             },
             {
               "name": "hints",
