@@ -1119,6 +1119,11 @@
                     "description": "Close browser gracefully."
                 },
                 {
+                    "name": "crash",
+                    "description": "Crashes browser on the main thread.",
+                    "experimental": true
+                },
+                {
                     "name": "getVersion",
                     "description": "Returns version information.",
                     "returns": [
@@ -10373,6 +10378,7 @@
                     "enum": [
                         "link",
                         "typed",
+                        "address_bar",
                         "auto_bookmark",
                         "auto_subframe",
                         "manual_subframe",

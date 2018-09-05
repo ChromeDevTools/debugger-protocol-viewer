@@ -3653,6 +3653,7 @@
           "enum": [
             "link",
             "typed",
+            "address_bar",
             "auto_bookmark",
             "auto_subframe",
             "manual_subframe",
