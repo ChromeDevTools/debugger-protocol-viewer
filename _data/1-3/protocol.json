@@ -1103,7 +1103,8 @@
       "description": "DOM debugging allows setting breakpoints on particular DOM operations and events. JavaScript\nexecution will stop on these operations as if there was a regular breakpoint set.",
       "dependencies": [
         "DOM",
-        "Debugger"
+        "Debugger",
+        "Runtime"
       ],
       "types": [
         {
@@ -2069,6 +2070,29 @@
       ],
       "types": [
         {
+          "id": "ResourceType",
+          "description": "Resource type as it was perceived by the rendering engine.",
+          "type": "string",
+          "enum": [
+            "Document",
+            "Stylesheet",
+            "Image",
+            "Media",
+            "Font",
+            "Script",
+            "TextTrack",
+            "XHR",
+            "Fetch",
+            "EventSource",
+            "WebSocket",
+            "Manifest",
+            "SignedExchange",
+            "Ping",
+            "CSPViolationReport",
+            "Other"
+          ]
+        },
+        {
           "id": "LoaderId",
           "description": "Unique loader identifier.",
           "type": "string"
@@ -2670,7 +2694,7 @@
             {
               "name": "type",
               "description": "Type of this resource.",
-              "$ref": "Page.ResourceType"
+              "$ref": "ResourceType"
             },
             {
               "name": "response",
@@ -3221,7 +3245,7 @@
             {
               "name": "type",
               "description": "Resource type.",
-              "$ref": "Page.ResourceType"
+              "$ref": "ResourceType"
             },
             {
               "name": "errorText",
@@ -3329,7 +3353,7 @@
               "name": "type",
               "description": "Type of this resource.",
               "optional": true,
-              "$ref": "Page.ResourceType"
+              "$ref": "ResourceType"
             },
             {
               "name": "frameId",
@@ -3367,7 +3391,7 @@
             {
               "name": "type",
               "description": "Resource type.",
-              "$ref": "Page.ResourceType"
+              "$ref": "ResourceType"
             },
             {
               "name": "response",
@@ -3538,32 +3562,10 @@
       "dependencies": [
         "Debugger",
         "DOM",
-        "Network"
+        "Network",
+        "Runtime"
       ],
       "types": [
-        {
-          "id": "ResourceType",
-          "description": "Resource type as it was perceived by the rendering engine.",
-          "type": "string",
-          "enum": [
-            "Document",
-            "Stylesheet",
-            "Image",
-            "Media",
-            "Font",
-            "Script",
-            "TextTrack",
-            "XHR",
-            "Fetch",
-            "EventSource",
-            "WebSocket",
-            "Manifest",
-            "SignedExchange",
-            "Ping",
-            "CSPViolationReport",
-            "Other"
-          ]
-        },
         {
           "id": "FrameId",
           "description": "Unique frame identifier.",
