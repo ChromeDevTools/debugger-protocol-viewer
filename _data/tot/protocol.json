@@ -12176,6 +12176,15 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        {
+                            "name": "recommendations",
+                            "description": "Recommendations to fix any issues.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     ]
                 },
