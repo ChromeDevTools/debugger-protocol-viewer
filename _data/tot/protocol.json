@@ -16040,7 +16040,9 @@
                                 "error",
                                 "proxy",
                                 "promise",
-                                "typedarray"
+                                "typedarray",
+                                "arraybuffer",
+                                "dataview"
                             ]
                         },
                         {
