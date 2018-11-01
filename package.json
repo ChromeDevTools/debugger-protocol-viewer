@@ -12,7 +12,7 @@
     "eslint": "^4.9.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-html": "^3.2.2",
-    "gh-pages": "^1.1.0",
+    "gh-pages": "^2.0.1",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-babel-minify": "^0.2.0",
     "gulp-html-minifier": "^0.1.8",
@@ -27,6 +27,6 @@
     "build": "gulp build",
     "prep": "bash prep-tot-protocol-files.sh",
     "serve": "echo 'Open http://localhost:8000/ for unbundled site'; echo 'Open http://localhost:8000/devtools-protocol/ for built/bundled site'; statikk --port 8000 .",
-    "deploy": "gh-pages --dist devtools-protocol --repo git@github.com:ChromeDevTools/devtools-protocol.git --dotfiles"
+    "deploy": "gh-pages --dist devtools-protocol --repo git@github.com:ChromeDevTools/devtools-protocol.git --dotfiles  --user \"devtools-bot <paulirish+bot@google.com>\""
   }
 }
