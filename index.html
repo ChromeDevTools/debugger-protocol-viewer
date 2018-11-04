@@ -160,22 +160,18 @@
                 alt="Fork me on GitHub"
                 data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
               <p>The <b>Chrome DevTools Protocol</b> allows for tools to instrument, inspect, debug and profile Chromium, Chrome and other Blink-based browsers.
-              Many existing projects <a href="https://developer.chrome.com/devtools/docs/debugging-clients">currently use</a> the protocol.
+              Many existing projects <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools">currently use</a> the protocol.
               The <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a> uses this protocol and the team maintains its API.
 
               <p>Instrumentation is divided into a number of domains (DOM, Debugger, Network
               etc.). Each domain defines a number of commands it supports and events it
               generates. Both commands and events are serialized JSON objects of a fixed
-              structure. You can either <a href="https://developer.chrome.com/devtools/docs/debugger-protocol">debug
-              over the wire</a> using the raw messages as they are described in the corresponding domain
-              documentation, or use <a href="https://developer.chrome.com/devtools/docs/debugger-protocol#extension">extension
-              JavaScript API.</a></p>
+              structure.</p>
 
 
               <h3>Protocol API Docs</h3>
               <h4><a href="tot/">The latest (tip-of-tree) protocol (tot)</a></h4>
-              <p> It <a href="https://chromium.googlesource.com/chromium/src/+log/master/third_party/blink/renderer/core/inspector/browser_protocol.json">changes</a>
-              <a href="https://chromium.googlesource.com/v8/v8.git/+log/master/src/inspector/js_protocol.json"></a>frequently</a> and can break at any time. However it captures the full capabilities of the Protocol, whereas the stable release is a subset. There is no backwards compatibility support guaranteed for the capabilities it introduces.</p>
+              <p> It <a href="https://chromium.googlesource.com/chromium/src/+log/HEAD/third_party/blink/renderer/core/inspector/browser_protocol.pdl">changes frequently</a> and can break at any time. However it captures the full capabilities of the Protocol, whereas the stable release is a subset. There is no backwards compatibility support guaranteed for the capabilities it introduces.</p>
 
               <h4><a href="v8/">v8-inspector protocol (v8)</a></h4>
               <p>It is available in <a href="https://nodejs.org/en/blog/release/v6.3.0/">node 6.3+</a> and enables <a href="https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27">debugging & profiling</a> of Node.js apps.</p>
@@ -187,14 +183,13 @@
               <p>The stable release of the protocol, tagged at Chrome 64. It includes a smaller subset of the complete protocol compatibilities.
 
               <h3>Resources</h3>
-              <p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
+
               <p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be used for concerns with the protocol. It also hosts the canonical copy of the json files.
               <p>Useful: <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Getting Started with Headless Chrome</a> and the <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md">Headless Chromium readme</a>.
               <p>The <a href="https://github.com/cyrus-and/chrome-remote-interface/">chrome-remote-interface</a> node module is recommended, and its <a href="https://github.com/cyrus-and/chrome-remote-interface/wiki">wiki</a> and <a href="https://github.com/cyrus-and/chrome-remote-interface/issues?utf8=%E2%9C%93&q=is%3Aissue%20">issue tracker</a> are full of useful recipes.
               <p>The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
 
-
-              Many applications and libraries already use the protocol.
+              <p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
 
               <h3 id="remote">Basics: Using DevTools as protocol client</h3>
               <p>The Developer Tools front-end can attach to a remotely running Chrome instance for debugging.
@@ -237,25 +232,29 @@
                 instrumenting them. See the <a href="#endpoints">HTTP Endpoints</a> section below for more.
               </p>
 
-              <h3>Sniffing the protocol</h3>
-              <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
-                First, run Chrome with the debugging port open:
-              <pre>alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
-  canary --remote-debugging-port=9222 http://localhost:9222 http://chromium.org</pre>
-
-                Then, select the Chromium Projects item in the <em>Inspectable Pages</em> list. Now that DevTools is up and fullscreen, open DevTools to inspect it.
-                Cmd-R in the new inspector to make the first restart. Now head to Network Panel, filter by Websocket, select the connection and click the Frames tab.
-                Now you can easily see the frames of WebSocket activity as you use the first instance of the DevTools.
-              </p>
+              <h3>Listening to the protocol</h3>
+              <p>This is especially handy to understand how the DevTools frontend makes use of the protocol. You can view all requests/responses and methods as they happen.</p>
 
               <figure class="screenshot">
-                <a href="images/debugger-protocol-sniffing-full.png" style="text-align: center; display:block;">
-                  <div style="background-image: url(images/debugger-protocol-sniffing-full.png)">
-                    <img src="images/debugger-protocol-sniffing.png" alt="Sniffing the debugger protocol">
-                  </div>
-                  Screenshot of sniffing the DevTools protocol with DevTools
+                <a href="images/protocol-monitor.png" target="_blank" style="text-align: center; display:block;">
+                  <img src="images/protocol-monitor.png" height="260" alt="Screenshot of the Protocol Monitor">
                 </a>
               </figure>
+
+              <p>To use, first <a href="https://stackoverflow.com/a/15680012/89484">enable DevTools experiemnts</a>. Then click the ⋮ menu icon in the top-right of the DevTools, and select <i>Settings</i>. Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close and reopen DevTools. Now click the ⋮ menu icon again, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.</p>
+              </p>
+
+              <p>You can also issue your own commands. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>, then within the inner DevTools window, use <code>Main.sendOverProtocol()</code> in the console:</p>
+
+              <pre>
+await Main.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
+  mobile: true,
+  width: 412,
+  height: 732,
+  deviceScaleFactor: 2.625,
+});
+
+const data = await Main.sendOverProtocol("Page.captureScreenshot");</pre>
 
 
               <h3 id="extension">DevTools protocol via Chrome extension</h3>
