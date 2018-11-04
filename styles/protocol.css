@@ -59,6 +59,10 @@ body {
   position: fixed;
 }
 
+h3 {
+  margin-top: 40px;
+}
+
 paper-listbox {
   overflow-y: auto;
 }

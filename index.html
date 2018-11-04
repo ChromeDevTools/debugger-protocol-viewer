@@ -234,16 +234,8 @@
                 http://localhost:9222, your application can discover available
                 pages by requesting: <a href="http://localhost:9222/json">http://localhost:9222/json</a> and getting a JSON object with information about inspectable pages along
                 with the WebSocket addresses that you could use in order to start
-                instrumenting them.
+                instrumenting them. See the <a href="#endpoints">HTTP Endpoints</a> section below for more.
               </p>
-
-              <p>Remote debugging is especially useful when debugging remote
-                instances of the browser or attaching to the embedded devices. Blink port
-                owners are responsible for exposing debugging connections to the external
-                users.
-              </p>
-
-              <p>If you need the protocol version for a specific Chrome client, glance at <code>fetchFromChromeRepo</code> from chrome-remote-interface's <a href="https://github.com/cyrus-and/chrome-remote-interface/blob/master/lib/devtools.js"><code>devtools.js</code></a>.
 
               <h3>Sniffing the protocol</h3>
               <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
@@ -303,9 +295,6 @@
                <p>These canonical .pdl files are mirrored on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/">in the devtools-protocol repo</a> where JSON versions, TypeScript definitions and closure typedefs are generated. Most tools rely on <a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">these JSON versions</a>.</p>
               <p>Also, if you've set <code>--remote-debugging-port=9222</code> with Chrome, the complete protocol version it speaks is available at <code>localhost:9222/json/protocol</code>.</p>
 
-              <h4 id="are-the-http-endpoints-documented">Are the HTTP endpoints (<code>/json/*</code>) documented?</h4>
-              <p>Not yet. See bugger-daemon’s <a href="https://github.com/buggerjs/bugger-daemon/blob/master/README.md#api">third-party docs</a>. See also the <a href="https://cs.chromium.org/search/?q=f:devtools_http_handler.cc+%22command+%3D%3D+%22&amp;sq=package:chromium&amp;type=cs">endpoints implementation</a> in Chromium. <code>/json/protocol</code> was added in Chrome 60.</p>
-
               <h4 id="how-do-i-access-the-browser-target">How do I access the browser target?</h4>
               <p>The endpoint is exposed as <code>webSocketDebuggerUrl</code> in <code>/json/version</code>. Note the <code>browser</code> in the URL, rather than <code>page</code>. If Chrome was launched with <code>--remote-debugging-port=0</code> and chose an open port, the browser endpoint is written to both stderr and the <code>DevToolsActivePort</code> file in browser profile folder.</p>
 
@@ -322,6 +311,75 @@
                 (For reference: the <a href="https://chromiumcodereview.appspot.com/11361034/">original patch</a>).
                 After disconnection, some apps have chosen to pause their state and offer a reconnect button.
               </p>
+
+
+
+
+
+
+              <h3 id="endpoints">HTTP Endpoints</h3>
+              <p>If started with a remote-debugging-port, these HTTP endpoints are available on the same port. (<a href="https://cs.chromium.org/search/?q=f:devtools_http_handler.cc+%22command+%3D%3D+%22&amp;sq=package:chromium&amp;type=cs">Chromium implementation</a>)</p>
+
+              <h4 id="get-jsonversion">GET <code>/json/version</code></h4>
+              <p>Browser version metadata</p>
+              <pre class="sourceCode js">
+{
+    "Browser": "Chrome/72.0.3601.0",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3601.0 Safari/537.36",
+    "V8-Version": "7.2.233",
+    "WebKit-Version": "537.36 (@cfede9db1d154de0468cb0538479f34c0755a0f4)",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/browser/b0b8a4fb-bb17-4359-9533-a8d9f3908bd8"
+}
+              </pre>
+              <h4 id="get-json-or-jsonlist">GET <code>/json</code> or <code>/json/list</code></h4>
+              <p>A list of all available websocket targets.</p>
+              <pre class="sourceCode js">
+[ {
+  "description": "",
+  "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/DAB7FB6187B554E10B0BD18821265734",
+  "id": "DAB7FB6187B554E10B0BD18821265734",
+  "title": "Yahoo",
+  "type": "page",
+  "url": "https://www.yahoo.com/",
+  "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/DAB7FB6187B554E10B0BD18821265734"
+} ]
+              </pre>
+              <h4 id="get-jsonprotocol">GET <code>/json/protocol/</code></h4>
+              <p>The current devtools protocol, as JSON:</p>
+              <pre class="sourceCode js">
+{
+  "domains": [
+      {
+          "domain": "Accessibility",
+          "experimental": true,
+          "dependencies": [
+              "DOM"
+          ],
+          "types": [
+              {
+                  "id": "AXValueType",
+                  "description": "Enum of possible property types.",
+                  "type": "string",
+                  "enum": [
+                      "boolean",
+                      "tristate",
+// ...
+              </pre>
+              <h4 id="get-jsonnewurl">GET <code>/json/new?{url}</code></h4>
+              <p>Opens a new tab. Responds with the websocket target data for the new tab.</p>
+              <h4 id="get-jsonactivatetargetid">GET <code>/json/activate/{targetId}</code></h4>
+              <p>Brings a page into the foreground (activate a tab).</p>
+              <p>For valid targets, the response is 200: <code>&quot;Target activated&quot;</code>. If the target is invalid, the response is 404: <code>&quot;No such target id: {targetId}&quot;</code></p>
+              <h4 id="get-jsonclosetargetid">GET <code>/json/close/{targetId}</code></h4>
+              <p>Closes the target page identified by <code>targetId</code>.</p>
+              <p>For valid targets, the response is 200: <code>&quot;Target is closing&quot;</code>. If the target is invalid, the response is 404: <code>&quot;No such target id: {targetId}&quot;</code></p>
+              <h4 id="websocket-devtoolspagetargetid">WebSocket <code>/devtools/page/{targetId}</code></h4>
+              <p>The WebSocket endpoint for the protocol.</p>
+              <h4 id="get-devtoolsinspector.html">GET <code>/devtools/inspector.html</code></h4>
+              <p>A copy of the DevTools frontend that ship with Chrome.</p>
+
+
             </div>
           </section>
         </iron-pages>
@@ -448,17 +506,27 @@
 
       function processHashUpdate() {
         function scrollIntoView() {
+          let scrollTarget = null;
           for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
+            if (scrollTarget) continue;
             if (`${details.type}-${details.name}` === location.hash) {
-              details.scrollIntoView({behavior: 'instant', block: 'start'});
-              return;
+              scrollTarget = details;
             }
           }
 
-          // After the hash update, we have not found any match.
-          // Could be the case that the hash is empty,
-          // or there is simply no match. Anyways, scroll all the way to the top
-          mainElement.scrollTop = '0';
+          // Intra page link to a regular ID
+          if (!scrollTarget) {
+            scrollTarget = document.querySelector(`main [id="${location.hash}"]`);
+          }
+
+          if (scrollTarget) {
+            scrollTarget.scrollIntoView({behavior: 'instant', block: 'start'});
+          } else {
+            // After the hash update, we have not found any match.
+            // Could be the case that the hash is empty,
+            // or there is simply no match. Anyways, scroll all the way to the top
+            mainElement.scrollTop = '0';
+          }
         }
         window.requestAnimationFrame(() => {
           // If we are still switching domains and fetching data (which is async)
