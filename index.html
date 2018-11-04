@@ -295,13 +295,13 @@
               <h3 id="faq">Frequently Asked Questions</h3>
 
               <h4 id="how-is-the-protocol-defined">How is the protocol defined?</h4>
-              <p>The canonical protocol definitions live in the Chromium source tree: (<a href="https://chromium.googlesource.com/chromium/src/+/master/third_party/blink/renderer/core/inspector/browser_protocol.json">browser_protocol.json</a> and <a href="https://chromium.googlesource.com/v8/v8/+/master/src/inspector/js_protocol.json">js_protocol.json</a>). They are maintained manually by the DevTools engineering team. These files are mirrored (hourly) on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">in the devtools-protocol repo</a>.</p>
-              <p>The declarative protocol definitions are used across tools. Within Chromium, a binding layer is created for the Chrome DevTools to interact with, and separately the protocol is used for <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md#client_devtools-api">Chrome Headless’s C++ interface</a>.</p>
+              <p>The canonical protocol definitions live in the Chromium source tree: (<a href="https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/inspector/browser_protocol.pdl">browser_protocol.pdl</a> and <a href="https://cs.chromium.org/chromium/src/v8/src/inspector/js_protocol.pdl">js_protocol.pdl</a>). They are maintained manually by the DevTools engineering team. The declarative protocol definitions are used across tools; for instance, a binding layer is created within Chromium for the Chrome DevTools to interact with, and separately bindings generated for <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md#client_devtools-api">Chrome Headless’s C++ interface</a>.
+              <h4 id="json">Can I get the protocol as JSON?</h4>
 
-              <h4 id="whats-the-protocol_externs-file">What’s the protocol_externs file?</h4>
-              <p>It’s created via <a href="https://cs.chromium.org/chromium/src/third_party/blink/renderer/devtools/scripts/build/generate_protocol_externs.py">generate_protocol_externs.py</a> and useful for tools using closure compiler. The TypeScript story is <a href="https://github.com/ChromeDevTools/devtools-protocol/issues/18">here</a>.</p>
+               <p>These canonical .pdl files are mirrored on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/">in the devtools-protocol repo</a> where JSON versions, TypeScript definitions and closure typedefs are generated. Most tools rely on <a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">these JSON versions</a>.</p>
+              <p>Also, if you've set <code>--remote-debugging-port=9222</code> with Chrome, the complete protocol version it speaks is available at <code>localhost:9222/json/protocol</code>.</p>
 
-              <h4 id="are-the-http-endpoints-documented">Are the HTTP endpoints documented?</h4>
+              <h4 id="are-the-http-endpoints-documented">Are the HTTP endpoints (<code>/json/*</code>) documented?</h4>
               <p>Not yet. See bugger-daemon’s <a href="https://github.com/buggerjs/bugger-daemon/blob/master/README.md#api">third-party docs</a>. See also the <a href="https://cs.chromium.org/search/?q=f:devtools_http_handler.cc+%22command+%3D%3D+%22&amp;sq=package:chromium&amp;type=cs">endpoints implementation</a> in Chromium. <code>/json/protocol</code> was added in Chrome 60.</p>
 
               <h4 id="how-do-i-access-the-browser-target">How do I access the browser target?</h4>
