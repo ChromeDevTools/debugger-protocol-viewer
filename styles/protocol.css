@@ -151,13 +151,6 @@ main {
   margin-bottom: 0;
 }
 
-.home-page-content .screenshot div {
-  background-repeat: no-repeat;
-  text-indent: -999em;
-  background-size: cover;
-  height: 260px;
-  background-position-y: -122px;
-}
 
 .gh-badge {
   float: right;
