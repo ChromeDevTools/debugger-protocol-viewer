@@ -4032,6 +4032,10 @@
           ]
         },
         {
+          "name": "resetNavigationHistory",
+          "description": "Resets navigation history for the current page."
+        },
+        {
           "name": "handleJavaScriptDialog",
           "description": "Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).",
           "parameters": [
