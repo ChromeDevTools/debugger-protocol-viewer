@@ -54,12 +54,18 @@
         color: gray;
         font-weight: 300;
         text-transform: uppercase;
-        letter-spacing: 1px;
         margin: 1rem 0 0;
       }
 
       .monospace {
         font-family: Consolas, Menlo, monospace;
+      }
+      .sm {
+        font-size: 90%;
+      }
+
+      h5 + p {
+        margin-top: 0;
       }
 
       .parameter-list {
@@ -87,7 +93,7 @@
       </p>
       <p hidden$="[[!details.type]]"class="type-type">Type: <strong>[[details.type]]</strong></p>
 
-      <div hidden$="[[!properties]]">
+      <div hidden$="[[!_hasProperties(details)]]">
         <h5>[[properties.name]]</h5>
         <dl class="parameter-list">
           <template is="dom-repeat" items="[[properties.values]]">
@@ -115,8 +121,8 @@
 
       <div hidden$="[[!details.enum.length]]">
         <h5>Allowed values</h5>
-        <p>
-          [[_computeDetailsEnum(details)]].
+        <p class="monospace sm">
+          [[_computeDetailsEnum(details)]]
         </p>
       </div>
     </div>
@@ -156,6 +162,9 @@
           };
         }
         return undefined;
+      }
+      _hasProperties(details) {
+        return !!this._computeProperties(details);
       }
       _computeDetailsEnum(details) {
         return details.enum && details.enum.join(', ');
