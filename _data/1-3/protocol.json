@@ -1847,6 +1847,16 @@
               "description": "Y delta in CSS pixels for mouse wheel event (default: 0).",
               "optional": true,
               "type": "number"
+            },
+            {
+              "name": "pointerType",
+              "description": "Pointer type (default: \"mouse\").",
+              "optional": true,
+              "type": "string",
+              "enum": [
+                "mouse",
+                "pen"
+              ]
             }
           ]
         },
