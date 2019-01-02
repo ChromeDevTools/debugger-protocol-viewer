@@ -81,6 +81,19 @@
           font-size: 120%;
       }
 
+      div.enum:not(:empty) {
+        margin-top: 5px;
+        font-size: 90%;
+      }
+
+      div.enum:not(:empty):before {
+        content: "Allowed values: ";
+        color: gray;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 300;
+        text-transform: uppercase;
+      }
+
       h6 {
         margin: 12px 0;
         font-size: 16px;
@@ -114,7 +127,7 @@
           </span>
           <span class="param-description">
             <cr-markdownish hidden$="[[!param.description]]" markdown=[[param.description]]></cr-markdownish>
-            <span>[[_computeParamEnum(param.enum)]]</span>
+            <div class="enum monospace">[[_computeParamEnum(param.enum)]]</div>
             <cr-domain-experimental item="[[param]]"></cr-domain-experimental>
           </span>
         </dd>
@@ -127,7 +140,7 @@
           <template is="dom-repeat" items="[[param.items.properties]]">
             <cr-domain-param param="[[item]]" version="[[version]]" domain="[[domain]]"></cr-domain-param>
           </template>
-          <span>[[_computeParamEnum(param.items.enum)]]</span>
+          <div class="enum monospace">[[_computeParamEnum(param.items.enum)]]</div>
         </div>
       </div>
     </div>
