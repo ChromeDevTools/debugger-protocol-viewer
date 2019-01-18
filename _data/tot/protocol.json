@@ -1045,7 +1045,8 @@
                         "paymentHandler",
                         "protectedMediaIdentifier",
                         "sensors",
-                        "videoCapture"
+                        "videoCapture",
+                        "idleDetection"
                     ]
                 },
                 {
