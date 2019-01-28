@@ -7853,6 +7853,10 @@
                     "name": "prepareForLeakDetection"
                 },
                 {
+                    "name": "forciblyPurgeJavaScriptMemory",
+                    "description": "Simulate OomIntervention by purging V8 memory."
+                },
+                {
                     "name": "setPressureNotificationsSuppressed",
                     "description": "Enable/disable suppressing memory pressure notifications in all processes.",
                     "parameters": [
