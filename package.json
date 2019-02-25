@@ -13,7 +13,7 @@
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-html": "^3.2.2",
     "gh-pages": "^2.0.1",
-    "gulp": "gulpjs/gulp#4.0",
+    "gulp": "4.0.0",
     "gulp-babel-minify": "^0.2.0",
     "gulp-html-minifier": "^0.1.8",
     "gulp-if": "^2.0.2",
