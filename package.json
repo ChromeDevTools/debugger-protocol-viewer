@@ -21,7 +21,7 @@
     "gulp-json-minify": "^1.2.0",
     "merge-stream": "^1.0.1",
     "polymer-build": "^2.1.0",
-    "statikk": "^1.1.0"
+    "statikk": "^1.1.1"
   },
   "scripts": {
     "build": "gulp build",
