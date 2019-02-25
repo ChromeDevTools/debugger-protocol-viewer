@@ -15,7 +15,7 @@
     "gh-pages": "^2.0.1",
     "gulp": "4.0.0",
     "gulp-babel-minify": "^0.2.0",
-    "gulp-html-minifier": "^0.1.8",
+    "gulp-html-minifier2": "^1.1.11",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^5.0.3",
     "gulp-json-minify": "^1.2.2",
