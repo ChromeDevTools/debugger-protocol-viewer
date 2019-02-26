@@ -25,7 +25,7 @@ const imagemin = require('gulp-imagemin');
 // Before using each plugin, install with `npm i --save-dev <package-name>`
 const babelMinify = require('gulp-babel-minify');
 const cssSlam = require('css-slam').gulp;
-const htmlMinifier = require('gulp-html-minifier');
+const htmlMinifier = require('gulp-html-minifier2');
 const jsonMinifiy = require('gulp-json-minify');
 
 const polymerJson = require('./polymer.json');
