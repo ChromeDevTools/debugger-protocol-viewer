@@ -6944,6 +6944,16 @@
               }
             },
             {
+              "name": "privateProperties",
+              "description": "Object private properties.",
+              "experimental": true,
+              "optional": true,
+              "type": "array",
+              "items": {
+                "$ref": "PrivatePropertyDescriptor"
+              }
+            },
+            {
               "name": "exceptionDetails",
               "description": "Exception details.",
               "optional": true,
