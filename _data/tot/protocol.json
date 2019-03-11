@@ -1074,6 +1074,16 @@
                             "$ref": "ServiceName"
                         }
                     ]
+                },
+                {
+                    "name": "clearEvents",
+                    "description": "Clears all stored data for the service.",
+                    "parameters": [
+                        {
+                            "name": "service",
+                            "$ref": "ServiceName"
+                        }
+                    ]
                 }
             ],
             "events": [
