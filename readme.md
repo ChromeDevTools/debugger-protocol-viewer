@@ -43,7 +43,7 @@ To add a new protocol version:
 
 ## Adding new domains
 
-They must be manually added to `<div id="drawerToolbar" class="paper-font-title">Domains</div>` in `index.html`.
+Run `node generate-sidenav-html.js` and add into `<div id="drawerToolbar" class="paper-font-title">Domains</div>` in `index.html`.
 
 ## History
 
