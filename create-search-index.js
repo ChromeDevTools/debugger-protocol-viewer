@@ -84,11 +84,12 @@ function generateSearchIndex(version) {
   var keywordMap = {
     // Lazily creates a KeyRecord.
     addReferenceForKey: function(keyword, pageRef) {
-      var record = this[keyword];
+      const key = keyword.toLowerCase();
+      var record = this[key];
       if (record) {
         record.addReference(pageRef);
       } else {
-        this[keyword.toLowerCase()] = KeyRecord.createKeyRecord(keyword, pageRef);
+        this[key] = KeyRecord.createKeyRecord(keyword, pageRef);
       }
     }
   };
