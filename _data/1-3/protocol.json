@@ -4607,48 +4607,6 @@
           ]
         },
         {
-          "id": "InsecureContentStatus",
-          "description": "Information about insecure content on the page.",
-          "type": "object",
-          "properties": [
-            {
-              "name": "ranMixedContent",
-              "description": "True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts.",
-              "type": "boolean"
-            },
-            {
-              "name": "displayedMixedContent",
-              "description": "True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images.",
-              "type": "boolean"
-            },
-            {
-              "name": "containedMixedForm",
-              "description": "True if the page was loaded over HTTPS and contained a form targeting an insecure url.",
-              "type": "boolean"
-            },
-            {
-              "name": "ranContentWithCertErrors",
-              "description": "True if the page was loaded over HTTPS without certificate errors, and ran content such as\nscripts that were loaded with certificate errors.",
-              "type": "boolean"
-            },
-            {
-              "name": "displayedContentWithCertErrors",
-              "description": "True if the page was loaded over HTTPS without certificate errors, and displayed content\nsuch as images that were loaded with certificate errors.",
-              "type": "boolean"
-            },
-            {
-              "name": "ranInsecureContentStyle",
-              "description": "Security state representing a page that ran insecure content.",
-              "$ref": "SecurityState"
-            },
-            {
-              "name": "displayedInsecureContentStyle",
-              "description": "Security state representing a page that displayed insecure content.",
-              "$ref": "SecurityState"
-            }
-          ]
-        },
-        {
           "id": "CertificateErrorAction",
           "description": "The action to take when a certificate error occurs. continue will continue processing the\nrequest and cancel will cancel the request.",
           "type": "string",
@@ -4694,6 +4652,7 @@
             {
               "name": "insecureContentStatus",
               "description": "Information about insecure content on the page.",
+              "deprecated": true,
               "$ref": "InsecureContentStatus"
             },
             {

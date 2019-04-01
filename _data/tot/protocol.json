@@ -12604,6 +12604,7 @@
                 {
                     "id": "InsecureContentStatus",
                     "description": "Information about insecure content on the page.",
+                    "deprecated": true,
                     "type": "object",
                     "properties": [
                         {
@@ -12752,6 +12753,7 @@
                         {
                             "name": "insecureContentStatus",
                             "description": "Information about insecure content on the page.",
+                            "deprecated": true,
                             "$ref": "InsecureContentStatus"
                         },
                         {
