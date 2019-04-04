@@ -10322,6 +10322,7 @@
                         "searchForNode",
                         "searchForUAShadowDOM",
                         "captureAreaScreenshot",
+                        "showDistances",
                         "none"
                     ]
                 }
