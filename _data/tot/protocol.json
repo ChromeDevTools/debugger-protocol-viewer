@@ -14770,6 +14770,21 @@
             ]
         },
         {
+            "domain": "WebAuthn",
+            "description": "This domain allows configuring virtual authenticators to test the WebAuthn\nAPI.",
+            "experimental": true,
+            "commands": [
+                {
+                    "name": "enable",
+                    "description": "Enable the WebAuthn domain and start intercepting credential storage and\nretrieval with a virtual authenticator."
+                },
+                {
+                    "name": "disable",
+                    "description": "Disable the WebAuthn domain."
+                }
+            ]
+        },
+        {
             "domain": "Console",
             "description": "This domain is deprecated - use Runtime or Log instead.",
             "deprecated": true,
