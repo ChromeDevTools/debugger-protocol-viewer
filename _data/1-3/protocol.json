@@ -4810,6 +4810,18 @@
               "experimental": true,
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "newWindow",
+              "description": "Whether to create a new Window or Tab (chrome-only, false by default).",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "background",
+              "description": "Whether to create the target in background or foreground (chrome-only,\nfalse by default).",
+              "optional": true,
+              "type": "boolean"
             }
           ],
           "returns": [
