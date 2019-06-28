@@ -4330,6 +4330,20 @@
           ]
         },
         {
+          "name": "fileChooserOpened",
+          "description": "Emitted only when `page.interceptFileChooser` is enabled.",
+          "parameters": [
+            {
+              "name": "mode",
+              "type": "string",
+              "enum": [
+                "selectSingle",
+                "selectMultiple"
+              ]
+            }
+          ]
+        },
+        {
           "name": "frameAttached",
           "description": "Fired when frame has been attached to its parent.",
           "parameters": [
