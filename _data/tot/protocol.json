@@ -979,7 +979,8 @@
                         "backgroundFetch",
                         "backgroundSync",
                         "pushMessaging",
-                        "notifications"
+                        "notifications",
+                        "paymentHandler"
                     ]
                 },
                 {
