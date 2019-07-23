@@ -13724,6 +13724,16 @@
                     ]
                 },
                 {
+                    "id": "ImageType",
+                    "description": "Image format of a given image.",
+                    "type": "string",
+                    "enum": [
+                        "jpeg",
+                        "webp",
+                        "unknown"
+                    ]
+                },
+                {
                     "id": "ImageDecodeAcceleratorCapability",
                     "description": "Describes a supported image decoding profile with its associated minimum and\nmaximum resolutions and subsampling.",
                     "type": "object",
@@ -13731,7 +13741,7 @@
                         {
                             "name": "imageType",
                             "description": "Image coded, e.g. Jpeg.",
-                            "type": "string"
+                            "$ref": "ImageType"
                         },
                         {
                             "name": "maxDimensions",
