@@ -613,6 +613,52 @@
           ]
         },
         {
+          "name": "getNodeForLocation",
+          "description": "Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is\neither returned or not.",
+          "parameters": [
+            {
+              "name": "x",
+              "description": "X coordinate.",
+              "type": "integer"
+            },
+            {
+              "name": "y",
+              "description": "Y coordinate.",
+              "type": "integer"
+            },
+            {
+              "name": "includeUserAgentShadowDOM",
+              "description": "False to skip to the nearest non-UA shadow root ancestor (default: false).",
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "ignorePointerEventsNone",
+              "description": "Whether to ignore pointer-events: none on elements and hit test them.",
+              "optional": true,
+              "type": "boolean"
+            }
+          ],
+          "returns": [
+            {
+              "name": "backendNodeId",
+              "description": "Resulting node.",
+              "$ref": "BackendNodeId"
+            },
+            {
+              "name": "frameId",
+              "description": "Frame this node belongs to.",
+              "$ref": "Page.FrameId"
+            },
+            {
+              "name": "nodeId",
+              "description": "Id of the node at given coordinates, only when enabled and requested document.",
+              "optional": true,
+              "$ref": "NodeId"
+            }
+          ]
+        },
+        {
           "name": "getOuterHTML",
           "description": "Returns node's HTML markup.",
           "parameters": [
