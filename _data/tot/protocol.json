@@ -9101,9 +9101,12 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "blockedReason",
-                            "description": "The reason this cookie was blocked.",
-                            "$ref": "SetCookieBlockedReason"
+                            "name": "blockedReasons",
+                            "description": "The reason(s) this cookie was blocked.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SetCookieBlockedReason"
+                            }
                         },
                         {
                             "name": "cookieLine",
@@ -9125,9 +9128,12 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "blockedReason",
-                            "description": "The reason the cookie was blocked.",
-                            "$ref": "CookieBlockedReason"
+                            "name": "blockedReasons",
+                            "description": "The reason(s) the cookie was blocked.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CookieBlockedReason"
+                            }
                         },
                         {
                             "name": "cookie",
