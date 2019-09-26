@@ -4834,8 +4834,7 @@
             },
             {
               "name": "flatten",
-              "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.",
-              "experimental": true,
+              "description": "Enables \"flat\" access to the session via specifying sessionId attribute in the commands.\nWe plan to make this the default, deprecate non-flattened mode,\nand eventually retire it. See crbug.com/991325.",
               "optional": true,
               "type": "boolean"
             }
@@ -4949,29 +4948,6 @@
               "items": {
                 "$ref": "TargetInfo"
               }
-            }
-          ]
-        },
-        {
-          "name": "sendMessageToTarget",
-          "description": "Sends protocol message over session with given id.",
-          "parameters": [
-            {
-              "name": "message",
-              "type": "string"
-            },
-            {
-              "name": "sessionId",
-              "description": "Identifier of the session.",
-              "optional": true,
-              "$ref": "SessionID"
-            },
-            {
-              "name": "targetId",
-              "description": "Deprecated.",
-              "deprecated": true,
-              "optional": true,
-              "$ref": "TargetID"
             }
           ]
         },
