@@ -17,7 +17,7 @@
   <link href="styles/protocol.css" rel="stylesheet">
 
   <!-- Start Single Page Apps for GitHub Pages -->
-  <script type="text/javascript">
+  <script>
     // Single Page Apps for GitHub Pages
     // https://github.com/rafrex/spa-github-pages
     // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
@@ -296,7 +296,7 @@ const data = await Main.sendOverProtocol("Page.captureScreenshot");</pre>
               <h3 id="faq">Frequently Asked Questions</h3>
 
               <h4 id="how-is-the-protocol-defined">How is the protocol defined?</h4>
-              <p>The canonical protocol definitions live in the Chromium source tree: (<a href="https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/inspector/browser_protocol.pdl">browser_protocol.pdl</a> and <a href="https://cs.chromium.org/chromium/src/v8/src/inspector/js_protocol.pdl">js_protocol.pdl</a>). They are maintained manually by the DevTools engineering team. The declarative protocol definitions are used across tools; for instance, a binding layer is created within Chromium for the Chrome DevTools to interact with, and separately bindings generated for <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md#client_devtools-api">Chrome Headless’s C++ interface</a>.
+              <p>The canonical protocol definitions live in the Chromium source tree: (<a href="https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/inspector/browser_protocol.pdl">browser_protocol.pdl</a> and <a href="https://cs.chromium.org/chromium/src/v8/include/js_protocol.pdl">js_protocol.pdl</a>). They are maintained manually by the DevTools engineering team. The declarative protocol definitions are used across tools; for instance, a binding layer is created within Chromium for the Chrome DevTools to interact with, and separately bindings generated for <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md#client_devtools-api">Chrome Headless’s C++ interface</a>.
               <h4 id="json">Can I get the protocol as JSON?</h4>
 
                <p>These canonical .pdl files are mirrored on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/">in the devtools-protocol repo</a> where JSON versions, TypeScript definitions and closure typedefs are generated. Most tools rely on <a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">these JSON versions</a>.</p>
