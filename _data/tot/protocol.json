@@ -18977,6 +18977,13 @@
                             "experimental": true,
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "replMode",
+                            "description": "Reserved flag for future REPL mode support. Setting this flag has currently no effect.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
