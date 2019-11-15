@@ -5414,25 +5414,13 @@
           "returns": [
             {
               "name": "scriptSource",
-              "description": "Script source.",
+              "description": "Script source (empty in case of Wasm bytecode).",
               "type": "string"
-            }
-          ]
-        },
-        {
-          "name": "getWasmBytecode",
-          "description": "Returns bytecode for the WebAssembly script with given id.",
-          "parameters": [
-            {
-              "name": "scriptId",
-              "description": "Id of the Wasm script to get source for.",
-              "$ref": "Runtime.ScriptId"
-            }
-          ],
-          "returns": [
+            },
             {
               "name": "bytecode",
-              "description": "Script source.",
+              "description": "Wasm bytecode.",
+              "optional": true,
               "type": "string"
             }
           ]
