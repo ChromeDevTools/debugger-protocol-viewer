@@ -4832,7 +4832,7 @@
               "name": "browserContextId",
               "experimental": true,
               "optional": true,
-              "$ref": "BrowserContextID"
+              "$ref": "Browser.BrowserContextID"
             }
           ]
         }
@@ -4912,7 +4912,7 @@
               "name": "browserContextId",
               "description": "The browser context to create the page in.",
               "optional": true,
-              "$ref": "BrowserContextID"
+              "$ref": "Browser.BrowserContextID"
             },
             {
               "name": "enableBeginFrameControl",
