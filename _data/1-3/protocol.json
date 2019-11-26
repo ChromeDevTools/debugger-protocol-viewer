@@ -4403,7 +4403,20 @@
           "description": "Emitted only when `page.interceptFileChooser` is enabled.",
           "parameters": [
             {
+              "name": "frameId",
+              "description": "Id of the frame containing input node.",
+              "experimental": true,
+              "$ref": "FrameId"
+            },
+            {
+              "name": "backendNodeId",
+              "description": "Input node id.",
+              "experimental": true,
+              "$ref": "DOM.BackendNodeId"
+            },
+            {
               "name": "mode",
+              "description": "Input mode.",
               "type": "string",
               "enum": [
                 "selectSingle",
