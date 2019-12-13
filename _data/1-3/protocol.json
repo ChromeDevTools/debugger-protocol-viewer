@@ -4107,6 +4107,13 @@
               "description": "Manifest content.",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "parsed",
+              "description": "Parsed manifest properties",
+              "experimental": true,
+              "optional": true,
+              "$ref": "AppManifestParsedProperties"
             }
           ]
         },
