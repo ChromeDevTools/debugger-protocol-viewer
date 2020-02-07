@@ -11960,16 +11960,7 @@
                     "experimental": true,
                     "returns": [
                         {
-                            "name": "errors",
-                            "deprecated": true,
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        {
                             "name": "installabilityErrors",
-                            "experimental": true,
                             "type": "array",
                             "items": {
                                 "$ref": "InstallabilityError"
