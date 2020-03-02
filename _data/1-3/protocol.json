@@ -4661,7 +4661,19 @@
         },
         {
           "name": "enable",
-          "description": "Enable collecting and reporting metrics."
+          "description": "Enable collecting and reporting metrics.",
+          "parameters": [
+            {
+              "name": "timeDomain",
+              "description": "Time domain to use for collecting and reporting duration metrics.",
+              "optional": true,
+              "type": "string",
+              "enum": [
+                "timeTicks",
+                "threadTicks"
+              ]
+            }
+          ]
         },
         {
           "name": "getMetrics",
