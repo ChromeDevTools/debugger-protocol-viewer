@@ -8,6 +8,9 @@ More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protoc
 
 
 ```sh
+# install bower dependencies
+bower install
+
 # install dependencies
 yarn
 
