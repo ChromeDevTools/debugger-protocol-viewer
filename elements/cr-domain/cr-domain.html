@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../styles/custom-paper-material-styles.html">
 <link rel="import" href="cr-domain-experimental.html">
+<link rel="import" href="cr-domain-toc.html">
 <link rel="import" href="cr-domain-details.html">
 
 <dom-module id="cr-domain">
@@ -26,6 +27,43 @@
             <cr-markdownish markdown="[[domain.description]]"></cr-markdownish>
         </p>
         <cr-domain-experimental item="[[domain]]"></cr-domain-experimental>
+
+        <div hidden$="[[!domain.commands.length]]">
+          <h3>Methods</h3>
+            <template is="dom-repeat" items="[[domain.commands]]">
+              <cr-domain-toc
+                  domain="[[domain.domain]]"
+                  details="[[item]]"
+                  version="[[version]]"
+                  type="method"
+              ></cr-domain-toc>
+            </template>
+        </div>
+
+        <div hidden$="[[!domain.events.length]]">
+          <h3>Events</h3>
+          <template is="dom-repeat" items="[[domain.events]]">
+            <cr-domain-toc
+                domain="[[domain.domain]]"
+                details="[[item]]"
+                version="[[version]]"
+                type="event"
+            ></cr-domain-toc>
+          </template>
+        </div>
+
+        <div hidden$="[[!domain.types.length]]">
+          <h3>Types</h3>
+          <template is="dom-repeat" items="[[domain.types]]">
+            <cr-domain-toc
+                domain="[[domain.domain]]"
+                details="[[item]]"
+                version="[[version]]"
+                type="type"
+            ></cr-domain-toc>
+          </template>
+        </div>
+
       </div>
 
       <div hidden$="[[!domain.commands.length]]">
