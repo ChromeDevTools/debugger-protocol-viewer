@@ -15746,7 +15746,7 @@
                         },
                         {
                             "name": "headers",
-                            "description": "If set, overrides the request headrts.",
+                            "description": "If set, overrides the request headers.",
                             "optional": true,
                             "type": "array",
                             "items": {
