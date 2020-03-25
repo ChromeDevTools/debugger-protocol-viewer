@@ -1,0 +1,45 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="cr-domain-experimental.html">
+
+<dom-module id="cr-domain-toc">
+  <template>
+    <style>
+      a {
+          font-family: Consolas, Menlo, monospace;
+          color: var(--default-primary-color);
+          margin: 5px;
+      }
+      span.domain-dot {
+          color: #ababab;
+      }
+    </style>
+    <div class="toc-item">
+      <a href$="[[version]]/[[domain]]#[[type]]-[[name]]">
+        <span class="domain-dot" hidden$="[[_filterType(type)]]">[[domain]].</span>[[name]]</a>
+      <cr-domain-experimental item="[[details]]"></cr-domain-experimental>
+    </div>
+  </template>
+  <script>
+    customElements.define('cr-domain-toc', class extends Polymer.Element {
+      static get is() { return 'cr-domain-toc'; }
+      static get properties() {
+        return {
+          domain: String,
+          details: Object,
+          version: String,
+          type: String,
+          name: {
+            type: String,
+            computed: '_computeName(details)'
+          }
+        }
+      }
+      _computeName(details) {
+        return details.name || details.id;
+      }
+      _filterType(type) {
+        return type === 'type';
+      }
+    });
+  </script>
+</dom-module>
