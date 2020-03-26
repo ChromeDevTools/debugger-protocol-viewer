@@ -16940,7 +16940,8 @@
                                 "block",
                                 "script",
                                 "eval",
-                                "module"
+                                "module",
+                                "wasm-expression-stack"
                             ]
                         },
                         {
