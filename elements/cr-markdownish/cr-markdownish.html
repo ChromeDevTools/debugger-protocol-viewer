@@ -1,22 +1,25 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<dom-module id="cr-markdownish">
   <script>
-    Polymer({
-      is: 'cr-markdownish',
-      properties: {
-        /**
-         * The markdown source that should be rendered by this element.
-         */
-        markdown: {
-          type: String,
-          observer: 'render',
+    class CRMarkdownish extends Polymer.Element {
+      static get properties() {
+        return {
+          /**
+           * The markdown source that should be rendered by this element.
+           */
+          markdown: {
+            type: String,
+            observer: 'render',
+          }
         }
-      },
-      attached: function () {
+      }
+      connectedCallback() {
+        super.connectedCallback();
+
         this.render();
-      },
-      render: function () {
+      }
+
+      render() {
         if (!this.markdown) return;
 
         // skip the work if we don't have markdown in it.
@@ -30,7 +33,7 @@
         let html = this._convertMarkdownLists(text);
         html = this._convertMarkdownCodeBlocks(html);
         this.innerHTML = html;
-      },
+      }
 
       /**
        * @param {string} text
@@ -57,7 +60,7 @@
         if (inList) html.push('</ul>');
 
         return html.join('\n');
-      },
+      }
 
       /**
        * @param {!string} text
@@ -75,7 +78,7 @@
           }
         }
         return html.join('');
-      },
+      }
 
       /**
        * Escape special characters in the given string of html.
@@ -132,7 +135,6 @@
           html + str.substring(lastIndex, index) :
           html;
       }
-    });
-
+    };
+    customElements.define('cr-markdownish', CRMarkdownish);
   </script>
-</dom-module>

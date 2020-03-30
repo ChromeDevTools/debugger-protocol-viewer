@@ -114,42 +114,46 @@
 (function() {
   var SITE_ROOT = '/devtools-protocol/';
 
-  Polymer({
-    is: 'cr-search-menu',
+  class CRSearchMenu extends Polymer.Element {
+    static get is() { return 'cr-search-menu'; }
 
-    properties: {
-      keywordsModel: {
-        type: Object
-      },
-      searchString: {
-        type: String,
-        value: ''
-      },
-      renderItems: {
-        type: Array,
-        readOnly: true,
-        value: [],
-        observer: 'handleRenderItemsChange_'
-      },
-      highlightedResultIdx: {
-        type: Number,
-        value: -1
-      },
-      empty_: {
-        type: Boolean,
-        empty: false
-      }
-    },
+    static get properties() {
+      return {
+        keywordsModel: {
+          type: Object
+        },
+        searchString: {
+          type: String,
+          value: ''
+        },
+        renderItems: {
+          type: Array,
+          readOnly: true,
+          value: [],
+          observer: 'handleRenderItemsChange_'
+        },
+        highlightedResultIdx: {
+          type: Number,
+          value: -1
+        },
+        empty_: {
+          type: Boolean,
+          empty: false
+        }
+      };
+    }
 
-    observers: [
-      'renderItems_(keywordsModel, searchString)'
-    ],
+    static get observers() {
+      return [
+        'renderItems_(keywordsModel, searchString)'
+      ];
+    }
 
-    highlightedClass: function (selected) {
+    highlightedClass(selected) {
       return selected ? 'search-match--active' : '';
-    },
+    }
 
-    highlightNextResult: function () {
+    highlightNextResult() {
       if (this.highlightedResultIdx >= this.renderItems.length) {
         return;
       }
@@ -159,9 +163,9 @@
       this.set('renderItems.' + this.highlightedResultIdx + '.selected', true);
 
       this.showHighlightedResult_();
-    },
+    }
 
-    highlightPreviousResult: function () {
+    highlightPreviousResult() {
       if (this.highlightedResultIdx <= 0) {
         return;
       }
@@ -171,10 +175,10 @@
       this.set('renderItems.' + this.highlightedResultIdx + '.selected', true);
 
       this.showHighlightedResult_();
-    },
+    }
 
-    showHighlightedResult_: function () {
-      var selected = this.$$('.search-match--active');
+    showHighlightedResult_() {
+      var selected = this.shadowRoot.querySelectorAll('.search-match--active');
       if (!selected) {
         return;
       }
@@ -183,24 +187,24 @@
       } else if (selected.scrollIntoView) {
         selected.scrollIntoView(false);
       }
-    },
+    }
 
-    chooseHighlightedResult: function() {
+    chooseHighlightedResult() {
       var selectedItem = this.renderItems[this.highlightedResultIdx];
       if (selectedItem) {
         if (selectedItem.href) {
           history.pushState({}, '', selectedItem.href);
-          this.fire('location-changed');
+          this.dispatchEvent(new CustomEvent('location-changed', { bubbles: true, composed: true}));
         }
         this.activateItem_();
       }
-    },
+    }
 
-    activateItem_: function() {
-      this.fire('item-activate');
-    },
+    activateItem_() {
+      this.dispatchEvent(new CustomEvent('item-activate', { bubbles: true, composed: true}));
+    }
 
-    renderItems_: function(keywordsModel, searchString) {
+    renderItems_(keywordsModel, searchString) {
       this.highlightedResultIdx = -1;
 
       var items = [];
@@ -227,51 +231,59 @@
         }, this);
       }
 
-      this.debounce('_iron-rerender', function() {
-        this._setRenderItems(items);
-      }.bind(this), 50);
-    },
+      this._debouncer = Polymer.Debouncer.debounce(this._debouncer,
+        Polymer.Async.timeOut.after(50),
+        () => {
+          this._setRenderItems(items);
+        });
+    }
 
-    handleRenderItemsChange_: function() {
+    handleRenderItemsChange_() {
       this.empty_ = !this.renderItems.length;
-    },
+    }
 
-    computeMatchHref_: function(match) {
+    computeMatchHref_(match) {
       if (this.isDomainType_(match.type)) {
         return match.domainHref;
       }
       return match.href;
-    },
-
-    isDomainType_: function(type) {
-      return type === this.Type.DOMAIN;
-    },
-
-    timeoutId_: null,
-
-    Type: {
-      DOMAIN: '0',
-      EVENT: '1',
-      PARAM: '2',
-      TYPE: '3',
-      METHOD: '4'
-    },
-
-    TypeLabel: {
-      '0': 'Domain',
-      '1': 'Event',
-      '2': 'Parameter',
-      '3': 'Type',
-      '4': 'Method'
-    },
-
-    TypeIcon: {
-      '0': '',
-      '1': 'image:wb-iridescent',
-      '2': 'icons:more-horiz',
-      '3': 'icons:code',
-      '4': 'icons:apps'
     }
-  });
+
+    isDomainType_(type) {
+      return type === this.Type.DOMAIN;
+    }
+
+    get Type() {
+      return {
+        DOMAIN: '0',
+        EVENT: '1',
+        PARAM: '2',
+        TYPE: '3',
+        METHOD: '4'
+      };
+    }
+
+    get TypeLabel() {
+      return {
+        '0': 'Domain',
+        '1': 'Event',
+        '2': 'Parameter',
+        '3': 'Type',
+        '4': 'Method'
+      }
+    }
+
+    get TypeIcon() {
+      return {
+        '0': '',
+        '1': 'image:wb-iridescent',
+        '2': 'icons:more-horiz',
+        '3': 'icons:code',
+        '4': 'icons:apps'
+      };
+    }
+  };
+
+  customElements.define('cr-search-menu', CRSearchMenu);
 })();
 </script>

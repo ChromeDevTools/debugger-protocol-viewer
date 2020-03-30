@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-behaviors/iron-button-state.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/debounce.html">
 <link rel="import" href="../cr-search-menu/cr-search-menu.html">
 
 <dom-module id="cr-search-control">
@@ -52,7 +53,7 @@
         icon="search"
         on-active-changed="handleButtonActiveChange_"></paper-icon-button>
     <div id="search-input-container" hidden$="{{!inputActive}}">
-      <input id="input" value="{{searchText::input}}" autocapitalize="off"
+      <input id="input" value="{{searchText::input}}" on-blur="handleBlur_" autocapitalize="off"
           autocorrect="off" placeholder="Search..." type="search" />
     </div>
   </template>
@@ -125,102 +126,102 @@
     }
   };
 
-  Polymer({
-    is: 'cr-search-control',
-    behaviors: [
-      Polymer.IronButtonState
-    ],
-    properties: {
-      protocolSrc: {
-        value: String,
-        observer: 'fireAjax_'
-      },
-      inputActive: {
-        type: Boolean,
-        value: false,
-        notify: true,
-        reflectToAttribute: true,
-        observer: 'handleInputActive_'
-      },
-      searchText: {
-        type: String,
-        reflectToAttribute: true,
-        notify: true,
-        value: '',
-        observer: 'handleSearchChange_'
-      },
-      /**
-       * Bound from iron-ajax.
-       */
-      requests: {
-        type: Array,
-        value: function() { return []; }
-      },
-      ajaxResponse: {
-        type: Object,
-        observer: 'handleAjaxResponse_'
-      },
-      resultsMenu: {
-        type: HTMLElement
-      }
-    },
+  class CRSearchControl extends Polymer.mixinBehaviors([Polymer.IronButtonState], Polymer.Element) {
+    static get is() { return 'cr-search-control'; }
+    static get properties() {
+      return {
+        protocolSrc: {
+          value: String,
+          observer: 'fireAjax_'
+        },
+        inputActive: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true,
+          observer: 'handleInputActive_'
+        },
+        searchText: {
+          type: String,
+          reflectToAttribute: true,
+          notify: true,
+          value: '',
+          observer: 'handleSearchChange_'
+        },
+        /**
+        * Bound from iron-ajax.
+        */
+        requests: {
+          type: Array,
+          value: function() { return []; }
+        },
+        ajaxResponse: {
+          type: Object,
+          observer: 'handleAjaxResponse_'
+        },
+        resultsMenu: {
+          type: HTMLElement
+        },
+      };
+    }
 
-    keyBindings: {
-      'esc': 'handleEsc_',
-      'enter': 'handleEnter_',
-      'up': 'handleUpArrow_',
-      'down': 'handleDownArrow_'
-    },
+    get keyBindings() {
+      return {
+        'esc': 'handleEsc_',
+        'enter': 'handleEnter_',
+        'up': 'handleUpArrow_',
+        'down': 'handleDownArrow_'
+      };
+    }
 
-    listeners: {
-      'input.blur': 'handleBlur_'
-    },
+    setMenuOpen_(open) {
+      this.dispatchEvent(new CustomEvent('search-menu-selected', {open, bubbles: true, composed: true }));
+    }
 
-    setMenuOpen_: function(open) {
-      this.fire('search-menu-selected', {open: open});
-    },
-
-    handleEnter_: function() {
+    handleEnter_() {
       this.resultsMenu.chooseHighlightedResult();
-    },
+    }
 
-    handleUpArrow_: function() {
+    handleUpArrow_() {
       this.resultsMenu.highlightPreviousResult();
-    },
+    }
 
-    handleDownArrow_: function() {
+    handleDownArrow_() {
       this.resultsMenu.highlightNextResult();
-    },
+    }
 
-    handleSearchChange_: function() {
+    handleSearchChange_() {
       if (!this.inputActive) {
         return;
       }
-      this.debounce('inputChange', function() {
-        this.resultsMenu.searchString = this.searchText;
-        this.setMenuOpen_(!!this.searchText);
-      }.bind(this), 70);
-    },
+      this._debouncer = Polymer.Debouncer.debounce(this._debouncer,
+        Polymer.Async.timeOut.after(70),
+        () => {
+          this.resultsMenu.searchString = this.searchText;
+          this.setMenuOpen_(!!this.searchText);
+         });
+    }
 
-    handleEsc_: function() {
+    handleEsc_() {
+      console.log('false');
       if (this.resultsMenu.opened) {
         this.setMenuOpen_(false);
       } else {
         this.inputActive = false;
       }
-    },
+    }
 
-    fireAjax_: function() {
+    fireAjax_() {
       if (this.protocolSrc) {
         this.$.ajax.generateRequest();
       }
-    },
+    }
 
-    handleButtonActiveChange_: function() {
+    handleButtonActiveChange_() {
       this.inputActive = this.$.searchButton.active;
-    },
+    }
 
-    handleInputActive_: function() {
+    handleInputActive_() {
       if (this.inputActive) {
         this.async(function() {
           this.$.input.focus();
@@ -231,26 +232,29 @@
         this.$.searchButton.icon = 'search';
         this.$.searchButton.active = false;
       }
-      this.fire(this.inputActive ? 'active' : 'inactive');
-    },
+      this.dispatchEvent(new CustomEvent(this.inputActive ? 'active' : 'inactive', { bubbles: true, composed: true }));
+    }
 
-    handleAjaxResponse_: function() {
-      // Set the keywords model (search index) onto the menu.
-      this.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
-          this.ajaxResponse);
-    },
+    handleAjaxResponse_() {
+      if (this.ajaxResponse) {
+        // Set the keywords model (search index) onto the menu.
+        this.resultsMenu.keywordsModel = KeywordsModel.createKeywordsModel(
+            this.ajaxResponse);
+      }
+    }
 
-    handleItemActivate_: function() {
+    handleItemActivate_() {
       this.setMenuOpen_(false);
       this.inputActive = false;
+    }
 
-    },
-
-    handleBlur_: function() {
+    handleBlur_() {
       if (!this.resultsMenu.opened) {
         this.$.searchButton.active = false;
       }
     }
-  });
+  };
+
+  customElements.define('cr-search-control', CRSearchControl);
 })();
 </script>
