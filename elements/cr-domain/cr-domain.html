@@ -4,9 +4,22 @@
 <link rel="import" href="cr-domain-toc.html">
 <link rel="import" href="cr-domain-details.html">
 
-<dom-module id="cr-domain">
-  <template>
-    <style include="custom-paper-material-styles">
+  <script>
+    customElements.define('cr-domain', class extends Polymer.Element {
+      static get is() { return 'cr-domain'; }
+      static get properties() {
+        return {
+          domain: {
+            type: Object,
+            observer: '_domainChanged'
+          },
+          data: Array,
+          version: String
+        }
+      }
+      static get template() {
+        return Polymer.html`
+        <style include="custom-paper-material-styles">
       h3 {
         font-size: 20px;
         line-height: 28px;
@@ -107,20 +120,7 @@
           </template>
         </div>
       </div>
-    </div>
-  </template>
-  <script>
-    customElements.define('cr-domain', class extends Polymer.Element {
-      static get is() { return 'cr-domain'; }
-      static get properties() {
-        return {
-          domain: {
-            type: Object,
-            observer: '_domainChanged'
-          },
-          data: Array,
-          version: String
-        }
+    </div>`;
       }
       _domainChanged(newDomain) {
         if (newDomain.experimental) {
@@ -131,4 +131,3 @@
       }
     });
   </script>
-</dom-module>

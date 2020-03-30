@@ -6,9 +6,47 @@
 <link rel="import" href="../../bower_components/iron-icons/image-icons.html">
 <link rel="import" href="../cr-html-echo/cr-html-echo.html">
 
-<dom-module id="cr-search-menu">
-  <template>
-    <style>
+<script>
+
+(function() {
+  var SITE_ROOT = '/devtools-protocol/';
+
+  class CRSearchMenu extends Polymer.Element {
+    static get properties() {
+      return {
+        keywordsModel: {
+          type: Object
+        },
+        searchString: {
+          type: String,
+          value: ''
+        },
+        renderItems: {
+          type: Array,
+          readOnly: true,
+          value: [],
+          observer: 'handleRenderItemsChange_'
+        },
+        highlightedResultIdx: {
+          type: Number,
+          value: -1
+        },
+        empty_: {
+          type: Boolean,
+          empty: false
+        }
+      };
+    }
+
+    static get observers() {
+      return [
+        'renderItems_(keywordsModel, searchString)'
+      ];
+    }
+
+    static get template() {
+      return Polymer.html`
+          <style>
       :host {
         --border-width: 1px;
         height: calc(100vh - 2 * var(--main-content-padding) - var(--header-height) - 2 * var(--border-width));
@@ -104,49 +142,7 @@
         </a>
       </template>
     </iron-list>
-    <slot name="footer"></slot>
-  </template>
-
-</dom-module>
-
-<script>
-
-(function() {
-  var SITE_ROOT = '/devtools-protocol/';
-
-  class CRSearchMenu extends Polymer.Element {
-    static get is() { return 'cr-search-menu'; }
-
-    static get properties() {
-      return {
-        keywordsModel: {
-          type: Object
-        },
-        searchString: {
-          type: String,
-          value: ''
-        },
-        renderItems: {
-          type: Array,
-          readOnly: true,
-          value: [],
-          observer: 'handleRenderItemsChange_'
-        },
-        highlightedResultIdx: {
-          type: Number,
-          value: -1
-        },
-        empty_: {
-          type: Boolean,
-          empty: false
-        }
-      };
-    }
-
-    static get observers() {
-      return [
-        'renderItems_(keywordsModel, searchString)'
-      ];
+    <slot name="footer"></slot>`;
     }
 
     highlightedClass(selected) {

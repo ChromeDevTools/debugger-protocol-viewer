@@ -1,9 +1,23 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="cr-domain-experimental.html">
 
-<dom-module id="cr-domain-param">
-  <template>
-    <style>
+  <script>
+    customElements.define('cr-domain-param', class extends Polymer.Element {
+      static get is() { return 'cr-domain-param'; }
+      static get properties() {
+        return {
+          param: Object,
+          referral: {
+            type: String,
+            computed: '_computeReferral(param)'
+          },
+          version: String,
+          domain: String
+        }
+      }
+      static get template() {
+        return Polymer.html`
+        <style>
       [hidden] {
         display: none !important;
       }
@@ -144,20 +158,7 @@
         </div>
       </div>
     </div>
-  </template>
-  <script>
-    customElements.define('cr-domain-param', class extends Polymer.Element {
-      static get is() { return 'cr-domain-param'; }
-      static get properties() {
-        return {
-          param: Object,
-          referral: {
-            type: String,
-            computed: '_computeReferral(param)'
-          },
-          version: String,
-          domain: String
-        }
+        `
       }
       _computeReferral(param) {
         if (param.type) {
@@ -183,4 +184,3 @@
       }
     });
   </script>
-</dom-module>

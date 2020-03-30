@@ -2,9 +2,28 @@
 <link rel="import" href="cr-domain-experimental.html">
 <link rel="import" href="cr-domain-param.html">
 
-<dom-module id="cr-domain-details">
-  <template>
-    <style>
+  <script>
+    customElements.define('cr-domain-details', class extends Polymer.Element {
+      static get is() { return 'cr-domain-details'; }
+      static get properties() {
+        return {
+          domain: String,
+          details: Object,
+          version: String,
+          type: String,
+          name: {
+            type: String,
+            computed: '_computeName(details)'
+          },
+          properties: {
+            type: Object,
+            computed: '_computeProperties(details)'
+          }
+        }
+      }
+      static get template() {
+        return Polymer.html`
+            <style>
       [hidden] {
         display: none !important;
       }
@@ -125,26 +144,7 @@
           [[_computeDetailsEnum(details)]]
         </p>
       </div>
-    </div>
-  </template>
-  <script>
-    customElements.define('cr-domain-details', class extends Polymer.Element {
-      static get is() { return 'cr-domain-details'; }
-      static get properties() {
-        return {
-          domain: String,
-          details: Object,
-          version: String,
-          type: String,
-          name: {
-            type: String,
-            computed: '_computeName(details)'
-          },
-          properties: {
-            type: Object,
-            computed: '_computeProperties(details)'
-          }
-        }
+    </div>`;
       }
       _computeName(details) {
         return details.name || details.id;
@@ -174,4 +174,3 @@
       }
     });
   </script>
-</dom-module>
