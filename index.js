@@ -1,27 +1,50 @@
 import {ChromeDevToolsDomain} from './elements/cr-domain/cr-domain.js';
 
 const homePageContent = document.querySelector('main > section');
+
 const domainElement = new ChromeDevToolsDomain();
-const sectionElement = document.createElement('section');
-sectionElement.appendChild(domainElement);
+const domainSectionElement = document.createElement('section');
+domainSectionElement.appendChild(domainElement);
 
 for (const link of [...document.querySelectorAll('#domains nav a')]) {
-  link.addEventListener('click', async (event) => {
+  link.addEventListener('click', (event) => {
     event.preventDefault();
 
-    
     const url = new URL(link.href);
-    const [,version, newDomain] = url.pathname.split('/');
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
+}
+
+let currentlySelectedContent = homePageContent;
+
+window.addEventListener('popstate', async () => {
+  const url = new URL(window.location.href);
+
+  const [, version, newDomain] = url.pathname.split('/');
+
+  // Show a domain for a particular version
+  if (newDomain) {
     const protocolData = await fetch(`_data/${version}/protocol.json`);
     const versionData = await protocolData.json();
 
     domainElement.domain = versionData.domains.find(d => d.domain === newDomain);
     domainElement.version = version;
-    
-    homePageContent.replaceWith(sectionElement);
-  });
-}
 
+    currentlySelectedContent.replaceWith(domainSectionElement);
+    currentlySelectedContent = domainSectionElement;
+    return;
+  }
+
+  // Show the summary page for a particular version;
+  if (version) {
+    return;
+  }
+
+  // Homepage
+  currentlySelectedContent.replaceWith(homePageContent);
+  currentlySelectedContent = homePageContent;
+});
 
 
 
