@@ -1,5 +1,6 @@
 import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
 
+import '../cr-markdownish/cr-markdownish.js';
 import './cr-domain-experimental.js';
 import './cr-domain-param.js';
 
