@@ -1,11 +1,9 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../styles/custom-paper-material-styles.html">
-<link rel="import" href="cr-domain-experimental.html">
-<link rel="import" href="cr-domain-toc.html">
-<link rel="import" href="cr-domain-details.html">
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
+import './cr-domain-experimental.js';
+import './cr-domain-toc.js';
+import './cr-domain-details.js';
 
-  <script>
-    customElements.define('cr-domain', class extends Polymer.Element {
+    customElements.define('cr-domain', class extends PolymerElement {
       static get is() { return 'cr-domain'; }
       static get properties() {
         return {
@@ -18,7 +16,7 @@
         }
       }
       static get template() {
-        return Polymer.html`
+        return html`
         <style include="custom-paper-material-styles">
       h3 {
         font-size: 20px;
@@ -130,4 +128,3 @@
         }
       }
     });
-  </script>

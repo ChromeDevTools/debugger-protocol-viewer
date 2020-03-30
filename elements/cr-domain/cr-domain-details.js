@@ -1,9 +1,9 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="cr-domain-experimental.html">
-<link rel="import" href="cr-domain-param.html">
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
 
-  <script>
-    customElements.define('cr-domain-details', class extends Polymer.Element {
+import './cr-domain-experimental.js';
+import './cr-domain-param.js';
+
+    customElements.define('cr-domain-details', class extends PolymerElement {
       static get is() { return 'cr-domain-details'; }
       static get properties() {
         return {
@@ -22,7 +22,7 @@
         }
       }
       static get template() {
-        return Polymer.html`
+        return html`
             <style>
       [hidden] {
         display: none !important;
@@ -173,4 +173,3 @@
         return type === 'type';
       }
     });
-  </script>

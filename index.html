@@ -9,10 +9,14 @@
 
   <meta name="theme-color" content="#303F9F">
 
-  <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="bower_components/web-animations-js/web-animations-next.min.js"></script>
+  <script type="module">
+    
 
-  <link rel="import" href="index-imports.html" />
+    import './elements/cr-markdownish/cr-markdownish.js';
+    import './elements/cr-domain/cr-domain.js';
+    import './elements/cr-search-control/cr-search-control.js';
+    import './elements/cr-search-menu/cr-search-menu.js';
+  </script>
 
   <link href="styles/protocol.css" rel="stylesheet">
 
@@ -514,6 +518,9 @@ const data = await Main.sendOverProtocol("Page.captureScreenshot");</pre>
       function processHashUpdate() {
         function scrollIntoView() {
           let scrollTarget = null;
+          if (!domainElement) {
+            return;
+          }
           for (const details of domainElement.shadowRoot.querySelectorAll('cr-domain-details')) {
             if (scrollTarget) continue;
             if (`${details.type}-${details.name}` === location.hash) {

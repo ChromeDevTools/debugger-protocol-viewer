@@ -1,17 +1,13 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
-<link rel="import" href="../../bower_components/iron-menu-behavior/iron-menu-behavior.html">
-<link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
-<link rel="import" href="../cr-html-echo/cr-html-echo.html">
-
-<script>
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
+import '../../node_modules/@polymer/iron-list/iron-list.js';
+import '../../node_modules/@polymer/iron-icon/iron-icon.js';
+import '../../node_modules/@polymer/iron-icons/image-icons.js';
+import '../cr-html-echo/cr-html-echo.js';
 
 (function() {
   var SITE_ROOT = '/devtools-protocol/';
 
-  class CRSearchMenu extends Polymer.Element {
+  class CRSearchMenu extends PolymerElement {
     static get properties() {
       return {
         keywordsModel: {
@@ -45,7 +41,7 @@
     }
 
     static get template() {
-      return Polymer.html`
+      return html`
           <style>
       :host {
         --border-width: 1px;
@@ -282,4 +278,3 @@
 
   customElements.define('cr-search-menu', CRSearchMenu);
 })();
-</script>

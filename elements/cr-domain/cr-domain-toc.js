@@ -1,8 +1,7 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="cr-domain-experimental.html">
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
+import './cr-domain-experimental.js';
 
-  <script>
-    customElements.define('cr-domain-toc', class extends Polymer.Element {
+    customElements.define('cr-domain-toc', class extends PolymerElement {
       static get is() { return 'cr-domain-toc'; }
       static get properties() {
         return {
@@ -17,7 +16,7 @@
         }
       }
       static get template() {
-        return Polymer.html`
+        return html`
         <style>
       a {
           font-family: Consolas, Menlo, monospace;
@@ -41,4 +40,3 @@
         return type === 'type';
       }
     });
-  </script>

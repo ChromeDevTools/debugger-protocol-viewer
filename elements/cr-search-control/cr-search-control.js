@@ -1,12 +1,12 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-behaviors/iron-button-state.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/polymer/lib/utils/debounce.html">
-<link rel="import" href="../cr-search-menu/cr-search-menu.html">
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
+import {mixinBehaviors} from '../../node_modules/@polymer/polymer/lib/legacy/class.js';
 
-<script>
+import '../../node_modules/@polymer/iron-ajax/iron-ajax.js';
+import {IronButtonState} from '../../node_modules/@polymer/iron-behaviors/iron-button-state.js';
+import '../../node_modules/@polymer/paper-icon-button/paper-icon-button.js';
+import {Debouncer} from '../../node_modules/@polymer/polymer/lib/utils/debounce.js';
+
+import '../cr-search-menu/cr-search-menu.js';
 
 (function() {
 
@@ -72,7 +72,7 @@
     }
   };
 
-  class CRSearchControl extends Polymer.mixinBehaviors([Polymer.IronButtonState], Polymer.Element) {
+  class CRSearchControl extends mixinBehaviors([IronButtonState], PolymerElement) {
     static get properties() {
       return {
         protocolSrc: {
@@ -111,7 +111,7 @@
     }
 
     static get template() {
-      return Polymer.html`
+      return html`
       <style>
       :host {
         display: block;
@@ -191,7 +191,7 @@
       if (!this.inputActive) {
         return;
       }
-      this._debouncer = Polymer.Debouncer.debounce(this._debouncer,
+      this._debouncer = Debouncer.debounce(this._debouncer,
         Polymer.Async.timeOut.after(70),
         () => {
           this.resultsMenu.searchString = this.searchText;
@@ -254,4 +254,3 @@
 
   customElements.define('cr-search-control', CRSearchControl);
 })();
-</script>

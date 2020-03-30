@@ -1,7 +1,6 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+import {PolymerElement, html} from '../../node_modules/@polymer/polymer/polymer-element.js';
 
-  <script>
-    customElements.define('cr-domain-experimental', class extends Polymer.Element {
+    customElements.define('cr-domain-experimental', class extends PolymerElement {
       static get is() { return 'cr-domain-experimental'; }
       static get properties() {
         return {
@@ -9,7 +8,7 @@
         }
       }
       static get template() {
-        return Polymer.html`
+        return html`
         <style>
       [hidden] {
         display: none !important;
@@ -49,4 +48,3 @@
     <span class="experimental deprecated" hidden$="[[!item.deprecated]]" title="Deprecated, please adopt alternative">Deprecated</span>`;
       }
     });
-  </script>

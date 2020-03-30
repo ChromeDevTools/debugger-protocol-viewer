@@ -1,7 +1,6 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-
-  <script>
-    class CRMarkdownish extends Polymer.Element {
+import {PolymerElement} from '../../node_modules/@polymer/polymer/polymer-element.js';
+    
+    class CRMarkdownish extends PolymerElement {
       static get properties() {
         return {
           /**
@@ -137,4 +136,3 @@
       }
     };
     customElements.define('cr-markdownish', CRMarkdownish);
-  </script>
