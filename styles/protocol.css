@@ -75,6 +75,8 @@ main {
   display: flex;
   flex-direction: column;
   overflow-x: auto;
+  /* Make sure that if the content is too small, we still show the full header */
+  flex-grow: 1;
 }
 
 main > header {
