@@ -17,6 +17,9 @@
     "@polymer/iron-list": "3.1.0",
     "css-slam": "^2.0.2",
     "del": "^3.0.0",
+    "esm": "3.2.25",
+    "lit-html": "1.2.1",
+    "@11ty/eleventy": "0.10.0",
     "gh-pages": "^2.0.1",
     "gulp": "4.0.0",
     "gulp-babel-minify": "^0.2.0",
@@ -29,7 +32,7 @@
     "statikk": "^1.1.1"
   },
   "scripts": {
-    "build": "gulp build",
+    "build": "node -r esm node_modules/.bin/eleventy",
     "prep": "bash prep-tot-protocol-files.sh",
     "serve": "echo 'Open http://localhost:8000/ for unbundled site'; echo 'Open http://localhost:8000/devtools-protocol/ for built/bundled site'; statikk --port 8000 .",
     "deploy": "gh-pages --dist devtools-protocol --repo git@github.com:ChromeDevTools/devtools-protocol.git --dotfiles  --user \"devtools-bot <24444246+devtools-bot@users.noreply.github.com>\""

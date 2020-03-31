@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * Utility command that creates the search index for _data/?/protocol.json.
+ * Utility command that creates the search index for pages/_data/?/protocol.json.
  */
 
 const fs = require('fs');
-const VERSIONS_FILE = '_data/versions.json';
+const VERSIONS_FILE = 'pages/_data/versions.json';
 
 const versionsText = fs.readFileSync(VERSIONS_FILE);
 const versions = JSON.parse(versionsText);
@@ -13,7 +13,7 @@ const versions = JSON.parse(versionsText);
 versions.forEach(generateSearchIndex);
 
 function generateSearchIndex(version) {
-  const protocolText = fs.readFileSync(`_data/${version.slug}/protocol.json`);
+  const protocolText = fs.readFileSync(`pages/_data/${version.slug}/protocol.json`);
   const protocol = JSON.parse(protocolText);
 
   // Set up Keyword bank

@@ -38,8 +38,8 @@ yarn deploy
 
 To add a new protocol version:
 
-1. Modify `_data/versions.json`
-1. Create `_data/VERSION_SLUG` folder and put `protocol.json` file there
+1. Modify `pages/_data/versions.json`
+1. Create `pages/_data/VERSION_SLUG.json`
 1. Create `_versions/VERSION_SLUG.html` file with protocol version description
 1. Update the `<paper-dropdown-menu id="versions">` tag in `index.html`.
 1. Build project

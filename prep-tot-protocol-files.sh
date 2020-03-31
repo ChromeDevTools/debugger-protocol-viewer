@@ -10,8 +10,8 @@ js_protocol_path="$protocol_repo_path/json/js_protocol.json"
 
 # => into viewer
 cd $local_script_path
-local_tot_protocol_path="_data/tot/protocol.json"
-local_v8_protocol_path="_data/v8/protocol.json"
+local_tot_protocol_path="pages/_data/tot.json"
+local_v8_protocol_path="pages/_data/v8.json"
 
 if ! [ -s $browser_protocol_path ]; then
   echo "error: couldn't find local protocol file" >&2; exit 1

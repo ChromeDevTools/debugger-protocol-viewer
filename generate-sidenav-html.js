@@ -1,12 +1,12 @@
 'use strict';
 
 
-const verSlugs = require('./_data/versions.json').map(e => e.slug);
+const verSlugs = require('./pages/_data/versions.json').map(e => e.slug);
 
 const allDomains = {};
 
 for (const slug of verSlugs){
-  const protocol = require(`./_data/${slug}/protocol.json`);
+  const protocol = require(`./pages/_data/${slug}/protocol.json`);
   const domains = protocol.domains;
   domains.forEach(domain => {
     const id = domain.domain;
