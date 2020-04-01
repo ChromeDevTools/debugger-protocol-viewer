@@ -2,6 +2,7 @@ html, body {
   padding: 0;
   margin: 0;
   height: 100%;
+  background-color: #fafafa;
 
   /* Border used in the aside to mark different sections */
   --separation-border: 1px solid rgba(0, 0, 0, 0.14);
@@ -114,4 +115,99 @@ img {
   top: 0;
   right: 0;
   border: 0;
+}
+
+/* Limit content width and center it */
+.domain-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+}
+
+span.experimental, span.deprecated {
+  font-size: 70%;
+  text-transform: uppercase;
+  padding: 2px;
+  margin-right: 5px;
+  cursor: help;
+  vertical-align: baseline;
+  font-weight: normal;
+  font-family: inherit;
+}
+
+span.experimental {
+  background-color: #E57373;
+  color: white;
+  border: 1px solid transparent;
+}
+
+span.deprecated {
+  background-color: #FFCC80;
+  color: black;
+  border: 1px solid #EF6C00;
+}
+
+.domain-experimental span.experimental {
+  display: none;
+}
+
+.domain-experimental .heading-domain span.experimental {
+  display: inline-block;
+}
+
+.domain-experimental .heading-domain {
+  border: 1px solid #E57373;
+}
+
+span.domain-dot {
+  color: #ababab;
+}
+
+.toc-link {
+  line-height: 1.5em;
+}
+
+.details .permalink {
+  opacity: 0;
+}
+
+.details:hover .permalink {
+  opacity: 1;
+}
+
+.details .properties-name {
+  color: gray;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin: 1rem 0 0;
+}
+
+.properties-container > div {
+  display: flex;
+}
+
+.properties-container dt, .properties-container dd {
+  flex: 1;
+}
+
+.properties-container dt {
+  text-align: right;
+}
+
+.details-description {
+  display: inline;
+}
+
+.details-description p {
+  display: inline;
+}
+
+.param-container {
+  margin-bottom: 10px;
+}
+
+.param-type {
+  display: block;
+  font-weight: bold;
 }

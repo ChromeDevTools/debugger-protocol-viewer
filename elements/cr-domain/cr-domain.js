@@ -6,7 +6,7 @@ import './cr-domain-details.js';
 
 import {domainTemplate} from './cr-domain.template.js';
 
-export class ChromeDevToolsDomain extends PolymerElement {
+export class ChromeDevToolsDomain extends HTMLElement {
   static get properties() {
     return {
       domain: {
@@ -16,9 +16,6 @@ export class ChromeDevToolsDomain extends PolymerElement {
       data: Array,
       version: String
     }
-  }
-  static get template() {
-    return domainTemplate({});
   }
   _domainChanged(newDomain) {
     if (newDomain.experimental) {

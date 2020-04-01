@@ -29,6 +29,7 @@
     "gulp-json-minify": "^1.2.2",
     "merge-stream": "^1.0.1",
     "polymer-build": "^2.1.0",
+    "marked": "0.8.2",
     "statikk": "^1.1.1"
   },
   "scripts": {
