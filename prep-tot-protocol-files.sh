@@ -42,7 +42,7 @@ cd $local_script_path
 # we no longer printing the most recent protocol git hashes.
 # we can restore this when the devtools-protocol repo starts includes that data
 
-cat _versions/tot.html | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > _versions/tot.html.new
-cat _versions/tot.html.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > _versions/tot.html
-rm -f _versions/tot.html.new
+cat pages/tot.md | sed -Ee "s/^(<code browser>)Date.*/\1$br_date_line/" > pages/tot.md.new
+cat pages/tot.md.new | sed -Ee "s/^(<code js>)Date.*/\1$js_date_line/"  > pages/tot.md
+rm -f pages/tot.md.new
 
