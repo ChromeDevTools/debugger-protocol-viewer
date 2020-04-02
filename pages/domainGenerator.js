@@ -110,14 +110,12 @@ export class DomainGenerator {
     for (const item of items) {
       const {name, description, experimental, deprecated} = item;
       properties += html`
-        <div class="param-container">
-          <dt class="param-name">${name}</dt>
-          <dd>
-            ${this.propertiesType(domain, item)}
-            ${this.descriptionTemplate(description)}
-            ${this.statusTemplate(experimental, deprecated)}
-          </dd>
-        </div>
+        <dt class="param-name">${name}</dt>
+        <dd>
+          ${this.propertiesType(domain, item)}
+          ${this.descriptionTemplate(description)}
+          ${this.statusTemplate(experimental, deprecated)}
+        </dd>
       `;
     }
     

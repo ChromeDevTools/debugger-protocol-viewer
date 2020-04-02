@@ -214,8 +214,9 @@ span.domain-dot {
   margin: 1rem 0 0;
 }
 
-.properties-container > div {
-  display: flex;
+.properties-container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr 2fr);
 }
 
 .properties-container dt {
