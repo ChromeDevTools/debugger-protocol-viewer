@@ -8,6 +8,8 @@ html, body {
 
   /* Border used in the aside to mark different sections */
   --separation-border: 1px solid rgba(0, 0, 0, 0.14);
+  /* Material-like elevation shadow */
+  --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
 }
 
 body {
@@ -17,6 +19,7 @@ body {
 aside {
   height: 100vh;
   display: flex;
+  min-width: 200px;
   flex-direction: column;
   border-right: var(--separation-border);
 }
@@ -121,23 +124,28 @@ img {
 }
 
 .gh-badge img {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: 0;
+  float: right;
+  /* The image is a triangle facing the right */
+  shape-outside: polygon(0 0, 150px 0, 150px 150px);
+  /*
+   * All content in the main section has a padding, but this
+   * image must be floated to the borders of the section.
+   */
+  margin: -21px -15px;
 }
 
 /* Limit content width and center it */
-.domain-section {
+.main-content-section {
   max-width: 1200px;
   margin: 0 auto;
   background-color: white;
 }
 
+.main-content-section:not(.domain),
 .domain-section > div {
   padding: 5px 15px;
   margin-bottom: 25px;
-  box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+  box-shadow: var(--elevation-shadow);
 }
 
 span.experimental, span.deprecated {
@@ -152,8 +160,8 @@ span.experimental, span.deprecated {
 }
 
 span.experimental {
-  background-color: #E57373;
-  color: white;
+  background-color: #ec8888;
+  color: #171616;
   border: 1px solid transparent;
 }
 
@@ -200,7 +208,7 @@ span.domain-dot {
 }
 
 .details .properties-name {
-  color: gray;
+  color: #4c4b4b;
   font-weight: 300;
   text-transform: uppercase;
   margin: 1rem 0 0;

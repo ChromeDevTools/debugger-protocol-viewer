@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain">
   <title>{{{title}}}</title>
 
   <meta name="theme-color" content="#303F9F">
@@ -92,7 +93,9 @@
       <cr-search-control></cr-search-control>
     </header>
     <section>
-      {{{content}}}
+      <div class="main-content-section {{{shadow}}}">
+        {{{content}}}
+      </div>
     </section>
   </main>
   <script>
