@@ -84,9 +84,9 @@ class DomainGenerator {
   computeReferralUrl(domain, referral) {
     // Referral points to a different domain
     if (referral.indexOf('.') !== -1) {
-      return this.url(`/${this.version}/${referral.replace('.', '/#details-types-')}`);
+      return this.url(`/${this.version}/${referral.replace('.', '/#type-')}`);
     }
-    return this.url(`/${this.version}/${domain}/#details-types-${referral}`);
+    return this.url(`/${this.version}/${domain}/#type-${referral}`);
   }
 
   propertiesType(domain, item) {
@@ -102,22 +102,9 @@ class DomainGenerator {
     return '';
   }
 
-  propertiesDetailsName(domain, details) {
-    let name = '';
-    let items = undefined;
-    if (details.parameters) {
-      name = 'parameters';
-      items = details.parameters;
-    }
-    if (details.properties) {
-      name = 'properties';
-      items = details.properties;
-    }
-    if (!name) {
-      return '';
-    }
-
+  propertyTemplate(domain, items) {
     let properties = '';
+    
     for (const item of items) {
       const {name, description, experimental, deprecated} = item;
       properties += html`
@@ -132,11 +119,55 @@ class DomainGenerator {
       `;
     }
     
+    return properties;
+  }
+
+  propertiesDetailsTemplate(domain, details) {
+    let name = '';
+    let items = undefined;
+    if (details.parameters) {
+      name = 'parameters';
+      items = details.parameters;
+    }
+    if (details.properties) {
+      name = 'properties';
+      items = details.properties;
+    }
+    if (!name) {
+      return '';
+    }
+    
     return html`
       <h5 class="properties-name">${name}</h5>
       <dl class="properties-container">
-        ${properties}
+        ${this.propertyTemplate(domain, items)}
       </dl>
+    `;
+  }
+
+  returnDetailsTemplate(domain, details) {
+    const {returns, name} = details;
+    if (!returns || !returns.length) {
+      return '';
+    }
+
+    return html`
+      <h5 class="properties-name">Return Object</h5>
+      <dl class="properties-container">
+        ${this.propertyTemplate(domain, returns)}
+      </dl>
+    `;
+  }
+
+  enumDetails(details) {
+    const {enum: enumValues} = details;
+    if (!enumValues || !enumValues.length) {
+      return '';
+    }
+
+    return html`
+      <h5 class="properties-name">Allowed Values</h5>
+      <div class="enum-container">${enumValues.join(', ')}</div>
     `;
   }
 
@@ -156,7 +187,9 @@ class DomainGenerator {
           ? html`<p class="type-type">Type: <strong>${type}</strong></p>`
           : ''
         }
-        ${this.propertiesDetailsName(domain, details)}
+        ${this.propertiesDetailsTemplate(domain, details)}
+        ${this.returnDetailsTemplate(domain, details)}
+        ${this.enumDetails(details)}
       </div>
     `;
   }

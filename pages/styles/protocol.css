@@ -4,6 +4,8 @@ html, body {
   height: 100%;
   background-color: #fafafa;
 
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
   /* Border used in the aside to mark different sections */
   --separation-border: 1px solid rgba(0, 0, 0, 0.14);
 }
@@ -78,6 +80,7 @@ main {
   overflow-x: auto;
   /* Make sure that if the content is too small, we still show the full header */
   flex-grow: 1;
+  background-color: #fafafa;
 }
 
 main > header {
@@ -121,7 +124,12 @@ img {
 .domain-section {
   max-width: 1200px;
   margin: 0 auto;
+  background-color: white;
+}
+
+.domain-section > div {
   padding: 5px 15px;
+  margin-bottom: 25px;
   box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
 }
 
@@ -161,11 +169,19 @@ span.deprecated {
 }
 
 span.domain-dot {
-  color: #ababab;
+  color: #555555;
 }
 
 .toc-link {
   line-height: 1.5em;
+}
+
+.details {
+  padding-bottom: 10px;
+}
+
+.details:not(:last-child) {
+  border-bottom: var(--separation-border);
 }
 
 .details .permalink {
@@ -187,8 +203,12 @@ span.domain-dot {
   display: flex;
 }
 
-.properties-container dt, .properties-container dd {
+.properties-container dt {
   flex: 1;
+}
+
+.properties-container dd {
+  flex: 2;
 }
 
 .properties-container dt {
@@ -203,7 +223,7 @@ span.domain-dot {
   display: inline;
 }
 
-.param-container {
+.param-container:not(:last-child) {
   margin-bottom: 10px;
 }
 
