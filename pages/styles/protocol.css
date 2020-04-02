@@ -6,6 +6,7 @@ html, body {
 
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
+  --header-text-color: white;
   /* Border used in the aside to mark different sections */
   --separation-border: 1px solid rgba(0, 0, 0, 0.14);
   /* Material-like elevation shadow */
@@ -90,12 +91,18 @@ main {
   overflow-x: auto;
   /* Make sure that if the content is too small, we still show the full header */
   flex-grow: 1;
+}
+
+main, cr-search-results {
   background-color: #fafafa;
 }
 
 main > header {
   background-color: #3f51b5;
-  color: white;
+  color: var(--header-text-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 main > header h1 {
@@ -103,6 +110,12 @@ main > header h1 {
   font-size: var(--header-height);
   line-height: var(--header-height);
   padding-left: 10px;
+  display: inline-block;
+}
+
+cr-search-control {
+  flex: 1;
+  margin: 0 25px;
 }
 
 main > section {
@@ -110,6 +123,10 @@ main > section {
   padding: 25px;
   /* To make sure that the GitHub badge positions correctly */
   position: relative;
+}
+
+main > section.hidden {
+  overflow-y: hidden;
 }
 
 /* Make sure that code snippets don't overflow the full content container */
@@ -203,7 +220,7 @@ span.domain-dot {
   opacity: 0;
 }
 
-.details:hover .permalink {
+.details:hover .permalink, .details .permalink:focus {
   opacity: 1;
 }
 

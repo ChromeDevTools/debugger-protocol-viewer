@@ -1,8 +1,7 @@
 module.exports = (eleventyConfig) => {
-  eleventyConfig.addPassthroughCopy('pages/scripts/index.js');
   eleventyConfig.addPassthroughCopy('pages/styles/protocol.css');
   eleventyConfig.addPassthroughCopy('pages/images/');
-  eleventyConfig.addPassthroughCopy('node_modules/lit-html');
+  eleventyConfig.addPassthroughCopy('search_index/');
 
   return {
     pathPrefix: '/devtools-protocol/',
