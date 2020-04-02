@@ -7,9 +7,9 @@ const computeHash = (typeName, name, id) => {
   return `${typeReference}-${name || id}`;
 }
 
-class DomainGenerator {
-  constructor() {
-    this.version = 'tot';
+export class DomainGenerator {
+  constructor(version) {
+    this.version = version;
   }
 
   data() {
@@ -17,6 +17,7 @@ class DomainGenerator {
     return {
       layout: 'shell.hbs',
       title: 'Chrome DevTools Protocol Viewer',
+      version,
       pagination: {
         data: `${version}.domains`,
         size: 1,
@@ -231,5 +232,3 @@ class DomainGenerator {
     `;
   }
 }
-
-module.exports = DomainGenerator;

@@ -1,6 +1,7 @@
 ---
 layout: shell.hbs
 title: Chrome DevTools Protocol Viewer
+version: tot
 ---
 <div data-url="domain-summary" class="paper-material" elevation="1">
         <a href="https://github.com/ChromeDevTools/debugger-protocol-viewer" class="gh-badge"><img
