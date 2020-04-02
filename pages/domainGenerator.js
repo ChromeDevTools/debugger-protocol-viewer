@@ -205,8 +205,8 @@ export class DomainGenerator {
     }
 
     return html`
+      <h3 id="${name.toLowerCase()}">${name}</h3>
       <div>
-        <h3 id="${name.toLowerCase()}">${name}</h3>
         ${details}
       </div>
     `;

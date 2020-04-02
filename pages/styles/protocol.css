@@ -138,13 +138,13 @@ img {
 .main-content-section {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: white;
 }
 
 .main-content-section:not(.domain),
 .domain-section > div {
   padding: 5px 15px;
   margin-bottom: 25px;
+  background-color: white;
   box-shadow: var(--elevation-shadow);
 }
 
