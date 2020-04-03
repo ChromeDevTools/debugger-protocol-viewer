@@ -13,7 +13,7 @@ const versions = JSON.parse(versionsText);
 versions.forEach(generateSearchIndex);
 
 function generateSearchIndex(version) {
-  const protocolText = fs.readFileSync(`pages/_data/${version.slug}/protocol.json`);
+  const protocolText = fs.readFileSync(`pages/_data/${version.slug}.json`);
   const protocol = JSON.parse(protocolText);
 
   // Set up Keyword bank
