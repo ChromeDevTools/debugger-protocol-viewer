@@ -14,7 +14,10 @@ class CRMarkdownish extends HTMLElement {
   render() {
     const markdown = this.getAttribute('markdown');
 
-    if (!markdown) return;
+    if (!markdown) {
+      this.innerHTML = '';
+      return;
+    }
 
     // skip the work if we don't have markdown in it.
     const hasMarkdown = /(\n-)|`/.test(markdown);

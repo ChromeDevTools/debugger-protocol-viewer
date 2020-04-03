@@ -142,7 +142,7 @@ class CRSearchResults extends HTMLElement {
                 </div>
               </div>
               <div class="match-description">
-                <cr-markdownish markdown="${description}"></cr-markdownish>
+                <cr-markdownish markdown="${description || ''}"></cr-markdownish>
               </div>
             </a>
           `;
