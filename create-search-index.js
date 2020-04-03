@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Utility command that creates the search index for pages/_data/?/protocol.json.
+ * Utility command that creates the search index for pages/_data/?.json.
  */
 
 const fs = require('fs');
