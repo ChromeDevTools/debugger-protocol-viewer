@@ -115,7 +115,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.COMMAND, command.description);
         ref.setHrefs(commandNameHref, domainPath);
-        keywordMap.addReferenceForKey(commandName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${commandName}`, ref);
       });
     }
     if (domain.events) {

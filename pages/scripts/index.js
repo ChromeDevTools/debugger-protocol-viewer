@@ -149,12 +149,12 @@ class CRSearchResults extends HTMLElement {
         })}
       </div>
     `, this.shadowRoot, {
-      eventContext: this
+      eventContext: this,
     });
   }
 
-  click() {
-    this.dispatchEvent(new CustomEvent('navigation'));
+  click(event) {
+    this.navigate(event.currentTarget);
   }
 
   get selectedResult() {
@@ -188,8 +188,12 @@ class CRSearchResults extends HTMLElement {
       return;
     }
 
+    this.navigate(this.selectedResult);
+  }
+
+  navigate(element) {
     const oldURL = new URL(window.location.href);
-    const newURL = new URL(this.selectedResult.href);
+    const newURL = new URL(element.href);
     window.location = newURL;
 
     if (oldURL.pathname === newURL.pathname) {
