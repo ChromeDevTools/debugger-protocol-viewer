@@ -255,7 +255,6 @@ customElements.define('cr-search-control', class extends HTMLElement {
 
           /* Float to the right */
           margin-left: auto;
-          display: block;
         }
         input::placeholder {
           color: var(--header-text-color);
