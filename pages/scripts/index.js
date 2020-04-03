@@ -105,8 +105,7 @@ class CRSearchResults extends HTMLElement {
           overflow-y: auto;
         }
         .match-info {
-          margin: 10px 0;
-          padding: 0 20px;
+          padding: 10px 20px;
           text-decoration: none;
           color: initial;
           display: block;
@@ -117,6 +116,10 @@ class CRSearchResults extends HTMLElement {
         .match-label {
           font-size: 1.4em;
           margin-bottom: 5px;
+        }
+        .match-label .label {
+          display: flex;
+          justify-content: space-between;
         }
         .match-label .type {
           font-size: 0.7em;
