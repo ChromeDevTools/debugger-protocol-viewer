@@ -89,18 +89,12 @@ class CRSearchResults extends HTMLElement {
   }
 
   set searchString(searchString) {
-    const matches = this.keywordsModel.getMatches(searchString);
+    this.matches = this.keywordsModel.getMatches(searchString);
 
     render(html`
       <style>
         :host {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
           background: white;
-
           padding: 15px;
         }
         .results {
@@ -117,7 +111,7 @@ class CRSearchResults extends HTMLElement {
           color: initial;
           display: block;
         }
-        .match-info:hover {
+        .match-info:hover, .match-info.selected {
           background-color: #E8F0FF;
         }
         .match-label {
@@ -129,7 +123,7 @@ class CRSearchResults extends HTMLElement {
         }
       </style>
       <div class="results">
-        ${matches.map((match) => {
+        ${this.matches.map((match) => {
           const {keyword, pageReferences} = match;
           const {type, description, href, domainHref} = pageReferences[0];
 
@@ -161,6 +155,46 @@ class CRSearchResults extends HTMLElement {
 
   click() {
     this.dispatchEvent(new CustomEvent('navigation'));
+  }
+
+  get selectedResult() {
+    return this.shadowRoot.querySelectorAll('a')[this._selected];
+  }
+
+  focusDown() {
+    if (this._selected === undefined) {
+      this._selected = 0;
+    } else {
+      this.selectedResult.classList.remove('selected');
+      this._selected = Math.min(this._selected + 1, this.matches.length - 1);
+    }
+
+    this.selectedResult.classList.add('selected');
+  }
+
+  focusUp() {
+    if (this._selected === undefined) {
+      return;
+    }
+
+    this.selectedResult.classList.remove('selected');
+    this._selected = Math.max(this._selected - 1, 0);
+
+    this.selectedResult.classList.add('selected');
+  }
+
+  select() {
+    if (this._selected === undefined) {
+      return;
+    }
+
+    const oldURL = new URL(window.location.href);
+    const newURL = new URL(this.selectedResult.href);
+    window.location = newURL;
+
+    if (oldURL.pathname === newURL.pathname) {
+      window.location.reload(true);
+    }
   }
 }
 customElements.define('cr-search-results', CRSearchResults);
@@ -228,26 +262,44 @@ customElements.define('cr-search-control', class extends HTMLElement {
           outline: none;
         }
       </style>
-      <input autofocus placeholder="Search..." @input=${this.onInput}/>
+      <input placeholder="Search..." @keydown=${this.handleArrows}/>
     `, this.shadowRoot, {
       eventContext: this,
     });
   }
 
-  onInput(event) {
+  handleArrows(event) {
+    switch (event.code) {
+      case 'ArrowDown':
+        this.menu.focusDown();
+        return;
+      case 'ArrowUp':
+        this.menu.focusUp();
+        return;
+      case 'Enter':
+        event.preventDefault();
+        this.menu.select();
+        return;
+    }
+
     const textValue = this.inputElement.value;
 
     if (textValue === '') {
-      this.menu.remove();
-      this.menuContainer.classList.remove('hidden');
+      this.menu.replaceWith(this.menuContainer);
       return;
     }
 
     if (!this.menu.connected) {
-      this.menuContainer.append(this.menu);
+      this.menuContainer.replaceWith(this.menu);
     }
 
     this.menu.searchString = textValue;
-    this.menuContainer.classList.add('hidden');
   }
 });
+
+document.addEventListener('keydown', (event) => {
+  // One of `a-zA-Z`
+  if (event.keyCode >= 65 && event.keyCode <= 122) {
+    document.querySelector('cr-search-control').inputElement.focus();
+  }
+})

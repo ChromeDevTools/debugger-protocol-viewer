@@ -125,10 +125,6 @@ main > section {
   position: relative;
 }
 
-main > section.hidden {
-  overflow-y: hidden;
-}
-
 /* Make sure that code snippets don't overflow the full content container */
 pre {
   overflow-x: auto;

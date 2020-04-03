@@ -3,7 +3,11 @@ class CRMarkdownish extends HTMLElement {
     this.render();
   }
 
-  attributeChangeCallback() {
+  static get observedAttributes() {
+    return ['markdown'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
     this.render();
   }
 
