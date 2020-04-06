@@ -10,10 +10,11 @@ class KeywordsModel {
     this.index = index;
     this.keys = Object.keys(index);
   }
-  getMatches(str) {
-    if (!str) {
+  getMatches(searchString) {
+    if (!searchString) {
       return [];
     }
+    let str = searchString.toLowerCase();
     let useCache = false;
     if (this.prevKey_) {
       const occurredAt = str.indexOf(this.prevKey_);
@@ -160,19 +161,32 @@ class CRSearchResults extends HTMLElement {
     this.navigate(event.currentTarget);
   }
 
+  get results() {
+    return this.shadowRoot.querySelectorAll('a');
+  }
+
   get selectedResult() {
-    return this.shadowRoot.querySelectorAll('a')[this._selected];
+    return this.results[this._selected];
+  }
+
+  focusSelectedResult() {
+    if (this.selectedResult) {
+      this.selectedResult.classList.add('selected');
+      this.selectedResult.scrollIntoView({block: 'center'});
+    }
   }
 
   focusDown() {
     if (this._selected === undefined) {
       this._selected = 0;
     } else {
-      this.selectedResult.classList.remove('selected');
+      if (this.selectedResult) {
+        this.selectedResult.classList.remove('selected');
+      }
       this._selected = Math.min(this._selected + 1, this.matches.length - 1);
     }
 
-    this.selectedResult.classList.add('selected');
+    this.focusSelectedResult();
   }
 
   focusUp() {
@@ -180,14 +194,16 @@ class CRSearchResults extends HTMLElement {
       return;
     }
 
-    this.selectedResult.classList.remove('selected');
+    if (this.selectedResult) {
+      this.selectedResult.classList.remove('selected');
+    }
     this._selected = Math.max(this._selected - 1, 0);
 
-    this.selectedResult.classList.add('selected');
+    this.focusSelectedResult();
   }
 
   select() {
-    if (this._selected === undefined) {
+    if (this._selected === undefined || this.selectedResult === undefined) {
       return;
     }
 
@@ -288,6 +304,11 @@ customElements.define('cr-search-control', class extends HTMLElement {
         return;
     }
 
+    if (event.code === 'Escape') {
+      this.inputElement.value = '';
+      this.inputElement.blur();
+    }
+
     const textValue = this.inputElement.value;
 
     if (textValue === '') {
@@ -304,8 +325,8 @@ customElements.define('cr-search-control', class extends HTMLElement {
 });
 
 document.addEventListener('keydown', (event) => {
-  // One of `a-zA-Z`
-  if (event.keyCode >= 65 && event.keyCode <= 122) {
+  // One of `a-z` or `A-Z`
+  if (event.keyCode >= 65 && event.keyCode <= 90) {
     document.querySelector('cr-search-control').inputElement.focus();
   }
 })

@@ -94,10 +94,6 @@ function generateSearchIndex(version) {
     }
   };
 
-  var primaryKeywords = [];
-  // TODO: collect and assign secondary keywords.
-  var secondaryKeywords = [];
-
   (protocol.domains).forEach(function (domain, idx) {
     var domainName = domain.domain;
     var domainPath = SITE_ROOT + version.slug + '/' + domainName + '/';
