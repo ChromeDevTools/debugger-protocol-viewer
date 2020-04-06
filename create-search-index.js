@@ -121,7 +121,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.EVENT, event.description);
         ref.setHrefs(eventNameHref, domainPath);
-        keywordMap.addReferenceForKey(eventName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${eventName}`, ref);
       });
     }
     if (domain.types) {
@@ -131,7 +131,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.TYPE_ID, type.description);
         ref.setHrefs(typeNameHref, domainPath);
-        keywordMap.addReferenceForKey(typeName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${typeName}`, ref);
       });
     }
     // TODO(ericguzman): Index other keyword types.
