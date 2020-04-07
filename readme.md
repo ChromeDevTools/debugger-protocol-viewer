@@ -8,45 +8,42 @@ More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protoc
 
 
 ```sh
-# install bower dependencies
-bower install
-
 # install dependencies
-yarn
+npm i
 
 # regenerate the protocol files
-yarn prep
+npm run prep
 
 # build it
-yarn build
+npm run build
 
 # serve it locally
-yarn serve
+npm run serve
 ```
 
 Deploying:
 
-We deploy to https://chromedevtools.github.io/devtools-protocol/ despite the source living here. The [repo/branch layout is described here](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/78). Master branch of this repo is deployed every hour (on the 15 minute mark) via the [devtools-protocol/scripts/update-n-publish-docs.sh](https://github.com/ChromeDevTools/devtools-protocol/blob/master/scripts/update-n-publish-docs.sh) script.
+We deploy to https://chromedevtools.github.io/devtools-protocol/ despite the source living here.
+The [repo/branch layout is described here](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/78).
+Master branch of this repo is deployed every hour (on the 15 minute mark) via the [devtools-protocol/scripts/update-n-publish-docs.sh](https://github.com/ChromeDevTools/devtools-protocol/blob/master/scripts/update-n-publish-docs.sh) script.
 
 ```sh
-yarn deploy
+npm run deploy
 ```
-
-
 
 ## Adding new version
 
 To add a new protocol version:
 
-1. Modify `_data/versions.json`
-1. Create `_data/VERSION_SLUG` folder and put `protocol.json` file there
+1. Modify `pages/_data/versions.json`
+1. Create `pages/_data/VERSION_SLUG.json`
 1. Create `_versions/VERSION_SLUG.html` file with protocol version description
-1. Update the `<paper-dropdown-menu id="versions">` tag in `index.html`.
+1. Update the `<div id="versions">` tag in `pages/_includes/shell.hbs`.
 1. Build project
 
 ## Adding new domains
 
-Run `node generate-sidenav-html.js` and add into `<div id="drawerToolbar" class="paper-font-title">Domains</div>` in `index.html`.
+Run `node generate-sidenav-html.js` and add into `<div id="domains">` in `pages/_includes/shell.hbs`.
 
 ## History
 

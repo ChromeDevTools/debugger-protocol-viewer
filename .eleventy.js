@@ -1,0 +1,15 @@
+module.exports = (eleventyConfig) => {
+  eleventyConfig.addPassthroughCopy('pages/styles/protocol.css');
+  eleventyConfig.addPassthroughCopy('pages/images/');
+  eleventyConfig.addPassthroughCopy('search_index/');
+  eleventyConfig.addPassthroughCopy('.nojekyll');
+
+  return {
+    pathPrefix: '/devtools-protocol/',
+    dir: {
+      input: 'pages',
+      output: 'devtools-protocol',
+      data: '_data',
+    },
+  };
+};

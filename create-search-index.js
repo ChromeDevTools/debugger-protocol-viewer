@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * Utility command that creates the search index for _data/?/protocol.json.
+ * Utility command that creates the search index for pages/_data/?.json.
  */
 
 const fs = require('fs');
-const VERSIONS_FILE = '_data/versions.json';
+const VERSIONS_FILE = 'pages/_data/versions.json';
 
 const versionsText = fs.readFileSync(VERSIONS_FILE);
 const versions = JSON.parse(versionsText);
@@ -13,7 +13,7 @@ const versions = JSON.parse(versionsText);
 versions.forEach(generateSearchIndex);
 
 function generateSearchIndex(version) {
-  const protocolText = fs.readFileSync(`_data/${version.slug}/protocol.json`);
+  const protocolText = fs.readFileSync(`pages/_data/${version.slug}.json`);
   const protocol = JSON.parse(protocolText);
 
   // Set up Keyword bank
@@ -94,10 +94,6 @@ function generateSearchIndex(version) {
     }
   };
 
-  var primaryKeywords = [];
-  // TODO: collect and assign secondary keywords.
-  var secondaryKeywords = [];
-
   (protocol.domains).forEach(function (domain, idx) {
     var domainName = domain.domain;
     var domainPath = SITE_ROOT + version.slug + '/' + domainName + '/';
@@ -115,7 +111,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.COMMAND, command.description);
         ref.setHrefs(commandNameHref, domainPath);
-        keywordMap.addReferenceForKey(commandName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${commandName}`, ref);
       });
     }
     if (domain.events) {
@@ -125,7 +121,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.EVENT, event.description);
         ref.setHrefs(eventNameHref, domainPath);
-        keywordMap.addReferenceForKey(eventName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${eventName}`, ref);
       });
     }
     if (domain.types) {
@@ -135,7 +131,7 @@ function generateSearchIndex(version) {
         var ref = PageReference.createPageReference(
             domainName, PageRefType.TYPE_ID, type.description);
         ref.setHrefs(typeNameHref, domainPath);
-        keywordMap.addReferenceForKey(typeName, ref);
+        keywordMap.addReferenceForKey(`${domainName}.${typeName}`, ref);
       });
     }
     // TODO(ericguzman): Index other keyword types.

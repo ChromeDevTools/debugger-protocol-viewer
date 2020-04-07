@@ -1,0 +1,262 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  background-color: #fafafa;
+
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --header-text-color: white;
+  /* Border used in the aside to mark different sections */
+  --separation-border: 1px solid rgba(0, 0, 0, 0.14);
+  /* Material-like elevation shadow */
+  --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+}
+
+body {
+  display: flex;
+}
+
+aside {
+  height: 100vh;
+  display: flex;
+  min-width: 200px;
+  flex-direction: column;
+  border-right: var(--separation-border);
+}
+
+#versions header, #domains header {
+  font-weight: bold;
+  font-size: 1.3em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: var(--separation-border);
+}
+
+#domains {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /*
+   * Without this, the scroller won't properly compute its height and
+   * enforce that items in it are overflowing.
+   */
+  min-height: 0;
+
+  border-top: var(--separation-border);
+}
+
+/* Scroller used to make sure that domains are overflowing with display flex */
+#domains .scroller {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#versions nav a, #domains nav a {
+  flex: 1;
+  display: block;
+
+  font-weight: 400;
+  line-height: 18px;
+  min-height: 36px;
+  padding: 0 16px;
+
+  border-left: 10px solid transparent;
+
+  display: flex;
+  align-items: center;
+}
+
+#domains nav a.experimental {
+  border-left: 10px solid #E5737399;
+}
+
+#domains nav a.deprecated {
+  border-left: 10px solid #FFCC8099;
+}
+
+#domains.version-tot nav a:not(.tot),
+#domains.version-1-2 nav a:not([class~="1-2"]),
+#domains.version-1-3 nav a:not([class~="1-3"]),
+#domains.version-v8 nav a:not(.v8) {
+  display: none;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  /* Make sure that if the content is too small, we still show the full header */
+  flex-grow: 1;
+}
+
+main, cr-search-results {
+  background-color: #fafafa;
+}
+
+main > header {
+  background-color: #3f51b5;
+  color: var(--header-text-color);
+  justify-content: space-between;
+  align-items: center;
+}
+
+main > header h1 {
+  --header-height: 26px;
+  font-size: var(--header-height);
+  line-height: var(--header-height);
+  padding-left: 10px;
+  display: inline-block;
+}
+
+cr-search-control {
+  flex: 1;
+  margin: 0 25px;
+  display: inline-block;
+}
+
+main > section {
+  overflow-y: auto;
+  padding: 25px;
+  /* To make sure that the GitHub badge positions correctly */
+  position: relative;
+}
+
+/* Make sure that code snippets don't overflow the full content container */
+pre {
+  overflow-x: auto;
+}
+
+/* Make sure that images don't overflow the full content container */
+img {
+  max-width: 100%;
+  object-fit: scale-down;
+}
+
+.gh-badge img {
+  float: right;
+  /* The image is a triangle facing the right */
+  shape-outside: polygon(0 0, 150px 0, 150px 150px);
+  /*
+   * All content in the main section has a padding, but this
+   * image must be floated to the borders of the section.
+   */
+  margin: -21px -15px;
+}
+
+/* Limit content width and center it */
+.main-content-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-content-section:not(.domain),
+.domain-section > div {
+  padding: 5px 15px;
+  margin-bottom: 25px;
+  background-color: white;
+  box-shadow: var(--elevation-shadow);
+}
+
+span.experimental, span.deprecated {
+  font-size: 70%;
+  text-transform: uppercase;
+  padding: 2px;
+  margin-right: 5px;
+  cursor: help;
+  vertical-align: baseline;
+  font-weight: normal;
+  font-family: inherit;
+}
+
+span.experimental {
+  background-color: #ec8888;
+  color: #171616;
+  border: 1px solid transparent;
+}
+
+span.deprecated {
+  background-color: #FFCC80;
+  color: black;
+  border: 1px solid #EF6C00;
+}
+
+.domain-experimental span.experimental {
+  display: none;
+}
+
+.domain-experimental .heading-domain span.experimental {
+  display: inline-block;
+}
+
+.domain-experimental .heading-domain {
+  border: 1px solid #E57373;
+}
+
+span.domain-dot {
+  color: #555555;
+}
+
+.toc-link {
+  line-height: 1.5em;
+}
+
+.details {
+  padding-bottom: 10px;
+}
+
+.details:not(:last-child) {
+  border-bottom: var(--separation-border);
+}
+
+.details .permalink {
+  opacity: 0;
+}
+
+.details:hover .permalink, .details .permalink:focus {
+  opacity: 1;
+}
+
+.details .properties-name {
+  color: #4c4b4b;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin: 1rem 0 0;
+}
+
+.properties-container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr 2fr);
+}
+
+.properties-container dt {
+  flex: 1;
+}
+
+.properties-container dd {
+  flex: 2;
+}
+
+.properties-container dt {
+  text-align: right;
+}
+
+.details-description {
+  display: inline;
+}
+
+.details-description p {
+  display: inline;
+}
+
+.param-container:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.param-type {
+  display: block;
+  font-weight: bold;
+}

@@ -1,12 +1,12 @@
 'use strict';
 
 
-const verSlugs = require('./_data/versions.json').map(e => e.slug);
+const verSlugs = require('./pages/_data/versions.json').map(e => e.slug);
 
 const allDomains = {};
 
 for (const slug of verSlugs){
-  const protocol = require(`./_data/${slug}/protocol.json`);
+  const protocol = require(`./pages/_data/${slug}.json`);
   const domains = protocol.domains;
   domains.forEach(domain => {
     const id = domain.domain;
@@ -29,7 +29,7 @@ const str = Object.entries(allDomains).sort(([domainA, tagsA], [domainB, tagsB])
     if (tagSortResult !== 0) return tagSortResult;
     return domainA.localeCompare(domainB);
   })
-  .map(([id, versions]) => `<a data-title="${id}" class="${versions.join(' ')}">${id}</a>`)
+  .map(([id, versions]) => `<a href="{{{ url '/' }}}{{{ version }}}/${id}" class="${versions.join(' ')}">${id}</a>`)
   .join('\n');
 
 
