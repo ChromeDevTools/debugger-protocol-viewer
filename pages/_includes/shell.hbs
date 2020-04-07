@@ -2,11 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {{#if domain}}
+    <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain" />
+  {{else}}
+    <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}}" />
+  {{/if}}
+  <link rel="icon" type="image/png" href="{{{ url '/images/logo.png'}}}" />
   <title>{{{title}}}</title>
 
-  <meta name="theme-color" content="#303F9F">
+  <meta name="theme-color" content="#303F9F" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@chromedevtools" />
+  <meta name="twitter:creator" content="@chromedevtools" />
+  <meta property="og:title" content="Chrome DevTools Protocol Viewer" />
+  <meta property="og:image" content="{{{ url '/images/logo.png'}}}" />
+  {{#if domain}}
+    <meta property="og:description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain" />
+  {{else}}
+    <meta property="og:description" content="Chrome DevTools Protocol Viewer - version {{{version}}}" />
+  {{/if}}
 
   <script type="module" src="{{{ url '/scripts/index.js' }}}"></script>
   <link href="{{{ url '/styles/protocol.css' }}}" rel="stylesheet">
