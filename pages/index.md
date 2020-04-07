@@ -30,11 +30,11 @@ It is available in <a href="https://nodejs.org/en/blog/release/v6.3.0/">node 6.3
 <a href="https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27">debugging & profiling</a>
 of Node.js apps.
 
-<p><b><a href="1-2/">stable 1.2 protocol (1-2)</a></b> —
-The stable release of the protocol, tagged at Chrome 54. It includes a smaller subset of the complete protocol compatibilities.
-
 <p><b><a href="1-3/">stable 1.3 protocol (1-3)</a></b> —
 The stable release of the protocol, tagged at Chrome 64. It includes a smaller subset of the complete protocol compatibilities.
+
+<p><b><a href="1-2/">stable 1.2 protocol (1-2)</a></b> —
+The stable release of the protocol, tagged at Chrome 54. It includes a smaller subset of the complete protocol compatibilities.
 
 <h3>Resources</h3>
 
