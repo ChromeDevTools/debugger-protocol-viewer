@@ -325,6 +325,10 @@ customElements.define('cr-search-control', class extends HTMLElement {
 });
 
 document.addEventListener('keydown', (event) => {
+  // Make sure that copy-pasting works
+  if (event.metaKey) {
+    return;
+  }
   // One of `a-z` or `A-Z`
   if (event.keyCode >= 65 && event.keyCode <= 90) {
     document.querySelector('cr-search-control').inputElement.focus();
