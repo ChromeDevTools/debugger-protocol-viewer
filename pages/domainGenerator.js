@@ -7,6 +7,14 @@ const computeHash = (typeName, name, id) => {
   return `${typeReference}-${name || id}`;
 }
 
+// Thx aslushnikov!
+const itemSort = (a, b) => {
+  if (a.experimental !== b.experimental) return a.experimental ? 1 : -1;
+  if (a.deprecated !== b.deprecated) return a.deprecated ? 1 : -1;
+  if (a.optional !== b.optional) return a.optional ? 1 : -1;
+  return (a.name || a.id).localeCompare(b.name || b.id);
+};
+
 export class DomainGenerator {
   constructor(version) {
     this.version = version;
@@ -213,6 +221,11 @@ export class DomainGenerator {
   }
 
   domainTemplate({domain, description, experimental, deprecated, commands, events, types}) {
+
+    commands && commands.sort(itemSort);
+    events && events.sort(itemSort);
+    types && types.sort(itemSort);
+
     return html`
     <div class="domain-section">
       <div id="header">
