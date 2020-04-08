@@ -3,6 +3,7 @@ module.exports = (eleventyConfig) => {
   eleventyConfig.addPassthroughCopy('pages/images/');
   eleventyConfig.addPassthroughCopy('search_index/');
   eleventyConfig.addPassthroughCopy('.nojekyll');
+  eleventyConfig.addPassthroughCopy('pages/service-worker.js');
 
   return {
     pathPrefix: '/devtools-protocol/',
