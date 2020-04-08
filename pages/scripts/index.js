@@ -330,7 +330,3 @@ document.addEventListener('keydown', (event) => {
     document.querySelector('cr-search-control').inputElement.focus();
   }
 })
-
-if ('serviceWorker' in window.navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
