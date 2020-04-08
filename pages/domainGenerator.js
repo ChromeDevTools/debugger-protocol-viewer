@@ -76,7 +76,7 @@ export class DomainGenerator {
     for (const {experimental, deprecated, name, id} of items) {
       output += html`
       <div class="toc-link">
-        <a href="#${computeHash(typeName, name, id)}">${this.nameIncludingDomainTemplate(domain, name || id)}</a>
+        <a class="monospace" href="#${computeHash(typeName, name, id)}">${this.nameIncludingDomainTemplate(domain, name || id)}</a>
         ${this.statusTemplate(experimental, deprecated)}
       </div>
       `;
@@ -114,11 +114,11 @@ export class DomainGenerator {
 
   propertyTemplate(domain, items) {
     let properties = '';
-    
+
     for (const item of items) {
       const {name, description, experimental, deprecated} = item;
       properties += html`
-        <dt class="param-name">${name}</dt>
+        <dt class="param-name monospace">${name}</dt>
         <dd>
           ${this.propertiesType(domain, item)}
           ${this.descriptionTemplate(description)}
@@ -126,7 +126,7 @@ export class DomainGenerator {
         </dd>
       `;
     }
-    
+
     return properties;
   }
 
@@ -144,7 +144,7 @@ export class DomainGenerator {
     if (!name) {
       return '';
     }
-    
+
     return html`
       <h5 class="properties-name">${name}</h5>
       <dl class="properties-container">
@@ -175,22 +175,22 @@ export class DomainGenerator {
 
     return html`
       <h5 class="properties-name">Allowed Values</h5>
-      <div class="enum-container">${enumValues.join(', ')}</div>
+      <div class="enum-container monospace">${enumValues.join(', ')}</div>
     `;
   }
 
   detailsTemplate(typeName, domain, details) {
     const {name, description, id, type, experimental, deprecated} = details;
     const computedId = computeHash(typeName, name, id);
-    
+
     return html`
       <div class="details">
         <h4 class="details-name monospace" id="${computedId}">
           ${this.nameIncludingDomainTemplate(domain, name || id)}
+          ${this.statusTemplate(experimental, deprecated)}
           <a href="#${computedId}" class="permalink">#</a>
         </h4>
         ${this.descriptionTemplate(description)}
-        ${this.statusTemplate(experimental, deprecated)}
         ${type
           ? html`<p class="type-type">Type: <strong>${type}</strong></p>`
           : ''

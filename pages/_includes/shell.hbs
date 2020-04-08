@@ -28,28 +28,30 @@
 </head>
 <body>
   <aside>
-    <div id="versions">
+    <div id="home" class="navs">
+      <nav>
+        <a href="{{{ url '/' }}}">Home</a>
+      </nav>
+    </div>
+    <div id="versions" class="navs">
       <header>Versions</header>
       <nav>
-        <a href="{{{ url '/1-2' }}}" name="1-2">
-          stable (1.2)
-        </a>
-        <a href="{{{ url '/1-3' }}}" name="1-3">
-          stable RC (1.3)
-        </a>
         <a href="{{{ url '/tot' }}}" name="tot">
           latest (tip-of-tree)
         </a>
         <a href="{{{ url '/v8' }}}" name="v8">
           v8-inspector (node)
         </a>
-        <a href="{{{ url '/' }}}" name="" class="homelink">
-          Home
+        <a href="{{{ url '/1-3' }}}" name="1-3">
+          stable RC (1.3)
+        </a>
+        <a href="{{{ url '/1-2' }}}" name="1-2">
+          stable (1.2)
         </a>
       </nav>
     </div>
 
-    <div id="domains" class="version-{{{version}}}">
+    <div id="domains" class="navs version-{{{version}}}">
       <header>Domains</header>
       <div class="scroller">
         <nav>

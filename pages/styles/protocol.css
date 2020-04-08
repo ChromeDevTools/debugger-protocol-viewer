@@ -11,10 +11,20 @@ html, body {
   --separation-border: 1px solid rgba(0, 0, 0, 0.14);
   /* Material-like elevation shadow */
   --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+
+  --home-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="hsl(0, 0%, 40%)" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>')
 }
 
 body {
   display: flex;
+}
+
+.monospace {
+  font-family: Consolas, Menlo, monospace;
+}
+
+a {
+  color: hsl(232, 50%, 45%);
 }
 
 aside {
@@ -25,14 +35,19 @@ aside {
   border-right: var(--separation-border);
 }
 
-#versions header, #domains header {
-  font-weight: bold;
+nav {
+  background-color: white;
+}
+
+.navs header {
   font-size: 1.3em;
   height: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: var(--separation-border);
+  color: #727272;
+  font-size: 16px;
 }
 
 #domains {
@@ -54,19 +69,19 @@ aside {
   overflow-y: auto;
 }
 
-#versions nav a, #domains nav a {
+.navs a {
   flex: 1;
-  display: block;
-
   font-weight: 400;
-  line-height: 18px;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 16px;
-
   border-left: 10px solid transparent;
-
   display: flex;
   align-items: center;
+  text-decoration: none;
+}
+
+.navs a:hover {
+  background-color: hsl(0,0%, 96%);
 }
 
 #domains nav a.experimental {
@@ -201,11 +216,12 @@ span.domain-dot {
 }
 
 .toc-link {
-  line-height: 1.5em;
+  line-height: 1.1em;
 }
 
 .details {
   padding-bottom: 10px;
+  word-break: break-word;
 }
 
 .details:not(:last-child) {
@@ -234,18 +250,21 @@ span.domain-dot {
 
 .properties-container dt {
   flex: 1;
+  text-align: right;
 }
 
 .properties-container dd {
   flex: 2;
+  margin-left: 10px;
 }
 
-.properties-container dt {
-  text-align: right;
+.properties-container dt, .properties-container dd {
+  padding: 5px;
 }
 
 .details-description {
   display: inline;
+  font-size: 90%;
 }
 
 .details-description p {
@@ -259,4 +278,17 @@ span.domain-dot {
 .param-type {
   display: block;
   font-weight: bold;
+}
+
+#home a {
+  background-image: var(--home-icon);
+  background-repeat: no-repeat;
+  padding-left: 26px;
+  background-size: 14px 14px;
+  border-left: 0;
+  background-position: 6px;
+}
+
+h3 {
+  color: hsl(0, 0%, 47%);
 }
