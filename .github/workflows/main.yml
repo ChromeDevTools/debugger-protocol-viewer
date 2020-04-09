@@ -20,6 +20,7 @@ jobs:
             http://localhost:8000/devtools-protocol/
             http://localhost:8000/devtools-protocol/tot/Page/
           uploadArtifacts: true
-          configPath: ./.lighthouserc.js
+          # i'm a bad man
+          configPath: /home/runner/work/debugger-protocol-viewer/debugger-protocol-viewer/.lighthouserc.js
           serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
           serverBaseUrl: https://lhci-canary.herokuapp.com/
