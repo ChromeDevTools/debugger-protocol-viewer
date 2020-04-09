@@ -9,9 +9,6 @@ module.exports = {
     },
     assert: {
       preset: "lighthouse:recommended",
-    },
-    upload: {
-      serverBaseUrl: "https://lhci-canary.herokuapp.com/",
-    },
+    }
   },
 };
