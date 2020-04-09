@@ -1,7 +1,7 @@
 name: 😎
 on: push
 jobs:
-  lighthouse ci:
+  lighthouse_ci:
 
     runs-on: ubuntu-latest
 
