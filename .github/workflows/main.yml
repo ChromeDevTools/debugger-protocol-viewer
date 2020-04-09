@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: build
-        run: npm i && npm prep && npm build
+        run: npm i && npm build
 
       - name: Audit URLs using Lighthouse
         uses: treosh/lighthouse-ci-action@v2
