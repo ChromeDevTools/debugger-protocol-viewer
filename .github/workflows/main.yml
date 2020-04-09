@@ -19,6 +19,7 @@ jobs:
           urls: |
             http://localhost:8000/devtools-protocol/
             http://localhost:8000/devtools-protocol/tot/Page/
+          runs: 3,
           uploadArtifacts: true
           # i'm a bad man
           configPath: /home/runner/work/debugger-protocol-viewer/debugger-protocol-viewer/.lighthouserc.js
