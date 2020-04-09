@@ -1,0 +1,24 @@
+name: 😎
+on: push
+jobs:
+  lighthouse ci:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: git clone
+        uses: actions/checkout@v1
+
+      - name: build
+        run: npm i && npm prep && npm build
+
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v2
+        with:
+          urls: |
+            http://localhost:8000/devtools-protocol/
+            http://localhost:8000/devtools-protocol/tot/Page/
+          uploadArtifacts: true
+          configPath: ./.lighthouserc.js
+          serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
