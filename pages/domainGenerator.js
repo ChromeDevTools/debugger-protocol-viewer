@@ -106,7 +106,7 @@ export class DomainGenerator {
     if (type) {
       const arrayDetails = _ => {
         if (type !== 'array') return '';
-        return ` <span class="param-type__array">[ ${this.propertiesType(domain, item.items)} ]</span>`;
+        return html`<span class="param-type__array">[ ${this.propertiesType(domain, item.items)} ]</span>`;
       }
       return html`<span class="param-type">${type}${arrayDetails()}</span>`;
     }
