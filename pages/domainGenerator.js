@@ -104,7 +104,11 @@ export class DomainGenerator {
     const referral = this.computeReferral(item);
 
     if (type) {
-      return html`<span class="param-type">${type}</span>`;
+      const arrayDetails = _ => {
+        if (type !== 'array') return '';
+        return html`<span class="param-type__array">[ ${this.propertiesType(domain, item.items)} ]</span>`;
+      }
+      return html`<span class="param-type">${type}${arrayDetails()}</span>`;
     }
     if (referral) {
       return html`<a href=${this.computeReferralUrl(domain, referral)} class="param-type">${referral}</a>`

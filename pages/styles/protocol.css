@@ -280,6 +280,14 @@ span.domain-dot {
   font-weight: bold;
 }
 
+.param-type__array {
+  font-weight: normal;
+}
+
+.param-type .param-type__array .param-type  {
+  display: inline;
+}
+
 #home a {
   background-image: var(--home-icon);
   background-repeat: no-repeat;
