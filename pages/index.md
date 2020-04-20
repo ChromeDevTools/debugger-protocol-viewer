@@ -106,16 +106,17 @@ Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", t
 Now click the ⋮ menu icon again, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
 
 <p>You can also issue your own commands. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>,
-then within the inner DevTools window, use <code>Main.sendOverProtocol()</code> in the console:
+then within the inner DevTools window, use <code>Main.MainImpl.sendOverProtocol()</code> in the console:
 
-<pre>await Main.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
+<pre>let Main = await import('./main/main.js');
+await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
   mobile: true,
   width: 412,
   height: 732,
   deviceScaleFactor: 2.625,
 });
 
-const data = await Main.sendOverProtocol("Page.captureScreenshot");</pre>
+const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pre>
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
 <p>To allow chrome extensions to interact with the protocol, we introduced
