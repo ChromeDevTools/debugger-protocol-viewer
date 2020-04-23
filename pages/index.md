@@ -96,7 +96,7 @@ You can view all requests/responses and methods as they happen.
 
 <figure class="screenshot">
   <a href="images/protocol-monitor.png" target="_blank" style="text-align: center; display:block;">
-    <img src="images/protocol-monitor.png" height="260" alt="Screenshot of the Protocol Monitor">
+    <img src="images/protocol-monitor.png" height="260" alt="Screenshot of the Protocol Monitor" loading="lazy">
   </a>
 </figure>
 

@@ -300,3 +300,9 @@ span.domain-dot {
 h3 {
   color: hsl(0, 0%, 47%);
 }
+
+@media(max-width: 800px) {
+  .navs a {
+    min-height: 48px;
+  }
+}
