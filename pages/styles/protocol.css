@@ -35,6 +35,11 @@ aside {
   border-right: var(--separation-border);
 }
 
+/* hide sidenav on mobile */
+@media only screen and (max-width:640px) {
+  aside { display:none; }
+}
+
 nav {
   background-color: white;
 }
@@ -125,11 +130,17 @@ main > header h1 {
   line-height: var(--header-height);
   padding-left: 10px;
   display: inline-block;
+  font-weight: 400;
+}
+
+/* When narrow, hide page title to avoid wrapping h1 + search */
+@media only screen and (max-width:810px) {
+  main > header h1 { display:none; }
 }
 
 cr-search-control {
   flex: 1;
-  margin: 0 25px;
+  margin: 14px 25px;
   display: inline-block;
 }
 
@@ -138,6 +149,11 @@ main > section {
   padding: 25px;
   /* To make sure that the GitHub badge positions correctly */
   position: relative;
+}
+@media only screen and (max-width:640px) {
+  main > section {
+    padding: 25px 4vw;
+  }
 }
 
 /* Make sure that code snippets don't overflow the full content container */
