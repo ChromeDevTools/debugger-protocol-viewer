@@ -41,13 +41,13 @@ export class DomainGenerator {
     return this.domainTemplate(data.pagination.items[0]);
   }
 
-  descriptionTemplate(description) {
-    if (!description) {
-      return '';
-    }
+  descriptionTemplate(description, item) {
+    // Some descriptions use markdown. eg. Page.printToPDF
+    // Some params have an emum: e.g. Debugger.continueToLocation
     return html`
       <div class="details-description">
-        ${marked(description)}
+        ${description ? marked(description) : ''}
+        ${item ? this.enumDetails(item) : ''}
       </div>
     `;
   }
@@ -127,7 +127,7 @@ export class DomainGenerator {
         </dt>
         <dd>
           ${this.propertiesType(domain, item)}
-          ${this.descriptionTemplate(description)}
+          ${this.descriptionTemplate(description, item)}
           ${this.statusTemplate(experimental, deprecated)}
         </dd>
       `;
@@ -179,9 +179,9 @@ export class DomainGenerator {
       return '';
     }
 
+    const enumItems = enumValues.map(e => html`<code>${e}</code>`);
     return html`
-      <h5 class="properties-name">Allowed Values</h5>
-      <div class="enum-container monospace">${enumValues.join(', ')}</div>
+      <div class="enum-container">Allowed Values: ${enumItems.join(', ')}</div>
     `;
   }
 
@@ -196,14 +196,13 @@ export class DomainGenerator {
           ${this.statusTemplate(experimental, deprecated)}
           <a href="#${computedId}" class="permalink">#</a>
         </h4>
-        ${this.descriptionTemplate(description)}
+        ${this.descriptionTemplate(description, details)}
         ${type
           ? html`<p class="type-type">Type: <strong>${type}</strong></p>`
           : ''
         }
         ${this.propertiesDetailsTemplate(domain, details)}
         ${this.returnDetailsTemplate(domain, details)}
-        ${this.enumDetails(details)}
       </div>
     `;
   }

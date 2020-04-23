@@ -19,8 +19,14 @@ body {
   display: flex;
 }
 
-.monospace {
+.monospace, code {
   font-family: Consolas, Menlo, monospace;
+}
+
+code {
+  color: #8E24AA;
+  font-size: 15px;
+  white-space: nowrap;
 }
 
 a {
