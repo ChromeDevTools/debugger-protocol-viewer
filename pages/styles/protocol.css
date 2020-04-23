@@ -275,6 +275,13 @@ span.domain-dot {
   margin-bottom: 10px;
 }
 
+.optional::after {
+  content: "optional";
+  opacity: .6;
+  font-size: 70%;
+  display: block;
+}
+
 .param-type {
   display: block;
   font-weight: bold;

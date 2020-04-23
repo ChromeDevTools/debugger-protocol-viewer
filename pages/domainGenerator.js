@@ -120,9 +120,11 @@ export class DomainGenerator {
     let properties = '';
 
     for (const item of items) {
-      const {name, description, experimental, deprecated} = item;
+      const {name, description, experimental, deprecated, optional} = item;
       properties += html`
-        <dt class="param-name monospace">${name}</dt>
+        <dt class="param-name monospace ${optional ? 'optional' : ''}">
+          ${name}
+        </dt>
         <dd>
           ${this.propertiesType(domain, item)}
           ${this.descriptionTemplate(description)}
