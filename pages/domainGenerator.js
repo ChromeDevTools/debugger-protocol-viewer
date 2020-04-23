@@ -24,7 +24,7 @@ export class DomainGenerator {
     const version = this.version;
     return {
       layout: 'shell.hbs',
-      title: `Chrome DevTools Protocol Viewer - ${version}`,
+      title: `Chrome DevTools Protocol - ${version}`,
       version,
       shadow: 'domain',
       pagination: {
