@@ -20,8 +20,14 @@ body {
   display: flex;
 }
 
-.monospace {
+.monospace, code {
   font-family: Consolas, Menlo, monospace;
+}
+
+code {
+  color: #8E24AA;
+  font-size: 15px;
+  white-space: nowrap;
 }
 
 a {
@@ -156,7 +162,7 @@ main > header .homepage-link {
   aside {
     display:none;
   }
-  
+
   main > header .homepage-link {
     display: inline-block;
   }
@@ -315,6 +321,13 @@ span.domain-dot {
   margin-bottom: 10px;
 }
 
+.optional::after {
+  content: "optional";
+  opacity: .6;
+  font-size: 70%;
+  display: block;
+}
+
 .param-type {
   display: block;
   font-weight: bold;
@@ -328,6 +341,27 @@ span.domain-dot {
   display: inline;
 }
 
+#home a {
+  background-image: var(--home-icon);
+  background-repeat: no-repeat;
+  padding-left: 26px;
+  background-size: 14px 14px;
+  border-left: 0;
+  background-position: 6px;
+}
+
+h4 {
+  /* use padding rather than margin for better positioning when viewing #method-navigate, etc. */
+  margin-top: 0;
+  padding-top: 1.33em;
+}
+
 h3 {
   color: hsl(0, 0%, 47%);
+}
+
+@media(max-width: 800px) {
+  .navs a {
+    min-height: 48px;
+  }
 }
