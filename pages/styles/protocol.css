@@ -19,8 +19,14 @@ body {
   display: flex;
 }
 
-.monospace {
+.monospace, code {
   font-family: Consolas, Menlo, monospace;
+}
+
+code {
+  color: #8E24AA;
+  font-size: 15px;
+  white-space: nowrap;
 }
 
 a {
@@ -275,6 +281,13 @@ span.domain-dot {
   margin-bottom: 10px;
 }
 
+.optional::after {
+  content: "optional";
+  opacity: .6;
+  font-size: 70%;
+  display: block;
+}
+
 .param-type {
   display: block;
   font-weight: bold;
@@ -295,6 +308,12 @@ span.domain-dot {
   background-size: 14px 14px;
   border-left: 0;
   background-position: 6px;
+}
+
+h4 {
+  /* use padding rather than margin for better positioning when viewing #method-navigate, etc. */
+  margin-top: 0;
+  padding-top: 1.33em;
 }
 
 h3 {
