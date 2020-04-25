@@ -12,7 +12,8 @@ html, body {
   /* Material-like elevation shadow */
   --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
 
-  --home-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="hsl(0, 0%, 40%)" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>')
+  --home-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="hsl(0, 0%, 40%)" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
+  --home-icon-for-header: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
 }
 
 body {
@@ -75,6 +76,15 @@ nav {
   overflow-y: auto;
 }
 
+#home a, .homepage-link {
+  background-image: var(--home-icon);
+  background-repeat: no-repeat;
+  padding-left: 26px;
+  background-size: 14px 14px;
+  border-left: 0;
+  background-position: 6px;
+}
+
 .navs a {
   flex: 1;
   font-weight: 400;
@@ -131,11 +141,36 @@ main > header h1 {
   line-height: var(--header-height);
   padding-left: 10px;
   display: inline-block;
+  font-weight: 400;
+}
+
+main > header .homepage-link {
+  background-image: var(--home-icon-for-header);
+  color: var(--header-text-color);
+  display: none;
+}
+
+/* When narrow, hide page title to avoid wrapping h1 + search */
+@media only screen and (max-width:825px) {
+  main > header h1 {
+    display:none;
+  }
+}
+
+/* hide sidenav on mobile */
+@media only screen and (max-width:640px) {
+  aside {
+    display:none;
+  }
+
+  main > header .homepage-link {
+    display: inline-block;
+  }
 }
 
 cr-search-control {
   flex: 1;
-  margin: 0 25px;
+  margin: 14px 25px;
   display: inline-block;
 }
 
@@ -144,6 +179,11 @@ main > section {
   padding: 25px;
   /* To make sure that the GitHub badge positions correctly */
   position: relative;
+}
+@media only screen and (max-width:640px) {
+  main > section {
+    padding: 25px 4vw;
+  }
 }
 
 /* Make sure that code snippets don't overflow the full content container */

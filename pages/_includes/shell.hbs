@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {{#if domain}}
-    <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain" />
+    <meta name="description" content="Chrome DevTools Protocol - version {{{version}}} - {{{domain.domain}}} domain" />
   {{else}}
-    <meta name="description" content="Chrome DevTools Protocol Viewer - version {{{version}}}" />
+    <meta name="description" content="Chrome DevTools Protocol - version {{{version}}}" />
   {{/if}}
   <link rel="icon" type="image/png" href="{{{ url '/images/logo.png'}}}" />
   <title>{{{title}}}</title>
@@ -15,12 +15,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@chromedevtools" />
   <meta name="twitter:creator" content="@chromedevtools" />
-  <meta property="og:title" content="Chrome DevTools Protocol Viewer" />
+  <meta property="og:title" content="Chrome DevTools Protocol" />
   <meta property="og:image" content="https://developers.google.com/web/tools/images/chrome-devtools-16x9_720.png" />
   {{#if domain}}
-    <meta property="og:description" content="Chrome DevTools Protocol Viewer - version {{{version}}} - {{{domain.domain}}} domain" />
+    <meta property="og:description" content="Chrome DevTools Protocol - version {{{version}}} - {{{domain.domain}}} domain" />
   {{else}}
-    <meta property="og:description" content="Chrome DevTools Protocol Viewer - version {{{version}}}" />
+    <meta property="og:description" content="Chrome DevTools Protocol - version {{{version}}}" />
   {{/if}}
 
   <script type="module" src="{{{ url '/scripts/index.js' }}}"></script>
@@ -107,7 +107,8 @@
 
   <main>
     <header>
-      <h1>Chrome DevTools Protocol Viewer</h1>
+      <h1>Chrome DevTools Protocol</h1>
+      <a href="{{{ url '/' }}}" class="homepage-link">Home</a>
       <cr-search-control base-url="{{{ url '/' }}}" protocol-search-index="/search_index/{{{version}}}.json"></cr-search-control>
     </header>
     <section>

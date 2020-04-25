@@ -1,6 +1,6 @@
 ---
 layout: shell.hbs
-title: Chrome DevTools Protocol Viewer
+title: Chrome DevTools Protocol
 version: tot
 ---
 <a href="https://github.com/ChromeDevTools/debugger-protocol-viewer" class="gh-badge"><img

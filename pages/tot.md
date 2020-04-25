@@ -1,6 +1,6 @@
 ---
 layout: shell.hbs
-title: Chrome DevTools Protocol Viewer - latest (tip-of-tree)
+title: Chrome DevTools Protocol - latest (tip-of-tree)
 version: tot
 ---
 The **latest (tip-of-tree) protocol** <a href="https://chromium.googlesource.com/chromium/src/+log/master/third_party/blink/renderer/core/inspector/browser_protocol.json">changes</a>
