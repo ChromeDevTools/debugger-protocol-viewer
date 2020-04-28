@@ -13,7 +13,6 @@ html, body {
   --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
 
   --home-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="hsl(0, 0%, 40%)" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
-  --home-icon-for-header: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
 }
 
 body {
@@ -30,7 +29,7 @@ code {
   white-space: nowrap;
 }
 
-a {
+a, .aside-close-button {
   color: hsl(232, 50%, 45%);
 }
 
@@ -40,6 +39,7 @@ aside {
   min-width: 200px;
   flex-direction: column;
   border-right: var(--separation-border);
+
 }
 
 nav {
@@ -76,7 +76,7 @@ nav {
   overflow-y: auto;
 }
 
-#home a, .homepage-link {
+#home a, .menu-link {
   background-image: var(--home-icon);
   background-repeat: no-repeat;
   padding-left: 26px;
@@ -144,10 +144,19 @@ main > header h1 {
   font-weight: 400;
 }
 
-main > header .homepage-link {
-  background-image: var(--home-icon-for-header);
+main > header .menu-link {
   color: var(--header-text-color);
+  background-color: inherit;
+  text-decoration: underline;
+  border: none;
   display: none;
+  font-size: 1em;
+  margin-top: 20px;
+  /*
+   * Reset the background image, as we don't want it on this link,
+   * but we do want it on all others.
+   */
+  background-image: none;
 }
 
 /* When narrow, hide page title to avoid wrapping h1 + search */
@@ -157,13 +166,39 @@ main > header .homepage-link {
   }
 }
 
+.aside-close-button {
+  display: none;
+}
+
 /* hide sidenav on mobile */
 @media only screen and (max-width:640px) {
   aside {
-    display:none;
+    transform: translate(-200px, 0);
+    position: absolute;
+    width: 200px;
+    z-index: 1;
+    background: inherit;
+    visibility: hidden;
+    transition: cubic-bezier(0,0,0.32,1);
+    transition-duration: 200ms;
   }
 
-  main > header .homepage-link {
+  aside.shown {
+    transform: none;
+    visibility: visible;
+  }
+
+  .aside-close-button {
+    display: block;
+    font-size: 1em;
+    width: 48px;
+  }
+
+  #home nav {
+    display: flex;
+  }
+
+  main > header .menu-link {
     display: inline-block;
   }
 }
@@ -339,15 +374,6 @@ span.domain-dot {
 
 .param-type .param-type__array .param-type  {
   display: inline;
-}
-
-#home a {
-  background-image: var(--home-icon);
-  background-repeat: no-repeat;
-  padding-left: 26px;
-  background-size: 14px 14px;
-  border-left: 0;
-  background-position: 6px;
 }
 
 h4 {
