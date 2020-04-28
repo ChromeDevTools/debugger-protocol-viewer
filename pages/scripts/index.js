@@ -324,7 +324,7 @@ customElements.define('cr-search-control', class extends HTMLElement {
   }
 });
 
-const menuNavigationLink = document.querySelector('.menu-link');
+const menuNavigationButton = document.querySelector('.menu-link');
 const aside = document.querySelector('aside');
 const mainSection = document.querySelector('main');
 const asideCloseButton = document.querySelector('.aside-close-button');
@@ -339,23 +339,23 @@ document.addEventListener('keydown', (event) => {
     document.querySelector('cr-search-control').inputElement.focus();
   }
   // Escape key
-  if (event.keyCode === 27 && aside.classList.contains('shown')) {
+  if (event.key === 'Escape' && aside.classList.contains('shown')) {
     aside.classList.remove('shown');
   }
 });
 
-menuNavigationLink.addEventListener('click', (event) => {
+menuNavigationButton.addEventListener('click', (event) => {
   // Don't trigger the click event on the main section
   event.stopPropagation();
   aside.addEventListener('transitionend', () => {
     // Move focus into close button of drawer
     asideCloseButton.focus();
-  });
+  }, {once: true});
   aside.classList.add('shown');
 });
 function closeAside() {
   aside.classList.remove('shown');
-  menuNavigationLink.focus();
+  menuNavigationButton.focus();
 }
 mainSection.addEventListener('click', closeAside);
 asideCloseButton.addEventListener('click', closeAside);

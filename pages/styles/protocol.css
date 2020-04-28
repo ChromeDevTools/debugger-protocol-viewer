@@ -13,7 +13,6 @@ html, body {
   --elevation-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
 
   --home-icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="hsl(0, 0%, 40%)" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
-  --home-icon-for-header: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" height="36" viewBox="0 0 24 24" width="36"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>');
 }
 
 body {
@@ -146,13 +145,18 @@ main > header h1 {
 }
 
 main > header .menu-link {
-  background-image: var(--home-icon-for-header);
   color: var(--header-text-color);
   background-color: inherit;
   text-decoration: underline;
   border: none;
   display: none;
   font-size: 1em;
+  margin-top: 20px;
+  /*
+   * Reset the background image, as we don't want it on this link,
+   * but we do want it on all others.
+   */
+  background-image: none;
 }
 
 /* When narrow, hide page title to avoid wrapping h1 + search */
@@ -187,6 +191,7 @@ main > header .menu-link {
   .aside-close-button {
     display: block;
     font-size: 1em;
+    width: 48px;
   }
 
   #home nav {
