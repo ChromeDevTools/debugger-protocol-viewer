@@ -52,7 +52,8 @@ Run `node generate-sidenav-html.js` and add into `<div id="domains">` in `pages/
 * [v0.2](https://rawgit.com/ChromeDevTools/devtools-protocol/v0.2/index.html)            irish's "upgrades".
 * [v0.8](https://rawgit.com/ChromeDevTools/devtools-protocol/v0.8/index.html)            guzman's polymer 0.8 refactor
 * [v1.0](https://rawgit.com/ChromeDevTools/devtools-protocol/v1.0/index.html)            konrad's polymer 1.0 + jekyll refactor
-* [v2.0](https://chromedevtools.github.io/devtools-protocol/)                            tim's polymer 2.0 - jekyll refactor
+* [v2.0](https://github.com/ChromeDevTools/debugger-protocol-viewer/tree/polymer)                            tim's polymer 2.0 - jekyll refactor
+* [v3.0](https://chromedevtools.github.io/devtools-protocol/)                            tim's Eleventy refactor
 * which brings us to… [now](https://chromedevtools.github.io/devtools-protocol/).
 
 
