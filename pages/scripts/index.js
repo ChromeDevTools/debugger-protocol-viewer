@@ -354,6 +354,9 @@ menuNavigationButton.addEventListener('click', (event) => {
   aside.classList.add('shown');
 });
 function closeAside() {
+  if (!aside.classList.contains('shown')) {
+    return;
+  }
   aside.classList.remove('shown');
   menuNavigationButton.focus();
 }
