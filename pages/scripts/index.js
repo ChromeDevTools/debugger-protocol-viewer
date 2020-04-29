@@ -1,5 +1,6 @@
 import {html, render} from 'lit-html';
 import './cr-markdownish.js';
+import './clipboard.js'
 
 /**
  * A model managing keywords searches.
@@ -85,7 +86,7 @@ class CRSearchResults extends HTMLElement {
   constructor(baseUrl) {
     super();
     this.attachShadow({mode: 'open'});
-    
+
     this.baseUrl = baseUrl;
   }
 
@@ -136,7 +137,7 @@ class CRSearchResults extends HTMLElement {
           if (href) {
             fullUrl += href;
           }
-          
+
           return html`
             <a role="menuitem" class="match-info" href="${fullUrl}" @click=${this.click}>
               <div class="match-label">

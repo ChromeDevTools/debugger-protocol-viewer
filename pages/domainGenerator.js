@@ -64,7 +64,7 @@ export class DomainGenerator {
   }
 
   nameIncludingDomainTemplate(domain, name) {
-    return html`<span class="domain-dot">${domain}.</span>${name}`;
+    return html`<span class="domain-dot">${domain}.</span><span class="name">${name}</span>`;
   }
 
   domainTocTemplate(typeName, domain, items) {
