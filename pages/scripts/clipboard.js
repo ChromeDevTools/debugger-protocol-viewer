@@ -23,10 +23,12 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
         classNames.push('copied__md');
       }
       // Show psuedo-element. rAF used to trigger animation reliably
-      permalinkEl.classList.remove(...classNames);
+      permalinkEl.className = 'permalink';
       requestAnimationFrame(_ => {
-        permalinkEl.classList.add(...classNames);
-      })
+        requestAnimationFrame(_ => {
+          permalinkEl.classList.add(...classNames);
+        });
+      });
     })
     // This can happen if the user denies clipboard permissions
     .catch(err => console.error('Could not copy to clipboard: ', err));
