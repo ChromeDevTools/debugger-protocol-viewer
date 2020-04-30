@@ -9,7 +9,11 @@
     <meta name="description" content="Chrome DevTools Protocol - version {{{version}}}" />
   {{/if}}
   <link rel="icon" type="image/png" href="{{{ url '/images/logo.png'}}}" />
-  <title>{{{title}}}</title>
+  {{#if domain}}
+    <title>{{{title}}} - {{{domain.domain}}} domain</title>
+  {{else}}
+    <title>{{{title}}}</title>
+  {{/if}}
 
   <meta name="theme-color" content="#303F9F" />
   <meta name="twitter:card" content="summary" />
