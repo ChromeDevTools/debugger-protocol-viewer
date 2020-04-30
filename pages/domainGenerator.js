@@ -22,9 +22,11 @@ export class DomainGenerator {
 
   data() {
     const version = this.version;
+    const versionPart = version === 'tot' ? '' : ` - version ${version}`;
+    const title = `Chrome DevTools Protocol${versionPart}`
     return {
       layout: 'shell.hbs',
-      title: `Chrome DevTools Protocol - ${version}`,
+      title,
       version,
       shadow: 'domain',
       pagination: {
