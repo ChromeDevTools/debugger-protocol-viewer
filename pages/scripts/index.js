@@ -284,7 +284,7 @@ customElements.define('cr-search-control', class extends HTMLElement {
           outline: none;
         }
       </style>
-      <input placeholder="Search..." aria-label="Search" @keyup=${this.handleArrows}/>
+      <input placeholder="Start typing to search..." aria-label="Search" @keyup=${this.handleArrows}/>
     `, this.shadowRoot, {
       eventContext: this,
     });
