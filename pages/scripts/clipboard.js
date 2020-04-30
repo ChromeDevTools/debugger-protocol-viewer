@@ -14,7 +14,7 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
     // No need to scroll
     e.preventDefault();
     // Add hash back to url
-    history.replaceState({}, '', href);
+    history.pushState({}, '', href);
 
     navigator.clipboard.writeText(e.type === 'dblclick' ? markdown : href)
     .then(_ => {
