@@ -190,13 +190,17 @@ export class DomainGenerator {
   detailsTemplate(typeName, domain, details) {
     const {name, description, id, type, experimental, deprecated} = details;
     const computedId = computeHash(typeName, name, id);
+    const actualName = name || id;
 
     return html`
       <div class="details">
         <h4 class="details-name monospace" id="${computedId}">
-          ${this.nameIncludingDomainTemplate(domain, name || id)}
+          ${this.nameIncludingDomainTemplate(domain, actualName)}
           ${this.statusTemplate(experimental, deprecated)}
-          <a href="#${computedId}" class="permalink">#</a>
+          <a href="#${computedId}"
+             class="permalink"
+             data-slug="${domain}.${actualName}"
+             title="Double click to copy markdown-formatted URL">#</a>
         </h4>
         ${this.descriptionTemplate(description, details)}
         ${type

@@ -317,6 +317,22 @@ span.domain-dot {
   opacity: 1;
 }
 
+.details .permalink.copied::after {
+  content: "Copied URL!";
+  background-color: #E0E0E0;
+  color: initial;
+  display: inline-block;
+  text-decoration: none;
+  margin-left: 6px;
+  font-size: 70%;
+  padding: 1px 3px;
+  font-weight: normal;
+  animation: 1s fadeOut 1s forwards;
+}
+.details .permalink.copied__md::after{
+  content: "Copied markdown!";
+}
+
 .details .properties-name {
   color: #4c4b4b;
   font-weight: 300;
@@ -391,3 +407,8 @@ h3 {
     min-height: 48px;
   }
 }
+
+@keyframes fadeOut {
+  0% {opacity: 1}
+  100% {opacity: 0}
+ }
