@@ -4,9 +4,7 @@
 //     [`Domain.method`](https://...)
 for (const permalinkEl of document.querySelectorAll('.permalink')) {
   const href = permalinkEl.href;
-  const h4el = permalinkEl.parentElement;
-  // A bit verbose to filter out the permalink # and experimental flags.
-  const textSlug = `${h4el.querySelector('.domain-dot').textContent.trim()}${h4el.querySelector('.name').textContent.trim()}`;
+  const textSlug = permalinkEl.dataset.slug;
   const markdown = `[\`${textSlug}\`](${href})`;
 
   permalinkEl.addEventListener('click', handleClicks);
@@ -15,11 +13,15 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
   function handleClicks(e) {
     // No need to scroll
     e.preventDefault();
+    // Add hash back to url
+    history.replaceState({}, '', href);
 
     navigator.clipboard.writeText(e.type === 'dblclick' ? markdown : href)
     .then(_ => {
       const classNames = ['copied'];
-      if (e.type === 'dblclick') classNames.push('copied__md');
+      if (e.type === 'dblclick') {
+        classNames.push('copied__md');
+      }
       // Show psuedo-element. rAF used to trigger animation reliably
       permalinkEl.classList.remove(...classNames);
       requestAnimationFrame(_ => {
