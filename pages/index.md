@@ -90,7 +90,7 @@ with the WebSocket addresses that you could use in order to start
 instrumenting them. See the <a href="#endpoints">HTTP Endpoints</a> section below for more.
 
 
-<h3>Listening to the protocol</h3>
+<h3 id="monitor">Listening to the protocol</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
 You can view all requests/responses and methods as they happen.
 
