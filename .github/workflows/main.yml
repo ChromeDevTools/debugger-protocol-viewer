@@ -17,8 +17,8 @@ jobs:
         uses: treosh/lighthouse-ci-action@v2
         with:
           urls: |
-            http://localhost:8000/devtools-protocol/
-            http://localhost:8000/devtools-protocol/tot/Page/
+            http://localhost:8696/devtools-protocol/
+            http://localhost:8696/devtools-protocol/tot/Page/
           runs: 3,
           uploadArtifacts: true
           # i'm a bad man

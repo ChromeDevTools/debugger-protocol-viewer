@@ -21,7 +21,7 @@
   "scripts": {
     "build": "rimraf devtools-protocol/ && node -r esm node_modules/.bin/eleventy && rollup -c rollup.config.js",
     "prep": "bash prep-tot-protocol-files.sh",
-    "serve": "echo 'Open http://localhost:8000/devtools-protocol/ for built site'; statikk --port 8000 .",
+    "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 .",
     "deploy": "gh-pages --dist devtools-protocol --repo git@github.com:ChromeDevTools/devtools-protocol.git --dotfiles  --user \"devtools-bot <24444246+devtools-bot@users.noreply.github.com>\""
   }
 }
