@@ -277,7 +277,7 @@ customElements.define('cr-search-control', class extends HTMLElement {
           margin-left: auto;
         }
         input::placeholder {
-          color: var(--header-text-color);
+          color: hsla(0, 0%, 100%, 0.5);
         }
         input:focus {
           transition: border-bottom-color 0.4s ease;
@@ -285,7 +285,7 @@ customElements.define('cr-search-control', class extends HTMLElement {
           outline: none;
         }
       </style>
-      <input placeholder="Search..." aria-label="Search" @keyup=${this.handleArrows}/>
+      <input placeholder="Start typing to search..." aria-label="Search" @keyup=${this.handleArrows}/>
     `, this.shadowRoot, {
       eventContext: this,
     });
