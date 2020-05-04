@@ -332,7 +332,7 @@ const asideCloseButton = document.querySelector('.aside-close-button');
 
 document.addEventListener('keydown', (event) => {
   // Make sure that copy-pasting works
-  if (event.metaKey) {
+  if (event.metaKey || event.ctrlKey || event.altKey) {
     return;
   }
   // One of `a-z` or `A-Z`
