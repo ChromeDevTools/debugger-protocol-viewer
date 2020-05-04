@@ -11157,7 +11157,22 @@
                             "description": "The grid layout color (default: transparent).",
                             "optional": true,
                             "$ref": "DOM.RGBA"
+                        },
+                        {
+                            "name": "colorFormat",
+                            "description": "The color format used to format color styles (default: hex).",
+                            "optional": true,
+                            "$ref": "ColorFormat"
                         }
+                    ]
+                },
+                {
+                    "id": "ColorFormat",
+                    "type": "string",
+                    "enum": [
+                        "rgb",
+                        "hsl",
+                        "hex"
                     ]
                 },
                 {
@@ -11225,6 +11240,12 @@
                             "description": "Whether to include style info.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "colorFormat",
+                            "description": "The color format to get config with (default: hex)",
+                            "optional": true,
+                            "$ref": "ColorFormat"
                         }
                     ],
                     "returns": [
