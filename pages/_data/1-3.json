@@ -1610,6 +1610,13 @@
               "description": "The platform navigator.platform should return.",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "userAgentMetadata",
+              "description": "To be sent in Sec-CH-UA-* headers and returned in navigator.userAgentData",
+              "experimental": true,
+              "optional": true,
+              "$ref": "UserAgentMetadata"
             }
           ]
         }
@@ -3297,6 +3304,13 @@
               "description": "The platform navigator.platform should return.",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "userAgentMetadata",
+              "description": "To be sent in Sec-CH-UA-* headers and returned in navigator.userAgentData",
+              "experimental": true,
+              "optional": true,
+              "$ref": "Emulation.UserAgentMetadata"
             }
           ]
         }
