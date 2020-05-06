@@ -5340,6 +5340,30 @@
             "JavaScript",
             "WebAssembly"
           ]
+        },
+        {
+          "id": "DebugSymbols",
+          "description": "Debug symbols available for a wasm script.",
+          "type": "object",
+          "properties": [
+            {
+              "name": "type",
+              "description": "Type of the debug symbols.",
+              "type": "string",
+              "enum": [
+                "None",
+                "SourceMap",
+                "EmbeddedDWARF",
+                "ExternalDWARF"
+              ]
+            },
+            {
+              "name": "externalURL",
+              "description": "URL of the external symbol source.",
+              "optional": true,
+              "type": "string"
+            }
+          ]
         }
       ],
       "commands": [
@@ -6165,6 +6189,13 @@
               "experimental": true,
               "optional": true,
               "$ref": "Debugger.ScriptLanguage"
+            },
+            {
+              "name": "debugSymbols",
+              "description": "If the scriptLanguage is WebASsembly, the source of debug symbols for the module.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "Debugger.DebugSymbols"
             }
           ]
         }
