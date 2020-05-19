@@ -245,7 +245,7 @@ img {
 
 /* Limit content width and center it */
 .main-content-section {
-  max-width: 1200px;
+  max-width: 100ch;
   margin: 0 auto;
 }
 
