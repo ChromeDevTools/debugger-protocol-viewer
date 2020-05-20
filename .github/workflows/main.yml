@@ -9,19 +9,22 @@ jobs:
 
       - name: git clone
         uses: actions/checkout@v1
+        
+      - name: setup node.js
+        uses: actions/setup-node@v1.4.2
+        with:
+          node-version: 10.x
 
       - name: build
         run: npm i && npm run build
 
-      - name: Audit URLs using Lighthouse
-        uses: treosh/lighthouse-ci-action@v2
-        with:
-          urls: |
-            http://localhost:8696/devtools-protocol/
-            http://localhost:8696/devtools-protocol/tot/Page/
-          runs: 3,
-          uploadArtifacts: true
-          # i'm a bad man
-          configPath: /home/runner/work/debugger-protocol-viewer/debugger-protocol-viewer/.lighthouserc.js
-          serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
-          serverBaseUrl: https://lhci-canary.herokuapp.com/
+      - name: install lhci
+        run: npm install @lhci/cli@next
+        
+      - name: run lhci
+        run: |
+          npx lhci autorun \
+            --collect.url=http://localhost:8696/devtools-protocol/ \
+            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
+            --upload.token=${{ secrets.LHCI_SERVER_TOKEN }} \
+            --upload.serverBaseUrl=https://lhci-canary.herokuapp.com/
