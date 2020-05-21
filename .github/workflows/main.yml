@@ -1,5 +1,9 @@
 name: 😎
-on: push
+on:
+  pull_request:
+  push:
+    branches:    
+      - master
 jobs:
   lighthouse_ci:
 
