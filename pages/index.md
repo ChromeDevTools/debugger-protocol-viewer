@@ -171,7 +171,7 @@ the browser endpoint is written to both stderr and the <code>DevToolsActivePort<
 <p>Chrome 63 introduced support for multiple clients. See
 <a href="https://developers.google.com/web/updates/2017/10/devtools-release-notes#multi-client">this article</a> for details.
 
-<p>Upon disconnnection, the outgoing client will receive a <code>detached</code> event.
+<p>Upon disconnection, the outgoing client will receive a <code>detached</code> event.
 For example: <code>{"method":"Inspector.detached","params":{"reason":"replaced_with_devtools"&#125;}</code>.
 View the <a href="https://code.google.com/p/chromium/codesearch#chromium/src/out/Debug/gen/chrome/common/extensions/api/debugger.cc&q=file:debugger.cc%20Reason%20ParseReason&sq=package:chromium&type=cs&">enum of
 possible reasons.</a>
