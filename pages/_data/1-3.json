@@ -3855,6 +3855,13 @@
               "experimental": true,
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "adFrameType",
+              "description": "Indicates whether this frame was tagged as an ad.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "AdFrameType"
             }
           ]
         },
