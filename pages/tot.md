@@ -10,7 +10,7 @@ There is no backwards compatibility support guaranteed for the capabilities it i
 
 <h5 browser>Latest <a
    href="https://chromium.googlesource.com/chromium/src/+log/master/third_party/blink/renderer/core/inspector/browser_protocol.json">browser_protocol.json</a> version updated:</h5>
-<code browser>Date:   2020-07-20 03:16:15 -0700
+<code browser>Date:   2020-07-21 13:16:17 -0700
 </code>
 
 <h5 js>Latest <a
