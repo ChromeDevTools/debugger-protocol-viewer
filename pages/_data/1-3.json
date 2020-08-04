@@ -6008,6 +6008,16 @@
               "experimental": true,
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "skipList",
+              "description": "The skipList specifies location ranges that should be skipped on step into.",
+              "experimental": true,
+              "optional": true,
+              "type": "array",
+              "items": {
+                "$ref": "LocationRange"
+              }
             }
           ]
         },
@@ -6017,7 +6027,19 @@
         },
         {
           "name": "stepOver",
-          "description": "Steps over the statement."
+          "description": "Steps over the statement.",
+          "parameters": [
+            {
+              "name": "skipList",
+              "description": "The skipList specifies location ranges that should be skipped on step over.",
+              "experimental": true,
+              "optional": true,
+              "type": "array",
+              "items": {
+                "$ref": "LocationRange"
+              }
+            }
+          ]
         }
       ],
       "events": [
