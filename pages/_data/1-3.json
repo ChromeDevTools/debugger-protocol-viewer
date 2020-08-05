@@ -586,34 +586,6 @@
           ]
         },
         {
-          "name": "getFlattenedDocument",
-          "description": "Returns the root DOM node (and optionally the subtree) to the caller.",
-          "parameters": [
-            {
-              "name": "depth",
-              "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the\nentire subtree or provide an integer larger than 0.",
-              "optional": true,
-              "type": "integer"
-            },
-            {
-              "name": "pierce",
-              "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree\n(default is false).",
-              "optional": true,
-              "type": "boolean"
-            }
-          ],
-          "returns": [
-            {
-              "name": "nodes",
-              "description": "Resulting node.",
-              "type": "array",
-              "items": {
-                "$ref": "Node"
-              }
-            }
-          ]
-        },
-        {
           "name": "getNodeForLocation",
           "description": "Returns node id at given location. Depending on whether DOM domain is enabled, nodeId is\neither returned or not.",
           "parameters": [
