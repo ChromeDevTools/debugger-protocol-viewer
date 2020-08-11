@@ -430,6 +430,22 @@
               "type": "number"
             }
           ]
+        },
+        {
+          "id": "CSSComputedStyleProperty",
+          "type": "object",
+          "properties": [
+            {
+              "name": "name",
+              "description": "Computed style property name.",
+              "type": "string"
+            },
+            {
+              "name": "value",
+              "description": "Computed style property value.",
+              "type": "string"
+            }
+          ]
         }
       ],
       "commands": [
