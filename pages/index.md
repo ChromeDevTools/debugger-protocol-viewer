@@ -145,7 +145,7 @@ remote connection and thus detach the extension.
 
 <h4 id="how-is-the-protocol-defined">How is the protocol defined?</h4>
 <p>The canonical protocol definitions live in the Chromium source tree:
-(<a href="https://cs.chromium.org/chromium/src/third_party/blink/renderer/core/inspector/browser_protocol.pdl">browser_protocol.pdl</a>
+(<a href="https://cs.chromium.org/chromium/src/third_party/blink/public/devtools_protocol/browser_protocol.pdl">browser_protocol.pdl</a>
 and <a href="https://cs.chromium.org/chromium/src/v8/include/js_protocol.pdl">js_protocol.pdl</a>).
 They are maintained manually by the DevTools engineering team. The declarative protocol definitions are used across tools;
 for instance, a binding layer is created within Chromium for the Chrome DevTools to interact with,
