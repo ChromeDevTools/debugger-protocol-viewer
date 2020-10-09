@@ -2511,6 +2511,13 @@
               "description": "Whether is loaded via link preload.",
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "trustTokenParams",
+              "description": "Set for requests when the TrustToken API is used. Contains the parameters\npassed by the developer (e.g. via \"fetch\") as understood by the backend.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "TrustTokenParams"
             }
           ]
         },
