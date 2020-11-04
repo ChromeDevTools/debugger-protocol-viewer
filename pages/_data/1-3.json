@@ -4020,6 +4020,15 @@
               "description": "Indicates whether this is a cross origin isolated context.",
               "experimental": true,
               "$ref": "CrossOriginIsolatedContextType"
+            },
+            {
+              "name": "gatedAPIFeatures",
+              "description": "Indicated which gated APIs / features are available.",
+              "experimental": true,
+              "type": "array",
+              "items": {
+                "$ref": "GatedAPIFeatures"
+              }
             }
           ]
         },
