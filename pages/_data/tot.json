@@ -13677,13 +13677,6 @@
                             "experimental": true,
                             "optional": true,
                             "type": "boolean"
-                        },
-                        {
-                            "name": "captureBeyondViewport",
-                            "description": "Capture the screenshot beyond the viewport. Defaults to false.",
-                            "experimental": true,
-                            "optional": true,
-                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -14749,6 +14742,18 @@
                 {
                     "name": "frameNavigated",
                     "description": "Fired once navigation of the frame has completed. Frame is now associated with the new loader.",
+                    "parameters": [
+                        {
+                            "name": "frame",
+                            "description": "Frame object.",
+                            "$ref": "Frame"
+                        }
+                    ]
+                },
+                {
+                    "name": "documentOpened",
+                    "description": "Fired when opening document to write to.",
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "frame",
