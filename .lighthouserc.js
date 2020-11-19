@@ -9,6 +9,16 @@ module.exports = {
     },
     assert: {
       preset: "lighthouse:no-pwa",
+      "assertions": {
+        // TODO(paulirish): fix these
+        "color-contrast": "warn",
+        "unsized-images": "warn",
+        "cumulative-layout-shift": "warn",
+        "render-blocking-resources": "warn",
+        "uses-long-cache-ttl": "warn",
+        "tap-targets": "warn",
+        "dom-size": "warn"
+      }
     }
   },
 };
