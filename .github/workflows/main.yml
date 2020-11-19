@@ -23,7 +23,7 @@ jobs:
         run: npm i && npm run build
 
       - name: install lhci
-        run: npm install @lhci/cli@next
+        run: npm install @lhci/cli@latest
         
       - name: run lhci
         run: |
