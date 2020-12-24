@@ -4379,7 +4379,7 @@
           "returns": [
             {
               "name": "data",
-              "description": "Base64-encoded image data.",
+              "description": "Base64-encoded image data. (Encoded as a base64 string when passed over JSON)",
               "type": "string"
             }
           ]
@@ -4699,7 +4699,7 @@
           "returns": [
             {
               "name": "data",
-              "description": "Base64-encoded pdf data. Empty if |returnAsStream| is specified.",
+              "description": "Base64-encoded pdf data. Empty if |returnAsStream| is specified. (Encoded as a base64 string when passed over JSON)",
               "type": "string"
             },
             {
@@ -5674,13 +5674,13 @@
             },
             {
               "name": "binaryResponseHeaders",
-              "description": "Alternative way of specifying response headers as a \\0-separated\nseries of name: value pairs. Prefer the above method unless you\nneed to represent some non-UTF8 values that can't be transmitted\nover the protocol as text.",
+              "description": "Alternative way of specifying response headers as a \\0-separated\nseries of name: value pairs. Prefer the above method unless you\nneed to represent some non-UTF8 values that can't be transmitted\nover the protocol as text. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             },
             {
               "name": "body",
-              "description": "A response body.",
+              "description": "A response body. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             },
@@ -5715,7 +5715,7 @@
             },
             {
               "name": "postData",
-              "description": "If set, overrides the post data in the request.",
+              "description": "If set, overrides the post data in the request. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             },
@@ -6264,7 +6264,7 @@
             },
             {
               "name": "bytecode",
-              "description": "Wasm bytecode.",
+              "description": "Wasm bytecode. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             }
