@@ -93,6 +93,8 @@
             "backdrop",
             "selection",
             "target-text",
+            "spelling-error",
+            "grammar-error",
             "first-line-inherited",
             "scrollbar",
             "scrollbar-thumb",
