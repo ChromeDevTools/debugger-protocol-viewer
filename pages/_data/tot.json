@@ -10357,6 +10357,12 @@
                             "description": "Cookie Priority",
                             "experimental": true,
                             "$ref": "CookiePriority"
+                        },
+                        {
+                            "name": "sameParty",
+                            "description": "True if cookie is SameParty.",
+                            "experimental": true,
+                            "type": "boolean"
                         }
                     ]
                 },
