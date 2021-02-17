@@ -3157,6 +3157,18 @@
               "description": "True if cookie is SameParty.",
               "experimental": true,
               "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "type": "integer"
             }
           ]
         },
@@ -3177,7 +3189,7 @@
             },
             {
               "name": "url",
-              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain and path values of the created cookie.",
+              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain, path, source port, and source scheme values of the created cookie.",
               "optional": true,
               "type": "string"
             },
@@ -3223,6 +3235,27 @@
               "experimental": true,
               "optional": true,
               "$ref": "CookiePriority"
+            },
+            {
+              "name": "sameParty",
+              "description": "True if cookie is SameParty.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "optional": true,
+              "type": "integer"
             }
           ]
         }
@@ -3434,7 +3467,7 @@
             },
             {
               "name": "url",
-              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain and path values of the created cookie.",
+              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain, path, source port, and source scheme values of the created cookie.",
               "optional": true,
               "type": "string"
             },
@@ -3480,6 +3513,27 @@
               "experimental": true,
               "optional": true,
               "$ref": "CookiePriority"
+            },
+            {
+              "name": "sameParty",
+              "description": "True if cookie is SameParty.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "optional": true,
+              "type": "integer"
             }
           ],
           "returns": [
