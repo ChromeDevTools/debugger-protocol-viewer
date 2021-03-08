@@ -11090,6 +11090,7 @@
                     "type": "string",
                     "enum": [
                         "None",
+                        "CorsOrCredentialless",
                         "RequireCorp"
                     ]
                 },
