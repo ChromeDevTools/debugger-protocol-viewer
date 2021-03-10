@@ -17620,7 +17620,7 @@
                     "parameters": [
                         {
                             "name": "url",
-                            "description": "The initial URL the page will be navigated to.",
+                            "description": "The initial URL the page will be navigated to. An empty string indicates about:blank.",
                             "type": "string"
                         },
                         {
