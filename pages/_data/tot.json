@@ -14595,6 +14595,16 @@
                             "type": "boolean"
                         }
                     ]
+                },
+                {
+                    "id": "NavigationType",
+                    "description": "The type of a frameNavigated event.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "Navigation",
+                        "BackForwardCacheRestore"
+                    ]
                 }
             ],
             "commands": [
@@ -15806,6 +15816,11 @@
                             "name": "frame",
                             "description": "Frame object.",
                             "$ref": "Frame"
+                        },
+                        {
+                            "name": "type",
+                            "experimental": true,
+                            "$ref": "NavigationType"
                         }
                     ]
                 },

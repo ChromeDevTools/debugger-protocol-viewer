@@ -4946,6 +4946,11 @@
               "name": "frame",
               "description": "Frame object.",
               "$ref": "Frame"
+            },
+            {
+              "name": "type",
+              "experimental": true,
+              "$ref": "NavigationType"
             }
           ]
         },
