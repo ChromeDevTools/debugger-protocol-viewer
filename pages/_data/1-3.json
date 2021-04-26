@@ -1436,11 +1436,11 @@
         },
         {
           "name": "clearDeviceMetricsOverride",
-          "description": "Clears the overriden device metrics."
+          "description": "Clears the overridden device metrics."
         },
         {
           "name": "clearGeolocationOverride",
-          "description": "Clears the overriden Geolocation Position and Error."
+          "description": "Clears the overridden Geolocation Position and Error."
         },
         {
           "name": "setDefaultBackgroundColorOverride",
@@ -1654,7 +1654,7 @@
       "types": [
         {
           "id": "StreamHandle",
-          "description": "This is either obtained from another method or specifed as `blob:&lt;uuid&gt;` where\n`&lt;uuid&gt` is an UUID of a Blob.",
+          "description": "This is either obtained from another method or specified as `blob:&lt;uuid&gt;` where\n`&lt;uuid&gt` is an UUID of a Blob.",
           "type": "string"
         }
       ],
@@ -1706,7 +1706,7 @@
             },
             {
               "name": "eof",
-              "description": "Set if the end-of-file condition occured while reading.",
+              "description": "Set if the end-of-file condition occurred while reading.",
               "type": "boolean"
             }
           ]
@@ -5628,7 +5628,7 @@
             },
             {
               "name": "requestStage",
-              "description": "Stage at wich to begin intercepting requests. Default is Request.",
+              "description": "Stage at which to begin intercepting requests. Default is Request.",
               "optional": true,
               "$ref": "RequestStage"
             }
