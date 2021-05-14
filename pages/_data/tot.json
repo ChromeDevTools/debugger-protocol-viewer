@@ -13929,6 +13929,7 @@
                     "enum": [
                         "accelerometer",
                         "ambient-light-sensor",
+                        "attribution-reporting",
                         "autoplay",
                         "camera",
                         "ch-dpr",
@@ -13948,7 +13949,6 @@
                         "ch-width",
                         "clipboard-read",
                         "clipboard-write",
-                        "conversion-measurement",
                         "cross-origin-isolated",
                         "direct-sockets",
                         "display-capture",
