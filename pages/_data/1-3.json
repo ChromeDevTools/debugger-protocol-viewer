@@ -2776,7 +2776,8 @@
             "MethodDisallowedByPreflightResponse",
             "HeaderDisallowedByPreflightResponse",
             "RedirectContainsCredentials",
-            "InsecurePrivateNetwork"
+            "InsecurePrivateNetwork",
+            "NoCorsRedirectModeNotFollow"
           ]
         },
         {
