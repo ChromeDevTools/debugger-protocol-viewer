@@ -118,6 +118,16 @@
           ]
         },
         {
+          "id": "CompatibilityMode",
+          "description": "Document compatibility mode.",
+          "type": "string",
+          "enum": [
+            "QuirksMode",
+            "LimitedQuirksMode",
+            "NoQuirksMode"
+          ]
+        },
+        {
           "id": "Node",
           "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes.\nDOMNode is a base node mirror type.",
           "type": "object",
@@ -299,6 +309,11 @@
               "description": "Whether the node is SVG.",
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "compatibilityMode",
+              "optional": true,
+              "$ref": "CompatibilityMode"
             }
           ]
         },
