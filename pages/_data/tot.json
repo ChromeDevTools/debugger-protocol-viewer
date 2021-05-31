@@ -11456,7 +11456,7 @@
                     "type": "string",
                     "enum": [
                         "None",
-                        "CorsOrCredentialless",
+                        "Credentialless",
                         "RequireCorp"
                     ]
                 },
