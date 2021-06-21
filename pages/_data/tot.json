@@ -15046,7 +15046,6 @@
                         "BrowsingInstanceNotSwapped",
                         "BackForwardCacheDisabledForDelegate",
                         "OptInUnloadHeaderNotPresent",
-                        "UnloadHandlerExistsInMainFrame",
                         "UnloadHandlerExistsInSubFrame",
                         "ServiceWorkerUnregistration",
                         "WebSocket",
