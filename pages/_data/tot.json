@@ -1667,6 +1667,11 @@
                     ]
                 },
                 {
+                    "id": "IssueId",
+                    "description": "A unique id for a DevTools inspector issue. Allows other entities (e.g.\nexceptions, CDP message, console messages, etc.) to reference an issue.",
+                    "type": "string"
+                },
+                {
                     "id": "InspectorIssue",
                     "description": "An inspector issue reported from the back-end.",
                     "type": "object",
@@ -1683,7 +1688,7 @@
                             "name": "issueId",
                             "description": "A unique id for this issue. May be omitted if no other entity (e.g.\nexception, CDP message, etc.) is referencing this issue.",
                             "optional": true,
-                            "type": "string"
+                            "$ref": "IssueId"
                         }
                     ]
                 }
