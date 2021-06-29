@@ -124,7 +124,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
 <p>To allow chrome extensions to interact with the protocol, we introduced
-<a href="https://developer.chrome.com/extensions/debugger">chrome.debugger</a>
+<a href="https://developer.chrome.com/extensions/debugger/">chrome.debugger</a>
 extension API that exposes this JSON message
 transport interface. As a result, you can not only attach to the remotely
 running Chrome instance, but also instrument it from its own extension.
