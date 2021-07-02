@@ -4296,6 +4296,7 @@
                         "target-text",
                         "spelling-error",
                         "grammar-error",
+                        "highlight",
                         "first-line-inherited",
                         "scrollbar",
                         "scrollbar-thumb",
