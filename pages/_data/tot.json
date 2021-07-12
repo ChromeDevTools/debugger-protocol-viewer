@@ -6644,6 +6644,12 @@
                             }
                         },
                         {
+                            "name": "shadowRootType",
+                            "description": "Type of the shadow root the `Node` is in. String values are equal to the `ShadowRootType` enum.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
                             "name": "nodeName",
                             "description": "`Node`'s nodeName.",
                             "optional": true,
