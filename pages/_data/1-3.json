@@ -5979,6 +5979,12 @@
               "type": "integer"
             },
             {
+              "name": "responseStatusText",
+              "description": "Response status text if intercepted at response stage.",
+              "optional": true,
+              "type": "string"
+            },
+            {
               "name": "responseHeaders",
               "description": "Response headers if intercepted at the response stage.",
               "optional": true,
