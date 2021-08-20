@@ -5836,7 +5836,7 @@
             },
             {
               "name": "body",
-              "description": "A response body. (Encoded as a base64 string when passed over JSON)",
+              "description": "A response body. If absent, original response body will be used if\nthe request is intercepted at the response stage and empty body\nwill be used if the request is intercepted at the request stage. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             },
