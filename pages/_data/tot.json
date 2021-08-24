@@ -15420,8 +15420,6 @@
                         "OutstandingNetworkRequestDirectSocket",
                         "IsolatedWorldScript",
                         "InjectedStyleSheet",
-                        "MediaSessionImplOnServiceCreated",
-                        "ContentMediaSessionImplOnServiceCreated",
                         "ContentSecurityHandler",
                         "ContentWebAuthenticationAPI",
                         "ContentFileChooser",
