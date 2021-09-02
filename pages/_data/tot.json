@@ -15359,6 +15359,7 @@
                         "BrowsingInstanceNotSwapped",
                         "BackForwardCacheDisabledForDelegate",
                         "OptInUnloadHeaderNotPresent",
+                        "UnloadHandlerExistsInMainFrame",
                         "UnloadHandlerExistsInSubFrame",
                         "ServiceWorkerUnregistration",
                         "CacheControlNoStore",
