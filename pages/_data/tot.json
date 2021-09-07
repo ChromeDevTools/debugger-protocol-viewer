@@ -11755,7 +11755,9 @@
                     "type": "string",
                     "enum": [
                         "Queued",
-                        "Pending"
+                        "Pending",
+                        "MarkedForRemoval",
+                        "Success"
                     ]
                 },
                 {
