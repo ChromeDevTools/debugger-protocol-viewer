@@ -15455,6 +15455,7 @@
                         "OutstandingNetworkRequestDirectSocket",
                         "InjectedJavascript",
                         "InjectedStyleSheet",
+                        "Dummy",
                         "ContentSecurityHandler",
                         "ContentWebAuthenticationAPI",
                         "ContentFileChooser",
