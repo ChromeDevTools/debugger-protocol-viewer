@@ -1,7 +1,9 @@
 # Site settings
-title: Redirecting
+title: Chrome Debugging Protocol Viewer
 baseurl: "/debugger-protocol-viewer"
 url: "https://chromedevtools.github.io"
+twitter_username: ChromeDevTools
+github_username:  chromedevtools
 
 collections:
   versions:
@@ -22,6 +24,3 @@ defaults:
     type: domains
   values:
     layout: default
-
-gems:
-  - jekyll-redirect-from
