@@ -14626,7 +14626,8 @@
                         "WrongVersion",
                         "FeatureDisabled",
                         "TokenDisabled",
-                        "FeatureDisabledForUser"
+                        "FeatureDisabledForUser",
+                        "UnknownTrial"
                     ]
                 },
                 {
