@@ -96,19 +96,23 @@ You can view all requests/responses and methods as they happen.
 
 <figure class="screenshot">
   <a href="images/protocol-monitor.png" target="_blank" style="text-align: center; display:block;">
-    <img src="images/protocol-monitor.png" height="260" alt="Screenshot of the Protocol Monitor" loading="lazy">
+    <img src="images/protocol-monitor.png" height="300" alt="Screenshot of the Protocol Monitor" loading="lazy">
   </a>
 </figure>
 
-<p>To use, first <a href="https://stackoverflow.com/a/15680012/89484">enable DevTools experiments</a>.
-Then click the ⋮ menu icon in the top-right of the DevTools, and select <i>Settings</i>.
+Click the gear icon in the top-right of the DevTools to open the <i>Settings</i> panel.
 Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close and reopen DevTools.
-Now click the ⋮ menu icon again, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
+Now click the ⋮ menu icon, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
 
-<p>You can also issue your own commands. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>,
+<p>You can also issue your own commands using Protocol Monitor (verion 92.0.4497.0+). If the command does not require any parameters,
+type the command into the prompt at the bottom of the Protocol Monitor panel and press Enter, for example, 
+<code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
+<code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
+
+<p>Alternatively, you can execute commands from the DevTools console. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>,
 then within the inner DevTools window, use <code>Main.MainImpl.sendOverProtocol()</code> in the console:
 
-<pre>let Main = await import('./main/main.js');
+<pre>let Main = await import('./entrypoints/main/main.js'); // or './main/main.js' depending on the browser version
 await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
   mobile: true,
   width: 412,
@@ -120,7 +124,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
 <p>To allow chrome extensions to interact with the protocol, we introduced
-<a href="https://developer.chrome.com/extensions/debugger.html">chrome.debugger</a>
+<a href="https://developer.chrome.com/extensions/debugger/">chrome.debugger</a>
 extension API that exposes this JSON message
 transport interface. As a result, you can not only attach to the remotely
 running Chrome instance, but also instrument it from its own extension.

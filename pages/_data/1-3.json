@@ -40,7 +40,8 @@
             }
           ]
         }
-      ]
+      ],
+      "events": []
     },
     {
       "domain": "DOM",
@@ -95,6 +96,7 @@
             "target-text",
             "spelling-error",
             "grammar-error",
+            "highlight",
             "first-line-inherited",
             "scrollbar",
             "scrollbar-thumb",
@@ -114,6 +116,16 @@
             "user-agent",
             "open",
             "closed"
+          ]
+        },
+        {
+          "id": "CompatibilityMode",
+          "description": "Document compatibility mode.",
+          "type": "string",
+          "enum": [
+            "QuirksMode",
+            "LimitedQuirksMode",
+            "NoQuirksMode"
           ]
         },
         {
@@ -279,7 +291,8 @@
             },
             {
               "name": "importedDocument",
-              "description": "Import document for the HTMLImport links.",
+              "description": "Deprecated, as the HTML Imports API has been removed (crbug.com/937746).\nThis property used to return the imported document for the HTMLImport links.\nThe property is always undefined now.",
+              "deprecated": true,
               "optional": true,
               "$ref": "Node"
             },
@@ -297,6 +310,11 @@
               "description": "Whether the node is SVG.",
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "compatibilityMode",
+              "optional": true,
+              "$ref": "CompatibilityMode"
             }
           ]
         },
@@ -1434,11 +1452,11 @@
         },
         {
           "name": "clearDeviceMetricsOverride",
-          "description": "Clears the overriden device metrics."
+          "description": "Clears the overridden device metrics."
         },
         {
           "name": "clearGeolocationOverride",
-          "description": "Clears the overriden Geolocation Position and Error."
+          "description": "Clears the overridden Geolocation Position and Error."
         },
         {
           "name": "setDefaultBackgroundColorOverride",
@@ -1652,7 +1670,7 @@
       "types": [
         {
           "id": "StreamHandle",
-          "description": "This is either obtained from another method or specifed as `blob:&lt;uuid&gt;` where\n`&lt;uuid&gt` is an UUID of a Blob.",
+          "description": "This is either obtained from another method or specified as `blob:&lt;uuid&gt;` where\n`&lt;uuid&gt` is an UUID of a Blob.",
           "type": "string"
         }
       ],
@@ -1704,7 +1722,7 @@
             },
             {
               "name": "eof",
-              "description": "Set if the end-of-file condition occured while reading.",
+              "description": "Set if the end-of-file condition occurred while reading.",
               "type": "boolean"
             }
           ]
@@ -2092,7 +2110,8 @@
             }
           ]
         }
-      ]
+      ],
+      "events": []
     },
     {
       "domain": "Log",
@@ -2142,6 +2161,14 @@
               "name": "text",
               "description": "Logged text.",
               "type": "string"
+            },
+            {
+              "name": "category",
+              "optional": true,
+              "type": "string",
+              "enum": [
+                "cors"
+              ]
             },
             {
               "name": "timestamp",
@@ -2585,6 +2612,13 @@
               "experimental": true,
               "optional": true,
               "$ref": "TrustTokenParams"
+            },
+            {
+              "name": "isSameSite",
+              "description": "True if this resource request is considered to be the 'same site' as the\nrequest correspondinfg to the main frame.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ]
         },
@@ -2737,7 +2771,6 @@
             "inspector",
             "subresource-filter",
             "content-type",
-            "collapsed-by-client",
             "coep-frame-resource-needs-coep-header",
             "coop-sandboxed-iframe-cannot-navigate-to-coop-page",
             "corp-not-same-origin",
@@ -2774,7 +2807,8 @@
             "MethodDisallowedByPreflightResponse",
             "HeaderDisallowedByPreflightResponse",
             "RedirectContainsCredentials",
-            "InsecurePrivateNetwork"
+            "InsecurePrivateNetwork",
+            "NoCorsRedirectModeNotFollow"
           ]
         },
         {
@@ -2829,7 +2863,8 @@
             },
             {
               "name": "headersText",
-              "description": "HTTP response headers text.",
+              "description": "HTTP response headers text. This has been replaced by the headers in Network.responseReceivedExtraInfo.",
+              "deprecated": true,
               "optional": true,
               "type": "string"
             },
@@ -2846,7 +2881,8 @@
             },
             {
               "name": "requestHeadersText",
-              "description": "HTTP request headers text.",
+              "description": "HTTP request headers text. This has been replaced by the headers in Network.requestWillBeSentExtraInfo.",
+              "deprecated": true,
               "optional": true,
               "type": "string"
             },
@@ -3157,6 +3193,18 @@
               "description": "True if cookie is SameParty.",
               "experimental": true,
               "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "type": "integer"
             }
           ]
         },
@@ -3177,7 +3225,7 @@
             },
             {
               "name": "url",
-              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain and path values of the created cookie.",
+              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain, path, source port, and source scheme values of the created cookie.",
               "optional": true,
               "type": "string"
             },
@@ -3223,6 +3271,27 @@
               "experimental": true,
               "optional": true,
               "$ref": "CookiePriority"
+            },
+            {
+              "name": "sameParty",
+              "description": "True if cookie is SameParty.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "optional": true,
+              "type": "integer"
             }
           ]
         }
@@ -3434,7 +3503,7 @@
             },
             {
               "name": "url",
-              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain and path values of the created cookie.",
+              "description": "The request-URI to associate with the setting of the cookie. This value can affect the\ndefault domain, path, source port, and source scheme values of the created cookie.",
               "optional": true,
               "type": "string"
             },
@@ -3480,6 +3549,27 @@
               "experimental": true,
               "optional": true,
               "$ref": "CookiePriority"
+            },
+            {
+              "name": "sameParty",
+              "description": "True if cookie is SameParty.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "sourceScheme",
+              "description": "Cookie source scheme type.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "CookieSourceScheme"
+            },
+            {
+              "name": "sourcePort",
+              "description": "Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.\nAn unspecified port value allows protocol clients to emulate legacy cookie scope for the port.\nThis is a temporary ability and it will be removed in the future.",
+              "experimental": true,
+              "optional": true,
+              "type": "integer"
             }
           ],
           "returns": [
@@ -4029,7 +4119,7 @@
               "name": "parentId",
               "description": "Parent frame identifier.",
               "optional": true,
-              "type": "string"
+              "$ref": "FrameId"
             },
             {
               "name": "loaderId",
@@ -4078,11 +4168,11 @@
               "type": "string"
             },
             {
-              "name": "adFrameType",
-              "description": "Indicates whether this frame was tagged as an ad.",
+              "name": "adFrameStatus",
+              "description": "Indicates whether this frame was tagged as an ad and why.",
               "experimental": true,
               "optional": true,
-              "$ref": "AdFrameType"
+              "$ref": "AdFrameStatus"
             },
             {
               "name": "secureContextType",
@@ -4346,6 +4436,13 @@
               "experimental": true,
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "includeCommandLineAPI",
+              "description": "Specifies whether command line API should be available to the script, defaults\nto false.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ],
           "returns": [
@@ -4371,7 +4468,8 @@
               "type": "string",
               "enum": [
                 "jpeg",
-                "png"
+                "png",
+                "webp"
               ]
             },
             {
@@ -4494,17 +4592,35 @@
           "returns": [
             {
               "name": "layoutViewport",
-              "description": "Metrics relating to the layout viewport.",
+              "description": "Deprecated metrics relating to the layout viewport. Can be in DP or in CSS pixels depending on the `enable-use-zoom-for-dsf` flag. Use `cssLayoutViewport` instead.",
+              "deprecated": true,
               "$ref": "LayoutViewport"
             },
             {
               "name": "visualViewport",
-              "description": "Metrics relating to the visual viewport.",
+              "description": "Deprecated metrics relating to the visual viewport. Can be in DP or in CSS pixels depending on the `enable-use-zoom-for-dsf` flag. Use `cssVisualViewport` instead.",
+              "deprecated": true,
               "$ref": "VisualViewport"
             },
             {
               "name": "contentSize",
-              "description": "Size of scrollable area.",
+              "description": "Deprecated size of scrollable area. Can be in DP or in CSS pixels depending on the `enable-use-zoom-for-dsf` flag. Use `cssContentSize` instead.",
+              "deprecated": true,
+              "$ref": "DOM.Rect"
+            },
+            {
+              "name": "cssLayoutViewport",
+              "description": "Metrics relating to the layout viewport in CSS pixels.",
+              "$ref": "LayoutViewport"
+            },
+            {
+              "name": "cssVisualViewport",
+              "description": "Metrics relating to the visual viewport in CSS pixels.",
+              "$ref": "VisualViewport"
+            },
+            {
+              "name": "cssContentSize",
+              "description": "Size of scrollable area in CSS pixels.",
               "$ref": "DOM.Rect"
             }
           ]
@@ -4872,6 +4988,11 @@
               "name": "frame",
               "description": "Frame object.",
               "$ref": "Frame"
+            },
+            {
+              "name": "type",
+              "experimental": true,
+              "$ref": "NavigationType"
             }
           ]
         },
@@ -5339,7 +5460,7 @@
           "parameters": [
             {
               "name": "url",
-              "description": "The initial URL the page will be navigated to.",
+              "description": "The initial URL the page will be navigated to. An empty string indicates about:blank.",
               "type": "string"
             },
             {
@@ -5524,7 +5645,7 @@
         },
         {
           "id": "RequestStage",
-          "description": "Stages of the request to handle. Request will intercept before the request is\nsent. Response will intercept after the response is received (but before response\nbody is received.",
+          "description": "Stages of the request to handle. Request will intercept before the request is\nsent. Response will intercept after the response is received (but before response\nbody is received).",
           "type": "string",
           "enum": [
             "Request",
@@ -5537,7 +5658,7 @@
           "properties": [
             {
               "name": "urlPattern",
-              "description": "Wildcards ('*' -> zero or more, '?' -> exactly one) are allowed. Escape character is\nbackslash. Omitting is equivalent to \"*\".",
+              "description": "Wildcards (`'*'` -> zero or more, `'?'` -> exactly one) are allowed. Escape character is\nbackslash. Omitting is equivalent to `\"*\"`.",
               "optional": true,
               "type": "string"
             },
@@ -5549,7 +5670,7 @@
             },
             {
               "name": "requestStage",
-              "description": "Stage at wich to begin intercepting requests. Default is Request.",
+              "description": "Stage at which to begin intercepting requests. Default is Request.",
               "optional": true,
               "$ref": "RequestStage"
             }
@@ -5705,7 +5826,7 @@
             },
             {
               "name": "body",
-              "description": "A response body. (Encoded as a base64 string when passed over JSON)",
+              "description": "A response body. If absent, original response body will be used if\nthe request is intercepted at the response stage and empty body\nwill be used if the request is intercepted at the request stage. (Encoded as a base64 string when passed over JSON)",
               "optional": true,
               "type": "string"
             },
@@ -5752,6 +5873,13 @@
               "items": {
                 "$ref": "HeaderEntry"
               }
+            },
+            {
+              "name": "interceptResponse",
+              "description": "If set, overrides response interception behavior for this request.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ]
         },
@@ -5847,6 +5975,12 @@
               "description": "Response code if intercepted at response stage.",
               "optional": true,
               "type": "integer"
+            },
+            {
+              "name": "responseStatusText",
+              "description": "Response status text if intercepted at response stage.",
+              "optional": true,
+              "type": "string"
             },
             {
               "name": "responseHeaders",
@@ -6713,6 +6847,7 @@
               "enum": [
                 "ambiguous",
                 "assert",
+                "CSPViolation",
                 "debugCommand",
                 "DOM",
                 "EventListener",
@@ -7361,13 +7496,12 @@
                 "number",
                 "boolean",
                 "symbol",
-                "bigint",
-                "wasm"
+                "bigint"
               ]
             },
             {
               "name": "subtype",
-              "description": "Object subtype hint. Specified for `object` or `wasm` type values only.",
+              "description": "Object subtype hint. Specified for `object` type values only.\nNOTE: If you change anything here, make sure to also update\n`subtype` in `ObjectPreview` and `PropertyPreview` below.",
               "optional": true,
               "type": "string",
               "enum": [
@@ -7388,12 +7522,8 @@
                 "typedarray",
                 "arraybuffer",
                 "dataview",
-                "i32",
-                "i64",
-                "f32",
-                "f64",
-                "v128",
-                "externref"
+                "webassemblymemory",
+                "wasmvalue"
               ]
             },
             {
@@ -7571,6 +7701,12 @@
             {
               "name": "name",
               "description": "Human readable name describing given context.",
+              "type": "string"
+            },
+            {
+              "name": "uniqueId",
+              "description": "A system-unique execution context identifier. Unlike the id, this is unique accross\nmultiple processes, so can be reliably used to identify specific context while backend\nperforms a cross-process navigation.",
+              "experimental": true,
               "type": "string"
             },
             {
@@ -7916,7 +8052,7 @@
             },
             {
               "name": "contextId",
-              "description": "Specifies in which execution context to perform evaluation. If the parameter is omitted the\nevaluation will be performed in the context of the inspected page.",
+              "description": "Specifies in which execution context to perform evaluation. If the parameter is omitted the\nevaluation will be performed in the context of the inspected page.\nThis is mutually exclusive with `uniqueContextId`, which offers an\nalternative way to identify the execution context that is more reliable\nin a multi-process environment.",
               "optional": true,
               "$ref": "ExecutionContextId"
             },
@@ -7979,6 +8115,13 @@
               "experimental": true,
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "uniqueContextId",
+              "description": "An alternative way to specify the execution context to evaluate in.\nCompared to contextId that may be reused accross processes, this is guaranteed to be\nsystem-unique, so it can be used to prevent accidental evaluation of the expression\nin context different than intended (e.g. as a result of navigation accross process\nboundaries).\nThis is mutually exclusive with `contextId`.",
+              "experimental": true,
+              "optional": true,
+              "type": "string"
             }
           ],
           "returns": [

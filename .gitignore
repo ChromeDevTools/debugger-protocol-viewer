@@ -4,3 +4,4 @@ devtools-protocol/
 
 .jekyll-metadata
 node_modules/
+.DS_Store

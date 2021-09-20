@@ -15,9 +15,9 @@ jobs:
         uses: actions/checkout@v1
         
       - name: setup node.js
-        uses: actions/setup-node@c6fd00c
+        uses: actions/setup-node@v1
         with:
-          node-version: 10.x
+          node-version: 14.x
 
       - name: build
         run: npm i && npm run build
