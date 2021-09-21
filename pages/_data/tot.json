@@ -11185,7 +11185,8 @@
                         "SchemefulSameSiteLax",
                         "SchemefulSameSiteUnspecifiedTreatedAsLax",
                         "SamePartyFromCrossPartyContext",
-                        "SamePartyConflictsWithOtherAttributes"
+                        "SamePartyConflictsWithOtherAttributes",
+                        "NameValuePairExceedsMaxSize"
                     ]
                 },
                 {
@@ -11206,7 +11207,8 @@
                         "SchemefulSameSiteStrict",
                         "SchemefulSameSiteLax",
                         "SchemefulSameSiteUnspecifiedTreatedAsLax",
-                        "SamePartyFromCrossPartyContext"
+                        "SamePartyFromCrossPartyContext",
+                        "NameValuePairExceedsMaxSize"
                     ]
                 },
                 {
