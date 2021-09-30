@@ -6285,7 +6285,7 @@
           "parameters": [
             {
               "name": "maxScriptsCacheSize",
-              "description": "The maximum size in bytes of collected scripts (not referenced by other heap objects)\nthe debugger can hold. Puts no limit if paramter is omitted.",
+              "description": "The maximum size in bytes of collected scripts (not referenced by other heap objects)\nthe debugger can hold. Puts no limit if parameter is omitted.",
               "experimental": true,
               "optional": true,
               "type": "number"
@@ -6441,40 +6441,6 @@
             {
               "name": "breakpointId",
               "$ref": "BreakpointId"
-            }
-          ]
-        },
-        {
-          "name": "restartFrame",
-          "description": "Restarts particular call frame from the beginning.",
-          "parameters": [
-            {
-              "name": "callFrameId",
-              "description": "Call frame identifier to evaluate on.",
-              "$ref": "CallFrameId"
-            }
-          ],
-          "returns": [
-            {
-              "name": "callFrames",
-              "description": "New stack trace.",
-              "type": "array",
-              "items": {
-                "$ref": "CallFrame"
-              }
-            },
-            {
-              "name": "asyncStackTrace",
-              "description": "Async stack trace, if any.",
-              "optional": true,
-              "$ref": "Runtime.StackTrace"
-            },
-            {
-              "name": "asyncStackTraceId",
-              "description": "Async stack trace, if any.",
-              "experimental": true,
-              "optional": true,
-              "$ref": "Runtime.StackTraceId"
             }
           ]
         },
@@ -7706,7 +7672,7 @@
             },
             {
               "name": "uniqueId",
-              "description": "A system-unique execution context identifier. Unlike the id, this is unique accross\nmultiple processes, so can be reliably used to identify specific context while backend\nperforms a cross-process navigation.",
+              "description": "A system-unique execution context identifier. Unlike the id, this is unique across\nmultiple processes, so can be reliably used to identify specific context while backend\nperforms a cross-process navigation.",
               "experimental": true,
               "type": "string"
             },
@@ -7772,6 +7738,13 @@
               "description": "Identifier of the context where exception happened.",
               "optional": true,
               "$ref": "ExecutionContextId"
+            },
+            {
+              "name": "exceptionMetaData",
+              "description": "Dictionary with entries of meta data that the client associated\nwith this exception, such as information about associated network\nrequests, etc.",
+              "experimental": true,
+              "optional": true,
+              "type": "object"
             }
           ]
         },
@@ -7955,6 +7928,13 @@
               "description": "Symbolic group name that can be used to release multiple objects. If objectGroup is not\nspecified and objectId is, objectGroup will be inherited from object.",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "throwOnSideEffect",
+              "description": "Whether to throw an exception if side effect cannot be ruled out during evaluation.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ],
           "returns": [
@@ -8119,7 +8099,7 @@
             },
             {
               "name": "uniqueContextId",
-              "description": "An alternative way to specify the execution context to evaluate in.\nCompared to contextId that may be reused accross processes, this is guaranteed to be\nsystem-unique, so it can be used to prevent accidental evaluation of the expression\nin context different than intended (e.g. as a result of navigation accross process\nboundaries).\nThis is mutually exclusive with `contextId`.",
+              "description": "An alternative way to specify the execution context to evaluate in.\nCompared to contextId that may be reused across processes, this is guaranteed to be\nsystem-unique, so it can be used to prevent accidental evaluation of the expression\nin context different than intended (e.g. as a result of navigation across process\nboundaries).\nThis is mutually exclusive with `contextId`.",
               "experimental": true,
               "optional": true,
               "type": "string"
@@ -8164,6 +8144,13 @@
             {
               "name": "generatePreview",
               "description": "Whether preview should be generated for the results.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "nonIndexedPropertiesOnly",
+              "description": "If true, returns non-indexed properties only.",
               "experimental": true,
               "optional": true,
               "type": "boolean"
@@ -8485,6 +8472,13 @@
             {
               "name": "hints",
               "type": "object"
+            },
+            {
+              "name": "executionContextId",
+              "description": "Identifier of the context where the call was made.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "ExecutionContextId"
             }
           ]
         }

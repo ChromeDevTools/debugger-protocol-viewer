@@ -15,5 +15,5 @@ There is no backwards compatibility support guaranteed for the capabilities it i
 
 <h5 js>Latest <a
    href="https://github.com/ChromeDevTools/devtools-protocol/blob/master/json/js_protocol.json">js_protocol.json</a> version updated:</h5>
-<code js>Date:   2021-02-23 18:16:02 -0800
+<code js>Date:   2021-09-30 08:28:28 -0700
 </code>
