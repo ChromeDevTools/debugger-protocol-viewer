@@ -17,7 +17,8 @@ module.exports = {
         "render-blocking-resources": "warn",
         "uses-long-cache-ttl": "warn",
         "tap-targets": "warn",
-        "dom-size": "warn"
+        "dom-size": "warn",
+        "csp-xss": "warn",
       }
     }
   },
