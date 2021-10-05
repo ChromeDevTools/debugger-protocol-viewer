@@ -2809,6 +2809,7 @@
             "RedirectContainsCredentials",
             "InsecurePrivateNetwork",
             "InvalidPrivateNetworkAccess",
+            "UnexpectedPrivateNetworkAccess",
             "NoCorsRedirectModeNotFollow"
           ]
         },
