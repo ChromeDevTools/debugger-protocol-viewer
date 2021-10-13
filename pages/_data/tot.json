@@ -1134,7 +1134,8 @@
                         "kEvalViolation",
                         "kURLViolation",
                         "kTrustedTypesSinkViolation",
-                        "kTrustedTypesPolicyViolation"
+                        "kTrustedTypesPolicyViolation",
+                        "kWasmEvalViolation"
                     ]
                 },
                 {
