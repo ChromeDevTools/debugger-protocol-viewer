@@ -112,7 +112,7 @@ type the command into the prompt at the bottom of the Protocol Monitor panel and
 <p>Alternatively, you can execute commands from the DevTools console. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>,
 then within the inner DevTools window, use <code>Main.MainImpl.sendOverProtocol()</code> in the console:
 
-<pre>let Main = await import('./entrypoints/main/main.js'); // or './main/main.js' depending on the browser version
+<pre>let Main = await import('./devtools-frontend/front_end/entrypoints/main/main.js'); // or './entrypoints/main/main.js' or './main/main.js' depending on the browser version
 await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
   mobile: true,
   width: 412,
@@ -121,6 +121,8 @@ await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
 });
 
 const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pre>
+
+<p>Note that this method is basically reaching into internals of the DevTools source code and there is no guarantee that it'd continue to work as DevTools evolves.
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
 <p>To allow chrome extensions to interact with the protocol, we introduced
