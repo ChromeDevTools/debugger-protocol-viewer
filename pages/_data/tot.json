@@ -305,6 +305,12 @@
                             }
                         },
                         {
+                            "name": "parentId",
+                            "description": "ID for this node's parent.",
+                            "optional": true,
+                            "$ref": "AXNodeId"
+                        },
+                        {
                             "name": "childIds",
                             "description": "IDs for each of this node's child nodes.",
                             "optional": true,
@@ -318,6 +324,12 @@
                             "description": "The backend ID for the associated DOM node, if any.",
                             "optional": true,
                             "$ref": "DOM.BackendNodeId"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "The frame ID for the frame associated with this nodes document.",
+                            "optional": true,
+                            "$ref": "Page.FrameId"
                         }
                     ]
                 }
