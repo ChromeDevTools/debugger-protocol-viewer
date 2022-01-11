@@ -23,10 +23,11 @@ for (const slug of verSlugs){
 }
 
 const str = Object.entries(allDomains).sort(([domainA, tagsA], [domainB, tagsB]) => {
-    const isExpOrDepr = a => a === 'experimental' || a === 'deprecated';
-    const getTagsStr = tags => tags.filter(isExpOrDepr).join('');
-    const tagSortResult = getTagsStr(tagsA).localeCompare(getTagsStr(tagsB));
-    if (tagSortResult !== 0) return tagSortResult;
+    // Disable grouping by tag https://github.com/ChromeDevTools/debugger-protocol-viewer/pull/179
+    // const isExpOrDepr = a => a === 'experimental' || a === 'deprecated';
+    // const getTagsStr = tags => tags.filter(isExpOrDepr).join('');
+    // const tagSortResult = getTagsStr(tagsA).localeCompare(getTagsStr(tagsB));
+    // if (tagSortResult !== 0) return tagSortResult;
     return domainA.localeCompare(domainB);
   })
   .map(([id, versions]) => `<a href="{{{ url '/' }}}{{{ version }}}/${id}" class="${versions.join(' ')}">${id}</a>`)
