@@ -10,7 +10,7 @@ There is no backwards compatibility support guaranteed for the capabilities it i
 
 <h5 browser>Latest <a
    href="https://github.com/ChromeDevTools/devtools-protocol/blob/master/json/browser_protocol.json">browser_protocol.json</a> version updated:</h5>
-<code browser>Date:   2022-01-25 22:15:29 -0800
+<code browser>Date:   2022-01-26 10:15:28 -0800
 </code>
 
 <h5 js>Latest <a
