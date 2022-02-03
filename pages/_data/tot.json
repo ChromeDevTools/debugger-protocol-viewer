@@ -14801,6 +14801,7 @@
                         "ch-viewport-height",
                         "ch-viewport-width",
                         "ch-width",
+                        "ch-partitioned-cookies",
                         "clipboard-read",
                         "clipboard-write",
                         "cross-origin-isolated",
