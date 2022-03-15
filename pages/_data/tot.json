@@ -15844,6 +15844,7 @@
                         "NoResponseHead",
                         "Unknown",
                         "ActivationNavigationsDisallowedForBug1234857",
+                        "ErrorDocument",
                         "WebSocket",
                         "WebTransport",
                         "WebRTC",
