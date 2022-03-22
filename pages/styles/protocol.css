@@ -214,6 +214,8 @@ main > section {
   padding: 25px;
   /* To make sure that the GitHub badge positions correctly */
   position: relative;
+  /* so scroll-anchors twoards the bottom of the page are positioned in the viewport correctly */
+  padding-bottom: 80vh;
 }
 @media only screen and (max-width:640px) {
   main > section {
