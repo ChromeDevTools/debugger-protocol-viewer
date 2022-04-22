@@ -6125,7 +6125,8 @@
             },
             {
               "name": "url",
-              "description": "JavaScript script name or url.",
+              "description": "JavaScript script name or url.\nDeprecated in favor of using the `location.scriptId` to resolve the URL via a previously\nsent `Debugger.scriptParsed` event.",
+              "deprecated": true,
               "type": "string"
             },
             {
