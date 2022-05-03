@@ -1601,7 +1601,6 @@
                         "SharedArrayBufferConstructedWithoutIsolation",
                         "TextToSpeech_DisallowedByAutoplay",
                         "V8SharedArrayBufferConstructedInExtensionWithoutIsolation",
-                        "WebCodecsVideoFrameDefaultTimestamp",
                         "XHRJSONEncodingDetection",
                         "XMLHttpRequestSynchronousInNonWorkerOutsideBeforeUnload",
                         "XRSupportsSession"
