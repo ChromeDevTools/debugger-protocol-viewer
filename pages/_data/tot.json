@@ -1553,7 +1553,6 @@
                         "CrossOriginWindowAlert",
                         "CrossOriginWindowConfirm",
                         "CSSSelectorInternalMediaControlsOverlayCastButton",
-                        "CustomCursorIntersectsViewport",
                         "DeprecationExample",
                         "DocumentDomainSettingWithoutOriginAgentClusterHeader",
                         "EventPath",
