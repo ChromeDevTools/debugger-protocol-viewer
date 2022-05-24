@@ -1587,7 +1587,6 @@
                         "RTCPeerConnectionComplexPlanBSdpUsingDefaultSdpSemantics",
                         "RTCPeerConnectionSdpSemanticsPlanB",
                         "RtcpMuxPolicyNegotiate",
-                        "RTPDataChannel",
                         "SharedArrayBufferConstructedWithoutIsolation",
                         "TextToSpeech_DisallowedByAutoplay",
                         "V8SharedArrayBufferConstructedInExtensionWithoutIsolation",
