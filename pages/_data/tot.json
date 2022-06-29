@@ -1560,6 +1560,7 @@
                         "GeolocationInsecureOriginDeprecatedNotRemoved",
                         "GetUserMediaInsecureOrigin",
                         "HostCandidateAttributeGetter",
+                        "IdentityInCanMakePaymentEvent",
                         "InsecurePrivateNetworkSubresourceRequest",
                         "LegacyConstraintGoogIPv6",
                         "LocalCSSFileExtensionRejected",
@@ -1569,6 +1570,7 @@
                         "NotificationInsecureOrigin",
                         "NotificationPermissionRequestedIframe",
                         "ObsoleteWebRtcCipherSuite",
+                        "OpenWebDatabaseInsecureContext",
                         "PictureSourceSrc",
                         "PrefixedCancelAnimationFrame",
                         "PrefixedRequestAnimationFrame",
@@ -2684,6 +2686,12 @@
                             "$ref": "DOM.PseudoType"
                         },
                         {
+                            "name": "pseudoIdentifier",
+                            "description": "Pseudo element custom ident.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
                             "name": "matches",
                             "description": "Matches of CSS rules applicable to the pseudo style.",
                             "type": "array",
@@ -2945,6 +2953,16 @@
                             "type": "array",
                             "items": {
                                 "$ref": "CSSLayer"
+                            }
+                        },
+                        {
+                            "name": "scopes",
+                            "description": "@scope CSS at-rule array.\nThe array enumerates @scope at-rules starting with the innermost one, going outwards.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "CSSScope"
                             }
                         }
                     ]
@@ -3301,6 +3319,31 @@
                     ]
                 },
                 {
+                    "id": "CSSScope",
+                    "description": "CSS Scope at-rule descriptor.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "text",
+                            "description": "Scope rule text.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "range",
+                            "description": "The associated rule header range in the enclosing stylesheet (if\navailable).",
+                            "optional": true,
+                            "$ref": "SourceRange"
+                        },
+                        {
+                            "name": "styleSheetId",
+                            "description": "Identifier of the stylesheet containing this object (if exists).",
+                            "optional": true,
+                            "$ref": "StyleSheetId"
+                        }
+                    ]
+                },
+                {
                     "id": "CSSLayer",
                     "description": "CSS Layer at-rule descriptor.",
                     "experimental": true,
@@ -3434,6 +3477,11 @@
                         {
                             "name": "fontStretch",
                             "description": "The font-stretch.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "fontDisplay",
+                            "description": "The font-display.",
                             "type": "string"
                         },
                         {
@@ -3987,6 +4035,32 @@
                             "name": "supports",
                             "description": "The resulting CSS Supports rule after modification.",
                             "$ref": "CSSSupports"
+                        }
+                    ]
+                },
+                {
+                    "name": "setScopeText",
+                    "description": "Modifies the expression of a scope at-rule.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "styleSheetId",
+                            "$ref": "StyleSheetId"
+                        },
+                        {
+                            "name": "range",
+                            "$ref": "SourceRange"
+                        },
+                        {
+                            "name": "text",
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "scope",
+                            "description": "The resulting CSS Scope rule after modification.",
+                            "$ref": "CSSScope"
                         }
                     ]
                 },
@@ -4726,6 +4800,12 @@
                             "description": "Pseudo element type for this node.",
                             "optional": true,
                             "$ref": "PseudoType"
+                        },
+                        {
+                            "name": "pseudoIdentifier",
+                            "description": "Pseudo element identifier for this node. Only present if there is a\nvalid pseudoType.",
+                            "optional": true,
+                            "type": "string"
                         },
                         {
                             "name": "shadowRootType",
@@ -5616,6 +5696,21 @@
                     ]
                 },
                 {
+                    "name": "getTopLayerElements",
+                    "description": "Returns NodeIds of current top layer elements.\nTop layer is rendered closest to the user within a viewport, therefore its elements always\nappear on top of all other content.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "nodeIds",
+                            "description": "NodeIds of top layer elements",
+                            "type": "array",
+                            "items": {
+                                "$ref": "NodeId"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "redo",
                     "description": "Re-does the last undone action.",
                     "experimental": true
@@ -6155,6 +6250,11 @@
                             "$ref": "Node"
                         }
                     ]
+                },
+                {
+                    "name": "topLayerElementsUpdated",
+                    "description": "Called when top layer elements are changed.",
+                    "experimental": true
                 },
                 {
                     "name": "pseudoElementRemoved",
@@ -7067,6 +7167,12 @@
                         {
                             "name": "pseudoType",
                             "description": "Type of a pseudo element node.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "pseudoIdentifier",
+                            "description": "Pseudo element identifier for this node. Only present if there is a\nvalid pseudoType.",
                             "optional": true,
                             "$ref": "RareStringData"
                         },
@@ -15053,6 +15159,7 @@
                         "encrypted-media",
                         "execution-while-out-of-viewport",
                         "execution-while-not-rendered",
+                        "federated-credentials",
                         "focus-without-user-activation",
                         "fullscreen",
                         "frobulate",
@@ -15094,7 +15201,8 @@
                     "enum": [
                         "Header",
                         "IframeAttribute",
-                        "InFencedFrameTree"
+                        "InFencedFrameTree",
+                        "InIsolatedApp"
                     ]
                 },
                 {
@@ -17312,12 +17420,6 @@
                             "$ref": "FrameId"
                         },
                         {
-                            "name": "backendNodeId",
-                            "description": "Input node id.",
-                            "experimental": true,
-                            "$ref": "DOM.BackendNodeId"
-                        },
-                        {
                             "name": "mode",
                             "description": "Input mode.",
                             "type": "string",
@@ -17325,6 +17427,13 @@
                                 "selectSingle",
                                 "selectMultiple"
                             ]
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Input node id. Only present for file choosers opened via an <input type=\"file\"> element.",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "DOM.BackendNodeId"
                         }
                     ]
                 },
@@ -20190,6 +20299,12 @@
                             ]
                         },
                         {
+                            "name": "traceBufferSizeInKb",
+                            "description": "Size of the trace buffer in kilobytes. If not specified or zero is passed, a default value\nof 200 MB would be used.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
                             "name": "enableSampling",
                             "description": "Turns on JavaScript stack sampling.",
                             "optional": true,
@@ -22799,7 +22914,7 @@
                 },
                 {
                     "name": "setScriptSource",
-                    "description": "Edits JavaScript source live.",
+                    "description": "Edits JavaScript source live.\n\nIn general, functions that are currently on the stack can not be edited with\na single exception: If the edited function is the top-most stack frame and\nthat is the only activation of that function on the stack. In this case\nthe live edit will be successful and a `Debugger.restartFrame` for the\ntop-most function is automatically triggered.",
                     "parameters": [
                         {
                             "name": "scriptId",
@@ -22816,12 +22931,20 @@
                             "description": "If true the change will not actually be applied. Dry run may be used to get result\ndescription without actually modifying the code.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "allowTopFrameEditing",
+                            "description": "If true, then `scriptSource` is allowed to change the function on top of the stack\nas long as the top-most stack frame is the only activation of that function.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
                         {
                             "name": "callFrames",
                             "description": "New stack trace in case editing has happened while VM was stopped.",
+                            "deprecated": true,
                             "optional": true,
                             "type": "array",
                             "items": {
@@ -22831,25 +22954,39 @@
                         {
                             "name": "stackChanged",
                             "description": "Whether current call stack  was modified after applying the changes.",
+                            "deprecated": true,
                             "optional": true,
                             "type": "boolean"
                         },
                         {
                             "name": "asyncStackTrace",
                             "description": "Async stack trace, if any.",
+                            "deprecated": true,
                             "optional": true,
                             "$ref": "Runtime.StackTrace"
                         },
                         {
                             "name": "asyncStackTraceId",
                             "description": "Async stack trace, if any.",
-                            "experimental": true,
+                            "deprecated": true,
                             "optional": true,
                             "$ref": "Runtime.StackTraceId"
                         },
                         {
+                            "name": "status",
+                            "description": "Whether the operation was successful or not. Only `Ok` denotes a\nsuccessful live edit while the other enum variants denote why\nthe live edit failed.",
+                            "experimental": true,
+                            "type": "string",
+                            "enum": [
+                                "Ok",
+                                "CompileError",
+                                "BlockedByActiveGenerator",
+                                "BlockedByActiveFunction"
+                            ]
+                        },
+                        {
                             "name": "exceptionDetails",
-                            "description": "Exception details if any.",
+                            "description": "Exception details if any. Only present when `status` is `CompileError`.",
                             "optional": true,
                             "$ref": "Runtime.ExceptionDetails"
                         }
