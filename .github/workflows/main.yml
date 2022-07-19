@@ -2,7 +2,7 @@ name: 😎
 on:
   pull_request:
   push:
-    branches:    
+    branches:
       - master
 jobs:
   lighthouse_ci:
@@ -13,18 +13,18 @@ jobs:
 
       - name: git clone
         uses: actions/checkout@v1
-        
-      - name: setup node.js
-        uses: actions/setup-node@v1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version-file: '.nvmrc'
 
       - name: build
         run: npm i && npm run build
 
       - name: install lhci
         run: npm install @lhci/cli@latest
-        
+
       - name: run lhci
         run: |
           npx lhci autorun \

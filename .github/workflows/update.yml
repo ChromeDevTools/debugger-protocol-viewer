@@ -1,0 +1,33 @@
+name: update-devtools-protocol-gh-pages
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    # Run daily at 05:20 UTC.
+    - cron: '20 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-devtools-protocol-gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # Fetching full history is required for the changelog script.
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Update devtools-protocol gh-pages
+        run: |
+          npm install
+          npm run build
+          npm run deploy
