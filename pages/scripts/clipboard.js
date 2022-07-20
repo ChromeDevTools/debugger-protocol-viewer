@@ -6,6 +6,7 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
   const href = permalinkEl.href;
   const textSlug = permalinkEl.dataset.slug;
   const markdown = `[\`${textSlug}\`](${href})`;
+  const htmlStr = `<meta charset="utf-8"><a href="${href}"><tt style="font-family: Consolas, Menlo, monospace;">${textSlug}</tt></a>`;
 
   permalinkEl.addEventListener('click', handleClicks);
   permalinkEl.addEventListener('dblclick', handleClicks);
@@ -16,7 +17,17 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
     // Add hash back to url
     history.pushState({}, '', href);
 
-    navigator.clipboard.writeText(e.type === 'dblclick' ? markdown : href)
+    const textBlob = new Blob([e.type === 'dblclick' ? markdown : href], { type: 'text/plain' });
+    const htmlBlob = new Blob([htmlStr], { type: 'text/html' });
+    // text/markdown not supported. (for several reasons) 
+    // …one being https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/modules/clipboard/clipboard_writer.cc;l=307-318;drc=717a5ba32f0aba300c860d5bff7c87bbcff44afc
+    // const mdBlob = new Blob([markdown], { type: "text/markdown" });
+    const cpItem = new ClipboardItem({
+      [textBlob.type]: textBlob,
+      [htmlBlob.type]: htmlBlob,
+    });
+
+    navigator.clipboard.write([cpItem])
     .then(_ => {
       const classNames = ['copied'];
       if (e.type === 'dblclick') {
