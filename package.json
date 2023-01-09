@@ -7,7 +7,7 @@
   "license": "Apache2",
   "private": true,
   "devDependencies": {
-    "@11ty/eleventy": "0.10.0",
+    "@11ty/eleventy": "1.0.2",
     "@rollup/plugin-node-resolve": "7.1.1",
     "esm": "3.2.25",
     "lit-html": "1.2.1",
