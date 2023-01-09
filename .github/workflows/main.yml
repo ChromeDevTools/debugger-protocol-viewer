@@ -29,6 +29,5 @@ jobs:
         run: |
           npx lhci autorun \
             --collect.url=http://localhost:8696/devtools-protocol/ \
-            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
-            --upload.token=${{ secrets.LHCI_SERVER_TOKEN }} \
-            --upload.serverBaseUrl=https://lhci-canary.herokuapp.com/
+            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ 
+
