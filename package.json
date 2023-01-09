@@ -20,6 +20,7 @@
   "scripts": {
     "build": "rimraf devtools-protocol/ && node -r esm node_modules/.bin/eleventy && rollup -c rollup.config.js",
     "prep": "bash prep-tot-protocol-files.sh",
+    "test": "bash test/primitive_tests.sh",
     "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 ."
   }
 }
