@@ -9,6 +9,6 @@ cat $build_dp_path/index.html | grep DOMSnapshot
 cat $build_dp_path/tot/Page/index.html | grep --no-messages navigateToHistoryEntry
 
 stat $build_dp_path/search_index/v8.json
-stat $build_dp_path/search_index/tot.jsson
+stat $build_dp_path/search_index/tot.json
 
 echo "assertions passed ✅"
