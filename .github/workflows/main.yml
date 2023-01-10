@@ -22,6 +22,9 @@ jobs:
       - name: build
         run: npm i && npm run build
 
+      - name: primitive test
+        run: npm run test
+
       - name: install lhci
         run: npm install @lhci/cli@latest
 
