@@ -33,5 +33,5 @@ jobs:
         run: |
           npx lhci autorun \
             --collect.url=http://localhost:8696/devtools-protocol/ \
-            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ 
-
+            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
+            --upload.target=temporary-public-storage
