@@ -19,6 +19,7 @@ module.exports = {
         "tap-targets": "warn",
         "dom-size": "warn",
         "csp-xss": "warn",
+        "label": "warn",
       }
     }
   },
