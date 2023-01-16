@@ -229,7 +229,7 @@ After disconnection, some apps have chosen to pause their state and offer a reco
                       "tristate",
 // ...</pre>
 
-<h4 id="get-jsonnewurl">GET <code>/json/new?{url}</code></h4>
+<h4 id="get-jsonnewurl">PUT <code>/json/new?{url}</code></h4>
 <p>Opens a new tab. Responds with the websocket target data for the new tab.
 
 <h4 id="get-jsonactivatetargetid">GET <code>/json/activate/{targetId}</code></h4>
