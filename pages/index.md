@@ -99,7 +99,7 @@ Click the gear icon in the top-right of the DevTools to open the <i>Settings</i>
 Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close and reopen DevTools.
 Now click the ⋮ menu icon, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
 
-<p>You can also issue your own commands using Protocol Monitor (verion 92.0.4497.0+). If the command does not require any parameters,
+<p>You can also issue your own commands using Protocol Monitor (version 92.0.4497.0+). If the command does not require any parameters,
 type the command into the prompt at the bottom of the Protocol Monitor panel and press Enter, for example, 
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
 <code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
