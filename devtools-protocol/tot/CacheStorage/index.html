@@ -391,14 +391,45 @@
       <h5 class="properties-name">parameters</h5>
       <dl class="properties-container">
         
-        <dt class="param-name monospace ">
+        <dt class="param-name monospace optional">
           securityOrigin
         </dt>
         <dd>
           <span class="param-type">string</span>
           
       <div class="details-description">
-        <p>Security origin.</p>
+        <p>At least and at most one of securityOrigin, storageKey, storageBucket must be specified.
+Security origin.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          storageKey
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>Storage key.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          storageBucket
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Storage/#type-StorageBucket class="param-type">Storage.StorageBucket</a>
+          
+      <div class="details-description">
+        <p>Storage bucket. If not specified, it uses the default bucket.</p>
 
         
       </div>
@@ -604,6 +635,36 @@ is the count of all entries from this storage.</p>
           
       <div class="details-description">
         <p>Security origin of the cache.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace ">
+          storageKey
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>Storage key of the cache.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          storageBucket
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Storage/#type-StorageBucket class="param-type">Storage.StorageBucket</a>
+          
+      <div class="details-description">
+        <p>Storage bucket of the cache.</p>
 
         
       </div>

@@ -292,6 +292,11 @@ other objects in their object group.</p>
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#type-DeepSerializedValue"><span class="domain-dot">Runtime.</span>DeepSerializedValue</a>
+        
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#type-ExceptionDetails"><span class="domain-dot">Runtime.</span>ExceptionDetails</a>
         
       </div>
@@ -332,6 +337,11 @@ other objects in their object group.</p>
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#type-SerializationOptions"><span class="domain-dot">Runtime.</span>SerializationOptions</a>
+        
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#type-StackTrace"><span class="domain-dot">Runtime.</span>StackTrace</a>
         
       </div>
@@ -348,11 +358,6 @@ other objects in their object group.</p>
       
       <div class="toc-link">
         <a class="monospace" href="#type-UnserializableValue"><span class="domain-dot">Runtime.</span>UnserializableValue</a>
-        
-      </div>
-      
-      <div class="toc-link">
-        <a class="monospace" href="#type-WebDriverValue"><span class="domain-dot">Runtime.</span>WebDriverValue</a>
         
       </div>
       
@@ -595,7 +600,8 @@ execution. Overrides <code>setPauseOnException</code> state.</p>
           <span class="param-type">boolean</span>
           
       <div class="details-description">
-        <p>Whether the result is expected to be a JSON object which should be sent by value.</p>
+        <p>Whether the result is expected to be a JSON object which should be sent by value.
+Can be overriden by <code>serializationOptions</code>.</p>
 
         
       </div>
@@ -697,15 +703,52 @@ specified and objectId is, objectGroup will be inherited from object.</p>
         </dd>
       
         <dt class="param-name monospace optional">
+          uniqueContextId
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>An alternative way to specify the execution context to call function on.
+Compared to contextId that may be reused across processes, this is guaranteed to be
+system-unique, so it can be used to prevent accidental function call
+in context different than intended (e.g. as a result of navigation across process
+boundaries).
+This is mutually exclusive with <code>executionContextId</code>.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
+        <dt class="param-name monospace optional">
           generateWebDriverValue
         </dt>
         <dd>
           <span class="param-type">boolean</span>
           
       <div class="details-description">
-        <p>Whether the result should contain <code>webDriverValue</code>, serialized according to
+        <p>Deprecated. Use <code>serializationOptions: {serialization:&quot;deep&quot;}</code> instead.
+Whether the result should contain <code>webDriverValue</code>, serialized according to
 <a href="https://w3c.github.io/webdriver-bidi">https://w3c.github.io/webdriver-bidi</a>. This is mutually exclusive with <code>returnByValue</code>, but
 resulting <code>objectId</code> is still provided.</p>
+
+        
+      </div>
+    
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          serializationOptions
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/v8/Runtime/#type-SerializationOptions class="param-type">SerializationOptions</a>
+          
+      <div class="details-description">
+        <p>Specifies the result serialization. If provided, overrides
+<code>generatePreview</code>, <code>returnByValue</code> and <code>generateWebDriverValue</code>.</p>
 
         
       </div>
@@ -1210,7 +1253,27 @@ This is mutually exclusive with <code>contextId</code>.</p>
           <span class="param-type">boolean</span>
           
       <div class="details-description">
-        <p>Whether the result should be serialized according to <a href="https://w3c.github.io/webdriver-bidi">https://w3c.github.io/webdriver-bidi</a>.</p>
+        <p>Deprecated. Use <code>serializationOptions: {serialization:&quot;deep&quot;}</code> instead.
+Whether the result should contain <code>webDriverValue</code>, serialized
+according to
+<a href="https://w3c.github.io/webdriver-bidi">https://w3c.github.io/webdriver-bidi</a>. This is mutually exclusive with <code>returnByValue</code>, but
+resulting <code>objectId</code> is still provided.</p>
+
+        
+      </div>
+    
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          serializationOptions
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/v8/Runtime/#type-SerializationOptions class="param-type">SerializationOptions</a>
+          
+      <div class="details-description">
+        <p>Specifies the result serialization. If provided, overrides
+<code>generatePreview</code>, <code>returnByValue</code> and <code>generateWebDriverValue</code>.</p>
 
         
       </div>
@@ -2592,7 +2655,22 @@ on named context.</p>
         
       </div>
     
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+        </dd>
+      
+        <dt class="param-name monospace ">
+          executionContextUniqueId
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
           
+      <div class="details-description">
+        <p>Unique Id of the destroyed context</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
       </dl>
@@ -2940,6 +3018,93 @@ unserializable primitive value or neither of (for undefined) them should be spec
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="type-DeepSerializedValue">
+          <span class="domain-dot">Runtime.</span>DeepSerializedValue
+          
+          <a href="#type-DeepSerializedValue"
+             class="permalink"
+             data-slug="Runtime.DeepSerializedValue"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Represents deep serialized value.</p>
+
+        
+      </div>
+    
+        <p class="type-type">Type: <strong>object</strong></p>
+        
+      <h5 class="properties-name">properties</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          type
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
+        
+      <div class="enum-container">Allowed Values: <code>undefined</code>, <code>null</code>, <code>string</code>, <code>number</code>, <code>boolean</code>, <code>bigint</code>, <code>regexp</code>, <code>date</code>, <code>symbol</code>, <code>array</code>, <code>object</code>, <code>function</code>, <code>map</code>, <code>set</code>, <code>weakmap</code>, <code>weakset</code>, <code>error</code>, <code>proxy</code>, <code>promise</code>, <code>typedarray</code>, <code>arraybuffer</code>, <code>node</code>, <code>window</code></div>
+    
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          value
+        </dt>
+        <dd>
+          <span class="param-type">any</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          objectId
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          weakLocalObjectReference
+        </dt>
+        <dd>
+          <span class="param-type">integer</span>
+          
+      <div class="details-description">
+        <p>Set if value reference met more then once during serialization. In such
+case, value is provided only to one of the serialized values. Unique
+per value in the scope of one CDP call.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="type-ExceptionDetails">
           <span class="domain-dot">Runtime.</span>ExceptionDetails
           
@@ -3209,7 +3374,7 @@ performs a cross-process navigation.</p>
           <span class="param-type">object</span>
           
       <div class="details-description">
-        <p>Embedder-specific auxiliary data.</p>
+        <p>Embedder-specific auxiliary data likely matching {isDefault: boolean, type: &#39;default&#39;|&#39;isolated&#39;|&#39;worker&#39;, frameId: string}</p>
 
         
       </div>
@@ -3601,10 +3766,25 @@ property.</p>
           webDriverValue
         </dt>
         <dd>
-          <a href=/devtools-protocol/v8/Runtime/#type-WebDriverValue class="param-type">WebDriverValue</a>
+          <a href=/devtools-protocol/v8/Runtime/#type-DeepSerializedValue class="param-type">DeepSerializedValue</a>
           
       <div class="details-description">
-        <p>WebDriver BiDi representation of the value.</p>
+        <p>Deprecated. Use <code>deepSerializedValue</code> instead. WebDriver BiDi representation of the value.</p>
+
+        
+      </div>
+    
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          deepSerializedValue
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/v8/Runtime/#type-DeepSerializedValue class="param-type">DeepSerializedValue</a>
+          
+      <div class="details-description">
+        <p>Deep serialized value.</p>
 
         
       </div>
@@ -3700,6 +3880,81 @@ property.</p>
     
         <p class="type-type">Type: <strong>string</strong></p>
         
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="type-SerializationOptions">
+          <span class="domain-dot">Runtime.</span>SerializationOptions
+          
+          <a href="#type-SerializationOptions"
+             class="permalink"
+             data-slug="Runtime.SerializationOptions"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Represents options for serialization. Overrides <code>generatePreview</code>, <code>returnByValue</code> and
+<code>generateWebDriverValue</code>.</p>
+
+        
+      </div>
+    
+        <p class="type-type">Type: <strong>object</strong></p>
+        
+      <h5 class="properties-name">properties</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          serialization
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
+        
+      <div class="enum-container">Allowed Values: <code>deep</code>, <code>json</code>, <code>idOnly</code></div>
+    
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          maxDepth
+        </dt>
+        <dd>
+          <span class="param-type">integer</span>
+          
+      <div class="details-description">
+        <p>Deep serialization depth. Default is full depth. Respected only in <code>deep</code> serialization mode.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          additionalParameters
+        </dt>
+        <dd>
+          <span class="param-type">object</span>
+          
+      <div class="details-description">
+        <p>Embedder-specific parameters. For example if connected to V8 in Chrome these control DOM
+serialization via <code>maxNodeDepth: integer</code> and <code>includeShadowTree: &quot;none&quot; | &quot;open&quot; | &quot;all&quot;</code>.
+Values can be only of type string or integer.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
         
       </div>
     
@@ -3851,77 +4106,6 @@ initiated the async call.</p>
     
         <p class="type-type">Type: <strong>string</strong></p>
         
-        
-      </div>
-    
-      <div class="details">
-        <h4 class="details-name monospace" id="type-WebDriverValue">
-          <span class="domain-dot">Runtime.</span>WebDriverValue
-          
-          <a href="#type-WebDriverValue"
-             class="permalink"
-             data-slug="Runtime.WebDriverValue"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        <p>Represents the value serialiazed by the WebDriver BiDi specification
-<a href="https://w3c.github.io/webdriver-bidi">https://w3c.github.io/webdriver-bidi</a>.</p>
-
-        
-      </div>
-    
-        <p class="type-type">Type: <strong>object</strong></p>
-        
-      <h5 class="properties-name">properties</h5>
-      <dl class="properties-container">
-        
-        <dt class="param-name monospace ">
-          type
-        </dt>
-        <dd>
-          <span class="param-type">string</span>
-          
-      <div class="details-description">
-        
-        
-      <div class="enum-container">Allowed Values: <code>undefined</code>, <code>null</code>, <code>string</code>, <code>number</code>, <code>boolean</code>, <code>bigint</code>, <code>regexp</code>, <code>date</code>, <code>symbol</code>, <code>array</code>, <code>object</code>, <code>function</code>, <code>map</code>, <code>set</code>, <code>weakmap</code>, <code>weakset</code>, <code>error</code>, <code>proxy</code>, <code>promise</code>, <code>typedarray</code>, <code>arraybuffer</code>, <code>node</code>, <code>window</code></div>
-    
-      </div>
-    
-          
-        </dd>
-      
-        <dt class="param-name monospace optional">
-          value
-        </dt>
-        <dd>
-          <span class="param-type">any</span>
-          
-      <div class="details-description">
-        
-        
-      </div>
-    
-          
-        </dd>
-      
-        <dt class="param-name monospace optional">
-          objectId
-        </dt>
-        <dd>
-          <span class="param-type">string</span>
-          
-      <div class="details-description">
-        
-        
-      </div>
-    
-          
-        </dd>
-      
-      </dl>
-    
         
       </div>
     

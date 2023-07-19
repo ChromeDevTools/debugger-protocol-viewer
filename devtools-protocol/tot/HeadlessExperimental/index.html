@@ -127,20 +127,15 @@
       
       <div class="toc-link">
         <a class="monospace" href="#method-disable"><span class="domain-dot">HeadlessExperimental.</span>disable</a>
-        
+        <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
       </div>
       
       <div class="toc-link">
         <a class="monospace" href="#method-enable"><span class="domain-dot">HeadlessExperimental.</span>enable</a>
-        
-      </div>
-      
-        <h3>Events</h3>
-      <div class="toc-link">
-        <a class="monospace" href="#event-needsBeginFramesChanged"><span class="domain-dot">HeadlessExperimental.</span>needsBeginFramesChanged</a>
         <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
       </div>
       
+        
         <h3>Types</h3>
       <div class="toc-link">
         <a class="monospace" href="#type-ScreenshotParams"><span class="domain-dot">HeadlessExperimental.</span>ScreenshotParams</a>
@@ -287,7 +282,7 @@ display. Reported for diagnostic uses, may be removed in the future.</p>
       <div class="details">
         <h4 class="details-name monospace" id="method-disable">
           <span class="domain-dot">HeadlessExperimental.</span>disable
-          
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
           <a href="#method-disable"
              class="permalink"
              data-slug="HeadlessExperimental.disable"
@@ -308,7 +303,7 @@ display. Reported for diagnostic uses, may be removed in the future.</p>
       <div class="details">
         <h4 class="details-name monospace" id="method-enable">
           <span class="domain-dot">HeadlessExperimental.</span>enable
-          
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
           <a href="#method-enable"
              class="permalink"
              data-slug="HeadlessExperimental.enable"
@@ -329,54 +324,6 @@ display. Reported for diagnostic uses, may be removed in the future.</p>
       </div>
     
       
-      <h3 id="events">Events</h3>
-      <div>
-        
-      <div class="details">
-        <h4 class="details-name monospace" id="event-needsBeginFramesChanged">
-          <span class="domain-dot">HeadlessExperimental.</span>needsBeginFramesChanged
-          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
-          <a href="#event-needsBeginFramesChanged"
-             class="permalink"
-             data-slug="HeadlessExperimental.needsBeginFramesChanged"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        <p>Issued when the target starts or stops needing BeginFrames.
-Deprecated. Issue beginFrame unconditionally instead and use result from
-beginFrame to detect whether the frames were suppressed.</p>
-
-        
-      </div>
-    
-        
-        
-      <h5 class="properties-name">parameters</h5>
-      <dl class="properties-container">
-        
-        <dt class="param-name monospace ">
-          needsBeginFrames
-        </dt>
-        <dd>
-          <span class="param-type">boolean</span>
-          
-      <div class="details-description">
-        <p>True if BeginFrames are needed, false otherwise.</p>
-
-        
-      </div>
-    
-          
-        </dd>
-      
-      </dl>
-    
-        
-      </div>
-    
-      </div>
-    
       
       <h3 id="types">Types</h3>
       <div>
@@ -412,7 +359,7 @@ beginFrame to detect whether the frames were suppressed.</p>
         <p>Image compression format (defaults to png).</p>
 
         
-      <div class="enum-container">Allowed Values: <code>jpeg</code>, <code>png</code></div>
+      <div class="enum-container">Allowed Values: <code>jpeg</code>, <code>png</code>, <code>webp</code></div>
     
       </div>
     
@@ -426,7 +373,22 @@ beginFrame to detect whether the frames were suppressed.</p>
           <span class="param-type">integer</span>
           
       <div class="details-description">
-        <p>Compression quality from range [0..100] (jpeg only).</p>
+        <p>Compression quality from range [0..100] (jpeg and webp only).</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          optimizeForSpeed
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>Optimize image encoding for speed, not for resulting size (defaults to false)</p>
 
         
       </div>

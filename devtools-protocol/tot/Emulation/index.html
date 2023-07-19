@@ -1307,10 +1307,11 @@ If not specified, any existing override will be cleared.</p>
           <span class="param-type">string</span>
           
       <div class="details-description">
-        <p>Vision deficiency to emulate.</p>
+        <p>Vision deficiency to emulate. Order: best-effort emulations come first, followed by any
+physiologically accurate emulations for medically recognized color vision deficiencies.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>none</code>, <code>achromatopsia</code>, <code>blurredVision</code>, <code>deuteranopia</code>, <code>protanopia</code>, <code>tritanopia</code></div>
+      <div class="enum-container">Allowed Values: <code>none</code>, <code>blurredVision</code>, <code>reducedContrast</code>, <code>achromatopsia</code>, <code>deuteranopia</code>, <code>protanopia</code>, <code>tritanopia</code></div>
     
       </div>
     
@@ -2064,7 +2065,7 @@ A display feature that only splits content will have a 0 mask_length.</p>
         <p>Enum of image types that can be disabled.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>avif</code>, <code>jxl</code>, <code>webp</code></div>
+      <div class="enum-container">Allowed Values: <code>avif</code>, <code>webp</code></div>
     
       </div>
     
@@ -2156,7 +2157,8 @@ Missing optional values will be filled in by the target with what it would norma
           <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Emulation/#type-UserAgentBrandVersion class="param-type">UserAgentBrandVersion</a> ]</span></span>
           
       <div class="details-description">
-        
+        <p>Brands appearing in Sec-CH-UA.</p>
+
         
       </div>
     
@@ -2170,7 +2172,8 @@ Missing optional values will be filled in by the target with what it would norma
           <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Emulation/#type-UserAgentBrandVersion class="param-type">UserAgentBrandVersion</a> ]</span></span>
           
       <div class="details-description">
-        
+        <p>Brands appearing in Sec-CH-UA-Full-Version-List.</p>
+
         
       </div>
     

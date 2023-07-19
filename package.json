@@ -15,6 +15,7 @@
     "rimraf": "^3.0.2",
     "rollup": "2.3.2",
     "rollup-plugin-terser": "5.3.0",
+    "sanitizer-polyfill": "github:mozilla/sanitizer-polyfill",
     "statikk": "^2.1.1"
   },
   "scripts": {

@@ -1619,8 +1619,8 @@ breakpoint if this expression evaluates to true.</p>
         </h4>
         
       <div class="details-description">
-        <p>Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or
-no exceptions. Initial pause on exceptions state is <code>none</code>.</p>
+        <p>Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions,
+or caught exceptions, no exceptions. Initial pause on exceptions state is <code>none</code>.</p>
 
         
       </div>
@@ -1640,7 +1640,7 @@ no exceptions. Initial pause on exceptions state is <code>none</code>.</p>
         <p>Pause on exceptions mode.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>none</code>, <code>uncaught</code>, <code>all</code></div>
+      <div class="enum-container">Allowed Values: <code>none</code>, <code>caught</code>, <code>uncaught</code>, <code>all</code></div>
     
       </div>
     
@@ -1818,7 +1818,7 @@ successful live edit while the other enum variants denote why
 the live edit failed.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>Ok</code>, <code>CompileError</code>, <code>BlockedByActiveGenerator</code>, <code>BlockedByActiveFunction</code></div>
+      <div class="enum-container">Allowed Values: <code>Ok</code>, <code>CompileError</code>, <code>BlockedByActiveGenerator</code>, <code>BlockedByActiveFunction</code>, <code>BlockedByTopLevelEsModuleChange</code></div>
     
       </div>
     
@@ -2232,8 +2232,8 @@ disassembly can be read successively.</p>
           <span class="param-type">array<span class="param-type__array">[ <span class="param-type">integer</span> ]</span></span>
           
       <div class="details-description">
-        <p>The offsets of all function bodies plus one additional entry pointing
-one by past the end of the last function.</p>
+        <p>The offsets of all function bodies, in the format [start1, end1,
+start2, end2, ...] where all ends are exclusive.</p>
 
         
       </div>
@@ -2751,7 +2751,7 @@ stop on the breakpoint if this expression evaluates to true.</p>
         <p>Pause reason.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>ambiguous</code>, <code>assert</code>, <code>CSPViolation</code>, <code>debugCommand</code>, <code>DOM</code>, <code>EventListener</code>, <code>exception</code>, <code>instrumentation</code>, <code>OOM</code>, <code>other</code>, <code>promiseRejection</code>, <code>XHR</code></div>
+      <div class="enum-container">Allowed Values: <code>ambiguous</code>, <code>assert</code>, <code>CSPViolation</code>, <code>debugCommand</code>, <code>DOM</code>, <code>EventListener</code>, <code>exception</code>, <code>instrumentation</code>, <code>OOM</code>, <code>other</code>, <code>promiseRejection</code>, <code>XHR</code>, <code>step</code></div>
     
       </div>
     
@@ -3007,7 +3007,7 @@ stop on the breakpoint if this expression evaluates to true.</p>
           <span class="param-type">object</span>
           
       <div class="details-description">
-        <p>Embedder-specific auxiliary data.</p>
+        <p>Embedder-specific auxiliary data likely matching {isDefault: boolean, type: &#39;default&#39;|&#39;isolated&#39;|&#39;worker&#39;, frameId: string}</p>
 
         
       </div>
@@ -3289,7 +3289,7 @@ scripts upon enabling debugger.</p>
           <span class="param-type">object</span>
           
       <div class="details-description">
-        <p>Embedder-specific auxiliary data.</p>
+        <p>Embedder-specific auxiliary data likely matching {isDefault: boolean, type: &#39;default&#39;|&#39;isolated&#39;|&#39;worker&#39;, frameId: string}</p>
 
         
       </div>

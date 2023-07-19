@@ -258,7 +258,17 @@
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#type-FilterEntry"><span class="domain-dot">Target.</span>FilterEntry</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#type-RemoteLocation"><span class="domain-dot">Target.</span>RemoteLocation</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#type-TargetFilter"><span class="domain-dot">Target.</span>TargetFilter</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
       
@@ -573,6 +583,21 @@ false by default).</p>
           
         </dd>
       
+        <dt class="param-name monospace optional">
+          forTab
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>Whether to create the target of type &quot;tab&quot;.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
       </dl>
     
         
@@ -672,6 +697,28 @@ false by default).</p>
     
         
         
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace optional">
+          filter
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Target/#type-TargetFilter class="param-type">TargetFilter</a>
+          
+      <div class="details-description">
+        <p>Only targets matching filter will be reported. If filter is not specified
+and target discovery is currently enabled, a filter used for target discovery
+is used for consistency.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
+      </dl>
+    
         
       <h5 class="properties-name">Return Object</h5>
       <dl class="properties-container">
@@ -730,6 +777,22 @@ false by default).</p>
       </div>
     
           
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          filter
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Target/#type-TargetFilter class="param-type">TargetFilter</a>
+          
+      <div class="details-description">
+        <p>Only targets matching filter will be attached. If <code>discover</code> is false,
+<code>filter</code> must be omitted or empty.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
       </dl>
@@ -903,6 +966,21 @@ to run paused targets.</p>
       </div>
     
           
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          filter
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Target/#type-TargetFilter class="param-type">TargetFilter</a>
+          
+      <div class="details-description">
+        <p>Only targets matching filter will be attached.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
       </dl>
@@ -1292,6 +1370,21 @@ and eventually retire it. See crbug.com/991325.</p>
       </div>
     
           
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          filter
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Target/#type-TargetFilter class="param-type">TargetFilter</a>
+          
+      <div class="details-description">
+        <p>Only targets matching filter will be attached.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
       </dl>
@@ -1932,6 +2025,78 @@ issued multiple times per target if multiple sessions have been attached to it.<
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
+        <dt class="param-name monospace optional">
+          subtype
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>Provides additional details for specific target types. For example, for
+the type of &quot;page&quot;, this may be set to &quot;portal&quot; or &quot;prerender&quot;.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="type-FilterEntry">
+          <span class="domain-dot">Target.</span>FilterEntry
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-FilterEntry"
+             class="permalink"
+             data-slug="Target.FilterEntry"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>A filter used by target query/discovery/auto-attach operations.</p>
+
+        
+      </div>
+    
+        <p class="type-type">Type: <strong>object</strong></p>
+        
+      <h5 class="properties-name">properties</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace optional">
+          exclude
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If set, causes exclusion of mathcing targets from the list.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          type
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>If not present, matches any type.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
       </dl>
     
         
@@ -1987,6 +2152,32 @@ issued multiple times per target if multiple sessions have been attached to it.<
       
       </dl>
     
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="type-TargetFilter">
+          <span class="domain-dot">Target.</span>TargetFilter
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-TargetFilter"
+             class="permalink"
+             data-slug="Target.TargetFilter"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>The entries in TargetFilter are matched sequentially against targets and
+the first entry that matches determines if the target is included or not,
+depending on the value of <code>exclude</code> field in the entry.
+If filter is not specified, the one assumed is
+[{type: &quot;browser&quot;, exclude: true}, {type: &quot;tab&quot;, exclude: true}, {}]
+(i.e. include everything but <code>browser</code> and <code>tab</code>).</p>
+
+        
+      </div>
+    
+        <p class="type-type">Type: <strong>array</strong></p>
+        
         
       </div>
     

@@ -118,8 +118,8 @@ that has an <code>id</code>. This <code>id</code> can be used to get additional 
 the JavaScript object wrapper, etc. It is important that client receives DOM events only for the
 nodes that are known to the client. Backend keeps track of the nodes that were sent to the client
 and never sends the same node twice. It is client&#39;s responsibility to collect information about
-the nodes that were sent to the client.<p>Note that <code>iframe</code> owner elements will return
-corresponding document elements as their child nodes.</p></p>
+the nodes that were sent to the client.&lt;p&gt;Note that <code>iframe</code> owner elements will return
+corresponding document elements as their child nodes.&lt;/p&gt;</p>
 
         
       </div>
@@ -474,12 +474,22 @@ corresponding document elements as their child nodes.</p></p>
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#type-LogicalAxes"><span class="domain-dot">DOM.</span>LogicalAxes</a>
+        
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#type-Node"><span class="domain-dot">DOM.</span>Node</a>
         
       </div>
       
       <div class="toc-link">
         <a class="monospace" href="#type-NodeId"><span class="domain-dot">DOM.</span>NodeId</a>
+        
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#type-PhysicalAxes"><span class="domain-dot">DOM.</span>PhysicalAxes</a>
         
       </div>
       
@@ -941,7 +951,8 @@ entire subtree or provide an integer larger than 0.</p>
         </h4>
         
       <div class="details-description">
-        <p>Returns the root DOM node (and optionally the subtree) to the caller.</p>
+        <p>Returns the root DOM node (and optionally the subtree) to the caller.
+Implicitly enables the DOM domain events for the current target.</p>
 
         
       </div>
@@ -2589,9 +2600,10 @@ be called for that search.</p>
         </h4>
         
       <div class="details-description">
-        <p>Returns the container of the given node based on container query conditions.
-If containerName is given, it will find the nearest container with a matching name;
-otherwise it will find the nearest container regardless of its container name.</p>
+        <p>Returns the query container of the given node based on container query
+conditions: containerName, physical, and logical axes. If no axes are
+provided, the style container is returned, which is the direct parent or the
+closest element with a matching container-name.</p>
 
         
       </div>
@@ -2620,6 +2632,34 @@ otherwise it will find the nearest container regardless of its container name.</
         </dt>
         <dd>
           <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          physicalAxes
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/DOM/#type-PhysicalAxes class="param-type">PhysicalAxes</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          logicalAxes
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/DOM/#type-LogicalAxes class="param-type">LogicalAxes</a>
           
       <div class="details-description">
         
@@ -4031,7 +4071,7 @@ $x functions).</p>
           <a href=/devtools-protocol/tot/DOM/#type-NodeId class="param-type">NodeId</a>
           
       <div class="details-description">
-        <p>If of the previous siblint.</p>
+        <p>Id of the previous sibling.</p>
 
         
       </div>
@@ -4843,6 +4883,29 @@ front-end.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="type-LogicalAxes">
+          <span class="domain-dot">DOM.</span>LogicalAxes
+          
+          <a href="#type-LogicalAxes"
+             class="permalink"
+             data-slug="DOM.LogicalAxes"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>ContainerSelector logical axes</p>
+
+        
+      <div class="enum-container">Allowed Values: <code>Inline</code>, <code>Block</code>, <code>Both</code></div>
+    
+      </div>
+    
+        <p class="type-type">Type: <strong>string</strong></p>
+        
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="type-Node">
           <span class="domain-dot">DOM.</span>Node
           
@@ -5359,6 +5422,29 @@ The property is always undefined now.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="type-PhysicalAxes">
+          <span class="domain-dot">DOM.</span>PhysicalAxes
+          
+          <a href="#type-PhysicalAxes"
+             class="permalink"
+             data-slug="DOM.PhysicalAxes"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>ContainerSelector physical axes</p>
+
+        
+      <div class="enum-container">Allowed Values: <code>Horizontal</code>, <code>Vertical</code>, <code>Both</code></div>
+    
+      </div>
+    
+        <p class="type-type">Type: <strong>string</strong></p>
+        
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="type-PseudoType">
           <span class="domain-dot">DOM.</span>PseudoType
           
@@ -5372,7 +5458,7 @@ The property is always undefined now.</p>
         <p>Pseudo element type.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>first-line</code>, <code>first-letter</code>, <code>before</code>, <code>after</code>, <code>marker</code>, <code>backdrop</code>, <code>selection</code>, <code>target-text</code>, <code>spelling-error</code>, <code>grammar-error</code>, <code>highlight</code>, <code>first-line-inherited</code>, <code>scrollbar</code>, <code>scrollbar-thumb</code>, <code>scrollbar-button</code>, <code>scrollbar-track</code>, <code>scrollbar-track-piece</code>, <code>scrollbar-corner</code>, <code>resizer</code>, <code>input-list-button</code>, <code>page-transition</code>, <code>page-transition-container</code>, <code>page-transition-image-wrapper</code>, <code>page-transition-outgoing-image</code>, <code>page-transition-incoming-image</code></div>
+      <div class="enum-container">Allowed Values: <code>first-line</code>, <code>first-letter</code>, <code>before</code>, <code>after</code>, <code>marker</code>, <code>backdrop</code>, <code>selection</code>, <code>target-text</code>, <code>spelling-error</code>, <code>grammar-error</code>, <code>highlight</code>, <code>first-line-inherited</code>, <code>scrollbar</code>, <code>scrollbar-thumb</code>, <code>scrollbar-button</code>, <code>scrollbar-track</code>, <code>scrollbar-track-piece</code>, <code>scrollbar-corner</code>, <code>resizer</code>, <code>input-list-button</code>, <code>view-transition</code>, <code>view-transition-group</code>, <code>view-transition-image-pair</code>, <code>view-transition-old</code>, <code>view-transition-new</code></div>
     
       </div>
     

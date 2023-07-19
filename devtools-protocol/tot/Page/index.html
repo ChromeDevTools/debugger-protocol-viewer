@@ -256,17 +256,17 @@
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#method-getAdScriptId"><span class="domain-dot">Page.</span>getAdScriptId</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#method-getAppId"><span class="domain-dot">Page.</span>getAppId</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
       
       <div class="toc-link">
         <a class="monospace" href="#method-getInstallabilityErrors"><span class="domain-dot">Page.</span>getInstallabilityErrors</a>
-        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
-      </div>
-      
-      <div class="toc-link">
-        <a class="monospace" href="#method-getManifestIcons"><span class="domain-dot">Page.</span>getManifestIcons</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
       
@@ -336,6 +336,16 @@
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#method-setPrerenderingAllowed"><span class="domain-dot">Page.</span>setPrerenderingAllowed</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#method-setRPHRegistrationMode"><span class="domain-dot">Page.</span>setRPHRegistrationMode</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#method-setSPCTransactionMode"><span class="domain-dot">Page.</span>setSPCTransactionMode</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
@@ -382,6 +392,11 @@
       
       <div class="toc-link">
         <a class="monospace" href="#method-getCookies"><span class="domain-dot">Page.</span>getCookies</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span><span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#method-getManifestIcons"><span class="domain-dot">Page.</span>getManifestIcons</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span><span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
       </div>
       
@@ -463,11 +478,6 @@
       
       <div class="toc-link">
         <a class="monospace" href="#event-loadEventFired"><span class="domain-dot">Page.</span>loadEventFired</a>
-        
-      </div>
-      
-      <div class="toc-link">
-        <a class="monospace" href="#event-prerenderAttemptCompleted"><span class="domain-dot">Page.</span>prerenderAttemptCompleted</a>
         
       </div>
       
@@ -583,11 +593,6 @@
       </div>
       
       <div class="toc-link">
-        <a class="monospace" href="#type-PrerenderFinalStatus"><span class="domain-dot">Page.</span>PrerenderFinalStatus</a>
-        
-      </div>
-      
-      <div class="toc-link">
         <a class="monospace" href="#type-ScriptIdentifier"><span class="domain-dot">Page.</span>ScriptIdentifier</a>
         
       </div>
@@ -629,6 +634,11 @@
       
       <div class="toc-link">
         <a class="monospace" href="#type-AppManifestParsedProperties"><span class="domain-dot">Page.</span>AppManifestParsedProperties</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#type-AutoResponseMode"><span class="domain-dot">Page.</span>AutoResponseMode</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
       
@@ -856,6 +866,22 @@ to false.</p>
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
+        <dt class="param-name monospace optional">
+          runImmediately
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If true, runs the script immediately on existing execution contexts or worlds.
+Default: false.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
       </dl>
     
         
@@ -993,6 +1019,21 @@ to false.</p>
           
       <div class="details-description">
         <p>Capture the screenshot beyond the viewport. Defaults to false.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          optimizeForSpeed
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>Optimize image encoding for speed, not for resulting size (defaults to false)</p>
 
         
       </div>
@@ -1915,7 +1956,7 @@ classes used to inject printing values into them:</p>
 <li><code>pageNumber</code>: current page number</li>
 <li><code>totalPages</code>: total pages in the document</li>
 </ul>
-<p>For example, <code>&lt;span class=title&gt;&lt;/span&gt;</code> would generate span containing the title.</p>
+<p>For example, <code>&amp;lt;span class=title&gt;&amp;lt;/span&gt;</code> would generate span containing the title.</p>
 
         
       </div>
@@ -2539,6 +2580,66 @@ iframes, shadow DOM, external resources, and element-inline styles.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="method-getAdScriptId">
+          <span class="domain-dot">Page.</span>getAdScriptId
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#method-getAdScriptId"
+             class="permalink"
+             data-slug="Page.getAdScriptId"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          frameId
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Page/#type-FrameId class="param-type">FrameId</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      <h5 class="properties-name">Return Object</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace optional">
+          adScriptId
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Page/#type-AdScriptId class="param-type">AdScriptId</a>
+          
+      <div class="details-description">
+        <p>Identifies the bottom-most script which caused the frame to be labelled
+as an ad. Only sent if frame is labelled as an ad and id is available.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="method-getAppId">
           <span class="domain-dot">Page.</span>getAppId
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
@@ -2621,45 +2722,6 @@ Only returns values if the feature flag &#39;WebAppEnableManifestId&#39; is enab
         </dt>
         <dd>
           <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Page/#type-InstallabilityError class="param-type">InstallabilityError</a> ]</span></span>
-          
-      <div class="details-description">
-        
-        
-      </div>
-    
-          
-        </dd>
-      
-      </dl>
-    
-      </div>
-    
-      <div class="details">
-        <h4 class="details-name monospace" id="method-getManifestIcons">
-          <span class="domain-dot">Page.</span>getManifestIcons
-          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
-          <a href="#method-getManifestIcons"
-             class="permalink"
-             data-slug="Page.getManifestIcons"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        
-        
-      </div>
-    
-        
-        
-        
-      <h5 class="properties-name">Return Object</h5>
-      <dl class="properties-container">
-        
-        <dt class="param-name monospace optional">
-          primaryIcon
-        </dt>
-        <dd>
-          <span class="param-type">string</span>
           
       <div class="details-description">
         
@@ -3393,6 +3455,91 @@ Instead, a protocol event <code>Page.fileChooserOpened</code> is emitted.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="method-setPrerenderingAllowed">
+          <span class="domain-dot">Page.</span>setPrerenderingAllowed
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#method-setPrerenderingAllowed"
+             class="permalink"
+             data-slug="Page.setPrerenderingAllowed"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Enable/disable prerendering manually.</p>
+<p>This command is a short-term solution for <a href="https://crbug.com/1440085">https://crbug.com/1440085</a>.
+See <a href="https://docs.google.com/document/d/12HVmFxYj5Jc-eJr5OmWsa2bqTJsbgGLKI6ZIyx0_wpA">https://docs.google.com/document/d/12HVmFxYj5Jc-eJr5OmWsa2bqTJsbgGLKI6ZIyx0_wpA</a>
+for more details.</p>
+<p>TODO(<a href="https://crbug.com/1440085">https://crbug.com/1440085</a>): Remove this once Puppeteer supports tab targets.</p>
+
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          isAllowed
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="method-setRPHRegistrationMode">
+          <span class="domain-dot">Page.</span>setRPHRegistrationMode
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#method-setRPHRegistrationMode"
+             class="permalink"
+             data-slug="Page.setRPHRegistrationMode"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Extensions for Custom Handlers API:
+<a href="https://html.spec.whatwg.org/multipage/system-state.html#rph-automation">https://html.spec.whatwg.org/multipage/system-state.html#rph-automation</a></p>
+
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          mode
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Page/#type-AutoResponseMode class="param-type">AutoResponseMode</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="method-setSPCTransactionMode">
           <span class="domain-dot">Page.</span>setSPCTransactionMode
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
@@ -3418,13 +3565,11 @@ Instead, a protocol event <code>Page.fileChooserOpened</code> is emitted.</p>
           mode
         </dt>
         <dd>
-          <span class="param-type">string</span>
+          <a href=/devtools-protocol/tot/Page/#type-AutoResponseMode class="param-type">AutoResponseMode</a>
           
       <div class="details-description">
         
         
-      <div class="enum-container">Allowed Values: <code>none</code>, <code>autoaccept</code>, <code>autoreject</code></div>
-    
       </div>
     
           
@@ -3794,8 +3939,9 @@ It will transition the page to the given state according to:
         </h4>
         
       <div class="details-description">
-        <p>Returns all browser cookies. Depending on the backend support, will return detailed cookie
-information in the <code>cookies</code> field.</p>
+        <p>Returns all browser cookies for the page and all of its subframes. Depending
+on the backend support, will return detailed cookie information in the
+<code>cookies</code> field.</p>
 
         
       </div>
@@ -3815,6 +3961,46 @@ information in the <code>cookies</code> field.</p>
       <div class="details-description">
         <p>Array of cookie objects.</p>
 
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="method-getManifestIcons">
+          <span class="domain-dot">Page.</span>getManifestIcons
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span><span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+          <a href="#method-getManifestIcons"
+             class="permalink"
+             data-slug="Page.getManifestIcons"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Deprecated because it&#39;s not guaranteed that the returned icon is in fact the one used for PWA installation.</p>
+
+        
+      </div>
+    
+        
+        
+        
+      <h5 class="properties-name">Return Object</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace optional">
+          primaryIcon
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
         
       </div>
     
@@ -4367,7 +4553,7 @@ available (otherwise deny).</p>
           <a href=/devtools-protocol/tot/DOM/#type-BackendNodeId class="param-type">DOM.BackendNodeId</a>
           
       <div class="details-description">
-        <p>Input node id. Only present for file choosers opened via an <input type="file"> element.</p>
+        <p>Input node id. Only present for file choosers opened via an &lt;input type=&quot;file&quot;&gt; element.</p>
 
         
       </div>
@@ -4444,22 +4630,6 @@ available (otherwise deny).</p>
       </div>
     
           
-        </dd>
-      
-        <dt class="param-name monospace optional">
-          adScriptId
-        </dt>
-        <dd>
-          <a href=/devtools-protocol/tot/Page/#type-AdScriptId class="param-type">AdScriptId</a>
-          
-      <div class="details-description">
-        <p>Identifies the bottom-most script which caused the frame to be labelled
-as an ad. Only sent if frame is labelled as an ad and id is available.</p>
-
-        
-      </div>
-    
-          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
       </dl>
@@ -4891,75 +5061,6 @@ the page execution. Execution can be resumed via calling Page.handleJavaScriptDi
         </dt>
         <dd>
           <a href=/devtools-protocol/tot/Network/#type-MonotonicTime class="param-type">Network.MonotonicTime</a>
-          
-      <div class="details-description">
-        
-        
-      </div>
-    
-          
-        </dd>
-      
-      </dl>
-    
-        
-      </div>
-    
-      <div class="details">
-        <h4 class="details-name monospace" id="event-prerenderAttemptCompleted">
-          <span class="domain-dot">Page.</span>prerenderAttemptCompleted
-          
-          <a href="#event-prerenderAttemptCompleted"
-             class="permalink"
-             data-slug="Page.prerenderAttemptCompleted"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        <p>Fired when a prerender attempt is completed.</p>
-
-        
-      </div>
-    
-        
-        
-      <h5 class="properties-name">parameters</h5>
-      <dl class="properties-container">
-        
-        <dt class="param-name monospace ">
-          initiatingFrameId
-        </dt>
-        <dd>
-          <a href=/devtools-protocol/tot/Page/#type-FrameId class="param-type">FrameId</a>
-          
-      <div class="details-description">
-        <p>The frame id of the frame initiating prerendering.</p>
-
-        
-      </div>
-    
-          
-        </dd>
-      
-        <dt class="param-name monospace ">
-          prerenderingUrl
-        </dt>
-        <dd>
-          <span class="param-type">string</span>
-          
-      <div class="details-description">
-        
-        
-      </div>
-    
-          
-        </dd>
-      
-        <dt class="param-name monospace ">
-          finalStatus
-        </dt>
-        <dd>
-          <a href=/devtools-protocol/tot/Page/#type-PrerenderFinalStatus class="param-type">PrerenderFinalStatus</a>
           
       <div class="details-description">
         
@@ -6527,29 +6628,6 @@ Example URLs: <a href="http://www.google.com/file.html">http://www.google.com/fi
       </div>
     
       <div class="details">
-        <h4 class="details-name monospace" id="type-PrerenderFinalStatus">
-          <span class="domain-dot">Page.</span>PrerenderFinalStatus
-          
-          <a href="#type-PrerenderFinalStatus"
-             class="permalink"
-             data-slug="Page.PrerenderFinalStatus"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        <p>List of FinalStatus reasons for Prerender2.</p>
-
-        
-      <div class="enum-container">Allowed Values: <code>Activated</code>, <code>Destroyed</code>, <code>LowEndDevice</code>, <code>CrossOriginRedirect</code>, <code>CrossOriginNavigation</code>, <code>InvalidSchemeRedirect</code>, <code>InvalidSchemeNavigation</code>, <code>InProgressNavigation</code>, <code>NavigationRequestBlockedByCsp</code>, <code>MainFrameNavigation</code>, <code>MojoBinderPolicy</code>, <code>RendererProcessCrashed</code>, <code>RendererProcessKilled</code>, <code>Download</code>, <code>TriggerDestroyed</code>, <code>NavigationNotCommitted</code>, <code>NavigationBadHttpStatus</code>, <code>ClientCertRequested</code>, <code>NavigationRequestNetworkError</code>, <code>MaxNumOfRunningPrerendersExceeded</code>, <code>CancelAllHostsForTesting</code>, <code>DidFailLoad</code>, <code>Stop</code>, <code>SslCertificateError</code>, <code>LoginAuthRequested</code>, <code>UaChangeRequiresReload</code>, <code>BlockedByClient</code>, <code>AudioOutputDeviceRequested</code>, <code>MixedContent</code>, <code>TriggerBackgrounded</code>, <code>EmbedderTriggeredAndSameOriginRedirected</code>, <code>EmbedderTriggeredAndCrossOriginRedirected</code>, <code>EmbedderTriggeredAndDestroyed</code></div>
-    
-      </div>
-    
-        <p class="type-type">Type: <strong>string</strong></p>
-        
-        
-      </div>
-    
-      <div class="details">
         <h4 class="details-name monospace" id="type-ScriptIdentifier">
           <span class="domain-dot">Page.</span>ScriptIdentifier
           
@@ -7039,6 +7117,29 @@ as an ad.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="type-AutoResponseMode">
+          <span class="domain-dot">Page.</span>AutoResponseMode
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-AutoResponseMode"
+             class="permalink"
+             data-slug="Page.AutoResponseMode"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Enum of possible auto-reponse for permisison / prompt dialogs.</p>
+
+        
+      <div class="enum-container">Allowed Values: <code>none</code>, <code>autoAccept</code>, <code>autoReject</code>, <code>autoOptOut</code></div>
+    
+      </div>
+    
+        <p class="type-type">Type: <strong>string</strong></p>
+        
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="type-BackForwardCacheNotRestoredExplanation">
           <span class="domain-dot">Page.</span>BackForwardCacheNotRestoredExplanation
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
@@ -7196,7 +7297,7 @@ dependent on the reason:</p>
         <p>List of not restored reasons for back-forward cache.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>NotPrimaryMainFrame</code>, <code>BackForwardCacheDisabled</code>, <code>RelatedActiveContentsExist</code>, <code>HTTPStatusNotOK</code>, <code>SchemeNotHTTPOrHTTPS</code>, <code>Loading</code>, <code>WasGrantedMediaAccess</code>, <code>DisableForRenderFrameHostCalled</code>, <code>DomainNotAllowed</code>, <code>HTTPMethodNotGET</code>, <code>SubframeIsNavigating</code>, <code>Timeout</code>, <code>CacheLimit</code>, <code>JavaScriptExecution</code>, <code>RendererProcessKilled</code>, <code>RendererProcessCrashed</code>, <code>SchedulerTrackedFeatureUsed</code>, <code>ConflictingBrowsingInstance</code>, <code>CacheFlushed</code>, <code>ServiceWorkerVersionActivation</code>, <code>SessionRestored</code>, <code>ServiceWorkerPostMessage</code>, <code>EnteredBackForwardCacheBeforeServiceWorkerHostAdded</code>, <code>RenderFrameHostReused_SameSite</code>, <code>RenderFrameHostReused_CrossSite</code>, <code>ServiceWorkerClaim</code>, <code>IgnoreEventAndEvict</code>, <code>HaveInnerContents</code>, <code>TimeoutPuttingInCache</code>, <code>BackForwardCacheDisabledByLowMemory</code>, <code>BackForwardCacheDisabledByCommandLine</code>, <code>NetworkRequestDatapipeDrainedAsBytesConsumer</code>, <code>NetworkRequestRedirected</code>, <code>NetworkRequestTimeout</code>, <code>NetworkExceedsBufferLimit</code>, <code>NavigationCancelledWhileRestoring</code>, <code>NotMostRecentNavigationEntry</code>, <code>BackForwardCacheDisabledForPrerender</code>, <code>UserAgentOverrideDiffers</code>, <code>ForegroundCacheLimit</code>, <code>BrowsingInstanceNotSwapped</code>, <code>BackForwardCacheDisabledForDelegate</code>, <code>UnloadHandlerExistsInMainFrame</code>, <code>UnloadHandlerExistsInSubFrame</code>, <code>ServiceWorkerUnregistration</code>, <code>CacheControlNoStore</code>, <code>CacheControlNoStoreCookieModified</code>, <code>CacheControlNoStoreHTTPOnlyCookieModified</code>, <code>NoResponseHead</code>, <code>Unknown</code>, <code>ActivationNavigationsDisallowedForBug1234857</code>, <code>ErrorDocument</code>, <code>FencedFramesEmbedder</code>, <code>WebSocket</code>, <code>WebTransport</code>, <code>WebRTC</code>, <code>MainResourceHasCacheControlNoStore</code>, <code>MainResourceHasCacheControlNoCache</code>, <code>SubresourceHasCacheControlNoStore</code>, <code>SubresourceHasCacheControlNoCache</code>, <code>ContainsPlugins</code>, <code>DocumentLoaded</code>, <code>DedicatedWorkerOrWorklet</code>, <code>OutstandingNetworkRequestOthers</code>, <code>OutstandingIndexedDBTransaction</code>, <code>RequestedNotificationsPermission</code>, <code>RequestedMIDIPermission</code>, <code>RequestedAudioCapturePermission</code>, <code>RequestedVideoCapturePermission</code>, <code>RequestedBackForwardCacheBlockedSensors</code>, <code>RequestedBackgroundWorkPermission</code>, <code>BroadcastChannel</code>, <code>IndexedDBConnection</code>, <code>WebXR</code>, <code>SharedWorker</code>, <code>WebLocks</code>, <code>WebHID</code>, <code>WebShare</code>, <code>RequestedStorageAccessGrant</code>, <code>WebNfc</code>, <code>OutstandingNetworkRequestFetch</code>, <code>OutstandingNetworkRequestXHR</code>, <code>AppBanner</code>, <code>Printing</code>, <code>WebDatabase</code>, <code>PictureInPicture</code>, <code>Portal</code>, <code>SpeechRecognizer</code>, <code>IdleManager</code>, <code>PaymentManager</code>, <code>SpeechSynthesis</code>, <code>KeyboardLock</code>, <code>WebOTPService</code>, <code>OutstandingNetworkRequestDirectSocket</code>, <code>InjectedJavascript</code>, <code>InjectedStyleSheet</code>, <code>Dummy</code>, <code>ContentSecurityHandler</code>, <code>ContentWebAuthenticationAPI</code>, <code>ContentFileChooser</code>, <code>ContentSerial</code>, <code>ContentFileSystemAccess</code>, <code>ContentMediaDevicesDispatcherHost</code>, <code>ContentWebBluetooth</code>, <code>ContentWebUSB</code>, <code>ContentMediaSessionService</code>, <code>ContentScreenReader</code>, <code>EmbedderPopupBlockerTabHelper</code>, <code>EmbedderSafeBrowsingTriggeredPopupBlocker</code>, <code>EmbedderSafeBrowsingThreatDetails</code>, <code>EmbedderAppBannerManager</code>, <code>EmbedderDomDistillerViewerSource</code>, <code>EmbedderDomDistillerSelfDeletingRequestDelegate</code>, <code>EmbedderOomInterventionTabHelper</code>, <code>EmbedderOfflinePage</code>, <code>EmbedderChromePasswordManagerClientBindCredentialManager</code>, <code>EmbedderPermissionRequestManager</code>, <code>EmbedderModalDialog</code>, <code>EmbedderExtensions</code>, <code>EmbedderExtensionMessaging</code>, <code>EmbedderExtensionMessagingForOpenPort</code>, <code>EmbedderExtensionSentMessageToCachedFrame</code></div>
+      <div class="enum-container">Allowed Values: <code>NotPrimaryMainFrame</code>, <code>BackForwardCacheDisabled</code>, <code>RelatedActiveContentsExist</code>, <code>HTTPStatusNotOK</code>, <code>SchemeNotHTTPOrHTTPS</code>, <code>Loading</code>, <code>WasGrantedMediaAccess</code>, <code>DisableForRenderFrameHostCalled</code>, <code>DomainNotAllowed</code>, <code>HTTPMethodNotGET</code>, <code>SubframeIsNavigating</code>, <code>Timeout</code>, <code>CacheLimit</code>, <code>JavaScriptExecution</code>, <code>RendererProcessKilled</code>, <code>RendererProcessCrashed</code>, <code>SchedulerTrackedFeatureUsed</code>, <code>ConflictingBrowsingInstance</code>, <code>CacheFlushed</code>, <code>ServiceWorkerVersionActivation</code>, <code>SessionRestored</code>, <code>ServiceWorkerPostMessage</code>, <code>EnteredBackForwardCacheBeforeServiceWorkerHostAdded</code>, <code>RenderFrameHostReused_SameSite</code>, <code>RenderFrameHostReused_CrossSite</code>, <code>ServiceWorkerClaim</code>, <code>IgnoreEventAndEvict</code>, <code>HaveInnerContents</code>, <code>TimeoutPuttingInCache</code>, <code>BackForwardCacheDisabledByLowMemory</code>, <code>BackForwardCacheDisabledByCommandLine</code>, <code>NetworkRequestDatapipeDrainedAsBytesConsumer</code>, <code>NetworkRequestRedirected</code>, <code>NetworkRequestTimeout</code>, <code>NetworkExceedsBufferLimit</code>, <code>NavigationCancelledWhileRestoring</code>, <code>NotMostRecentNavigationEntry</code>, <code>BackForwardCacheDisabledForPrerender</code>, <code>UserAgentOverrideDiffers</code>, <code>ForegroundCacheLimit</code>, <code>BrowsingInstanceNotSwapped</code>, <code>BackForwardCacheDisabledForDelegate</code>, <code>UnloadHandlerExistsInMainFrame</code>, <code>UnloadHandlerExistsInSubFrame</code>, <code>ServiceWorkerUnregistration</code>, <code>CacheControlNoStore</code>, <code>CacheControlNoStoreCookieModified</code>, <code>CacheControlNoStoreHTTPOnlyCookieModified</code>, <code>NoResponseHead</code>, <code>Unknown</code>, <code>ActivationNavigationsDisallowedForBug1234857</code>, <code>ErrorDocument</code>, <code>FencedFramesEmbedder</code>, <code>CookieDisabled</code>, <code>HTTPAuthRequired</code>, <code>CookieFlushed</code>, <code>WebSocket</code>, <code>WebTransport</code>, <code>WebRTC</code>, <code>MainResourceHasCacheControlNoStore</code>, <code>MainResourceHasCacheControlNoCache</code>, <code>SubresourceHasCacheControlNoStore</code>, <code>SubresourceHasCacheControlNoCache</code>, <code>ContainsPlugins</code>, <code>DocumentLoaded</code>, <code>DedicatedWorkerOrWorklet</code>, <code>OutstandingNetworkRequestOthers</code>, <code>RequestedMIDIPermission</code>, <code>RequestedAudioCapturePermission</code>, <code>RequestedVideoCapturePermission</code>, <code>RequestedBackForwardCacheBlockedSensors</code>, <code>RequestedBackgroundWorkPermission</code>, <code>BroadcastChannel</code>, <code>WebXR</code>, <code>SharedWorker</code>, <code>WebLocks</code>, <code>WebHID</code>, <code>WebShare</code>, <code>RequestedStorageAccessGrant</code>, <code>WebNfc</code>, <code>OutstandingNetworkRequestFetch</code>, <code>OutstandingNetworkRequestXHR</code>, <code>AppBanner</code>, <code>Printing</code>, <code>WebDatabase</code>, <code>PictureInPicture</code>, <code>Portal</code>, <code>SpeechRecognizer</code>, <code>IdleManager</code>, <code>PaymentManager</code>, <code>SpeechSynthesis</code>, <code>KeyboardLock</code>, <code>WebOTPService</code>, <code>OutstandingNetworkRequestDirectSocket</code>, <code>InjectedJavascript</code>, <code>InjectedStyleSheet</code>, <code>KeepaliveRequest</code>, <code>IndexedDBEvent</code>, <code>Dummy</code>, <code>JsNetworkRequestReceivedCacheControlNoStoreResource</code>, <code>WebRTCSticky</code>, <code>WebTransportSticky</code>, <code>WebSocketSticky</code>, <code>ContentSecurityHandler</code>, <code>ContentWebAuthenticationAPI</code>, <code>ContentFileChooser</code>, <code>ContentSerial</code>, <code>ContentFileSystemAccess</code>, <code>ContentMediaDevicesDispatcherHost</code>, <code>ContentWebBluetooth</code>, <code>ContentWebUSB</code>, <code>ContentMediaSessionService</code>, <code>ContentScreenReader</code>, <code>EmbedderPopupBlockerTabHelper</code>, <code>EmbedderSafeBrowsingTriggeredPopupBlocker</code>, <code>EmbedderSafeBrowsingThreatDetails</code>, <code>EmbedderAppBannerManager</code>, <code>EmbedderDomDistillerViewerSource</code>, <code>EmbedderDomDistillerSelfDeletingRequestDelegate</code>, <code>EmbedderOomInterventionTabHelper</code>, <code>EmbedderOfflinePage</code>, <code>EmbedderChromePasswordManagerClientBindCredentialManager</code>, <code>EmbedderPermissionRequestManager</code>, <code>EmbedderModalDialog</code>, <code>EmbedderExtensions</code>, <code>EmbedderExtensionMessaging</code>, <code>EmbedderExtensionMessagingForOpenPort</code>, <code>EmbedderExtensionSentMessageToCachedFrame</code></div>
     
       </div>
     
@@ -8302,7 +8403,7 @@ parsable.</p>
 in third_party/blink/renderer/core/permissions_policy/permissions_policy_features.json5.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>accelerometer</code>, <code>ambient-light-sensor</code>, <code>attribution-reporting</code>, <code>autoplay</code>, <code>bluetooth</code>, <code>browsing-topics</code>, <code>camera</code>, <code>ch-dpr</code>, <code>ch-device-memory</code>, <code>ch-downlink</code>, <code>ch-ect</code>, <code>ch-prefers-color-scheme</code>, <code>ch-rtt</code>, <code>ch-save-data</code>, <code>ch-ua</code>, <code>ch-ua-arch</code>, <code>ch-ua-bitness</code>, <code>ch-ua-platform</code>, <code>ch-ua-model</code>, <code>ch-ua-mobile</code>, <code>ch-ua-full</code>, <code>ch-ua-full-version</code>, <code>ch-ua-full-version-list</code>, <code>ch-ua-platform-version</code>, <code>ch-ua-reduced</code>, <code>ch-ua-wow64</code>, <code>ch-viewport-height</code>, <code>ch-viewport-width</code>, <code>ch-width</code>, <code>clipboard-read</code>, <code>clipboard-write</code>, <code>cross-origin-isolated</code>, <code>direct-sockets</code>, <code>display-capture</code>, <code>document-domain</code>, <code>encrypted-media</code>, <code>execution-while-out-of-viewport</code>, <code>execution-while-not-rendered</code>, <code>federated-credentials</code>, <code>focus-without-user-activation</code>, <code>fullscreen</code>, <code>frobulate</code>, <code>gamepad</code>, <code>geolocation</code>, <code>gyroscope</code>, <code>hid</code>, <code>idle-detection</code>, <code>interest-cohort</code>, <code>join-ad-interest-group</code>, <code>keyboard-map</code>, <code>local-fonts</code>, <code>magnetometer</code>, <code>microphone</code>, <code>midi</code>, <code>otp-credentials</code>, <code>payment</code>, <code>picture-in-picture</code>, <code>publickey-credentials-get</code>, <code>run-ad-auction</code>, <code>screen-wake-lock</code>, <code>serial</code>, <code>shared-autofill</code>, <code>shared-storage</code>, <code>storage-access-api</code>, <code>sync-xhr</code>, <code>trust-token-redemption</code>, <code>usb</code>, <code>vertical-scroll</code>, <code>web-share</code>, <code>window-placement</code>, <code>xr-spatial-tracking</code></div>
+      <div class="enum-container">Allowed Values: <code>accelerometer</code>, <code>ambient-light-sensor</code>, <code>attribution-reporting</code>, <code>autoplay</code>, <code>bluetooth</code>, <code>browsing-topics</code>, <code>camera</code>, <code>ch-dpr</code>, <code>ch-device-memory</code>, <code>ch-downlink</code>, <code>ch-ect</code>, <code>ch-prefers-color-scheme</code>, <code>ch-prefers-reduced-motion</code>, <code>ch-rtt</code>, <code>ch-save-data</code>, <code>ch-ua</code>, <code>ch-ua-arch</code>, <code>ch-ua-bitness</code>, <code>ch-ua-platform</code>, <code>ch-ua-model</code>, <code>ch-ua-mobile</code>, <code>ch-ua-form-factor</code>, <code>ch-ua-full-version</code>, <code>ch-ua-full-version-list</code>, <code>ch-ua-platform-version</code>, <code>ch-ua-wow64</code>, <code>ch-viewport-height</code>, <code>ch-viewport-width</code>, <code>ch-width</code>, <code>clipboard-read</code>, <code>clipboard-write</code>, <code>compute-pressure</code>, <code>cross-origin-isolated</code>, <code>direct-sockets</code>, <code>display-capture</code>, <code>document-domain</code>, <code>encrypted-media</code>, <code>execution-while-out-of-viewport</code>, <code>execution-while-not-rendered</code>, <code>focus-without-user-activation</code>, <code>fullscreen</code>, <code>frobulate</code>, <code>gamepad</code>, <code>geolocation</code>, <code>gyroscope</code>, <code>hid</code>, <code>identity-credentials-get</code>, <code>idle-detection</code>, <code>interest-cohort</code>, <code>join-ad-interest-group</code>, <code>keyboard-map</code>, <code>local-fonts</code>, <code>magnetometer</code>, <code>microphone</code>, <code>midi</code>, <code>otp-credentials</code>, <code>payment</code>, <code>picture-in-picture</code>, <code>private-aggregation</code>, <code>private-state-token-issuance</code>, <code>private-state-token-redemption</code>, <code>publickey-credentials-get</code>, <code>run-ad-auction</code>, <code>screen-wake-lock</code>, <code>serial</code>, <code>shared-autofill</code>, <code>shared-storage</code>, <code>shared-storage-select-url</code>, <code>smart-card</code>, <code>storage-access</code>, <code>sync-xhr</code>, <code>unload</code>, <code>usb</code>, <code>vertical-scroll</code>, <code>web-share</code>, <code>window-management</code>, <code>window-placement</code>, <code>xr-spatial-tracking</code></div>
     
       </div>
     

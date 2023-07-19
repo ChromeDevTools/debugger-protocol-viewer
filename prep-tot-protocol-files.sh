@@ -2,13 +2,13 @@
 set -x
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ -n $CI ]; then
-  # https://github.com/ChromeDevTools/devtools-protocol/blob/HEAD/.github/workflows/update.yml
-  protocol_repo_path="$local_script_path/.."
-else
+# if [ -z $CI ]; then
+#   # https://github.com/ChromeDevTools/devtools-protocol/blob/HEAD/.github/workflows/update.yml
+#   protocol_repo_path="$local_script_path/.."
+# else
   # Assume `devtools-protocol` lives alongside `debugger-protocol-viewer`.
   protocol_repo_path="$local_script_path/../devtools-protocol"
-fi
+# fi
 
 browser_protocol_path="$protocol_repo_path/json/browser_protocol.json"
 js_protocol_path="$protocol_repo_path/json/js_protocol.json"

@@ -172,11 +172,26 @@ API.</p>
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#method-setResponseOverrideBits"><span class="domain-dot">WebAuthn.</span>setResponseOverrideBits</a>
+        
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#method-setUserVerified"><span class="domain-dot">WebAuthn.</span>setUserVerified</a>
         
       </div>
       
+        <h3>Events</h3>
+      <div class="toc-link">
+        <a class="monospace" href="#event-credentialAdded"><span class="domain-dot">WebAuthn.</span>credentialAdded</a>
         
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#event-credentialAsserted"><span class="domain-dot">WebAuthn.</span>credentialAsserted</a>
+        
+      </div>
+      
         <h3>Types</h3>
       <div class="toc-link">
         <a class="monospace" href="#type-AuthenticatorId"><span class="domain-dot">WebAuthn.</span>AuthenticatorId</a>
@@ -717,6 +732,94 @@ The default is true.</p>
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="method-setResponseOverrideBits">
+          <span class="domain-dot">WebAuthn.</span>setResponseOverrideBits
+          
+          <a href="#method-setResponseOverrideBits"
+             class="permalink"
+             data-slug="WebAuthn.setResponseOverrideBits"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not present.</p>
+
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          authenticatorId
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/WebAuthn/#type-AuthenticatorId class="param-type">AuthenticatorId</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          isBogusSignature
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If isBogusSignature is set, overrides the signature in the authenticator response to be zero.
+Defaults to false.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          isBadUV
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If isBadUV is set, overrides the UV bit in the flags in the authenticator response to
+be zero. Defaults to false.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          isBadUP
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If isBadUP is set, overrides the UP bit in the flags in the authenticator response to
+be zero. Defaults to false.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="method-setUserVerified">
           <span class="domain-dot">WebAuthn.</span>setUserVerified
           
@@ -774,6 +877,119 @@ The default is true.</p>
       </div>
     
       
+      <h3 id="events">Events</h3>
+      <div>
+        
+      <div class="details">
+        <h4 class="details-name monospace" id="event-credentialAdded">
+          <span class="domain-dot">WebAuthn.</span>credentialAdded
+          
+          <a href="#event-credentialAdded"
+             class="permalink"
+             data-slug="WebAuthn.credentialAdded"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Triggered when a credential is added to an authenticator.</p>
+
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          authenticatorId
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/WebAuthn/#type-AuthenticatorId class="param-type">AuthenticatorId</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace ">
+          credential
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/WebAuthn/#type-Credential class="param-type">Credential</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="event-credentialAsserted">
+          <span class="domain-dot">WebAuthn.</span>credentialAsserted
+          
+          <a href="#event-credentialAsserted"
+             class="permalink"
+             data-slug="WebAuthn.credentialAsserted"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Triggered when a credential is used in a webauthn assertion.</p>
+
+        
+      </div>
+    
+        
+        
+      <h5 class="properties-name">parameters</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          authenticatorId
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/WebAuthn/#type-AuthenticatorId class="param-type">AuthenticatorId</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace ">
+          credential
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/WebAuthn/#type-Credential class="param-type">Credential</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+        
+      </div>
+    
+      </div>
+    
       
       <h3 id="types">Types</h3>
       <div>
@@ -1133,6 +1349,23 @@ Defaults to false.</p>
       <div class="details-description">
         <p>If set to true, the authenticator will support the minPinLength extension.
 <a href="https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-20210615.html#sctn-minpinlength-extension">https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-20210615.html#sctn-minpinlength-extension</a>
+Defaults to false.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          hasPrf
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>If set to true, the authenticator will support the prf extension.
+<a href="https://w3c.github.io/webauthn/#prf-extension">https://w3c.github.io/webauthn/#prf-extension</a>
 Defaults to false.</p>
 
         

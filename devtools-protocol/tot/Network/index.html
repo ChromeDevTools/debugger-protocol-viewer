@@ -152,11 +152,6 @@ file, data and other requests and responses, their headers, bodies, timing, etc.
       </div>
       
       <div class="toc-link">
-        <a class="monospace" href="#method-getAllCookies"><span class="domain-dot">Network.</span>getAllCookies</a>
-        
-      </div>
-      
-      <div class="toc-link">
         <a class="monospace" href="#method-getCookies"><span class="domain-dot">Network.</span>getCookies</a>
         
       </div>
@@ -208,6 +203,11 @@ file, data and other requests and responses, their headers, bodies, timing, etc.
       
       <div class="toc-link">
         <a class="monospace" href="#method-canEmulateNetworkConditions"><span class="domain-dot">Network.</span>canEmulateNetworkConditions</a>
+        <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#method-getAllCookies"><span class="domain-dot">Network.</span>getAllCookies</a>
         <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
       </div>
       
@@ -584,6 +584,11 @@ file, data and other requests and responses, their headers, bodies, timing, etc.
       </div>
       
       <div class="toc-link">
+        <a class="monospace" href="#type-AlternateProtocolUsage"><span class="domain-dot">Network.</span>AlternateProtocolUsage</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
         <a class="monospace" href="#type-AuthChallenge"><span class="domain-dot">Network.</span>AuthChallenge</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
@@ -615,6 +620,16 @@ file, data and other requests and responses, their headers, bodies, timing, etc.
       
       <div class="toc-link">
         <a class="monospace" href="#type-ContentEncoding"><span class="domain-dot">Network.</span>ContentEncoding</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#type-ContentSecurityPolicySource"><span class="domain-dot">Network.</span>ContentSecurityPolicySource</a>
+        <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+      </div>
+      
+      <div class="toc-link">
+        <a class="monospace" href="#type-ContentSecurityPolicyStatus"><span class="domain-dot">Network.</span>ContentSecurityPolicyStatus</a>
         <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
       </div>
       
@@ -1074,48 +1089,6 @@ provided URL.</p>
       </dl>
     
         
-      </div>
-    
-      <div class="details">
-        <h4 class="details-name monospace" id="method-getAllCookies">
-          <span class="domain-dot">Network.</span>getAllCookies
-          
-          <a href="#method-getAllCookies"
-             class="permalink"
-             data-slug="Network.getAllCookies"
-             title="Double click to copy markdown-formatted URL">#</a>
-        </h4>
-        
-      <div class="details-description">
-        <p>Returns all browser cookies. Depending on the backend support, will return detailed cookie
-information in the <code>cookies</code> field.</p>
-
-        
-      </div>
-    
-        
-        
-        
-      <h5 class="properties-name">Return Object</h5>
-      <dl class="properties-container">
-        
-        <dt class="param-name monospace ">
-          cookies
-        </dt>
-        <dd>
-          <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Network/#type-Cookie class="param-type">Cookie</a> ]</span></span>
-          
-      <div class="details-description">
-        <p>Array of cookie objects.</p>
-
-        
-      </div>
-    
-          
-        </dd>
-      
-      </dl>
-    
       </div>
     
       <div class="details">
@@ -1901,6 +1874,49 @@ If not set, the cookie will be set as not partitioned.</p>
           
       <div class="details-description">
         <p>True if emulation of network conditions is supported.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="method-getAllCookies">
+          <span class="domain-dot">Network.</span>getAllCookies
+          <span class="deprecated" title="Deprecated, please adopt alternative">Deprecated</span>
+          <a href="#method-getAllCookies"
+             class="permalink"
+             data-slug="Network.getAllCookies"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>Returns all browser cookies. Depending on the backend support, will return detailed cookie
+information in the <code>cookies</code> field.
+Deprecated. Use Storage.getCookies instead.</p>
+
+        
+      </div>
+    
+        
+        
+        
+      <h5 class="properties-name">Return Object</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          cookies
+        </dt>
+        <dd>
+          <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Network/#type-Cookie class="param-type">Cookie</a> ]</span></span>
+          
+      <div class="details-description">
+        <p>Array of cookie objects.</p>
 
         
       </div>
@@ -3225,22 +3241,6 @@ continueInterceptedRequest call.</p>
           
         </dd>
       
-        <dt class="param-name monospace optional">
-          shouldReportCorbBlocking
-        </dt>
-        <dd>
-          <span class="param-type">boolean</span>
-          
-      <div class="details-description">
-        <p>Set when 1) response was blocked by Cross-Origin Read Blocking and also
-2) this needs to be reported to the DevTools console.</p>
-
-        
-      </div>
-    
-          
-        </dd>
-      
       </dl>
     
         
@@ -4556,6 +4556,21 @@ the request and the ones not sent; the latter are distinguished by having blocke
           
         </dd>
       
+        <dt class="param-name monospace optional">
+          siteHasCookieInOtherPartition
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>Whether the site has partitioned cookies stored in a partition different than the current one.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
       </dl>
     
         
@@ -4744,6 +4759,37 @@ for cached requests, where the status in responseReceived is a 200 and this will
       <div class="details-description">
         <p>Raw response header text as it was received over the wire. The raw text may not always be
 available, such as in the case of HTTP/2 or QUIC.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          cookiePartitionKey
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        <p>The cookie partition key that will be used to store partitioned cookies set in this response.
+Only sent when partitioned cookies are enabled.</p>
+
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          cookiePartitionKeyOpaque
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        <p>True if partitioned cookies are enabled, but the partition key is not serializeable to string.</p>
 
         
       </div>
@@ -5124,7 +5170,7 @@ of the operation already exists und thus, the operation was abort
 preemptively (e.g. a cache hit).</p>
 
         
-      <div class="enum-container">Allowed Values: <code>Ok</code>, <code>InvalidArgument</code>, <code>FailedPrecondition</code>, <code>ResourceExhausted</code>, <code>AlreadyExists</code>, <code>Unavailable</code>, <code>BadResponse</code>, <code>InternalError</code>, <code>UnknownError</code>, <code>FulfilledLocally</code></div>
+      <div class="enum-container">Allowed Values: <code>Ok</code>, <code>InvalidArgument</code>, <code>MissingIssuerKeys</code>, <code>FailedPrecondition</code>, <code>ResourceExhausted</code>, <code>AlreadyExists</code>, <code>Unavailable</code>, <code>Unauthorized</code>, <code>BadResponse</code>, <code>InternalError</code>, <code>UnknownError</code>, <code>FulfilledLocally</code></div>
     
       </div>
     
@@ -6133,7 +6179,7 @@ If not set, the cookie will be set as not partitioned.</p>
         <p>The reason why request was blocked.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>DisallowedByMode</code>, <code>InvalidResponse</code>, <code>WildcardOriginNotAllowed</code>, <code>MissingAllowOriginHeader</code>, <code>MultipleAllowOriginValues</code>, <code>InvalidAllowOriginValue</code>, <code>AllowOriginMismatch</code>, <code>InvalidAllowCredentials</code>, <code>CorsDisabledScheme</code>, <code>PreflightInvalidStatus</code>, <code>PreflightDisallowedRedirect</code>, <code>PreflightWildcardOriginNotAllowed</code>, <code>PreflightMissingAllowOriginHeader</code>, <code>PreflightMultipleAllowOriginValues</code>, <code>PreflightInvalidAllowOriginValue</code>, <code>PreflightAllowOriginMismatch</code>, <code>PreflightInvalidAllowCredentials</code>, <code>PreflightMissingAllowExternal</code>, <code>PreflightInvalidAllowExternal</code>, <code>PreflightMissingAllowPrivateNetwork</code>, <code>PreflightInvalidAllowPrivateNetwork</code>, <code>InvalidAllowMethodsPreflightResponse</code>, <code>InvalidAllowHeadersPreflightResponse</code>, <code>MethodDisallowedByPreflightResponse</code>, <code>HeaderDisallowedByPreflightResponse</code>, <code>RedirectContainsCredentials</code>, <code>InsecurePrivateNetwork</code>, <code>InvalidPrivateNetworkAccess</code>, <code>UnexpectedPrivateNetworkAccess</code>, <code>NoCorsRedirectModeNotFollow</code></div>
+      <div class="enum-container">Allowed Values: <code>DisallowedByMode</code>, <code>InvalidResponse</code>, <code>WildcardOriginNotAllowed</code>, <code>MissingAllowOriginHeader</code>, <code>MultipleAllowOriginValues</code>, <code>InvalidAllowOriginValue</code>, <code>AllowOriginMismatch</code>, <code>InvalidAllowCredentials</code>, <code>CorsDisabledScheme</code>, <code>PreflightInvalidStatus</code>, <code>PreflightDisallowedRedirect</code>, <code>PreflightWildcardOriginNotAllowed</code>, <code>PreflightMissingAllowOriginHeader</code>, <code>PreflightMultipleAllowOriginValues</code>, <code>PreflightInvalidAllowOriginValue</code>, <code>PreflightAllowOriginMismatch</code>, <code>PreflightInvalidAllowCredentials</code>, <code>PreflightMissingAllowExternal</code>, <code>PreflightInvalidAllowExternal</code>, <code>PreflightMissingAllowPrivateNetwork</code>, <code>PreflightInvalidAllowPrivateNetwork</code>, <code>InvalidAllowMethodsPreflightResponse</code>, <code>InvalidAllowHeadersPreflightResponse</code>, <code>MethodDisallowedByPreflightResponse</code>, <code>HeaderDisallowedByPreflightResponse</code>, <code>RedirectContainsCredentials</code>, <code>InsecurePrivateNetwork</code>, <code>InvalidPrivateNetworkAccess</code>, <code>UnexpectedPrivateNetworkAccess</code>, <code>NoCorsRedirectModeNotFollow</code>, <code>PreflightMissingPrivateNetworkAccessId</code>, <code>PreflightMissingPrivateNetworkAccessName</code>, <code>PrivateNetworkAccessPermissionUnavailable</code>, <code>PrivateNetworkAccessPermissionDenied</code></div>
     
       </div>
     
@@ -7009,6 +7055,21 @@ milliseconds relatively to this requestTime.</p>
         </dd>
       
         <dt class="param-name monospace ">
+          receiveHeadersStart
+        </dt>
+        <dd>
+          <span class="param-type">number</span>
+          
+      <div class="details-description">
+        <p>Started receiving response headers.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+        </dd>
+      
+        <dt class="param-name monospace ">
           receiveHeadersEnd
         </dt>
         <dd>
@@ -7385,6 +7446,21 @@ milliseconds relatively to this requestTime.</p>
       </div>
     
           
+        </dd>
+      
+        <dt class="param-name monospace optional">
+          alternateProtocolUsage
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Network/#type-AlternateProtocolUsage class="param-type">AlternateProtocolUsage</a>
+          
+      <div class="details-description">
+        <p>The reason why Chrome uses a specific transport protocol for HTTP semantics.</p>
+
+        
+      </div>
+    
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
         </dd>
       
         <dt class="param-name monospace ">
@@ -8097,6 +8173,29 @@ If the opcode isn&#39;t 1, then payloadData is a base64 encoded string represent
       </div>
     
       <div class="details">
+        <h4 class="details-name monospace" id="type-AlternateProtocolUsage">
+          <span class="domain-dot">Network.</span>AlternateProtocolUsage
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-AlternateProtocolUsage"
+             class="permalink"
+             data-slug="Network.AlternateProtocolUsage"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        <p>The reason why Chrome uses a specific transport protocol for HTTP semantics.</p>
+
+        
+      <div class="enum-container">Allowed Values: <code>alternativeJobWonWithoutRace</code>, <code>alternativeJobWonRace</code>, <code>mainJobWonRace</code>, <code>mappingMissing</code>, <code>broken</code>, <code>dnsAlpnH3JobWonWithoutRace</code>, <code>dnsAlpnH3JobWonRace</code>, <code>unspecifiedReason</code></div>
+    
+      </div>
+    
+        <p class="type-type">Type: <strong>string</strong></p>
+        
+        
+      </div>
+    
+      <div class="details">
         <h4 class="details-name monospace" id="type-AuthChallenge">
           <span class="domain-dot">Network.</span>AuthChallenge
           <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
@@ -8514,12 +8613,101 @@ the same request (but not for redirected requests).</p>
         <p>List of content encodings supported by the backend.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>deflate</code>, <code>gzip</code>, <code>br</code></div>
+      <div class="enum-container">Allowed Values: <code>deflate</code>, <code>gzip</code>, <code>br</code>, <code>zstd</code></div>
     
       </div>
     
         <p class="type-type">Type: <strong>string</strong></p>
         
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="type-ContentSecurityPolicySource">
+          <span class="domain-dot">Network.</span>ContentSecurityPolicySource
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-ContentSecurityPolicySource"
+             class="permalink"
+             data-slug="Network.ContentSecurityPolicySource"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        
+        
+      <div class="enum-container">Allowed Values: <code>HTTP</code>, <code>Meta</code></div>
+    
+      </div>
+    
+        <p class="type-type">Type: <strong>string</strong></p>
+        
+        
+      </div>
+    
+      <div class="details">
+        <h4 class="details-name monospace" id="type-ContentSecurityPolicyStatus">
+          <span class="domain-dot">Network.</span>ContentSecurityPolicyStatus
+          <span class="experimental" title="This may be changed, moved or removed">Experimental</span>
+          <a href="#type-ContentSecurityPolicyStatus"
+             class="permalink"
+             data-slug="Network.ContentSecurityPolicyStatus"
+             title="Double click to copy markdown-formatted URL">#</a>
+        </h4>
+        
+      <div class="details-description">
+        
+        
+      </div>
+    
+        <p class="type-type">Type: <strong>object</strong></p>
+        
+      <h5 class="properties-name">properties</h5>
+      <dl class="properties-container">
+        
+        <dt class="param-name monospace ">
+          effectiveDirectives
+        </dt>
+        <dd>
+          <span class="param-type">string</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace ">
+          isEnforced
+        </dt>
+        <dd>
+          <span class="param-type">boolean</span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+        <dt class="param-name monospace ">
+          source
+        </dt>
+        <dd>
+          <a href=/devtools-protocol/tot/Network/#type-ContentSecurityPolicySource class="param-type">ContentSecurityPolicySource</a>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
+      </dl>
+    
         
       </div>
     
@@ -8537,7 +8725,7 @@ the same request (but not for redirected requests).</p>
         <p>Types of reasons why a cookie may not be sent with a request.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>SecureOnly</code>, <code>NotOnPath</code>, <code>DomainMismatch</code>, <code>SameSiteStrict</code>, <code>SameSiteLax</code>, <code>SameSiteUnspecifiedTreatedAsLax</code>, <code>SameSiteNoneInsecure</code>, <code>UserPreferences</code>, <code>UnknownError</code>, <code>SchemefulSameSiteStrict</code>, <code>SchemefulSameSiteLax</code>, <code>SchemefulSameSiteUnspecifiedTreatedAsLax</code>, <code>SamePartyFromCrossPartyContext</code>, <code>NameValuePairExceedsMaxSize</code></div>
+      <div class="enum-container">Allowed Values: <code>SecureOnly</code>, <code>NotOnPath</code>, <code>DomainMismatch</code>, <code>SameSiteStrict</code>, <code>SameSiteLax</code>, <code>SameSiteUnspecifiedTreatedAsLax</code>, <code>SameSiteNoneInsecure</code>, <code>UserPreferences</code>, <code>ThirdPartyBlockedInFirstPartySet</code>, <code>UnknownError</code>, <code>SchemefulSameSiteStrict</code>, <code>SchemefulSameSiteLax</code>, <code>SchemefulSameSiteUnspecifiedTreatedAsLax</code>, <code>SamePartyFromCrossPartyContext</code>, <code>NameValuePairExceedsMaxSize</code></div>
     
       </div>
     
@@ -9413,6 +9601,20 @@ backslash. Omitting is equivalent to <code>&quot;*&quot;</code>.</p>
           
         </dd>
       
+        <dt class="param-name monospace optional">
+          csp
+        </dt>
+        <dd>
+          <span class="param-type">array<span class="param-type__array">[ <a href=/devtools-protocol/tot/Network/#type-ContentSecurityPolicyStatus class="param-type">ContentSecurityPolicyStatus</a> ]</span></span>
+          
+      <div class="details-description">
+        
+        
+      </div>
+    
+          
+        </dd>
+      
       </dl>
     
         
@@ -9432,7 +9634,7 @@ backslash. Omitting is equivalent to <code>&quot;*&quot;</code>.</p>
         <p>Types of reasons why a cookie may not be stored from a response.</p>
 
         
-      <div class="enum-container">Allowed Values: <code>SecureOnly</code>, <code>SameSiteStrict</code>, <code>SameSiteLax</code>, <code>SameSiteUnspecifiedTreatedAsLax</code>, <code>SameSiteNoneInsecure</code>, <code>UserPreferences</code>, <code>SyntaxError</code>, <code>SchemeNotSupported</code>, <code>OverwriteSecure</code>, <code>InvalidDomain</code>, <code>InvalidPrefix</code>, <code>UnknownError</code>, <code>SchemefulSameSiteStrict</code>, <code>SchemefulSameSiteLax</code>, <code>SchemefulSameSiteUnspecifiedTreatedAsLax</code>, <code>SamePartyFromCrossPartyContext</code>, <code>SamePartyConflictsWithOtherAttributes</code>, <code>NameValuePairExceedsMaxSize</code></div>
+      <div class="enum-container">Allowed Values: <code>SecureOnly</code>, <code>SameSiteStrict</code>, <code>SameSiteLax</code>, <code>SameSiteUnspecifiedTreatedAsLax</code>, <code>SameSiteNoneInsecure</code>, <code>UserPreferences</code>, <code>ThirdPartyBlockedInFirstPartySet</code>, <code>SyntaxError</code>, <code>SchemeNotSupported</code>, <code>OverwriteSecure</code>, <code>InvalidDomain</code>, <code>InvalidPrefix</code>, <code>UnknownError</code>, <code>SchemefulSameSiteStrict</code>, <code>SchemefulSameSiteLax</code>, <code>SchemefulSameSiteUnspecifiedTreatedAsLax</code>, <code>SamePartyFromCrossPartyContext</code>, <code>SamePartyConflictsWithOtherAttributes</code>, <code>NameValuePairExceedsMaxSize</code></div>
     
       </div>
     
@@ -9624,7 +9826,7 @@ backslash. Omitting is equivalent to <code>&quot;*&quot;</code>.</p>
           <span class="param-type">string</span>
           
       <div class="details-description">
-        <p>Signed exchange header integrity hash in the form of &quot;sha256-<base64-hash-value>&quot;.</p>
+        <p>Signed exchange header integrity hash in the form of &quot;sha256-&lt;base64-hash-value&gt;&quot;.</p>
 
         
       </div>
@@ -9931,7 +10133,7 @@ are specified in third_party/blink/renderer/core/fetch/trust_token.idl.</p>
       <dl class="properties-container">
         
         <dt class="param-name monospace ">
-          type
+          operation
         </dt>
         <dd>
           <a href=/devtools-protocol/tot/Network/#type-TrustTokenOperationType class="param-type">TrustTokenOperationType</a>
@@ -9951,7 +10153,7 @@ are specified in third_party/blink/renderer/core/fetch/trust_token.idl.</p>
           <span class="param-type">string</span>
           
       <div class="details-description">
-        <p>Only set for &quot;token-redemption&quot; type and determine whether
+        <p>Only set for &quot;token-redemption&quot; operation and determine whether
 to request a fresh SRR or use a still valid cached SRR.</p>
 
         

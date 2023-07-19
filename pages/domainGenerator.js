@@ -1,5 +1,6 @@
 import {default as marked} from 'marked';
 
+
 const html = String.raw;
 
 const computeHash = (typeName, name, id) => {
@@ -14,6 +15,16 @@ const itemSort = (a, b) => {
   if (a.optional !== b.optional) return a.optional ? 1 : -1;
   return (a.name || a.id).localeCompare(b.name || b.id);
 };
+
+
+// const noHTMLSanitizer = new Sanitizer({allowElements: []});
+// const res = noHTMLSanitizer.sanitizeFor('div', 'Input node id. Only present for file choosers opened via an <input type="file"> element.');
+// console.log({res});
+
+function parseSafeMarkdown(text) {
+  text = text.replaceAll('<', '&lt;');
+  return marked(text);
+}
 
 export class DomainGenerator {
   constructor(version) {
@@ -48,7 +59,7 @@ export class DomainGenerator {
     // Some params have an emum: e.g. Debugger.continueToLocation
     return html`
       <div class="details-description">
-        ${description ? marked(description) : ''}
+        ${description ? parseSafeMarkdown(description) : ''}
         ${item ? this.enumDetails(item) : ''}
       </div>
     `;
