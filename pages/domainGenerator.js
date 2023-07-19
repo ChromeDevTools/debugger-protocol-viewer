@@ -16,14 +16,16 @@ const itemSort = (a, b) => {
   return (a.name || a.id).localeCompare(b.name || b.id);
 };
 
+// This handles a few weird cases of raw HTML or over-escaping in the protocol JSON
+function parseSafeMarkdown(mdText) {
+  mdText = mdText.replaceAll('<', '&lt;'); // protect against some naked `<script>` and `<label>` and `<input` in the JSON
+  const html = marked(mdText);
+  return html
+    .replaceAll('&amp;lt;', '&lt;')  // Page.printToPDF > headerTemplate.... and IO.StreamHandle
+    .replaceAll('&amp;gt;', '&gt;')  //  IO.StreamHandle
+    .replaceAll('&amp;gt', '&gt;')  //  IO.StreamHandle (actual typo in desc)
+    .replaceAll('&lt;p&gt;Note that', '<p>Note that').replaceAll('their child nodes.&lt;/p&gt;</p>', 'their child nodes.</p></p>') // DOM domain description
 
-// const noHTMLSanitizer = new Sanitizer({allowElements: []});
-// const res = noHTMLSanitizer.sanitizeFor('div', 'Input node id. Only present for file choosers opened via an <input type="file"> element.');
-// console.log({res});
-
-function parseSafeMarkdown(text) {
-  // text = text.replaceAll('<', '&lt;');
-  return marked(text);
 }
 
 export class DomainGenerator {
