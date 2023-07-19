@@ -39,6 +39,16 @@
               "type": "string"
             }
           ]
+        },
+        {
+          "name": "addPrivacySandboxEnrollmentOverride",
+          "description": "Allows a site to use privacy sandbox features that require enrollment\nwithout the site actually being enrolled. Only supported on page targets.",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string"
+            }
+          ]
         }
       ],
       "events": []
@@ -106,11 +116,11 @@
             "scrollbar-corner",
             "resizer",
             "input-list-button",
-            "page-transition",
-            "page-transition-container",
-            "page-transition-image-wrapper",
-            "page-transition-outgoing-image",
-            "page-transition-incoming-image"
+            "view-transition",
+            "view-transition-group",
+            "view-transition-image-pair",
+            "view-transition-old",
+            "view-transition-new"
           ]
         },
         {
@@ -131,6 +141,26 @@
             "QuirksMode",
             "LimitedQuirksMode",
             "NoQuirksMode"
+          ]
+        },
+        {
+          "id": "PhysicalAxes",
+          "description": "ContainerSelector physical axes",
+          "type": "string",
+          "enum": [
+            "Horizontal",
+            "Vertical",
+            "Both"
+          ]
+        },
+        {
+          "id": "LogicalAxes",
+          "description": "ContainerSelector logical axes",
+          "type": "string",
+          "enum": [
+            "Inline",
+            "Block",
+            "Both"
           ]
         },
         {
@@ -628,7 +658,7 @@
         },
         {
           "name": "getDocument",
-          "description": "Returns the root DOM node (and optionally the subtree) to the caller.",
+          "description": "Returns the root DOM node (and optionally the subtree) to the caller.\nImplicitly enables the DOM domain events for the current target.",
           "parameters": [
             {
               "name": "depth",
@@ -1138,7 +1168,7 @@
             },
             {
               "name": "previousNodeId",
-              "description": "If of the previous siblint.",
+              "description": "Id of the previous sibling.",
               "$ref": "NodeId"
             },
             {
@@ -2129,6 +2159,10 @@
           ]
         },
         {
+          "name": "cancelDragging",
+          "description": "Cancels any active dragging in the page."
+        },
+        {
           "name": "setIgnoreInputEvents",
           "description": "Ignores input events (useful while auditing page).",
           "parameters": [
@@ -2526,6 +2560,12 @@
               "type": "number"
             },
             {
+              "name": "receiveHeadersStart",
+              "description": "Started receiving response headers.",
+              "experimental": true,
+              "type": "number"
+            },
+            {
               "name": "receiveHeadersEnd",
               "description": "Finished receiving response headers.",
               "type": "number"
@@ -2853,7 +2893,11 @@
             "InsecurePrivateNetwork",
             "InvalidPrivateNetworkAccess",
             "UnexpectedPrivateNetworkAccess",
-            "NoCorsRedirectModeNotFollow"
+            "NoCorsRedirectModeNotFollow",
+            "PreflightMissingPrivateNetworkAccessId",
+            "PreflightMissingPrivateNetworkAccessName",
+            "PrivateNetworkAccessPermissionUnavailable",
+            "PrivateNetworkAccessPermissionDenied"
           ]
         },
         {
@@ -3005,6 +3049,13 @@
               "description": "Protocol used to fetch this request.",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "alternateProtocolUsage",
+              "description": "The reason why Chrome uses a specific transport protocol for HTTP semantics.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "AlternateProtocolUsage"
             },
             {
               "name": "securityState",
@@ -3463,20 +3514,6 @@
           ]
         },
         {
-          "name": "getAllCookies",
-          "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie\ninformation in the `cookies` field.",
-          "returns": [
-            {
-              "name": "cookies",
-              "description": "Array of cookie objects.",
-              "type": "array",
-              "items": {
-                "$ref": "Cookie"
-              }
-            }
-          ]
-        },
-        {
           "name": "getCookies",
           "description": "Returns all browser cookies for the current URL. Depending on the backend support, will return\ndetailed cookie information in the `cookies` field.",
           "parameters": [
@@ -3831,12 +3868,6 @@
               "name": "encodedDataLength",
               "description": "Total number of bytes received for this request.",
               "type": "number"
-            },
-            {
-              "name": "shouldReportCorbBlocking",
-              "description": "Set when 1) response was blocked by Cross-Origin Read Blocking and also\n2) this needs to be reported to the DevTools console.",
-              "optional": true,
-              "type": "boolean"
             }
           ]
         },
@@ -4504,46 +4535,6 @@
               "type": "number"
             }
           ]
-        },
-        {
-          "id": "PrerenderFinalStatus",
-          "description": "List of FinalStatus reasons for Prerender2.",
-          "type": "string",
-          "enum": [
-            "Activated",
-            "Destroyed",
-            "LowEndDevice",
-            "CrossOriginRedirect",
-            "CrossOriginNavigation",
-            "InvalidSchemeRedirect",
-            "InvalidSchemeNavigation",
-            "InProgressNavigation",
-            "NavigationRequestBlockedByCsp",
-            "MainFrameNavigation",
-            "MojoBinderPolicy",
-            "RendererProcessCrashed",
-            "RendererProcessKilled",
-            "Download",
-            "TriggerDestroyed",
-            "NavigationNotCommitted",
-            "NavigationBadHttpStatus",
-            "ClientCertRequested",
-            "NavigationRequestNetworkError",
-            "MaxNumOfRunningPrerendersExceeded",
-            "CancelAllHostsForTesting",
-            "DidFailLoad",
-            "Stop",
-            "SslCertificateError",
-            "LoginAuthRequested",
-            "UaChangeRequiresReload",
-            "BlockedByClient",
-            "AudioOutputDeviceRequested",
-            "MixedContent",
-            "TriggerBackgrounded",
-            "EmbedderTriggeredAndSameOriginRedirected",
-            "EmbedderTriggeredAndCrossOriginRedirected",
-            "EmbedderTriggeredAndDestroyed"
-          ]
         }
       ],
       "commands": [
@@ -4565,6 +4556,13 @@
             {
               "name": "includeCommandLineAPI",
               "description": "Specifies whether command line API should be available to the script, defaults\nto false.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "runImmediately",
+              "description": "If true, runs the script immediately on existing execution contexts or worlds.\nDefault: false.",
               "experimental": true,
               "optional": true,
               "type": "boolean"
@@ -4619,6 +4617,13 @@
             {
               "name": "captureBeyondViewport",
               "description": "Capture the screenshot beyond the viewport. Defaults to false.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "optimizeForSpeed",
+              "description": "Optimize image encoding for speed, not for resulting size (defaults to false)",
               "experimental": true,
               "optional": true,
               "type": "boolean"
@@ -5077,13 +5082,6 @@
               "description": "JavaScript stack trace of when frame was attached, only set if frame initiated from script.",
               "optional": true,
               "$ref": "Runtime.StackTrace"
-            },
-            {
-              "name": "adScriptId",
-              "description": "Identifies the bottom-most script which caused the frame to be labelled\nas an ad. Only sent if frame is labelled as an ad and id is available.",
-              "experimental": true,
-              "optional": true,
-              "$ref": "AdScriptId"
             }
           ]
         },
@@ -5200,25 +5198,6 @@
             {
               "name": "timestamp",
               "$ref": "Network.MonotonicTime"
-            }
-          ]
-        },
-        {
-          "name": "prerenderAttemptCompleted",
-          "description": "Fired when a prerender attempt is completed.",
-          "parameters": [
-            {
-              "name": "initiatingFrameId",
-              "description": "The frame id of the frame initiating prerendering.",
-              "$ref": "FrameId"
-            },
-            {
-              "name": "prerenderingUrl",
-              "type": "string"
-            },
-            {
-              "name": "finalStatus",
-              "$ref": "PrerenderFinalStatus"
             }
           ]
         },
@@ -5506,6 +5485,13 @@
               "experimental": true,
               "optional": true,
               "$ref": "Browser.BrowserContextID"
+            },
+            {
+              "name": "subtype",
+              "description": "Provides additional details for specific target types. For example, for\nthe type of \"page\", this may be set to \"portal\" or \"prerender\".",
+              "experimental": true,
+              "optional": true,
+              "type": "string"
             }
           ]
         }
@@ -5608,6 +5594,13 @@
               "description": "Whether to create the target in background or foreground (chrome-only,\nfalse by default).",
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "forTab",
+              "description": "Whether to create the target of type \"tab\".",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ],
           "returns": [
@@ -5640,6 +5633,15 @@
         {
           "name": "getTargets",
           "description": "Retrieves a list of available targets.",
+          "parameters": [
+            {
+              "name": "filter",
+              "description": "Only targets matching filter will be reported. If filter is not specified\nand target discovery is currently enabled, a filter used for target discovery\nis used for consistency.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "TargetFilter"
+            }
+          ],
           "returns": [
             {
               "name": "targetInfos",
@@ -5659,6 +5661,13 @@
               "name": "discover",
               "description": "Whether to discover available targets.",
               "type": "boolean"
+            },
+            {
+              "name": "filter",
+              "description": "Only targets matching filter will be attached. If `discover` is false,\n`filter` must be omitted or empty.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "TargetFilter"
             }
           ]
         }
@@ -5976,7 +5985,7 @@
             },
             {
               "name": "headers",
-              "description": "If set, overrides the request headers.",
+              "description": "If set, overrides the request headers. Note that the overrides do not\nextend to subsequent redirect hops, if a redirect happens. Another override\nmay be applied to a different request produced by a redirect.",
               "optional": true,
               "type": "array",
               "items": {
@@ -6010,7 +6019,7 @@
         },
         {
           "name": "getResponseBody",
-          "description": "Causes the body of the response to be received from the server and\nreturned as a single string. May only be issued for a request that\nis paused in the Response stage and is mutually exclusive with\ntakeResponseBodyForInterceptionAsStream. Calling other methods that\naffect the request or disabling fetch domain before body is received\nresults in an undefined behavior.",
+          "description": "Causes the body of the response to be received from the server and\nreturned as a single string. May only be issued for a request that\nis paused in the Response stage and is mutually exclusive with\ntakeResponseBodyForInterceptionAsStream. Calling other methods that\naffect the request or disabling fetch domain before body is received\nresults in an undefined behavior.\nNote that the response body is not available for redirects. Requests\npaused in the _redirect received_ state may be differentiated by\n`responseCode` and presence of `location` response header, see\ncomments to `requestPaused` for details.",
           "parameters": [
             {
               "name": "requestId",
@@ -6051,7 +6060,7 @@
       "events": [
         {
           "name": "requestPaused",
-          "description": "Issued when the domain is enabled and the request URL matches the\nspecified filter. The request is paused until the client responds\nwith one of continueRequest, failRequest or fulfillRequest.\nThe stage of the request can be determined by presence of responseErrorReason\nand responseStatusCode -- the request is at the response stage if either\nof these fields is present and in the request stage otherwise.",
+          "description": "Issued when the domain is enabled and the request URL matches the\nspecified filter. The request is paused until the client responds\nwith one of continueRequest, failRequest or fulfillRequest.\nThe stage of the request can be determined by presence of responseErrorReason\nand responseStatusCode -- the request is at the response stage if either\nof these fields is present and in the request stage otherwise.\nRedirect responses and subsequent requests are reported similarly to regular\nresponses and requests. Redirect responses may be distinguished by the value\nof `responseStatusCode` (which is one of 301, 302, 303, 307, 308) along with\npresence of the `location` header. Requests resulting from a redirect will\nhave `redirectedRequestId` field set.",
           "parameters": [
             {
               "name": "requestId",
@@ -6103,6 +6112,13 @@
             {
               "name": "networkId",
               "description": "If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,\nthen this networkId will be the same as the requestId present in the requestWillBeSent event.",
+              "optional": true,
+              "$ref": "Network.RequestId"
+            },
+            {
+              "name": "redirectedRequestId",
+              "description": "If the request is due to a redirect response from the server, the id of the request that\nhas caused the redirect.",
+              "experimental": true,
               "optional": true,
               "$ref": "RequestId"
             }
@@ -6787,7 +6803,7 @@
         },
         {
           "name": "setPauseOnExceptions",
-          "description": "Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions or\nno exceptions. Initial pause on exceptions state is `none`.",
+          "description": "Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught exceptions,\nor caught exceptions, no exceptions. Initial pause on exceptions state is `none`.",
           "parameters": [
             {
               "name": "state",
@@ -6795,6 +6811,7 @@
               "type": "string",
               "enum": [
                 "none",
+                "caught",
                 "uncaught",
                 "all"
               ]
@@ -6870,7 +6887,8 @@
                 "Ok",
                 "CompileError",
                 "BlockedByActiveGenerator",
-                "BlockedByActiveFunction"
+                "BlockedByActiveFunction",
+                "BlockedByTopLevelEsModuleChange"
               ]
             },
             {
@@ -7007,7 +7025,8 @@
                 "OOM",
                 "other",
                 "promiseRejection",
-                "XHR"
+                "XHR",
+                "step"
               ]
             },
             {
@@ -7098,7 +7117,7 @@
             },
             {
               "name": "executionContextAuxData",
-              "description": "Embedder-specific auxiliary data.",
+              "description": "Embedder-specific auxiliary data likely matching {isDefault: boolean, type: 'default'|'isolated'|'worker', frameId: string}",
               "optional": true,
               "type": "object"
             },
@@ -7202,7 +7221,7 @@
             },
             {
               "name": "executionContextAuxData",
-              "description": "Embedder-specific auxiliary data.",
+              "description": "Embedder-specific auxiliary data likely matching {isDefault: boolean, type: 'default'|'isolated'|'worker', frameId: string}",
               "optional": true,
               "type": "object"
             },
@@ -7621,8 +7640,36 @@
           "type": "string"
         },
         {
-          "id": "WebDriverValue",
-          "description": "Represents the value serialiazed by the WebDriver BiDi specification\nhttps://w3c.github.io/webdriver-bidi.",
+          "id": "SerializationOptions",
+          "description": "Represents options for serialization. Overrides `generatePreview`, `returnByValue` and\n`generateWebDriverValue`.",
+          "type": "object",
+          "properties": [
+            {
+              "name": "serialization",
+              "type": "string",
+              "enum": [
+                "deep",
+                "json",
+                "idOnly"
+              ]
+            },
+            {
+              "name": "maxDepth",
+              "description": "Deep serialization depth. Default is full depth. Respected only in `deep` serialization mode.",
+              "optional": true,
+              "type": "integer"
+            },
+            {
+              "name": "additionalParameters",
+              "description": "Embedder-specific parameters. For example if connected to V8 in Chrome these control DOM\nserialization via `maxNodeDepth: integer` and `includeShadowTree: \"none\" | \"open\" | \"all\"`.\nValues can be only of type string or integer.",
+              "optional": true,
+              "type": "object"
+            }
+          ]
+        },
+        {
+          "id": "DeepSerializedValue",
+          "description": "Represents deep serialized value.",
           "type": "object",
           "properties": [
             {
@@ -7663,6 +7710,12 @@
               "name": "objectId",
               "optional": true,
               "type": "string"
+            },
+            {
+              "name": "weakLocalObjectReference",
+              "description": "Set if value reference met more then once during serialization. In such\ncase, value is provided only to one of the serialized values. Unique\nper value in the scope of one CDP call.",
+              "optional": true,
+              "type": "integer"
             }
           ]
         },
@@ -7749,10 +7802,17 @@
             },
             {
               "name": "webDriverValue",
-              "description": "WebDriver BiDi representation of the value.",
+              "description": "Deprecated. Use `deepSerializedValue` instead. WebDriver BiDi representation of the value.",
+              "deprecated": true,
+              "optional": true,
+              "$ref": "DeepSerializedValue"
+            },
+            {
+              "name": "deepSerializedValue",
+              "description": "Deep serialized value.",
               "experimental": true,
               "optional": true,
-              "$ref": "WebDriverValue"
+              "$ref": "DeepSerializedValue"
             },
             {
               "name": "objectId",
@@ -7915,7 +7975,7 @@
             },
             {
               "name": "auxData",
-              "description": "Embedder-specific auxiliary data.",
+              "description": "Embedder-specific auxiliary data likely matching {isDefault: boolean, type: 'default'|'isolated'|'worker', frameId: string}",
               "optional": true,
               "type": "object"
             }
@@ -8131,7 +8191,7 @@
             },
             {
               "name": "returnByValue",
-              "description": "Whether the result is expected to be a JSON object which should be sent by value.",
+              "description": "Whether the result is expected to be a JSON object which should be sent by value.\nCan be overriden by `serializationOptions`.",
               "optional": true,
               "type": "boolean"
             },
@@ -8174,11 +8234,25 @@
               "type": "boolean"
             },
             {
-              "name": "generateWebDriverValue",
-              "description": "Whether the result should contain `webDriverValue`, serialized according to\nhttps://w3c.github.io/webdriver-bidi. This is mutually exclusive with `returnByValue`, but\nresulting `objectId` is still provided.",
+              "name": "uniqueContextId",
+              "description": "An alternative way to specify the execution context to call function on.\nCompared to contextId that may be reused across processes, this is guaranteed to be\nsystem-unique, so it can be used to prevent accidental function call\nin context different than intended (e.g. as a result of navigation across process\nboundaries).\nThis is mutually exclusive with `executionContextId`.",
               "experimental": true,
               "optional": true,
+              "type": "string"
+            },
+            {
+              "name": "generateWebDriverValue",
+              "description": "Deprecated. Use `serializationOptions: {serialization:\"deep\"}` instead.\nWhether the result should contain `webDriverValue`, serialized according to\nhttps://w3c.github.io/webdriver-bidi. This is mutually exclusive with `returnByValue`, but\nresulting `objectId` is still provided.",
+              "deprecated": true,
+              "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "serializationOptions",
+              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview`, `returnByValue` and `generateWebDriverValue`.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "SerializationOptions"
             }
           ],
           "returns": [
@@ -8350,10 +8424,17 @@
             },
             {
               "name": "generateWebDriverValue",
-              "description": "Whether the result should be serialized according to https://w3c.github.io/webdriver-bidi.",
-              "experimental": true,
+              "description": "Deprecated. Use `serializationOptions: {serialization:\"deep\"}` instead.\nWhether the result should contain `webDriverValue`, serialized\naccording to\nhttps://w3c.github.io/webdriver-bidi. This is mutually exclusive with `returnByValue`, but\nresulting `objectId` is still provided.",
+              "deprecated": true,
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "serializationOptions",
+              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview`, `returnByValue` and `generateWebDriverValue`.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "SerializationOptions"
             }
           ],
           "returns": [
@@ -8704,7 +8785,14 @@
             {
               "name": "executionContextId",
               "description": "Id of the destroyed context",
+              "deprecated": true,
               "$ref": "ExecutionContextId"
+            },
+            {
+              "name": "executionContextUniqueId",
+              "description": "Unique Id of the destroyed context",
+              "experimental": true,
+              "type": "string"
             }
           ]
         },
