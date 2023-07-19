@@ -22,7 +22,7 @@ const itemSort = (a, b) => {
 // console.log({res});
 
 function parseSafeMarkdown(text) {
-  text = text.replaceAll('<', '&lt;');
+  // text = text.replaceAll('<', '&lt;');
   return marked(text);
 }
 
