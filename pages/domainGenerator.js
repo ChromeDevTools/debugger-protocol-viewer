@@ -15,6 +15,12 @@ const itemSort = (a, b) => {
   return (a.name || a.id).localeCompare(b.name || b.id);
 };
 
+function parseSafeMarkdown(text) {
+  // TODO: sanitize
+  
+  return marked(text);
+}
+
 export class DomainGenerator {
   constructor(version) {
     this.version = version;
@@ -48,7 +54,7 @@ export class DomainGenerator {
     // Some params have an emum: e.g. Debugger.continueToLocation
     return html`
       <div class="details-description">
-        ${description ? marked(description) : ''}
+        ${description ? parseSafeMarkdown(description) : ''}
         ${item ? this.enumDetails(item) : ''}
       </div>
     `;
