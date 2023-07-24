@@ -5,33 +5,33 @@ on:
     branches:
       - master
 jobs:
-  lighthouse_ci:
+  build_test:
 
     runs-on: ubuntu-latest
 
     steps:
 
       - name: git clone
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
+          node-version: latest
           cache: 'npm'
 
-      - name: build
-        run: npm i && npm run build
-
+      - run: npm ci
+      - run: npm run build
+      
       - name: primitive test
         run: npm run test
 
       - name: install lhci
         run: npm install @lhci/cli@latest
 
-      - name: run lhci
-        run: |
-          npx lhci autorun \
-            --collect.url=http://localhost:8696/devtools-protocol/ \
-            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
-            --upload.target=temporary-public-storage
+#       - name: run lhci
+#         run: |
+#           npx lhci autorun \
+#             --collect.url=http://localhost:8696/devtools-protocol/ \
+#             --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
+#             --upload.target=temporary-public-storage
