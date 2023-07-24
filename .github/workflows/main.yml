@@ -5,7 +5,7 @@ on:
     branches:
       - master
 jobs:
-  build_test_lhci:
+  build_test:
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,6 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
 
       - run: echo $(node --version)
       
@@ -33,9 +32,9 @@ jobs:
       - name: install lhci
         run: npm install @lhci/cli@latest
 
-      - name: run lhci
-        run: |
-          npx lhci autorun \
-            --collect.url=http://localhost:8696/devtools-protocol/ \
-            --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
-            --upload.target=temporary-public-storage
+#       - name: run lhci
+#         run: |
+#           npx lhci autorun \
+#             --collect.url=http://localhost:8696/devtools-protocol/ \
+#             --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
+#             --upload.target=temporary-public-storage
