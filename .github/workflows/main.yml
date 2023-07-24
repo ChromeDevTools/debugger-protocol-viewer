@@ -22,8 +22,9 @@ jobs:
 
       - run: echo $(node --version)
       
-      - name: build
-        run: npm i && npm run build
+      - run: npm i
+      - run: DEBUG="*" node -r esm node_modules/.bin/eleventy
+      - run: rollup -c rollup.config.js
 
       - name: primitive test
         run: npm run test
