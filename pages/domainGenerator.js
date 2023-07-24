@@ -1,6 +1,5 @@
 import {default as marked} from 'marked';
 
-
 const html = String.raw;
 
 const computeHash = (typeName, name, id) => {
