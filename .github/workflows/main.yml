@@ -23,7 +23,7 @@ jobs:
 
       - run: echo $(node --version)
       
-      - run: npm install
+      - run: npm ci
       - run: DEBUG="*" node -r esm node_modules/.bin/eleventy
       - run: rollup -c rollup.config.js
 
