@@ -20,7 +20,7 @@ const itemSort = (a, b) => {
 function parseSafeMarkdown(mdText) {
   // Inline codeblocks to doublecheck: IO.StreamHandle, Preload.PreloadingAttemptSource, Preload.RuleSet > backendNodeId, Accessibility.AXValueSource > nativeSource
   mdText = mdText.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-  const html = marked(mdText);
+  const html = marked(mdText, {escape: true});
   return html.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;');
 }
 
