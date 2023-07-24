@@ -102,7 +102,7 @@
                         },
                         {
                             "name": "nativeSource",
-                            "description": "The native markup source for this value, e.g. a <label> element.",
+                            "description": "The native markup source for this value, e.g. a `<label>` element.",
                             "optional": true,
                             "$ref": "AXValueNativeSourceType"
                         },
