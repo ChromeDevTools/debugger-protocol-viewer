@@ -20,6 +20,8 @@ jobs:
           node-version: latest
           cache: 'npm'
 
+      - run: echo $(node --version)
+      
       - name: build
         run: npm i && npm run build
 
