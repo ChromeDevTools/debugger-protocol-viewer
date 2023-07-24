@@ -1729,7 +1729,7 @@
       "types": [
         {
           "id": "StreamHandle",
-          "description": "This is either obtained from another method or specified as `blob:<uuid>` where\n`<uuid>` is an UUID of a Blob.",
+          "description": "This is either obtained from another method or specified as blob:<uuid> where\n`<uuid>` is an UUID of a Blob.",
           "type": "string"
         }
       ],
