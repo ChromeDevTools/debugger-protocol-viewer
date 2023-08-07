@@ -89,7 +89,6 @@ instrumenting them. See the <a href="#endpoints">HTTP Endpoints</a> section belo
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
 You can view all requests/responses and methods as they happen.
 
-<p>You can also open a CDP editor to by clicking on the icon on the left of the input bar : 
 <figure class="screenshot">
   <a href="images/protocol-monitor.png" target="_blank" style="text-align: center; display:block;">
     <img src="images/protocol-monitor.png" height="300" alt="Screenshot of the Protocol Monitor" loading="lazy">
@@ -105,15 +104,7 @@ type the command into the prompt at the bottom of the Protocol Monitor panel and
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
 <code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
 
-<p> You can also open a CDP editor by clicking on the icon on the left of the input bar :
-
-<figure class="screenshot">
-  <a href="images/open-editor-screenshot.png" target="_blank" style="text-align: center; display:block;">
-    <img src="images/open-editor-screenshot.png" height="300" alt="Screenshot of the Protocol Monitor" loading="lazy">
-  </a>
-</figure>
-
-<p>This will automatically open the editor which will enable you to better edit your commands. First enter the command you want to send. The corresponding parameters will then appear and you will just have to edit them and either press CTRL + Enter or click the send icon to send your command.
+<p> You can also open a CDP editor by clicking on the icon on the left of the input bar. This will automatically open an editor which will enable you to better edit your commands. First, enter the command you want to send. The corresponding parameters will then appear and you will just have to edit them and either press CTRL + Enter or click the send icon to send your command.
 
 <figure class="screenshot">
   <a href="images/cdp-editor.png" target="_blank" style="text-align: center; display:block;">
