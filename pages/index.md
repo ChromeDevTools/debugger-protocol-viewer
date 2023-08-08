@@ -104,7 +104,7 @@ type the command into the prompt at the bottom of the Protocol Monitor panel and
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
 <code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
 
-<p> You can also open a CDP editor by clicking on the icon on the left of the input bar. This will automatically open an editor which will enable you to better edit your commands. First, enter the command you want to send. The corresponding parameters will then appear and you will just have to edit them and either press CTRL + Enter or click the send icon to send your command.
+<p> By clicking on the icon next to the command input (available starting from Chrome version 117.0.5936.0), you can open the command editor. After you select a CDP command, the editor creates a structured form based on the protocol definitions that allows you to edit the parameters, and see the documentation and types for specific parameters. Send the commands by clicking on the send button or using <code>Ctrl + Enter</code>.  Use the context menu in the list of previously sent commands to open one of them in the editor.
 
 <figure class="screenshot">
   <a href="images/cdp-editor.png" target="_blank" style="text-align: center; display:block;">
