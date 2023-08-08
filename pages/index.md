@@ -104,6 +104,15 @@ type the command into the prompt at the bottom of the Protocol Monitor panel and
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
 <code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
 
+<p> By clicking on the icon next to the command input (available starting from Chrome version 117.0.5936.0), you can open the command editor. After you select a CDP command, the editor creates a structured form based on the protocol definitions that allows you to edit parameters, and view their documentation and types. Send the commands by clicking on the send button or using <code>Ctrl + Enter</code>.  Use the context menu in the list of previously sent commands to open one of them in the editor.
+
+<figure class="screenshot">
+  <a href="images/cdp-editor.png" target="_blank" style="text-align: center; display:block;">
+    <img src="images/cdp-editor.png" height="300" alt="Screenshot of CDP Editor" loading="lazy">
+  </a>
+</figure>
+
+
 <p>Alternatively, you can execute commands from the DevTools console. First, <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>,
 then within the inner DevTools window, use <code>Main.MainImpl.sendOverProtocol()</code> in the console:
 
