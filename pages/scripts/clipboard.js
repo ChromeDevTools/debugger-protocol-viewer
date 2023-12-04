@@ -14,8 +14,8 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
   function handleClicks(e) {
     // No need to scroll
     e.preventDefault();
-    // Add hash back to url
-    history.pushState({}, '', href);
+    // Add hash back to url, but without pushState cuz it usually creates more problems
+    window.location.href = href;
 
     const textBlob = new Blob([e.type === 'dblclick' ? markdown : href], { type: 'text/plain' });
     const htmlBlob = new Blob([htmlStr], { type: 'text/html' });
@@ -44,5 +44,16 @@ for (const permalinkEl of document.querySelectorAll('.permalink')) {
     // This can happen if the user denies clipboard permissions
     .catch(err => console.error('Could not copy to clipboard: ', err));
   }
-
 };
+
+// Handle back-button navigations through hashes.  (yes it does seem weird that this need to be done manually.......)
+window.addEventListener("popstate", scrollToCurrentHash);
+document.addEventListener("DOMContentLoaded", scrollToCurrentHash);
+function scrollToCurrentHash(e) {
+  const u = new URL(location.href);
+  const hash = u.hash.slice(1);
+  if (!hash) return;
+
+  const elem = document.querySelector(`#${hash}`);
+  elem.scrollIntoView({block: 'start'});
+}
