@@ -18,74 +18,25 @@ structure.
 <p><b><a href="tot/">The latest (tip-of-tree) protocol (tot)</a></b> —
 It <a href="https://chromium.googlesource.com/chromium/src/+log/HEAD/third_party/blink/renderer/core/inspector/browser_protocol.pdl">changes frequently</a>
 and can break at any time. However it captures the full capabilities of the Protocol, whereas the stable release is a subset.
-There is no backwards compatibility support guaranteed for the capabilities it introduces.
+There is no backwards compatibility support guaranteed.
 
 <p><b><a href="v8/">v8-inspector protocol (v8)</a></b> —
-It is available in <a href="https://nodejs.org/en/blog/release/v6.3.0/">node 6.3+</a> and enables
+Enables
 <a href="https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27">debugging & profiling</a>
 of Node.js apps.
 
 <p><b><a href="1-3/">stable 1.3 protocol (1-3)</a></b> —
 The stable release of the protocol, tagged at Chrome 64. It includes a smaller subset of the complete protocol compatibilities.
 
-<p><b><a href="1-2/">stable 1.2 protocol (1-2)</a></b> —
-The stable release of the protocol, tagged at Chrome 54. It includes a smaller subset of the complete protocol compatibilities.
-
 <h3>Resources</h3>
 
-<p><a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md">Getting Started with CDP</a>
+<p>See <a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md">Getting Started with CDP</a>. The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
 
 <p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be
-used for concerns with the protocol. It also hosts the canonical copy of the json files.
-
-<p>Useful: <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Getting Started with Headless Chrome</a>
-and the <a href="https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md">Headless Chromium readme</a>.
-
-<p>The <a href="https://github.com/cyrus-and/chrome-remote-interface/">chrome-remote-interface</a> node module is recommended,
-and its <a href="https://github.com/cyrus-and/chrome-remote-interface/wiki">wiki</a> and
-<a href="https://github.com/cyrus-and/chrome-remote-interface/issues?utf8=%E2%9C%93&q=is%3Aissue%20">issue tracker</a> are full of useful recipes.
-<p>The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
-
-<p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
-
-<h3 id="remote">Basics: Using DevTools as protocol client</h3>
-<p>The Developer Tools front-end can attach to a remotely running Chrome instance for debugging.
-For this scenario to work, you should start your <i>host</i> Chrome instance with the remote-debugging-port
-command line switch:
-
-<pre class="summary">chrome.exe --remote-debugging-port=9222</pre>
-
-<p>Then you can start a separate <i>client</i> Chrome instance, using a distinct user profile:
-
-<pre class="summary">chrome.exe --user-data-dir=&lt;some directory&gt;</pre>
-
-<p>Now you can navigate to the given port from your <i>client</i> and attach to
-any of the discovered tabs for debugging: <a href="http://localhost:9222">http://localhost:9222</a>
-
-<p>You will find the Developer Tools interface identical to the embedded one and here is why:
-
-<ul>
-  <li>When you navigate your <i>client</i> browser to the remote's Chrome port,
-    Developer Tools front-end is being served from the <i>host</i> Chrome
-    as a Web Application from the Web Server.
-  </li>
-  <li>It fetches HTML, JavaScript and CSS files over HTTP
-  </li>
-  <li>Once loaded, Developer Tools establishes a Web Socket connection to its
-    host and starts exchanging JSON messages with it.
-  </li>
-</ul>
-
-<p>In this scenario, you can substitute Developer Tools front-end with your
-own implementation. Instead of navigating to the HTML page at
-http://localhost:9222, your application can discover available
-pages by requesting: <a href="http://localhost:9222/json">http://localhost:9222/json</a>
-and getting a JSON object with information about inspectable pages along
-with the WebSocket addresses that you could use in order to start
-instrumenting them. See the <a href="#endpoints">HTTP Endpoints</a> section below for more.
+used for concerns with the protocol. It also hosts the canonical copy of the json files. Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
 
 
-<h3 id="monitor">Listening to the protocol</h3>
+<h3 id="monitor">Monitoring the protocol</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
 You can view all requests/responses and methods as they happen.
 
@@ -99,12 +50,12 @@ Click the gear icon in the top-right of the DevTools to open the <i>Settings</i>
 Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close and reopen DevTools.
 Now click the ⋮ menu icon, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
 
-<p>You can also issue your own commands using Protocol Monitor (version 92.0.4497.0+). If the command does not require any parameters,
+<p>You can also issue your own commands using Protocol Monitor. If the command does not require any parameters,
 type the command into the prompt at the bottom of the Protocol Monitor panel and press Enter, for example, 
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
-<code>{"command":"Page.captureScreenshot","parameters":{"format": "jpeg"}}</code>.
+<code>{"cmd":"Page.captureScreenshot","args":{"format": "jpeg"}}</code>.
 
-<p> By clicking on the icon next to the command input (available starting from Chrome version 117.0.5936.0), you can open the command editor. After you select a CDP command, the editor creates a structured form based on the protocol definitions that allows you to edit parameters, and view their documentation and types. Send the commands by clicking on the send button or using <code>Ctrl + Enter</code>.  Use the context menu in the list of previously sent commands to open one of them in the editor.
+<p> By clicking on the icon next to the command input (in Chrome 117+), you can open the command editor. After you select a CDP command, the editor creates a structured form based on the protocol definitions that allows you to edit parameters, and view their documentation and types. Send the commands by clicking on the send button or using <code>Ctrl + Enter</code>.  Use the context menu in the list of previously sent commands to open one of them in the editor.
 
 <figure class="screenshot">
   <a href="images/cdp-editor.png" target="_blank" style="text-align: center; display:block;">
@@ -126,7 +77,6 @@ await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
 
 const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pre>
 
-<p>Note that this method is basically reaching into internals of the DevTools source code and there is no guarantee that it'd continue to work as DevTools evolves.
 
 <h3 id="extension">DevTools protocol via Chrome extension</h3>
 <p>To allow chrome extensions to interact with the protocol, we introduced
@@ -165,8 +115,7 @@ and separately bindings generated for
 <h4 id="json">Can I get the protocol as JSON?</h4>
 
 <p>These canonical .pdl files are mirrored on GitHub <a href="https://github.com/ChromeDevTools/devtools-protocol/">in the devtools-protocol repo</a>
-where JSON versions, TypeScript definitions and closure typedefs are generated. Most tools rely on
-<a href="https://github.com/ChromeDevTools/devtools-protocol/tree/master/json">these JSON versions</a>.
+where JSON versions, TypeScript definitions and closure typedefs are generated. It's published <a href="https://www.npmjs.com/package/devtools-protocol">regularly to NPM</a>.
 
 <p>Also, if you've set <code>--remote-debugging-port=9222</code> with Chrome, the complete protocol version it speaks
 is available at <code>localhost:9222/json/protocol</code>.
