@@ -21,11 +21,13 @@ npm run build
 npm run serve
 ```
 
-Deploying:
+## Deploying
 
 We deploy to https://chromedevtools.github.io/devtools-protocol/ despite the source living here.
 The [repo/branch layout is described here](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/78).
 There is no need to manually trigger deployments. It’s done [automatically](https://github.com/ChromeDevTools/devtools-protocol/commit/c9c207e583264058326792210d1b29a95109beac) as part of the devtools-protocol GitHub Actions workflow.
+
+FYI: The protocol files here in `debugger-protocol-viewer#master` don't get updated. A deployment writes to the `devtools-protocol#ghpages` branch.
 
 ## Adding new version
 

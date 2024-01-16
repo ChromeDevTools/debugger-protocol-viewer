@@ -1224,7 +1224,6 @@
       "description": "DOM debugging allows setting breakpoints on particular DOM operations and events. JavaScript\nexecution will stop on these operations as if there was a regular breakpoint set.",
       "dependencies": [
         "DOM",
-        "Debugger",
         "Runtime"
       ],
       "types": [
@@ -1483,6 +1482,21 @@
           ]
         },
         {
+          "id": "DevicePosture",
+          "type": "object",
+          "properties": [
+            {
+              "name": "type",
+              "description": "Current posture of the device",
+              "type": "string",
+              "enum": [
+                "continuous",
+                "folded"
+              ]
+            }
+          ]
+        },
+        {
           "id": "MediaFeature",
           "type": "object",
           "properties": [
@@ -1614,6 +1628,13 @@
               "experimental": true,
               "optional": true,
               "$ref": "DisplayFeature"
+            },
+            {
+              "name": "devicePosture",
+              "description": "If set, the posture of a foldable device. If not set the posture is set\nto continuous.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "DevicePosture"
             }
           ]
         },
@@ -1701,7 +1722,7 @@
             },
             {
               "name": "acceptLanguage",
-              "description": "Browser langugage to emulate.",
+              "description": "Browser language to emulate.",
               "optional": true,
               "type": "string"
             },
@@ -1857,16 +1878,14 @@
             {
               "name": "tiltX",
               "description": "The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0)",
-              "experimental": true,
               "optional": true,
-              "type": "integer"
+              "type": "number"
             },
             {
               "name": "tiltY",
               "description": "The plane angle between the X-Z plane and the plane containing both the stylus axis and the X axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).",
-              "experimental": true,
               "optional": true,
-              "type": "integer"
+              "type": "number"
             },
             {
               "name": "twist",
@@ -2079,16 +2098,14 @@
             {
               "name": "tiltX",
               "description": "The plane angle between the Y-Z plane and the plane containing both the stylus axis and the Y axis, in degrees of the range [-90,90], a positive tiltX is to the right (default: 0).",
-              "experimental": true,
               "optional": true,
-              "type": "integer"
+              "type": "number"
             },
             {
               "name": "tiltY",
               "description": "The plane angle between the X-Z plane and the plane containing both the stylus axis and the X axis, in degrees of the range [-90,90], a positive tiltY is towards the user (default: 0).",
-              "experimental": true,
               "optional": true,
-              "type": "integer"
+              "type": "number"
             },
             {
               "name": "twist",
@@ -2963,6 +2980,11 @@
               "type": "string"
             },
             {
+              "name": "charset",
+              "description": "Resource charset as determined by the browser (if applicable).",
+              "type": "string"
+            },
+            {
               "name": "requestHeaders",
               "description": "Refined HTTP request headers that were actually transmitted over the network.",
               "optional": true,
@@ -3014,6 +3036,13 @@
               "description": "Specifies that the request was served from the prefetch cache.",
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "serviceWorkerRouterInfo",
+              "description": "Infomation about how Service Worker Static Router was used.",
+              "experimental": true,
+              "optional": true,
+              "$ref": "ServiceWorkerRouterInfo"
             },
             {
               "name": "encodedDataLength",
@@ -3288,6 +3317,7 @@
               "name": "sameParty",
               "description": "True if cookie is SameParty.",
               "experimental": true,
+              "deprecated": true,
               "type": "boolean"
             },
             {
@@ -3728,7 +3758,7 @@
             },
             {
               "name": "acceptLanguage",
-              "description": "Browser langugage to emulate.",
+              "description": "Browser language to emulate.",
               "optional": true,
               "type": "string"
             },
@@ -3772,6 +3802,13 @@
               "name": "encodedDataLength",
               "description": "Actual bytes received (might be less than dataLength for compressed encodings).",
               "type": "integer"
+            },
+            {
+              "name": "data",
+              "description": "Data that was received. (Encoded as a base64 string when passed over JSON)",
+              "experimental": true,
+              "optional": true,
+              "type": "string"
             }
           ]
         },
@@ -4959,6 +4996,20 @@
                 "ReturnAsBase64",
                 "ReturnAsStream"
               ]
+            },
+            {
+              "name": "generateTaggedPDF",
+              "description": "Whether or not to generate tagged (accessible) PDF. Defaults to embedder choice.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
+            },
+            {
+              "name": "generateDocumentOutline",
+              "description": "Whether or not to embed the document outline into the PDF.",
+              "experimental": true,
+              "optional": true,
+              "type": "boolean"
             }
           ],
           "returns": [
@@ -7641,7 +7692,7 @@
         },
         {
           "id": "SerializationOptions",
-          "description": "Represents options for serialization. Overrides `generatePreview`, `returnByValue` and\n`generateWebDriverValue`.",
+          "description": "Represents options for serialization. Overrides `generatePreview` and `returnByValue`.",
           "type": "object",
           "properties": [
             {
@@ -7698,7 +7749,8 @@
                 "typedarray",
                 "arraybuffer",
                 "node",
-                "window"
+                "window",
+                "generator"
               ]
             },
             {
@@ -7799,13 +7851,6 @@
               "description": "String representation of the object.",
               "optional": true,
               "type": "string"
-            },
-            {
-              "name": "webDriverValue",
-              "description": "Deprecated. Use `deepSerializedValue` instead. WebDriver BiDi representation of the value.",
-              "deprecated": true,
-              "optional": true,
-              "$ref": "DeepSerializedValue"
             },
             {
               "name": "deepSerializedValue",
@@ -8241,15 +8286,8 @@
               "type": "string"
             },
             {
-              "name": "generateWebDriverValue",
-              "description": "Deprecated. Use `serializationOptions: {serialization:\"deep\"}` instead.\nWhether the result should contain `webDriverValue`, serialized according to\nhttps://w3c.github.io/webdriver-bidi. This is mutually exclusive with `returnByValue`, but\nresulting `objectId` is still provided.",
-              "deprecated": true,
-              "optional": true,
-              "type": "boolean"
-            },
-            {
               "name": "serializationOptions",
-              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview`, `returnByValue` and `generateWebDriverValue`.",
+              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview` and `returnByValue`.",
               "experimental": true,
               "optional": true,
               "$ref": "SerializationOptions"
@@ -8423,15 +8461,8 @@
               "type": "string"
             },
             {
-              "name": "generateWebDriverValue",
-              "description": "Deprecated. Use `serializationOptions: {serialization:\"deep\"}` instead.\nWhether the result should contain `webDriverValue`, serialized\naccording to\nhttps://w3c.github.io/webdriver-bidi. This is mutually exclusive with `returnByValue`, but\nresulting `objectId` is still provided.",
-              "deprecated": true,
-              "optional": true,
-              "type": "boolean"
-            },
-            {
               "name": "serializationOptions",
-              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview`, `returnByValue` and `generateWebDriverValue`.",
+              "description": "Specifies the result serialization. If provided, overrides\n`generatePreview` and `returnByValue`.",
               "experimental": true,
               "optional": true,
               "$ref": "SerializationOptions"
