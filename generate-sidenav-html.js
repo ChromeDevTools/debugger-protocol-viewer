@@ -30,8 +30,8 @@ const str = Object.entries(allDomains).sort(([domainA, tagsA], [domainB, tagsB])
     // if (tagSortResult !== 0) return tagSortResult;
     return domainA.localeCompare(domainB);
   })
-  .map(([id, versions]) => `<a href="{{{ url '/' }}}{{{ version }}}/${id}" class="${versions.join(' ')}">${id}</a>`)
+  .map(([id, versions]) => `          <a href="{{{ url '/' }}}{{{ version }}}/${id}" class="${versions.join(' ')}">${id}</a>`)
   .join('\n');
 
 
-process.stdout.write(str + '\n');
+process.stdout.write('\n' + str + '\n');

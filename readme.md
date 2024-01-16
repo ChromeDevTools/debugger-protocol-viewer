@@ -39,7 +39,7 @@ To add a new protocol version:
 
 ## Adding new domains
 
-Run `node generate-sidenav-html.js` and add into `<div id="domains">` in `pages/_includes/shell.hbs`.
+Run `npm run prep` then `node generate-sidenav-html.js` and add into `<div id="domains">` in `pages/_includes/shell.hbs`.
 
 ## History
 

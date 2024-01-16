@@ -2,7 +2,7 @@
 set -x
 
 local_script_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ -n $CI ]; then
+if [ -n "$CI" ]; then
   # https://github.com/ChromeDevTools/devtools-protocol/blob/HEAD/.github/workflows/update.yml
   protocol_repo_path="$local_script_path/.."
 else
