@@ -35,3 +35,6 @@ const str = Object.entries(allDomains).sort(([domainA, tagsA], [domainB, tagsB])
 
 
 process.stdout.write('\n' + str + '\n');
+
+// And update shell.hbs with the output
+
