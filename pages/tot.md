@@ -10,10 +10,10 @@ There is no backwards compatibility support guaranteed for the capabilities it i
 
 <h5 browser>Latest <a
    href="https://github.com/ChromeDevTools/devtools-protocol/blob/master/json/browser_protocol.json">browser_protocol.json</a> version updated:</h5>
-<code browser>Date:   2024-01-16 04:27:14 +0000
+<code browser>Date:   2025-06-27 04:31:59 +0000
 </code>
 
 <h5 js>Latest <a
    href="https://github.com/ChromeDevTools/devtools-protocol/blob/master/json/js_protocol.json">js_protocol.json</a> version updated:</h5>
-<code js>Date:   2023-09-28 04:26:18 +0000
+<code js>Date:   2025-04-26 04:29:56 +0000
 </code>
