@@ -32,9 +32,7 @@ The stable release of the protocol, tagged at Chrome 64. It includes a smaller s
 
 <p>See <a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md">Getting Started with CDP</a>. The <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol">awesome-chrome-devtools</a> page links to many of the tools in the protocol ecosystem, including protocol API libraries in JavaScript, TypeScript, Python, Java, and Go.
 
-<p>The <a href="https://github.com/chromedevtools/devtools-protocol">devtools-protocol repo</a> issue tracker can also be
-used for concerns with the protocol. It also hosts the canonical copy of the json files. Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
-
+<p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
 
 <h3 id="monitor">Monitoring the protocol</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
