@@ -6,10 +6,11 @@
   "author": "Google Inc.",
   "license": "Apache2",
   "private": true,
+  "type": "module",
   "devDependencies": {
-    "@11ty/eleventy": "0.10.0",
+    "@11ty/eleventy": "3.0.0",
+    "@11ty/eleventy-plugin-handlebars": "^1.0.0",
     "@rollup/plugin-node-resolve": "7.1.1",
-    "esm": "3.2.25",
     "lit-html": "1.2.1",
     "marked": "0.8.2",
     "rimraf": "^3.0.2",
@@ -18,7 +19,7 @@
     "statikk": "^2.1.1"
   },
   "scripts": {
-    "build": "rimraf devtools-protocol/ && node -r esm node_modules/.bin/eleventy && rollup -c rollup.config.js",
+    "build": "rimraf devtools-protocol/ && node node_modules/.bin/eleventy && rollup -c rollup.config.js",
     "prep": "bash prep-tot-protocol-files.sh",
     "test": "bash test/primitive_tests.sh",
     "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 ."

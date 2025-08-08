@@ -11,14 +11,14 @@ jobs:
 
     steps:
 
-      - name: git clone
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: latest
-          cache: 'npm'
+          node-version-file: '.nvmrc'
+          cache: npm
 
       - run: npm ci
       - run: npm run build
