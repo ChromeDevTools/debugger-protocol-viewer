@@ -154,7 +154,7 @@ class CRSearchResults extends HTMLElement {
         })}
       </div>
     `, this.shadowRoot, {
-      eventContext: this,
+      host: this,
     });
   }
 
@@ -287,7 +287,7 @@ customElements.define('cr-search-control', class extends HTMLElement {
       </style>
       <input placeholder="Start typing to search..." aria-label="Search" @keyup=${this.handleArrows}/>
     `, this.shadowRoot, {
-      eventContext: this,
+      host: this,
     });
   }
 
