@@ -1584,6 +1584,16 @@
                     ]
                 },
                 {
+                    "id": "UnencodedDigestError",
+                    "type": "string",
+                    "enum": [
+                        "MalformedDictionary",
+                        "UnknownAlgorithm",
+                        "IncorrectDigestType",
+                        "IncorrectDigestLength"
+                    ]
+                },
+                {
                     "id": "AttributionReportingIssueDetails",
                     "description": "Details for issues around \"Attribution Reporting API\" usage.\nExplainer: https://github.com/WICG/attribution-reporting-api",
                     "type": "object",
@@ -1685,6 +1695,20 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        {
+                            "name": "request",
+                            "$ref": "AffectedRequest"
+                        }
+                    ]
+                },
+                {
+                    "id": "UnencodedDigestIssueDetails",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "error",
+                            "$ref": "UnencodedDigestError"
                         },
                         {
                             "name": "request",
@@ -2061,7 +2085,8 @@
                     "type": "string",
                     "enum": [
                         "BlockedFrameNavigation",
-                        "BlockedSubresource"
+                        "BlockedSubresource",
+                        "NoisedCanvasReadback"
                     ]
                 },
                 {
@@ -2078,6 +2103,12 @@
                             "description": "Applies to BlockedFrameNavigation and BlockedSubresource issue types.",
                             "optional": true,
                             "$ref": "AffectedRequest"
+                        },
+                        {
+                            "name": "sourceCodeLocation",
+                            "description": "Applies to NoisedCanvasReadback issue type.",
+                            "optional": true,
+                            "$ref": "SourceCodeLocation"
                         }
                     ]
                 },
@@ -2110,6 +2141,7 @@
                         "SharedDictionaryIssue",
                         "ElementAccessibilityIssue",
                         "SRIMessageSignatureIssue",
+                        "UnencodedDigestIssue",
                         "UserReidentificationIssue"
                     ]
                 },
@@ -2238,6 +2270,11 @@
                             "name": "sriMessageSignatureIssueDetails",
                             "optional": true,
                             "$ref": "SRIMessageSignatureIssueDetails"
+                        },
+                        {
+                            "name": "unencodedDigestIssueDetails",
+                            "optional": true,
+                            "$ref": "UnencodedDigestIssueDetails"
                         },
                         {
                             "name": "userReidentificationIssueDetails",
@@ -3420,6 +3457,30 @@
                     ]
                 },
                 {
+                    "name": "setContentsSize",
+                    "description": "Set size of the browser contents resizing browser window as necessary.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "windowId",
+                            "description": "Browser window id.",
+                            "$ref": "WindowID"
+                        },
+                        {
+                            "name": "width",
+                            "description": "The window contents width in DIP. Assumes current width if omitted.\nMust be specified if 'height' is omitted.",
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "height",
+                            "description": "The window contents height in DIP. Assumes current height if omitted.\nMust be specified if 'width' is omitted.",
+                            "optional": true,
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
                     "name": "setDockTile",
                     "description": "Set dock tile details, platform-specific.",
                     "experimental": true,
@@ -4336,6 +4397,12 @@
                             "description": "true if the query contains scroll-state() queries.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "queriesAnchored",
+                            "description": "true if the query contains anchored() queries.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -5088,7 +5155,7 @@
                     "parameters": [
                         {
                             "name": "values",
-                            "description": "Substitution functions (var()/env()/attr()) and cascade-dependent\nkeywords (revert/revert-layer) do not work.",
+                            "description": "Cascade-dependent keywords (revert/revert-layer) do not work.",
                             "type": "array",
                             "items": {
                                 "type": "string"
@@ -5334,6 +5401,17 @@
                             "items": {
                                 "$ref": "CSSFunctionRule"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "getEnvironmentVariables",
+                    "description": "Returns the values of the default UA-defined environment variables used in env()",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "environmentVariables",
+                            "type": "object"
                         }
                     ]
                 },
@@ -6263,6 +6341,7 @@
                         "before",
                         "after",
                         "picker-icon",
+                        "interest-hint",
                         "marker",
                         "backdrop",
                         "column",
@@ -7149,6 +7228,13 @@
                             "description": "JavaScript object id of the node wrapper.",
                             "optional": true,
                             "$ref": "Runtime.RemoteObjectId"
+                        },
+                        {
+                            "name": "includeShadowDOM",
+                            "description": "Include all shadow roots. Equals to false if not specified.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -7774,7 +7860,7 @@
                 },
                 {
                     "name": "getContainerForNode",
-                    "description": "Returns the query container of the given node based on container query\nconditions: containerName, physical and logical axes, and whether it queries\nscroll-state. If no axes are provided and queriesScrollState is false, the\nstyle container is returned, which is the direct parent or the closest\nelement with a matching container-name.",
+                    "description": "Returns the query container of the given node based on container query\nconditions: containerName, physical and logical axes, and whether it queries\nscroll-state or anchored elements. If no axes are provided and\nqueriesScrollState is false, the style container is returned, which is the\ndirect parent or the closest element with a matching container-name.",
                     "experimental": true,
                     "parameters": [
                         {
@@ -7798,6 +7884,11 @@
                         },
                         {
                             "name": "queriesScrollState",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "queriesAnchored",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -7855,6 +7946,33 @@
                             "name": "nodeId",
                             "description": "The anchor element of the given anchor query.",
                             "$ref": "NodeId"
+                        }
+                    ]
+                },
+                {
+                    "name": "forceShowPopover",
+                    "description": "When enabling, this API force-opens the popover identified by nodeId\nand keeps it open until disabled.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Id of the popover HTMLElement",
+                            "$ref": "NodeId"
+                        },
+                        {
+                            "name": "enable",
+                            "description": "If true, opens the popover and keeps it open. If false, closes the\npopover if it was previously force-opened.",
+                            "type": "boolean"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodeIds",
+                            "description": "List of popovers that were closed in order to respect popover stacking order.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "NodeId"
+                            }
                         }
                     ]
                 }
@@ -10484,6 +10602,19 @@
                             "items": {
                                 "$ref": "DisabledImageType"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "setDataSaverOverride",
+                    "description": "Override the value of navigator.connection.saveData",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "dataSaverEnabled",
+                            "description": "Override value. Omitting the parameter disables the override.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -13825,6 +13956,13 @@
                             "description": "Security details for the request.",
                             "optional": true,
                             "$ref": "SecurityDetails"
+                        },
+                        {
+                            "name": "isIpProtectionUsed",
+                            "description": "Indicates whether the request was sent through IP Protection proxies. If\nset to true, the request used the IP Protection privacy feature.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -14759,7 +14897,7 @@
                     "type": "string",
                     "enum": [
                         "Loopback",
-                        "Private",
+                        "Local",
                         "Public",
                         "Unknown"
                     ]
@@ -17606,7 +17744,6 @@
                         "searchForNode",
                         "searchForUAShadowDOM",
                         "captureAreaScreenshot",
-                        "showDistances",
                         "none"
                     ]
                 }
@@ -18253,6 +18390,7 @@
                         "accelerometer",
                         "all-screens-capture",
                         "ambient-light-sensor",
+                        "aria-notify",
                         "attribution-reporting",
                         "autoplay",
                         "bluetooth",
@@ -18291,6 +18429,7 @@
                         "deferred-fetch",
                         "deferred-fetch-minimal",
                         "device-attributes",
+                        "digital-credentials-create",
                         "digital-credentials-get",
                         "direct-sockets",
                         "direct-sockets-private",
@@ -20325,6 +20464,13 @@
                             "description": "User friendly error message, present if and only if navigation has failed.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "isDownload",
+                            "description": "Whether the navigation resulted in a download.",
+                            "experimental": true,
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ]
                 },
@@ -21600,7 +21746,7 @@
                 },
                 {
                     "name": "compilationCacheProduced",
-                    "description": "Issued for every compilation cache generated. Is only available\nif Page.setGenerateCompilationCache is enabled.",
+                    "description": "Issued for every compilation cache generated.",
                     "experimental": true,
                     "parameters": [
                         {
@@ -22503,15 +22649,6 @@
                 },
                 {
                     "name": "enable"
-                },
-                {
-                    "name": "inspectWorker",
-                    "parameters": [
-                        {
-                            "name": "versionId",
-                            "type": "string"
-                        }
-                    ]
                 },
                 {
                     "name": "setForceUpdateOnPageLoad",
@@ -25502,6 +25639,25 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "openDevTools",
+                    "description": "Opens a DevTools window for the target.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "description": "This can be the page or tab target ID.",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "targetId",
+                            "description": "The targetId of DevTools page target.",
+                            "$ref": "TargetID"
+                        }
+                    ]
                 }
             ],
             "events": [
@@ -27726,7 +27882,8 @@
                     "type": "string",
                     "enum": [
                         "SourceIsNotJsonObject",
-                        "InvalidRulesSkipped"
+                        "InvalidRulesSkipped",
+                        "InvalidRulesetLevelTag"
                     ]
                 },
                 {
@@ -27878,7 +28035,8 @@
                         "OtherPrerenderedPageActivated",
                         "V8OptimizerDisabled",
                         "PrerenderFailedDuringPrefetch",
-                        "BrowsingDataRemoved"
+                        "BrowsingDataRemoved",
+                        "PrerenderHostReused"
                     ]
                 },
                 {
