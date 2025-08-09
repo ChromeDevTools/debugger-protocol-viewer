@@ -1,4 +1,4 @@
-import {default as marked} from 'marked';
+import { marked } from 'marked';
 
 const html = String.raw;
 
