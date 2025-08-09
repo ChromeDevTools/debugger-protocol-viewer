@@ -10,7 +10,7 @@
   "devDependencies": {
     "@11ty/eleventy": "3.0.0",
     "@11ty/eleventy-plugin-handlebars": "^1.0.0",
-    "@rollup/plugin-node-resolve": "7.1.1",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "lit-html": "^3.3.1",
     "marked": "^16.1.2",
