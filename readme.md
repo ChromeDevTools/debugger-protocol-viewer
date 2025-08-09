@@ -1,5 +1,7 @@
-# devtools-protocol
-Explore the Chrome DevTools Protocol, its methods, events and basic documentation.
+# debugger-protocol-viewer
+
+Website for viewing Chrome DevTools Protocol defined at
+https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/public/devtools_protocol/.
 
 More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protocol) and [published devtools protocol viewer](https://chromedevtools.github.io/devtools-protocol/)
 
@@ -61,4 +63,5 @@ Apache
 
 ## Contributing
 
-Pull requests very welcome!
+Report issues about the website via GitHub issues in this repo. Please report
+issues with CDP itself via https://crbug.com/new. Pull requests very welcome!
