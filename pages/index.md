@@ -34,9 +34,10 @@ The stable release of the protocol, tagged at Chrome 64. It includes a smaller s
 
 <p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
 
-<h3 id="monitor">Monitoring the protocol</h3>
+<h3 id="monitor">Inspect CDP traffic using Protocol Monitor in DevTools</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
-You can view all requests/responses and methods as they happen.
+You can view all requests/responses and methods as they happen in the Protocol Monitor
+panel in DevTools.
 
 <figure class="screenshot">
   <a href="images/protocol-monitor.png" target="_blank" style="text-align: center; display:block;">
@@ -48,7 +49,7 @@ Click the gear icon in the top-right of the DevTools to open the <i>Settings</i>
 Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close and reopen DevTools.
 Now click the ⋮ menu icon, choose <i>More Tools</i> and then select <i>Protocol monitor</i>.
 
-<p>You can also issue your own commands using Protocol Monitor. If the command does not require any parameters,
+<p>You can also send commands using Protocol Monitor. If the command does not require any parameters,
 type the command into the prompt at the bottom of the Protocol Monitor panel and press Enter, for example, 
 <code>Page.captureScreenshot</code>. If the command requires parameters, provide them as JSON, for example,
 <code>{"cmd":"Page.captureScreenshot","args":{"format": "jpeg"}}</code>.
