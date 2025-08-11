@@ -3,7 +3,7 @@
 Website for viewing Chrome DevTools Protocol defined at
 https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/public/devtools_protocol/.
 
-More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protocol) and [published devtools protocol viewer](https://chromedevtools.github.io/devtools-protocol/)
+More: [DevTools Protocol repo](https://github.com/ChromeDevTools/devtools-protocol) and [published DevTools Protocol website](https://chromedevtools.github.io/devtools-protocol/).
 
 
 ##  Building
