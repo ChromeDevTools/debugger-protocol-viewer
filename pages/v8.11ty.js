@@ -1,6 +1,6 @@
 import {DomainGenerator} from './domainGenerator.js';
 
-module.exports = class extends DomainGenerator {
+export default class extends DomainGenerator {
   constructor() {
     super('v8');
   }

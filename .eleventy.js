@@ -1,4 +1,7 @@
-module.exports = (eleventyConfig) => {
+import handlebarsPlugin from '@11ty/eleventy-plugin-handlebars';
+
+export default (eleventyConfig) => {
+  eleventyConfig.addPlugin(handlebarsPlugin);
   eleventyConfig.addPassthroughCopy('pages/styles/protocol.css');
   eleventyConfig.addPassthroughCopy('pages/images/');
   eleventyConfig.addPassthroughCopy('search_index/');
