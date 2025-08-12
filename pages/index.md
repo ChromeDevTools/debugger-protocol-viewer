@@ -34,7 +34,7 @@ The stable release of the protocol, tagged at Chrome 64. It includes a smaller s
 
 <p>Consider subscribing to the <a href="https://groups.google.com/d/forum/chrome-debugging-protocol">chrome-debugging-protocol</a> mailing list.
 
-<h3 id="monitor">Inspect CDP traffic using Protocol Monitor in DevTools</h3>
+<h3 id="monitor">Using Protocol Monitor in Chrome DevTools</h3>
 <p>This is especially handy to understand how the DevTools frontend makes use of the protocol.
 You can view all requests/responses and methods as they happen in the Protocol Monitor
 panel in DevTools.
