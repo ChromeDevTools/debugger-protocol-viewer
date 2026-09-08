@@ -85,7 +85,15 @@ class ProtocolRenderer {
     }
     if (type.enum) {
       main.el('h5', '', 'Allowed values');
-      main.el('p', '', type.enum.join(', '));
+      const p = main.el('p', 'enum-values');
+      type.enum.forEach((value, index) => {
+        const code = document.createElement('code');
+        code.textContent = value;
+        p.append(code);
+        if (index < type.enum.length - 1) {
+          p.append(', ');
+        }
+      });
     }
     if (type.referencedBy && type.referencedBy.length) {
       // Render back references.

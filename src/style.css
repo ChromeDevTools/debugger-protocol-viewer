@@ -453,9 +453,7 @@ figure.screenshot img {
 
 /* Table of Contents */
 .domain-toc {
-  margin-top: 24px;
   padding-top: 18px;
-  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -653,6 +651,20 @@ figure.screenshot img {
   font-size: 14px;
   line-height: 1.55;
   color: var(--color-text);
+}
+
+.enum-values {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.enum-values code {
+  color: #6a1b9a;
+  background-color: #f3e5f5;
+  border: 1px solid rgba(106, 27, 154, 0.15);
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .optional::after {
