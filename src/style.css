@@ -214,12 +214,6 @@ figure.screenshot img {
   color: #ffffff;
 }
 
-.brand-logo {
-  display: block;
-  width: 24px;
-  height: 24px;
-}
-
 .brand-title {
   white-space: nowrap;
 }
@@ -958,7 +952,9 @@ h2 span.deprecated,
   .header-left {
     min-width: unset;
   }
+}
 
+@media (max-width: 480px) {
   .brand-title {
     display: none;
   }

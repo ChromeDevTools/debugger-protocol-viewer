@@ -76,7 +76,6 @@ test('generateStubs: end-to-end stub generation in temporary directory', async t
         'style.css',
         'favicons',
         'images',
-        'home.svg',
       ];
 
       for (const asset of expectedAssets) {
