@@ -59,8 +59,8 @@ test('normalizeProtocol: deterministic sorting (experimental, deprecated, option
   const normalized = normalizeProtocol(raw);
   const commandNames = normalized.domains[0].commands.map(c => c.name);
 
-  // Non-experimental & non-deprecated alphabetical first, then deprecated, then experimental
-  assert.deepEqual(commandNames, ['alpha', 'beta', 'alphaDep', 'zetaExp']);
+  // Standard alphabetical first, then experimental, then deprecated
+  assert.deepEqual(commandNames, ['alpha', 'beta', 'zetaExp', 'alphaDep']);
 });
 
 test('normalizeProtocol: does NOT mutate input objects (delete object.experimental)', () => {

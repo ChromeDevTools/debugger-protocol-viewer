@@ -90,7 +90,7 @@ test('generateStubs: end-to-end stub generation in temporary directory', async t
         const scriptPath = path.resolve('scripts/generate-stubs.js');
         const output = execFileSync(
           process.execPath,
-          [scriptPath, path.resolve('pages/_data/tot.json'), cliTmpDir],
+          [scriptPath, path.resolve('data/tot.json'), cliTmpDir],
           { encoding: 'utf8' }
         );
 

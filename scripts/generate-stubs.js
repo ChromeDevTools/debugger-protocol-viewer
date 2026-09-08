@@ -65,7 +65,7 @@ export function generateDomainStub(domain) {
  * @returns {{ domainCount: number, outputDir: string }}
  */
 export function generateStubs({
-  protocolPath = path.resolve('pages/_data/tot.json'),
+  protocolPath = path.resolve('data/tot.json'),
   outputDir = path.resolve('devtools-protocol'),
   srcDir = path.resolve('src'),
 } = {}) {

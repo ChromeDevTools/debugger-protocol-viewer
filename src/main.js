@@ -146,7 +146,6 @@ class App {
       ]);
 
       this._prepareDatasets(browserProto, jsProto);
-      this._setupExperimentalToggle();
       this._onRoute();
     } catch (error) {
       this._contentElement.textContent = '';
@@ -182,7 +181,7 @@ class App {
     }
 
     // 2. Stable Protocol (1.3)
-    // Stable target is the stabilized Tip-of-Tree protocol
+    // Stable target is the stabilized Tip-of-Tree protocol (strictly no experimental domains/items)
     for (const d of stableTotDomains) {
       this._targetStore.stable.all.set(d.domain, d);
       this._targetStore.stable.stable.set(d.domain, d);
@@ -204,23 +203,6 @@ class App {
     }
     for (const d of stableV8Domains) {
       this._targetStore.v8.stable.set(d.domain, d);
-    }
-  }
-
-  _setupExperimentalToggle() {
-    const isExpEnabled = window.localStorage['experimental'] !== 'false';
-    document.body.classList.toggle('experimental-enabled', isExpEnabled);
-
-    const expToggle = document.getElementById('experimental');
-    if (expToggle) {
-      expToggle.addEventListener('click', () => {
-        const currentlyEnabled = window.localStorage['experimental'] !== 'false';
-        const nextState = !currentlyEnabled;
-        window.localStorage['experimental'] = nextState ? 'true' : 'false';
-        document.body.classList.toggle('experimental-enabled', nextState);
-        this._updateActiveDomains();
-        this._onRoute();
-      });
     }
   }
 
@@ -306,9 +288,8 @@ class App {
   }
 
   _updateActiveDomains() {
-    const isExp = window.localStorage['experimental'] !== 'false';
     const store = this._targetStore[this._currentTarget] || this._targetStore.tot;
-    this._activeDomains = isExp ? store.all : store.stable;
+    this._activeDomains = store.all;
 
     this._search.setDomains(Array.from(this._activeDomains.values()));
     this._renderSidebar(this._activeDomains);
@@ -388,7 +369,7 @@ class App {
 
     if (!this._activeDomains.has(domain)) {
       this._contentElement.appendChild(
-        renderError(`Unknown domain: ${domain}. Enable experimental domains above?`)
+        renderError(`Unknown domain: ${domain}.`)
       );
       return;
     }

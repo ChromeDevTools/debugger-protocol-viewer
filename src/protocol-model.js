@@ -45,10 +45,9 @@ function nameProperty(collectionName) {
 
 /**
  * Deterministically sorts a collection in-place:
- * 1. Non-experimental before experimental.
- * 2. Non-deprecated before deprecated.
- * 3. Required before optional.
- * 4. Alphabetical by entity name.
+ * 1. Standard (0) before Experimental (1) before Deprecated (2).
+ * 2. Required before optional.
+ * 3. Alphabetical by entity name.
  *
  * @param {Array<Object>} items
  * @param {string|null} prop
@@ -56,18 +55,17 @@ function nameProperty(collectionName) {
 function sortCollection(items, prop) {
   if (!prop) return;
   items.sort((a, b) => {
-    const aExp = a.experimental ? 1 : 0;
-    const bExp = b.experimental ? 1 : 0;
-    if (aExp !== bExp) return aExp - bExp;
+    // 1. Standard (0) before Experimental (1) before Deprecated (2)
+    const aRank = a.deprecated ? 2 : (a.experimental ? 1 : 0);
+    const bRank = b.deprecated ? 2 : (b.experimental ? 1 : 0);
+    if (aRank !== bRank) return aRank - bRank;
 
-    const aDep = a.deprecated ? 1 : 0;
-    const bDep = b.deprecated ? 1 : 0;
-    if (aDep !== bDep) return aDep - bDep;
-
+    // 2. Required before optional
     const aOpt = a.optional ? 1 : 0;
     const bOpt = b.optional ? 1 : 0;
     if (aOpt !== bOpt) return aOpt - bOpt;
 
+    // 3. Alphabetical by entity name
     if (!a[prop] || !b[prop]) return 0;
     return a[prop].localeCompare(b[prop]);
   });
