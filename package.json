@@ -8,13 +8,17 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@types/node": "^26.5.0",
+    "devtools-protocol": "^0.0.1693794",
     "rimraf": "^6.0.1",
-    "statikk": "^2.2.2"
+    "statikk": "^2.2.2",
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "build": "node scripts/generate-stubs.js",
     "prep": "bash prep-tot-protocol-files.sh",
-    "test": "node --test test/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck && node --test test/*.test.js",
     "test:unit": "node --test test/protocol-model.test.js",
     "test:stubs": "node --test test/stubs.test.js",
     "test:e2e": "node --test test/e2e.test.js",
