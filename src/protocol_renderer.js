@@ -2,7 +2,7 @@
  * @fileoverview DOM Renderer for CDP Domains, Commands, Events, and Types.
  */
 
-/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolType, ProtocolCommand, ProtocolEvent, ProtocolParameter, ProtocolBackReference } from './types.d.ts' */
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolType, ProtocolCommand, ProtocolEvent, ProtocolParameter, ProtocolBackReference } from '../types/types.d.ts' */
 
 /**
  * @param {string} tag

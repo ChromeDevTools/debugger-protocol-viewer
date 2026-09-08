@@ -2,7 +2,7 @@
  * @fileoverview Fuzzy search controller and UI rendering for protocol entities.
  */
 
-/** @import { ProtocolDomain } from './types.d.ts' */
+/** @import { ProtocolDomain } from '../types/types.d.ts' */
 
 import { FuzzySearch } from './fuzzy_search.js';
 import { ProtocolRenderer } from './protocol_renderer.js';

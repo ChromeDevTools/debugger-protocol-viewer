@@ -3,7 +3,7 @@
  * Browser-agnostic, zero-DOM ES module.
  */
 
-/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from './types.d.ts' */
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
 
 /** @type {Map<string, TargetKind>} */
 const TARGET_MAP = new Map([

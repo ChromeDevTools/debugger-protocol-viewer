@@ -10,7 +10,7 @@ import {
 } from '../src/protocol-model.js';
 
 /** @import { TestContext } from 'node:test' */
-/** @import { ProtocolDomain, ProtocolType } from '../src/types.d.ts' */
+/** @import { ProtocolDomain, ProtocolType } from '../types/types.d.ts' */
 
 test('normalizeTarget', () => {
   assert.equal(normalizeTarget('tot'), 'tot');

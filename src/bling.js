@@ -7,7 +7,7 @@
  * But.. it's different. and upgraded.
  */
 
-/** @import { ParseSelector } from './bling.d.ts' */
+/** @import { ParseSelector } from '../types/bling.d.ts' */
 
 /**
  * querySelector that throws if nothing matches. Return type is inferred from the selector literal via ParseSelector.

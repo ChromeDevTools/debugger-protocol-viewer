@@ -2,7 +2,7 @@
  * @fileoverview Main Application Controller for Chrome DevTools Protocol Viewer.
  */
 
-/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, TargetKind, RouteInfo } from './types.d.ts' */
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
 import {
   normalizeProtocol,
   stabilize,

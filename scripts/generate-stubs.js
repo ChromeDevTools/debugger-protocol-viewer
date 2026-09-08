@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-/** @import { ProtocolDomain } from '../src/types.d.ts' */
+/** @import { ProtocolDomain } from '../types/types.d.ts' */
 
 /**
  * Generates HTML for a domain redirect stub with noscript fallback links.
