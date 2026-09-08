@@ -430,6 +430,29 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       );
       assert.strictEqual(hash, '#/stable/Page.navigate', `Expected 404 handler to redirect to "#/stable/Page.navigate", got "${hash}"`);
     });
+
+    await t.test('9. Root landing page rendering and rich content (#/)', async () => {
+      await cdp.send('Page.navigate', { url: `${baseUrl}/#/` }, sessionId);
+
+      const landingHeading = await cdp.pollEvaluate(
+        'document.querySelector("#content .box h1")?.textContent?.trim()',
+        (val) => val === 'Chrome DevTools Protocol',
+        sessionId
+      );
+      assert.strictEqual(landingHeading, 'Chrome DevTools Protocol', 'Expected landing page title');
+
+      const monitorImageSrc = await cdp.evaluate(
+        'document.querySelector("figure.screenshot img")?.getAttribute("src")',
+        sessionId
+      );
+      assert.strictEqual(monitorImageSrc, 'images/protocol-monitor.png', 'Expected Protocol Monitor image');
+
+      const endpointsHeading = await cdp.evaluate(
+        'document.getElementById("endpoints")?.textContent?.trim()',
+        sessionId
+      );
+      assert.strictEqual(endpointsHeading, 'HTTP Endpoints', 'Expected HTTP Endpoints heading');
+    });
   } finally {
     // Teardown resources
     if (browserWs) {

@@ -75,6 +75,7 @@ test('generateStubs: end-to-end stub generation in temporary directory', async t
         'utilities.js',
         'style.css',
         'favicons',
+        'images',
         'home.svg',
       ];
 
