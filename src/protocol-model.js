@@ -337,8 +337,11 @@ export function parseRoute(routeString) {
     .map((s) => s.trim())
     .filter((s) => Boolean(s) && !s.endsWith('.html'));
 
-  // Filter out leading repository base path if present (e.g. /devtools-protocol/)
-  if (pathSegments.length > 0 && pathSegments[0] === 'devtools-protocol') {
+  // Filter out leading repository base path if present (e.g. /devtools-protocol/ or /debugger-protocol-viewer/)
+  if (
+    pathSegments.length > 0 &&
+    (pathSegments[0] === 'devtools-protocol' || pathSegments[0] === 'debugger-protocol-viewer')
+  ) {
     pathSegments.shift();
   }
 

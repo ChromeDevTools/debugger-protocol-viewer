@@ -299,7 +299,7 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       expected: { target: 'tot', domain: null, member: null },
     },
 
-    // Base path prefix stripping (/devtools-protocol/)
+    // Base path prefix stripping (/devtools-protocol/ and /debugger-protocol-viewer/)
     {
       input: '/devtools-protocol/',
       expected: { target: 'tot', domain: null, member: null },
@@ -310,6 +310,18 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
     },
     {
       input: '/devtools-protocol/tot/Page/#method-navigate',
+      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
+    },
+    {
+      input: '/debugger-protocol-viewer/',
+      expected: { target: 'tot', domain: null, member: null },
+    },
+    {
+      input: '/debugger-protocol-viewer/index.html',
+      expected: { target: 'tot', domain: null, member: null },
+    },
+    {
+      input: '/debugger-protocol-viewer/tot/Page/#method-navigate',
       expected: { target: 'tot', domain: 'Page', member: 'navigate' },
     },
 
