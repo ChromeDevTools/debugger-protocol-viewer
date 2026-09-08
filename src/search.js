@@ -27,7 +27,8 @@ class SearchItem {
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
-    this.route = (window.app && window.app.formatRef) ? window.app.formatRef(this.title) : '#/' + this.title;
+    this.route =
+      window.app && window.app.formatRef ? window.app.formatRef(this.title) : '#/' + this.title;
   }
 }
 
@@ -50,7 +51,10 @@ class Search {
    * @param {Element} resultsElement
    */
   constructor(searchHeader, resultsElement) {
-    const input = searchHeader.tagName === 'INPUT' ? searchHeader : (searchHeader.querySelector('input') || searchHeader);
+    const input =
+      searchHeader.tagName === 'INPUT'
+        ? searchHeader
+        : searchHeader.querySelector('input') || searchHeader;
     this._searchInput = /** @type {HTMLInputElement} */ (input);
     /** @type {Array<SearchItem>} */
     this._items = [];
@@ -64,51 +68,59 @@ class Search {
     this._resultsElement = resultsElement;
 
     // Activate search on any keypress (unless user is in an input field)
-    document.addEventListener('keypress', event => {
+    document.addEventListener('keypress', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+      if (
+        target &&
+        target.matches &&
+        target.matches('input, textarea, select, [contenteditable="true"]')
+      )
         return;
-      if (this._searchInput === document.activeElement)
-        return;
+      if (this._searchInput === document.activeElement) return;
       if (/\S/.test(event.key)) {
-        if (event.key !== '.')
-          this._searchInput.value = '';
+        if (event.key !== '.') this._searchInput.value = '';
         this._searchInput.focus();
       }
     });
 
     // Activate search on backspace, delete, '/', or Cmd+K
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+      if (
+        target &&
+        target.matches &&
+        target.matches('input, textarea, select, [contenteditable="true"]')
+      )
         return;
-      if (this._searchInput === document.activeElement)
-        return;
+      if (this._searchInput === document.activeElement) return;
       if (event.key === '/' || ((event.metaKey || event.ctrlKey) && event.key === 'k')) {
         event.preventDefault();
         this._searchInput.focus();
         this._searchInput.select();
         return;
       }
-      if (event.keyCode === 8 || event.keyCode === 46)
-        this._searchInput.focus();
+      if (event.keyCode === 8 || event.keyCode === 46) this._searchInput.focus();
     });
 
     // Activate on paste
-    document.addEventListener('paste', event => {
+    document.addEventListener('paste', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+      if (
+        target &&
+        target.matches &&
+        target.matches('input, textarea, select, [contenteditable="true"]')
+      )
         return;
-      if (this._searchInput === document.activeElement)
-        return;
+      if (this._searchInput === document.activeElement) return;
       this._searchInput.focus();
     });
 
-    document.addEventListener('click', event => {
+    document.addEventListener('click', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (!target || this._searchInput.contains(target))
-        return;
-      const searchItem = /** @type {HTMLElement & { __route?: string } | null} */ (target.closest('.search-item'));
+      if (!target || this._searchInput.contains(target)) return;
+      const searchItem = /** @type {HTMLElement & { __route?: string } | null} */ (
+        target.closest('.search-item')
+      );
       if (searchItem) {
         event.preventDefault();
         event.stopPropagation();
@@ -128,15 +140,25 @@ class Search {
     this._items = [];
     for (var domain of domains) {
       this._domainNames.add(domain.domain.toLowerCase());
-      for (var command of (domain.commands || [])) {
-        let item = new SearchItem(domain.domain, command.name, SearchItemType.Method, command.description);
+      for (var command of domain.commands || []) {
+        let item = new SearchItem(
+          domain.domain,
+          command.name,
+          SearchItemType.Method,
+          command.description,
+        );
         this._items.push(item);
       }
-      for (var event of (domain.events || [])) {
-        let item = new SearchItem(domain.domain, event.name, SearchItemType.Event, event.description);
+      for (var event of domain.events || []) {
+        let item = new SearchItem(
+          domain.domain,
+          event.name,
+          SearchItemType.Event,
+          event.description,
+        );
         this._items.push(item);
       }
-      for (var type of (domain.types || [])) {
+      for (var type of domain.types || []) {
         let item = new SearchItem(domain.domain, type.id, SearchItemType.Type, type.description);
         this._items.push(item);
       }
@@ -147,8 +169,7 @@ class Search {
     this._searchInput.blur();
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'none');
     this._searchInput.value = this._defaultValue;
-    if (window.app && window.app.focusContent)
-      window.app.focusContent();
+    if (window.app && window.app.focusContent) window.app.focusContent();
   }
 
   /**
@@ -169,14 +190,12 @@ class Search {
       return;
     }
     this._resultsElement.textContent = '';
-    if (!query)
-      this._addNavigateHomeItem();
+    if (!query) this._addNavigateHomeItem();
     for (let i = 0; i < Math.min(results.length, SEARCH_RENDER_COUNT); ++i)
       this._resultsElement.appendChild(renderSearchResult(results[i]));
     this._addAllResultsButtonIfNeeded(results);
     this._selectedElement = /** @type {Element|null} */ (this._resultsElement.firstChild);
-    if (this._selectedElement)
-      this._selectedElement.classList.add('selected');
+    if (this._selectedElement) this._selectedElement.classList.add('selected');
   }
 
   _addNavigateHomeItem() {
@@ -192,21 +211,24 @@ class Search {
    */
   _addAllResultsButtonIfNeeded(results) {
     let remainingResults = results.length - SEARCH_RENDER_COUNT;
-    if (remainingResults <= 0)
-      return;
+    if (remainingResults <= 0) return;
     let main = E.hbox('search-item', `Show Remaining ${remainingResults} Results...`);
     main.classList.add('custom-search-result');
     main.classList.add('monospace');
-    main.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      for (let i = SEARCH_RENDER_COUNT; i < results.length; ++i)
-        this._resultsElement.appendChild(renderSearchResult(results[i]));
-      let next = /** @type {Element|null} */ (main.nextSibling);
-      main.remove();
-      this._selectElement(next);
-      this._searchInput.focus();
-    }, false);
+    main.addEventListener(
+      'click',
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        for (let i = SEARCH_RENDER_COUNT; i < results.length; ++i)
+          this._resultsElement.appendChild(renderSearchResult(results[i]));
+        let next = /** @type {Element|null} */ (main.nextSibling);
+        main.remove();
+        this._selectElement(next);
+        this._searchInput.focus();
+      },
+      false,
+    );
     this._resultsElement.appendChild(main);
     return main;
   }
@@ -228,8 +250,7 @@ class Search {
   _doSearch(items, query) {
     let results = [];
     if (!query) {
-      for (let item of items)
-        results.push(new SearchResult(item, 0, []));
+      for (let item of items) results.push(new SearchResult(item, 0, []));
       return results;
     }
 
@@ -238,18 +259,15 @@ class Search {
       /** @type {Array<number>} */
       let matches = [];
       let score = fuzzySearch.score(item.title, matches);
-      if (score === 0)
-        continue;
+      if (score === 0) continue;
       results.push(new SearchResult(item, score, matches));
     }
     results.sort((/** @type {SearchResult} */ a, /** @type {SearchResult} */ b) => {
       const scoreDiff = b.score - a.score;
-      if (scoreDiff)
-        return scoreDiff;
+      if (scoreDiff) return scoreDiff;
       // Prefer left-most search results.
       const startDiff = (a.matches[0] ?? 0) - (b.matches[0] ?? 0);
-      if (startDiff)
-        return startDiff;
+      if (startDiff) return startDiff;
       return a.item.title.length - b.item.title.length;
     });
     return results;
@@ -270,8 +288,7 @@ class Search {
     } else if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      if (this._selectedElement)
-        /** @type {HTMLElement} */ (this._selectedElement).click();
+      if (this._selectedElement) /** @type {HTMLElement} */ (this._selectedElement).click();
     }
   }
 
@@ -279,13 +296,11 @@ class Search {
    * @param {Event} event
    */
   _selectNext(event) {
-    if (!this._selectedElement)
-      return;
+    if (!this._selectedElement) return;
     event.preventDefault();
     event.stopPropagation();
     let next = /** @type {Element|null} */ (this._selectedElement.nextSibling);
-    if (!next)
-      next = /** @type {Element|null} */ (this._resultsElement.firstChild);
+    if (!next) next = /** @type {Element|null} */ (this._resultsElement.firstChild);
     this._selectElement(next);
   }
 
@@ -293,13 +308,11 @@ class Search {
    * @param {Event} event
    */
   _selectPrevious(event) {
-    if (!this._selectedElement)
-      return;
+    if (!this._selectedElement) return;
     event.preventDefault();
     event.stopPropagation();
     let previous = /** @type {Element|null} */ (this._selectedElement.previousSibling);
-    if (!previous)
-      previous = /** @type {Element|null} */ (this._resultsElement.lastChild);
+    if (!previous) previous = /** @type {Element|null} */ (this._resultsElement.lastChild);
     this._selectElement(previous);
   }
 
@@ -307,8 +320,7 @@ class Search {
    * @param {Element|null} item
    */
   _selectElement(item) {
-    if (this._selectedElement)
-      this._selectedElement.classList.remove('selected');
+    if (this._selectedElement) this._selectedElement.classList.remove('selected');
     this._selectedElement = item;
     if (this._selectedElement) {
       this._selectedElement.classList.add('selected');
@@ -340,8 +352,17 @@ function renderSearchResult(searchResult) {
     let container = main.div('search-item-main');
     let p1 = container.el('div', 'search-item-title monospace');
     let domainElement = p1.span('search-item-title-domain');
-    domainElement.appendChild(renderTextWithMatches(item.title, searchResult.matches, 0, item.domainName.length + 1));
-    p1.appendChild(renderTextWithMatches(item.title, searchResult.matches, item.domainName.length + 1, item.title.length));
+    domainElement.appendChild(
+      renderTextWithMatches(item.title, searchResult.matches, 0, item.domainName.length + 1),
+    );
+    p1.appendChild(
+      renderTextWithMatches(
+        item.title,
+        searchResult.matches,
+        item.domainName.length + 1,
+        item.title.length,
+      ),
+    );
     let p2 = container.el('div', 'search-item-description');
     p2.textContent = item.description;
   }
@@ -357,8 +378,7 @@ function renderSearchResult(searchResult) {
  * @returns {Node}
  */
 function renderTextWithMatches(text, matches, fromIndex, toIndex) {
-  if (!matches.length)
-    return E.textNode(text.substring(fromIndex, toIndex));
+  if (!matches.length) return E.textNode(text.substring(fromIndex, toIndex));
   let result = document.createDocumentFragment();
   let insideMatch = false;
   let currentIndex = fromIndex;
@@ -379,8 +399,7 @@ function renderTextWithMatches(text, matches, fromIndex, toIndex) {
    * @param {boolean} isHighlight
    */
   function add(from, to, isHighlight) {
-    if (to === from)
-      return;
+    if (to === from) return;
     if (isHighlight) {
       const span = result.span('search-highlight');
       span.textContent = text.substring(from, to);

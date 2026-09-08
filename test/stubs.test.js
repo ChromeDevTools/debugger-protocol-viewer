@@ -6,7 +6,7 @@ import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { generateStubs, generateDomainStub } from '../scripts/generate-stubs.js';
 
-test('generateDomainStub: unit testing HTML generator', async t => {
+test('generateDomainStub: unit testing HTML generator', async (t) => {
   await t.test('generates redirect script and noscript list', () => {
     const mockDomain = {
       domain: 'TestDomain',
@@ -19,13 +19,22 @@ test('generateDomainStub: unit testing HTML generator', async t => {
 
     assert.match(html, /<title>Redirecting to DevTools Protocol: TestDomain\.\.\.<\/title>/);
     assert.match(html, /window\.location\.replace\('\.\.\/\.\.\/#\/TestDomain' \+ member\);/);
-    assert.match(html, /<li><a href="\.\.\/\.\.\/#\/TestDomain\.testMethod">TestDomain\.testMethod<\/a><\/li>/);
-    assert.match(html, /<li><a href="\.\.\/\.\.\/#\/TestDomain\.testEvent">TestDomain\.testEvent<\/a><\/li>/);
-    assert.match(html, /<li><a href="\.\.\/\.\.\/#\/TestDomain\.TestType">TestDomain\.TestType<\/a><\/li>/);
+    assert.match(
+      html,
+      /<li><a href="\.\.\/\.\.\/#\/TestDomain\.testMethod">TestDomain\.testMethod<\/a><\/li>/,
+    );
+    assert.match(
+      html,
+      /<li><a href="\.\.\/\.\.\/#\/TestDomain\.testEvent">TestDomain\.testEvent<\/a><\/li>/,
+    );
+    assert.match(
+      html,
+      /<li><a href="\.\.\/\.\.\/#\/TestDomain\.TestType">TestDomain\.TestType<\/a><\/li>/,
+    );
   });
 });
 
-test('generateStubs: end-to-end stub generation in temporary directory', async t => {
+test('generateStubs: end-to-end stub generation in temporary directory', async (t) => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-stubs-'));
 
   try {
@@ -42,7 +51,11 @@ test('generateStubs: end-to-end stub generation in temporary directory', async t
 
       const content = fs.readFileSync(pageStubPath, 'utf8');
       assert.match(content, /window\.location\.replace\('\.\.\/\.\.\/#\/Page' \+ member\)/);
-      assert.match(content, /Page\.navigateToHistoryEntry/, 'Must contain navigateToHistoryEntry noscript link');
+      assert.match(
+        content,
+        /Page\.navigateToHistoryEntry/,
+        'Must contain navigateToHistoryEntry noscript link',
+      );
     });
 
     await t.test('.nojekyll file exists in output directory', () => {
@@ -91,7 +104,7 @@ test('generateStubs: end-to-end stub generation in temporary directory', async t
         const output = execFileSync(
           process.execPath,
           [scriptPath, path.resolve('data/tot.json'), cliTmpDir],
-          { encoding: 'utf8' }
+          { encoding: 'utf8' },
         );
 
         assert.match(output, /Generated 53 domain stubs/);

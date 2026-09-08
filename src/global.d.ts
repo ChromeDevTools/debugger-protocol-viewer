@@ -1,4 +1,10 @@
-import type { ProtocolDomain, ProtocolType, ProtocolCommand, ProtocolEvent, EHelper } from './types.d.ts';
+import type {
+  ProtocolDomain,
+  ProtocolType,
+  ProtocolCommand,
+  ProtocolEvent,
+  EHelper,
+} from './types.d.ts';
 
 declare global {
   const E: EHelper;

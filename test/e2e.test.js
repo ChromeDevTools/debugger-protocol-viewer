@@ -169,12 +169,27 @@ class CdpClient {
    * @returns {import('devtools-protocol/types/protocol-proxy-api.js').ProtocolProxyApi.ProtocolApi}
    */
   createApi(sessionId = null) {
-    return /** @type {any} */ (new Proxy({}, {
-      get: (_, domain) => new Proxy({}, {
-        get: (_, method) => (/** @type {any} */ params = {}) =>
-          this.send(/** @type {any} */ (`${String(domain)}.${String(method)}`), params, sessionId)
-      })
-    }));
+    return /** @type {any} */ (
+      new Proxy(
+        {},
+        {
+          get: (_, domain) =>
+            new Proxy(
+              {},
+              {
+                get:
+                  (_, method) =>
+                  (/** @type {any} */ params = {}) =>
+                    this.send(
+                      /** @type {any} */ (`${String(domain)}.${String(method)}`),
+                      params,
+                      sessionId,
+                    ),
+              },
+            ),
+        },
+      )
+    );
   }
 
   /**
@@ -184,15 +199,19 @@ class CdpClient {
    * @returns {Promise<any>}
    */
   async evaluate(expression, sessionId = null) {
-    const res = await this.send('Runtime.evaluate', {
-      expression,
-      returnByValue: true,
-      awaitPromise: true,
-    }, sessionId);
+    const res = await this.send(
+      'Runtime.evaluate',
+      {
+        expression,
+        returnByValue: true,
+        awaitPromise: true,
+      },
+      sessionId,
+    );
 
     if (res.exceptionDetails) {
       throw new Error(
-        `Evaluation exception: ${res.exceptionDetails.text || res.exceptionDetails.exception?.description}`
+        `Evaluation exception: ${res.exceptionDetails.text || res.exceptionDetails.exception?.description}`,
       );
     }
     return res.result?.value;
@@ -219,10 +238,10 @@ class CdpClient {
       } catch {
         // Ignored during page navigation / transitions
       }
-      await new Promise(r => setTimeout(r, intervalMs));
+      await new Promise((r) => setTimeout(r, intervalMs));
     }
     throw new Error(
-      `pollEvaluate timed out after ${timeoutMs}ms waiting for: ${expression}\nLast value: ${JSON.stringify(lastVal)}`
+      `pollEvaluate timed out after ${timeoutMs}ms waiting for: ${expression}\nLast value: ${JSON.stringify(lastVal)}`,
     );
   }
 }
@@ -257,7 +276,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       `--user-data-dir=${tmpUserDataDir}`,
       'about:blank',
     ],
-    { stdio: ['ignore', 'pipe', 'pipe'] }
+    { stdio: ['ignore', 'pipe', 'pipe'] },
   );
 
   /** @type {WebSocket|null} */
@@ -276,7 +295,10 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
   try {
     // 3. Parse WebSocket URL from Chrome stderr
     const wsUrl = await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('Timed out waiting for Chrome WebSocket URL')), 10000);
+      const timeout = setTimeout(
+        () => reject(new Error('Timed out waiting for Chrome WebSocket URL')),
+        10000,
+      );
       let stderrBuffer = '';
       chromeProcess.stderr.on('data', (chunk) => {
         stderrBuffer += chunk.toString();
@@ -330,15 +352,18 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const title = await client.pollEvaluate(
         'document.title',
         (/** @type {any} */ val) => typeof val === 'string' && val.includes('Page.navigate'),
-        sessionId
+        sessionId,
       );
       const hasElement = await client.pollEvaluate(
         'Boolean(document.getElementById("Page_navigate"))',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
 
-      assert.ok(title.includes('Page.navigate'), `Expected title to contain "Page.navigate", got "${title}"`);
+      assert.ok(
+        title.includes('Page.navigate'),
+        `Expected title to contain "Page.navigate", got "${title}"`,
+      );
       assert.strictEqual(hasElement, true, 'Expected #Page_navigate element to exist in DOM');
     });
 
@@ -348,10 +373,14 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const hash = await client.pollEvaluate(
         'window.location.hash',
         (/** @type {any} */ val) => val === '#/Page.navigate',
-        sessionId
+        sessionId,
       );
 
-      assert.strictEqual(hash, '#/Page.navigate', `Expected hash to be "#/Page.navigate", got "${hash}"`);
+      assert.strictEqual(
+        hash,
+        '#/Page.navigate',
+        `Expected hash to be "#/Page.navigate", got "${hash}"`,
+      );
     });
 
     await t.test('3. Target selector routing (#/v8/Runtime.evaluate)', async () => {
@@ -360,46 +389,63 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const targetValue = await client.pollEvaluate(
         'document.getElementById("target-selector") ? document.getElementById("target-selector").value : null',
         (/** @type {any} */ val) => val === 'v8',
-        sessionId
+        sessionId,
       );
       const hasRuntimeEvaluate = await client.pollEvaluate(
         'Boolean(document.getElementById("Runtime_evaluate"))',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
 
-      assert.strictEqual(targetValue, 'v8', `Expected target dropdown value to be "v8", got "${targetValue}"`);
-      assert.strictEqual(hasRuntimeEvaluate, true, 'Expected #Runtime_evaluate element to exist in DOM for v8');
+      assert.strictEqual(
+        targetValue,
+        'v8',
+        `Expected target dropdown value to be "v8", got "${targetValue}"`,
+      );
+      assert.strictEqual(
+        hasRuntimeEvaluate,
+        true,
+        'Expected #Runtime_evaluate element to exist in DOM for v8',
+      );
     });
 
-    await t.test('3b. Target selector user interaction: switching dropdown from tot to v8', async () => {
-      await page.Page.navigate({ url: `${baseUrl}/#/Page.navigate` });
+    await t.test(
+      '3b. Target selector user interaction: switching dropdown from tot to v8',
+      async () => {
+        await page.Page.navigate({ url: `${baseUrl}/#/Page.navigate` });
 
-      // Wait for page ready
-      await client.pollEvaluate(
-        'Boolean(document.getElementById("target-selector"))',
-        (/** @type {any} */ v) => Boolean(v),
-        sessionId
-      );
+        // Wait for page ready
+        await client.pollEvaluate(
+          'Boolean(document.getElementById("target-selector"))',
+          (/** @type {any} */ v) => Boolean(v),
+          sessionId,
+        );
 
-      // Change select element value and dispatch change event
-      await client.evaluate(`
+        // Change select element value and dispatch change event
+        await client.evaluate(
+          `
         (function() {
           const select = document.getElementById('target-selector');
           select.value = 'v8';
           select.dispatchEvent(new Event('change', { bubbles: true }));
         })()
-      `, sessionId);
+      `,
+          sessionId,
+        );
 
-      // Assert hash changed to v8
-      const newHash = await client.pollEvaluate(
-        'window.location.hash',
-        (/** @type {any} */ val) => val.startsWith('#/v8'),
-        sessionId
-      );
+        // Assert hash changed to v8
+        const newHash = await client.pollEvaluate(
+          'window.location.hash',
+          (/** @type {any} */ val) => val.startsWith('#/v8'),
+          sessionId,
+        );
 
-      assert.ok(newHash.startsWith('#/v8'), `Expected hash to start with "#/v8", got "${newHash}"`);
-    });
+        assert.ok(
+          newHash.startsWith('#/v8'),
+          `Expected hash to start with "#/v8", got "${newHash}"`,
+        );
+      },
+    );
 
     await t.test('4. Search keyboard shortcut (/)', async () => {
       await page.Page.navigate({ url: `${baseUrl}/#/Page` });
@@ -408,12 +454,12 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       await client.pollEvaluate(
         'Boolean(document.getElementById("search"))',
         (/** @type {any} */ v) => Boolean(v),
-        sessionId
+        sessionId,
       );
       await client.pollEvaluate(
         'window.app && window.app._search && window.app._search._items.length > 0',
         (/** @type {any} */ v) => Boolean(v),
-        sessionId
+        sessionId,
       );
 
       // Press '/' via Input.dispatchKeyEvent
@@ -433,7 +479,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const isFocused = await client.pollEvaluate(
         'document.activeElement === document.getElementById("search")',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
 
       assert.strictEqual(isFocused, true, 'Expected search input to be focused after pressing "/"');
@@ -446,13 +492,22 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       await client.pollEvaluate(
         'Boolean(document.querySelector(".domain-toc"))',
         (/** @type {any} */ arr) => Boolean(arr),
-        sessionId
+        sessionId,
       );
 
       // Verify TOC items contain badges
-      const methodBadgeText = await client.evaluate('document.querySelector(".entity-icon-method") ? document.querySelector(".entity-icon-method").textContent : null', sessionId);
-      const eventBadgeText = await client.evaluate('document.querySelector(".entity-icon-event") ? document.querySelector(".entity-icon-event").textContent : null', sessionId);
-      const typeBadgeText = await client.evaluate('document.querySelector(".entity-icon-type") ? document.querySelector(".entity-icon-type").textContent : null', sessionId);
+      const methodBadgeText = await client.evaluate(
+        'document.querySelector(".entity-icon-method") ? document.querySelector(".entity-icon-method").textContent : null',
+        sessionId,
+      );
+      const eventBadgeText = await client.evaluate(
+        'document.querySelector(".entity-icon-event") ? document.querySelector(".entity-icon-event").textContent : null',
+        sessionId,
+      );
+      const typeBadgeText = await client.evaluate(
+        'document.querySelector(".entity-icon-type") ? document.querySelector(".entity-icon-type").textContent : null',
+        sessionId,
+      );
 
       assert.strictEqual(methodBadgeText, 'Method');
       assert.strictEqual(eventBadgeText, 'Event');
@@ -462,9 +517,13 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const hasCodeTags = await client.pollEvaluate(
         'document.querySelectorAll(".parameter-description code").length > 0',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
-      assert.strictEqual(hasCodeTags, true, 'Expected markdown backticks to be rendered as <code> tags');
+      assert.strictEqual(
+        hasCodeTags,
+        true,
+        'Expected markdown backticks to be rendered as <code> tags',
+      );
     });
 
     await t.test('6. Type cross-references (#/DOM.NodeId)', async () => {
@@ -474,10 +533,13 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const refCount = await client.pollEvaluate(
         'document.querySelectorAll(".references-list li").length',
         (/** @type {any} */ val) => typeof val === 'number' && val > 0,
-        sessionId
+        sessionId,
       );
 
-      assert.ok(refCount > 0, `Expected DOM.NodeId to have back-references, got count: ${refCount}`);
+      assert.ok(
+        refCount > 0,
+        `Expected DOM.NodeId to have back-references, got count: ${refCount}`,
+      );
     });
 
     await t.test('7. Mobile responsive drawer (#drawer-toggle & backdrop)', async () => {
@@ -486,7 +548,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       await client.pollEvaluate(
         'Boolean(document.getElementById("drawer-toggle"))',
         (/** @type {any} */ v) => Boolean(v),
-        sessionId
+        sessionId,
       );
 
       // Click drawer toggle
@@ -494,18 +556,26 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const drawerOpen = await client.pollEvaluate(
         'document.body.classList.contains("drawer-open")',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
-      assert.strictEqual(drawerOpen, true, 'Expected body to have "drawer-open" class after toggle click');
+      assert.strictEqual(
+        drawerOpen,
+        true,
+        'Expected body to have "drawer-open" class after toggle click',
+      );
 
       // Click backdrop to close
       await client.evaluate('document.getElementById("drawer-backdrop").click()', sessionId);
       const drawerClosed = await client.pollEvaluate(
         '!document.body.classList.contains("drawer-open")',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
-      assert.strictEqual(drawerClosed, true, 'Expected body to not have "drawer-open" class after backdrop click');
+      assert.strictEqual(
+        drawerClosed,
+        true,
+        'Expected body to not have "drawer-open" class after backdrop click',
+      );
     });
 
     await t.test('8. Wildcard 404 redirection (/1-3/Page/#method-navigate)', async () => {
@@ -514,10 +584,13 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const hash = await client.pollEvaluate(
         'window.location.hash',
         (/** @type {any} */ val) => val.includes('Page.navigate'),
-        sessionId
+        sessionId,
       );
 
-      assert.ok(hash.includes('Page.navigate'), `Expected hash after 404 fallback to contain Page.navigate, got "${hash}"`);
+      assert.ok(
+        hash.includes('Page.navigate'),
+        `Expected hash after 404 fallback to contain Page.navigate, got "${hash}"`,
+      );
     });
 
     await t.test('9. Root landing page rendering and rich content (#/)', async () => {
@@ -526,14 +599,21 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const hasLandingContent = await client.pollEvaluate(
         'Boolean(document.querySelector(".landing-hero") || document.querySelector(".box-content"))',
         (/** @type {any} */ val) => val === true,
-        sessionId
+        sessionId,
       );
       const title = await client.evaluate('document.title', sessionId);
 
-      assert.strictEqual(hasLandingContent, true, 'Expected landing content to be rendered at root hash route');
-      assert.strictEqual(title, 'DevTools Protocol Viewer', `Expected root page title, got "${title}"`);
+      assert.strictEqual(
+        hasLandingContent,
+        true,
+        'Expected landing content to be rendered at root hash route',
+      );
+      assert.strictEqual(
+        title,
+        'DevTools Protocol Viewer',
+        `Expected root page title, got "${title}"`,
+      );
     });
-
   } finally {
     if (targetId && browserApi) {
       try {

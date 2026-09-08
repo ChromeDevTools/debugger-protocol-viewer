@@ -20,10 +20,14 @@ export function generateDomainStub(domain) {
   const items = [];
 
   for (const command of domain.commands || []) {
-    items.push(`<li><a href="../../#/${domainName}.${command.name}">${domainName}.${command.name}</a></li>`);
+    items.push(
+      `<li><a href="../../#/${domainName}.${command.name}">${domainName}.${command.name}</a></li>`,
+    );
   }
   for (const event of domain.events || []) {
-    items.push(`<li><a href="../../#/${domainName}.${event.name}">${domainName}.${event.name}</a></li>`);
+    items.push(
+      `<li><a href="../../#/${domainName}.${event.name}">${domainName}.${event.name}</a></li>`,
+    );
   }
   for (const type of domain.types || []) {
     items.push(`<li><a href="../../#/${domainName}.${type.id}">${domainName}.${type.id}</a></li>`);
@@ -83,7 +87,6 @@ export function generateStubs({
   // Copy all assets from src/ to outputDir/
   fs.cpSync(srcDir, outputDir, { recursive: true });
 
-
   // Create .nojekyll in output directory
   fs.writeFileSync(path.join(outputDir, '.nojekyll'), '');
 
@@ -107,7 +110,8 @@ export function generateStubs({
 }
 
 // Auto-run if executed directly as CLI
-const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isDirectRun =
+  process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isDirectRun) {
   const protocolPath = process.argv[2] ? path.resolve(process.argv[2]) : undefined;
   const outputDir = process.argv[3] ? path.resolve(process.argv[3]) : undefined;

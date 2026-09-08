@@ -1,4 +1,8 @@
-type _Trim<S extends string> = S extends ` ${infer R}` ? _Trim<R> : S extends `${infer R} ` ? _Trim<R> : S;
+type _Trim<S extends string> = S extends ` ${infer R}`
+  ? _Trim<R>
+  : S extends `${infer R} `
+    ? _Trim<R>
+    : S;
 
 // Peel combinators; only the rightmost simple selector matters for the type.
 type _LastSegment<S extends string> = S extends `${string} ${infer R}`

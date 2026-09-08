@@ -19,7 +19,7 @@ mergedDomains.push(...protocol1.domains);
 mergedDomains.push(...protocol2.domains);
 
 const protocolMerged = {
-  domains: mergedDomains
+  domains: mergedDomains,
 };
 
 console.log(JSON.stringify(protocolMerged, null, '    '));

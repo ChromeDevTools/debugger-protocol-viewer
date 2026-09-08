@@ -87,7 +87,15 @@ class ProtocolRenderer {
     let main = E.div('type');
     ProtocolRenderer.applyBackground(type, main);
     ProtocolRenderer.applyBackground(domain, main);
-    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, type.id, type, 'type', Boolean(domain.experimental)));
+    main.appendChild(
+      ProtocolRenderer.renderTitle(
+        domain.domain,
+        type.id,
+        type,
+        'type',
+        Boolean(domain.experimental),
+      ),
+    );
     if (type.type) {
       const p = main.el('p', '', 'Type: ');
       const span = p.span('parameter-type');
@@ -150,12 +158,9 @@ class ProtocolRenderer {
     // Render heading.
     let heading = E.el('h4', 'monospace text-overflow');
 
-    if (titleType === 'type')
-      heading.appendChild(ProtocolRenderer.renderTypeIcon());
-    else if (titleType === 'event')
-      heading.appendChild(ProtocolRenderer.renderEventIcon());
-    else if (titleType === 'method')
-      heading.appendChild(ProtocolRenderer.renderMethodIcon());
+    if (titleType === 'type') heading.appendChild(ProtocolRenderer.renderTypeIcon());
+    else if (titleType === 'event') heading.appendChild(ProtocolRenderer.renderEventIcon());
+    else if (titleType === 'method') heading.appendChild(ProtocolRenderer.renderMethodIcon());
 
     let id = `${domainName}.${title}`;
     heading.setAttribute('id', ProtocolRenderer.titleId(domainName, title));
@@ -164,7 +169,7 @@ class ProtocolRenderer {
     const nameSpan = heading.span('method-name');
     nameSpan.textContent = title;
     ProtocolRenderer.applyMarks(item, heading, isParentDomainExperimental);
-    let href = (window.app && window.app.formatRef) ? window.app.formatRef(id) : '#/' + id;
+    let href = window.app && window.app.formatRef ? window.app.formatRef(id) : '#/' + id;
     const link = E.a(href, '#');
     link.classList.add('title-link');
     heading.appendChild(link);
@@ -190,14 +195,39 @@ class ProtocolRenderer {
     let renderTypeEntry = (type, container) =>
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, type.id, container);
 
-    if ((domain.commands && domain.commands.length) || (domain.events && domain.events.length) || (domain.types && domain.types.length)) {
+    if (
+      (domain.commands && domain.commands.length) ||
+      (domain.events && domain.events.length) ||
+      (domain.types && domain.types.length)
+    ) {
       let toc = container.div('domain-toc');
       if (domain.commands && domain.commands.length)
-        ProtocolRenderer.renderTableOfContentsSection("Methods", "method", domain.commands, renderEventOrMethodEntry, toc, isDomainExp);
+        ProtocolRenderer.renderTableOfContentsSection(
+          'Methods',
+          'method',
+          domain.commands,
+          renderEventOrMethodEntry,
+          toc,
+          isDomainExp,
+        );
       if (domain.events && domain.events.length)
-        ProtocolRenderer.renderTableOfContentsSection("Events", "event", domain.events, renderEventOrMethodEntry, toc, isDomainExp);
+        ProtocolRenderer.renderTableOfContentsSection(
+          'Events',
+          'event',
+          domain.events,
+          renderEventOrMethodEntry,
+          toc,
+          isDomainExp,
+        );
       if (domain.types && domain.types.length)
-        ProtocolRenderer.renderTableOfContentsSection("Types", "type", domain.types, renderTypeEntry, toc, isDomainExp);
+        ProtocolRenderer.renderTableOfContentsSection(
+          'Types',
+          'type',
+          domain.types,
+          renderTypeEntry,
+          toc,
+          isDomainExp,
+        );
     }
   }
 
@@ -210,7 +240,14 @@ class ProtocolRenderer {
    * @param {boolean} [isDomainExp]
    * @returns {HTMLElement}
    */
-  static renderTableOfContentsSection(sectionName, sectionType, entries, renderer, container, isDomainExp = false) {
+  static renderTableOfContentsSection(
+    sectionName,
+    sectionType,
+    entries,
+    renderer,
+    container,
+    isDomainExp = false,
+  ) {
     let sectionWrapper = container.div('toc-section');
     let title = sectionWrapper.el('h4', 'toc-section-heading');
     let badge = title.span(`entity-icon entity-icon-${sectionType}`);
@@ -221,7 +258,8 @@ class ProtocolRenderer {
       event.preventDefault();
       const target = document.getElementById(sectionName.toLowerCase());
       if (target) {
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const prefersReducedMotion =
+          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
       }
     });
@@ -260,7 +298,15 @@ class ProtocolRenderer {
     let main = E.div('method');
     ProtocolRenderer.applyBackground(method, main);
     ProtocolRenderer.applyBackground(domain, main);
-    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, method.name, method, isEvent ? 'event' : 'method', Boolean(domain.experimental)));
+    main.appendChild(
+      ProtocolRenderer.renderTitle(
+        domain.domain,
+        method.name,
+        method,
+        isEvent ? 'event' : 'method',
+        Boolean(domain.experimental),
+      ),
+    );
     if (method.description) {
       ProtocolRenderer.renderDescription(method.description, main);
     }
@@ -295,8 +341,7 @@ class ProtocolRenderer {
       // Render parameter name.
       let name = main.div('parameter-name monospace');
       ProtocolRenderer.applyBackground(parameter, name);
-      if (parameter.optional)
-        name.classList.add('optional');
+      if (parameter.optional) name.classList.add('optional');
       name.textContent = parameter.name || '';
     }
     {
@@ -306,8 +351,7 @@ class ProtocolRenderer {
       container.appendChild(ProtocolRenderer.renderTypeLink(domain, parameter));
       let description = container.span('parameter-description');
       let descriptions = [];
-      if (parameter.description)
-        descriptions.push(parameter.description);
+      if (parameter.description) descriptions.push(parameter.description);
       ProtocolRenderer.renderTextWithCode(descriptions.join(' '), description);
       if (parameter.enum) {
         description.append(' Allowed values: ');
@@ -315,10 +359,8 @@ class ProtocolRenderer {
           const code = document.createElement('code');
           code.textContent = value;
           description.append(code);
-          if (index < (parameter.enum?.length ?? 0) - 1)
-            description.append(', ');
-          else
-            description.append('.');
+          if (index < (parameter.enum?.length ?? 0) - 1) description.append(', ');
+          else description.append('.');
         });
       }
       ProtocolRenderer.applyMarks(parameter, description, Boolean(domain.experimental));
@@ -332,21 +374,13 @@ class ProtocolRenderer {
    * @returns {HTMLElement}
    */
   static renderTypeLink(domain, parameter) {
-    const primitiveTypes = new Set([
-      "string",
-      "integer",
-      "boolean",
-      "number",
-      "object",
-      "any"
-    ]);
+    const primitiveTypes = new Set(['string', 'integer', 'boolean', 'number', 'object', 'any']);
 
     if (parameter.type && primitiveTypes.has(parameter.type))
       return E.span('parameter-type', parameter.type);
     if (parameter.$ref) {
       let $ref = parameter.$ref;
-      if (!$ref.includes('.'))
-        $ref = domain.domain + '.' + parameter.$ref;
+      if (!$ref.includes('.')) $ref = domain.domain + '.' + parameter.$ref;
       return ProtocolRenderer.renderRef($ref);
     }
     if (parameter.type === 'array' && parameter.items) {
@@ -364,7 +398,10 @@ class ProtocolRenderer {
    * @returns {HTMLAnchorElement}
    */
   static renderRef($ref) {
-    let a = E.a((window.app && window.app.formatRef) ? window.app.formatRef($ref) : '#/' + $ref, $ref);
+    let a = E.a(
+      window.app && window.app.formatRef ? window.app.formatRef($ref) : '#/' + $ref,
+      $ref,
+    );
     a.className = 'parameter-type';
     return a;
   }
@@ -375,10 +412,8 @@ class ProtocolRenderer {
    */
   static applyBackground(item, element) {
     if (!item) return;
-    if (item.experimental)
-      element.classList.add('experimental-bg');
-    else if (item.deprecated)
-      element.classList.add('deprecated-bg');
+    if (item.experimental) element.classList.add('experimental-bg');
+    else if (item.deprecated) element.classList.add('deprecated-bg');
   }
 
   /**

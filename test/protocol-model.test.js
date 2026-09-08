@@ -61,7 +61,9 @@ test('normalizeProtocol: deterministic sorting (experimental, deprecated, option
   };
 
   const normalized = normalizeProtocol(raw);
-  const commandNames = (normalized.domains[0]?.commands || []).map((/** @type {{name: string}} */ c) => c.name);
+  const commandNames = (normalized.domains[0]?.commands || []).map(
+    (/** @type {{name: string}} */ c) => c.name,
+  );
 
   // Standard alphabetical first, then experimental, then deprecated
   assert.deepEqual(commandNames, ['alpha', 'beta', 'zetaExp', 'alphaDep']);
@@ -179,8 +181,8 @@ test('computeBackReferences: computes reverse references with deduplication and 
 
   computeBackReferences(domains);
 
-  const nodeIdType = domains[0]?.types?.find(t => t.id === 'NodeId');
-  const nodeType = domains[0]?.types?.find(t => t.id === 'Node');
+  const nodeIdType = domains[0]?.types?.find((t) => t.id === 'NodeId');
+  const nodeType = domains[0]?.types?.find((t) => t.id === 'Node');
 
   // NodeId should be referenced by:
   // - DOM.describeNode (command)
@@ -188,23 +190,29 @@ test('computeBackReferences: computes reverse references with deduplication and 
   // - DOM.setChildNodes (event)
   // - DOM.Node (type)
   assert.ok(nodeIdType?.referencedBy);
-  assert.deepEqual(nodeIdType?.referencedBy, [
-    { type: 'command', name: 'DOM.describeNode' },
-    { type: 'type', name: 'DOM.Node' },
-    { type: 'command', name: 'DOM.pushNodesByBackendIdsToFrontend' },
-    { type: 'event', name: 'DOM.setChildNodes' },
-  ].sort((a, b) => a.name.localeCompare(b.name)));
+  assert.deepEqual(
+    nodeIdType?.referencedBy,
+    [
+      { type: 'command', name: 'DOM.describeNode' },
+      { type: 'type', name: 'DOM.Node' },
+      { type: 'command', name: 'DOM.pushNodesByBackendIdsToFrontend' },
+      { type: 'event', name: 'DOM.setChildNodes' },
+    ].sort((a, b) => a.name.localeCompare(b.name)),
+  );
 
   // Node should be referenced by:
   // - DOM.describeNode (command return)
   // - DOM.NodeList (type items $ref)
   // - DOM.setChildNodes (event array items $ref)
   assert.ok(nodeType?.referencedBy);
-  assert.deepEqual(nodeType?.referencedBy, [
-    { type: 'command', name: 'DOM.describeNode' },
-    { type: 'type', name: 'DOM.NodeList' },
-    { type: 'event', name: 'DOM.setChildNodes' },
-  ].sort((a, b) => a.name.localeCompare(b.name)));
+  assert.deepEqual(
+    nodeType?.referencedBy,
+    [
+      { type: 'command', name: 'DOM.describeNode' },
+      { type: 'type', name: 'DOM.NodeList' },
+      { type: 'event', name: 'DOM.setChildNodes' },
+    ].sort((a, b) => a.name.localeCompare(b.name)),
+  );
 });
 
 test('parseRoute: dynamic native subtests for all route formats', async (/** @type {TestContext} */ t) => {
@@ -344,44 +352,29 @@ test('formatRoute: canonical route formatting', () => {
   // Tot target formats without prefix
   assert.equal(
     formatRoute({ target: 'tot', domain: 'Page', member: 'navigate' }),
-    '#/Page.navigate'
+    '#/Page.navigate',
   );
-  assert.equal(
-    formatRoute({ target: 'tot', domain: 'Page', member: null }),
-    '#/Page'
-  );
-  assert.equal(
-    formatRoute({ target: 'tot', domain: null, member: null }),
-    '#/'
-  );
+  assert.equal(formatRoute({ target: 'tot', domain: 'Page', member: null }), '#/Page');
+  assert.equal(formatRoute({ target: 'tot', domain: null, member: null }), '#/');
 
   // V8 target formats with v8/ prefix
   assert.equal(
     formatRoute({ target: 'v8', domain: 'Runtime', member: 'evaluate' }),
-    '#/v8/Runtime.evaluate'
+    '#/v8/Runtime.evaluate',
   );
-  assert.equal(
-    formatRoute({ target: 'v8', domain: 'Runtime', member: null }),
-    '#/v8/Runtime'
-  );
-  assert.equal(
-    formatRoute({ target: 'v8', domain: null, member: null }),
-    '#/v8/'
-  );
+  assert.equal(formatRoute({ target: 'v8', domain: 'Runtime', member: null }), '#/v8/Runtime');
+  assert.equal(formatRoute({ target: 'v8', domain: null, member: null }), '#/v8/');
 
   // Stable target formats with stable/ prefix
   assert.equal(
     formatRoute({ target: 'stable', domain: 'Network', member: 'getCookies' }),
-    '#/stable/Network.getCookies'
+    '#/stable/Network.getCookies',
   );
   assert.equal(
     formatRoute({ target: 'stable', domain: 'Network', member: null }),
-    '#/stable/Network'
+    '#/stable/Network',
   );
-  assert.equal(
-    formatRoute({ target: 'stable', domain: null, member: null }),
-    '#/stable/'
-  );
+  assert.equal(formatRoute({ target: 'stable', domain: null, member: null }), '#/stable/');
 
   // Default options
   assert.equal(formatRoute(), '#/');

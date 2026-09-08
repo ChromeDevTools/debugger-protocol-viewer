@@ -59,8 +59,8 @@ function sortCollection(items, prop) {
   if (!prop) return;
   items.sort((a, b) => {
     // 1. Standard (0) before Experimental (1) before Deprecated (2)
-    const aRank = a.deprecated ? 2 : (a.experimental ? 1 : 0);
-    const bRank = b.deprecated ? 2 : (b.experimental ? 1 : 0);
+    const aRank = a.deprecated ? 2 : a.experimental ? 1 : 0;
+    const bRank = b.deprecated ? 2 : b.experimental ? 1 : 0;
     if (aRank !== bRank) {
       return aRank - bRank;
     }
@@ -91,7 +91,7 @@ function normalizeNode(object, alreadyExperimental) {
   }
 
   if (Array.isArray(object)) {
-    return object.map(item => normalizeNode(item, alreadyExperimental));
+    return object.map((item) => normalizeNode(item, alreadyExperimental));
   }
 
   const result = /** @type {Record<string, any>} */ ({});
@@ -105,7 +105,7 @@ function normalizeNode(object, alreadyExperimental) {
     }
 
     if (Array.isArray(value)) {
-      result[key] = value.map(item => normalizeNode(item, childAlreadyExperimental));
+      result[key] = value.map((item) => normalizeNode(item, childAlreadyExperimental));
       sortCollection(result[key], nameProperty(key));
     } else {
       result[key] = normalizeNode(value, childAlreadyExperimental);
@@ -167,9 +167,11 @@ export function stabilize(node) {
   }
 
   if (Array.isArray(node)) {
-    return /** @type {any} */ (node
-      .filter(item => !(item && typeof item === 'object' && item.experimental === true))
-      .map(item => stabilize(item)));
+    return /** @type {any} */ (
+      node
+        .filter((item) => !(item && typeof item === 'object' && item.experimental === true))
+        .map((item) => stabilize(item))
+    );
   }
 
   const result = /** @type {Record<string, any>} */ ({});
@@ -282,7 +284,9 @@ export function computeBackReferences(domains) {
       map.set(reference.name, reference);
     }
     type.referencedBy = Array.from(map.values());
-    type.referencedBy.sort((/** @type {{name: string}} */ a, /** @type {{name: string}} */ b) => a.name.localeCompare(b.name));
+    type.referencedBy.sort((/** @type {{name: string}} */ a, /** @type {{name: string}} */ b) =>
+      a.name.localeCompare(b.name),
+    );
   }
 
   return domains;
@@ -330,8 +334,8 @@ export function parseRoute(routeString) {
 
   const pathSegments = pathPart
     .split('/')
-    .map(s => s.trim())
-    .filter(s => Boolean(s) && !s.endsWith('.html'));
+    .map((s) => s.trim())
+    .filter((s) => Boolean(s) && !s.endsWith('.html'));
 
   // Filter out leading repository base path if present (e.g. /devtools-protocol/)
   if (pathSegments.length > 0 && pathSegments[0] === 'devtools-protocol') {
@@ -344,7 +348,7 @@ export function parseRoute(routeString) {
     let target = 'tot';
     let domain = null;
 
-    const targetIndex = pathSegments.findIndex(s => TARGET_MAP.has(s.toLowerCase()));
+    const targetIndex = pathSegments.findIndex((s) => TARGET_MAP.has(s.toLowerCase()));
     if (targetIndex !== -1) {
       target = normalizeTarget(pathSegments[targetIndex]);
       if (pathSegments.length > targetIndex + 1) {

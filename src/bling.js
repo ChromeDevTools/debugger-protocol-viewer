@@ -30,7 +30,9 @@ export function $(query, context) {
  * @returns {ParseSelector<T>[]}
  */
 export function $$(query, context) {
-  return /** @type {ParseSelector<T>[]} */ (Array.from((context ?? document).querySelectorAll(query)));
+  return /** @type {ParseSelector<T>[]} */ (
+    Array.from((context ?? document).querySelectorAll(query))
+  );
 }
 
 if (typeof Element !== 'undefined') {
@@ -43,7 +45,7 @@ if (typeof Element !== 'undefined') {
          * @param {T} query
          * @returns {ParseSelector<T>}
          */
-        value: function(query) {
+        value: function (query) {
           return $(query, this);
         },
         writable: true,
@@ -57,7 +59,7 @@ if (typeof Element !== 'undefined') {
          * @param {T} query
          * @returns {ParseSelector<T>[]}
          */
-        value: function(query) {
+        value: function (query) {
           return $$(query, this);
         },
         writable: true,

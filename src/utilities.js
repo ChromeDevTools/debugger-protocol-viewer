@@ -10,12 +10,10 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLElement}
    */
-  el: function(name, className, textContent) {
+  el: function (name, className, textContent) {
     let e = document.createElement(name);
-    if (className)
-      e.className = className;
-    if (textContent)
-      e.textContent = textContent;
+    if (className) e.className = className;
+    if (textContent) e.textContent = textContent;
     return e;
   },
 
@@ -23,7 +21,7 @@ const E = {
    * @param {string} text
    * @returns {Text}
    */
-  textNode: function(text) {
+  textNode: function (text) {
     return document.createTextNode(text);
   },
 
@@ -32,7 +30,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLDivElement}
    */
-  div: function(className, textContent) {
+  div: function (className, textContent) {
     return /** @type {HTMLDivElement} */ (E.el('div', className, textContent));
   },
 
@@ -41,7 +39,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLSpanElement}
    */
-  span: function(className, textContent) {
+  span: function (className, textContent) {
     return /** @type {HTMLSpanElement} */ (E.el('span', className, textContent));
   },
 
@@ -50,7 +48,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLParagraphElement}
    */
-  p: function(className, textContent) {
+  p: function (className, textContent) {
     return /** @type {HTMLParagraphElement} */ (E.el('p', className, textContent));
   },
 
@@ -59,7 +57,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLDivElement}
    */
-  box: function(className, textContent) {
+  box: function (className, textContent) {
     let e = E.div(className, textContent);
     e.classList.add('box');
     return e;
@@ -70,7 +68,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLDivElement}
    */
-  hbox: function(className, textContent) {
+  hbox: function (className, textContent) {
     let e = E.div(className, textContent);
     e.classList.add('hbox');
     return e;
@@ -81,7 +79,7 @@ const E = {
    * @param {string} [textContent]
    * @returns {HTMLDivElement}
    */
-  vbox: function(className, textContent) {
+  vbox: function (className, textContent) {
     let e = E.div(className, textContent);
     e.classList.add('vbox');
     return e;
@@ -91,7 +89,7 @@ const E = {
    * @param {string} text
    * @returns {HTMLElement}
    */
-  strong: function(text) {
+  strong: function (text) {
     return E.el('strong', '', text);
   },
 
@@ -99,7 +97,7 @@ const E = {
    * @param {string} text
    * @returns {HTMLElement}
    */
-  code: function(text) {
+  code: function (text) {
     return E.el('code', '', text);
   },
 
@@ -108,7 +106,7 @@ const E = {
    * @param {string} [text]
    * @returns {HTMLAnchorElement}
    */
-  a: function(href, text) {
+  a: function (href, text) {
     let link = /** @type {HTMLAnchorElement} */ (E.el('a', '', text || href));
     link.href = href;
     return link;
@@ -124,7 +122,7 @@ for (const [helperName, fn] of Object.entries(E)) {
      * @param {...any} args
      * @returns {any}
      */
-    value: function(...args) {
+    value: function (...args) {
       const element = /** @type {any} */ (fn)(...args);
       this.appendChild(element);
       return element;
