@@ -243,9 +243,13 @@ class App {
         if (nextTarget === this._currentTarget) return;
 
         this._currentTarget = nextTarget;
+        const targetStore = this._targetStore[this._currentTarget] || this._targetStore.tot;
+        const domainExistsInTarget = this._currentDomain && targetStore.all.has(this._currentDomain);
+        const domain = domainExistsInTarget ? this._currentDomain : null;
+
         const newRoute = formatRoute({
           target: this._currentTarget,
-          domain: this._currentDomain,
+          domain,
           member: null,
         });
         this.navigate(newRoute);

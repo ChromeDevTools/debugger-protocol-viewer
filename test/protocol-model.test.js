@@ -311,6 +311,22 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
       input: '#/v8/Runtime/',
       expected: { target: 'v8', domain: 'Runtime', member: null },
     },
+    {
+      input: '#/v8',
+      expected: { target: 'v8', domain: null, member: null },
+    },
+    {
+      input: '#/v8/',
+      expected: { target: 'v8', domain: null, member: null },
+    },
+    {
+      input: '#/stable',
+      expected: { target: 'stable', domain: null, member: null },
+    },
+    {
+      input: '#/stable/',
+      expected: { target: 'stable', domain: null, member: null },
+    },
   ];
 
   for (const { input, expected } of cases) {
@@ -337,6 +353,14 @@ test('formatRoute: canonical route formatting', () => {
   assert.equal(
     formatRoute({ target: 'stable', domain: 'Network', member: 'getCookies' }),
     '#/stable/Network.getCookies'
+  );
+  assert.equal(
+    formatRoute({ target: 'v8', domain: null, member: null }),
+    '#/v8/'
+  );
+  assert.equal(
+    formatRoute({ target: 'stable', domain: null, member: null }),
+    '#/stable/'
   );
   assert.equal(
     formatRoute({ target: 'tot', domain: null, member: null }),

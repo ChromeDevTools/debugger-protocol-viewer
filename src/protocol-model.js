@@ -366,6 +366,9 @@ export function parseRoute(routeString) {
       target = normalizeTarget(potentialTarget);
       targetAndRest = cleanHash.slice(slashIndex + 1);
     }
+  } else if (TARGET_MAP.has(cleanHash.toLowerCase())) {
+    target = normalizeTarget(cleanHash);
+    targetAndRest = '';
   }
 
   // Strip trailing slashes from domain/member (e.g. #/Page/ -> Page)
@@ -395,7 +398,7 @@ export function formatRoute({ target = 'tot', domain = null, member = null } = {
   const targetPrefix = normTarget === 'tot' ? '' : `${normTarget}/`;
 
   if (!domain) {
-    return '#/';
+    return normTarget === 'tot' ? '#/' : `#/${targetPrefix}`;
   }
   if (member) {
     return `#/${targetPrefix}${domain}.${member}`;

@@ -330,6 +330,39 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       assert.strictEqual(hasRuntimeEvaluate, true, 'Expected #Runtime_evaluate element to exist in DOM');
     });
 
+    await t.test('3b. Target selector user interaction: switching dropdown from tot to v8', async () => {
+      await cdp.send('Page.navigate', { url: `${baseUrl}/#/` }, sessionId);
+      await cdp.pollEvaluate('Boolean(window.app)', (v) => v === true, sessionId);
+
+      // Select 'v8' in target-selector and dispatch change event
+      await cdp.evaluate(`
+        const selector = document.getElementById("target-selector");
+        selector.value = "v8";
+        selector.dispatchEvent(new Event("change"));
+      `, sessionId);
+
+      // Assert that target-selector value is 'v8'
+      const finalTarget = await cdp.pollEvaluate(
+        'document.getElementById("target-selector")?.value',
+        (val) => val === 'v8',
+        sessionId
+      );
+      assert.strictEqual(finalTarget, 'v8', 'Target selector should stay "v8"');
+
+      // Assert that sidebar only contains v8 domains (Runtime exists, Page does not)
+      const hasPageDomain = await cdp.evaluate(
+        'Boolean(document.querySelector("#domain-list [data-domain=\\"Page\\"]"))',
+        sessionId
+      );
+      assert.strictEqual(hasPageDomain, false, 'Expected Page domain to NOT exist in V8 sidebar');
+
+      const hasRuntimeDomain = await cdp.evaluate(
+        'Boolean(document.querySelector("#domain-list [data-domain=\\"Runtime\\"]"))',
+        sessionId
+      );
+      assert.strictEqual(hasRuntimeDomain, true, 'Expected Runtime domain to exist in V8 sidebar');
+    });
+
     await t.test('4. Search keyboard shortcut (/)', async () => {
       await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page` }, sessionId);
 
