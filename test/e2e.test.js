@@ -555,6 +555,23 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         `Expected root page title, got "${title}"`,
       );
     });
+
+    await t.test('10. Headings have scroll-margin-top clearance from fixed header', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
+
+      const h4ScrollMarginTop = await client.pollEvaluate(
+        'window.getComputedStyle(document.querySelector("h4")).scrollMarginTop',
+        (/** @type {any} */ val) => Boolean(val && val !== '0px'),
+        sessionId,
+      );
+
+      // calc(var(--header-height) + 16px) -> 50px + 16px = 66px
+      assert.strictEqual(
+        h4ScrollMarginTop,
+        '66px',
+        `Expected h4 scroll-margin-top to be 66px, got "${h4ScrollMarginTop}"`,
+      );
+    });
   } finally {
     if (targetId && browserApi) {
       try {

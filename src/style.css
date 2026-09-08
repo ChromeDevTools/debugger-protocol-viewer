@@ -84,6 +84,7 @@ h3 {
   margin: 32px 0 14px 0;
   color: #3c4043;
   letter-spacing: -0.1px;
+  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 h4 {
@@ -91,6 +92,7 @@ h4 {
   font-size: 15.5px;
   font-weight: 600;
   line-height: 1.4;
+  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 h5 {
