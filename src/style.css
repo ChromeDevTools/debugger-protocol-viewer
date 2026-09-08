@@ -516,8 +516,8 @@ figure.screenshot img {
   margin-bottom: 6px;
   max-width: 100%;
   padding: 3px 8px;
-  background-color: #f1f3f5;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #f8f8f8;
+  border: 1px solid rgba(0, 0, 0, 0.04);
   border-radius: 4px;
   font-size: 12.5px;
   line-height: 1.4;
