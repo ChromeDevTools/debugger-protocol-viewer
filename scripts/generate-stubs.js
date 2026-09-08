@@ -8,10 +8,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+/** @import { ProtocolDomain } from '../src/types.d.ts' */
 
 /**
  * Generates HTML for a domain redirect stub with noscript fallback links.
- * @param {Object} domain
+ * @param {ProtocolDomain} domain
  * @returns {string}
  */
 export function generateDomainStub(domain) {

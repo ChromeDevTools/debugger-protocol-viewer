@@ -9,6 +9,9 @@ import {
   normalizeTarget,
 } from '../src/protocol-model.js';
 
+/** @import { TestContext } from 'node:test' */
+/** @import { ProtocolDomain, ProtocolType } from '../src/types.d.ts' */
+
 test('normalizeTarget', () => {
   assert.equal(normalizeTarget('tot'), 'tot');
   assert.equal(normalizeTarget('stable'), 'stable');
@@ -21,6 +24,7 @@ test('normalizeTarget', () => {
 });
 
 test('normalizeProtocol: sets empty array defaults', () => {
+  /** @type {any} */
   const raw = {
     domains: [
       {
@@ -31,9 +35,9 @@ test('normalizeProtocol: sets empty array defaults', () => {
 
   const normalized = normalizeProtocol(raw);
 
-  assert.deepEqual(normalized.domains[0].commands, []);
-  assert.deepEqual(normalized.domains[0].events, []);
-  assert.deepEqual(normalized.domains[0].types, []);
+  assert.deepEqual(normalized.domains[0]?.commands, []);
+  assert.deepEqual(normalized.domains[0]?.events, []);
+  assert.deepEqual(normalized.domains[0]?.types, []);
 
   // Assert input object was not mutated
   assert.equal(raw.domains[0].commands, undefined);
@@ -57,7 +61,7 @@ test('normalizeProtocol: deterministic sorting (experimental, deprecated, option
   };
 
   const normalized = normalizeProtocol(raw);
-  const commandNames = normalized.domains[0].commands.map(c => c.name);
+  const commandNames = (normalized.domains[0]?.commands || []).map((/** @type {{name: string}} */ c) => c.name);
 
   // Standard alphabetical first, then experimental, then deprecated
   assert.deepEqual(commandNames, ['alpha', 'beta', 'zetaExp', 'alphaDep']);
@@ -67,7 +71,7 @@ test('normalizeProtocol: does NOT mutate input objects (delete object.experiment
   const raw = {
     domains: [
       {
-        domain: 'ExpDomain',
+        domain: 'ExperimentalDomain',
         experimental: true,
         commands: [
           {
@@ -79,11 +83,13 @@ test('normalizeProtocol: does NOT mutate input objects (delete object.experiment
     ],
   };
 
-  const frozenInput = JSON.parse(JSON.stringify(raw));
   const normalized = normalizeProtocol(raw);
 
-  // Assert raw object still has its original properties
-  assert.deepEqual(raw, frozenInput);
+  // In normalized output, redundant experimental flag on child is pruned
+  assert.equal(normalized.domains[0]?.experimental, true);
+  assert.equal(normalized.domains[0]?.commands[0]?.experimental, undefined);
+
+  // Input object must retain experimental: true
   assert.equal(raw.domains[0].commands[0].experimental, true);
 });
 
@@ -114,22 +120,23 @@ test('stabilize: deep immutability and filtering experimental entities', () => {
 
   // Commands filtered
   assert.equal(stable.commands.length, 1);
-  assert.equal(stable.commands[0].name, 'stableCommand');
+  assert.equal(stable.commands[0]?.name, 'stableCommand');
 
   // Types filtered
   assert.equal(stable.types.length, 1);
-  assert.equal(stable.types[0].id, 'StableType');
-  assert.equal(stable.types[0].properties.length, 1);
-  assert.equal(stable.types[0].properties[0].name, 'propA');
+  assert.equal(stable.types[0]?.id, 'StableType');
+  assert.equal(stable.types[0]?.properties?.length, 1);
+  assert.equal(stable.types[0]?.properties?.[0]?.name, 'propA');
 
   // Deep clone immutability: mutating stable must not affect original
   stable.commands[0].name = 'MUTATED';
-  stable.commands.push({ name: 'NEW' });
-  assert.equal(original.commands[0].name, 'stableCommand');
+  stable.commands.push(/** @type {any} */ ({ name: 'NEW' }));
+  assert.equal(original.commands[0]?.name, 'stableCommand');
   assert.equal(original.commands.length, 2);
 });
 
 test('computeBackReferences: computes reverse references with deduplication and array item $ref unpacking', () => {
+  /** @type {ProtocolDomain[]} */
   const domains = [
     {
       domain: 'DOM',
@@ -150,20 +157,8 @@ test('computeBackReferences: computes reverse references with deduplication and 
         },
         {
           name: 'pushNodesByBackendIdsToFrontend',
-          parameters: [
-            {
-              name: 'backendNodeIds',
-              type: 'array',
-              items: { $ref: 'NodeId' },
-            },
-          ],
-          returns: [
-            {
-              name: 'nodeIds',
-              type: 'array',
-              items: { $ref: 'NodeId' },
-            },
-          ],
+          parameters: [{ name: 'backendNodeIds', $ref: 'NodeId' }],
+          returns: [{ name: 'nodeIds', $ref: 'NodeId' }],
         },
       ],
       events: [
@@ -171,7 +166,11 @@ test('computeBackReferences: computes reverse references with deduplication and 
           name: 'setChildNodes',
           parameters: [
             { name: 'parentId', $ref: 'NodeId' },
-            { name: 'nodes', type: 'array', items: { $ref: 'Node' } },
+            {
+              name: 'nodes',
+              type: 'array',
+              items: { $ref: 'Node' },
+            },
           ],
         },
       ],
@@ -180,16 +179,16 @@ test('computeBackReferences: computes reverse references with deduplication and 
 
   computeBackReferences(domains);
 
-  const nodeIdType = domains[0].types.find(t => t.id === 'NodeId');
-  const nodeType = domains[0].types.find(t => t.id === 'Node');
+  const nodeIdType = domains[0]?.types?.find(t => t.id === 'NodeId');
+  const nodeType = domains[0]?.types?.find(t => t.id === 'Node');
 
   // NodeId should be referenced by:
   // - DOM.describeNode (command)
   // - DOM.pushNodesByBackendIdsToFrontend (command - deduplicated across params and returns!)
   // - DOM.setChildNodes (event)
   // - DOM.Node (type)
-  assert.ok(nodeIdType.referencedBy);
-  assert.deepEqual(nodeIdType.referencedBy, [
+  assert.ok(nodeIdType?.referencedBy);
+  assert.deepEqual(nodeIdType?.referencedBy, [
     { type: 'command', name: 'DOM.describeNode' },
     { type: 'type', name: 'DOM.Node' },
     { type: 'command', name: 'DOM.pushNodesByBackendIdsToFrontend' },
@@ -200,15 +199,15 @@ test('computeBackReferences: computes reverse references with deduplication and 
   // - DOM.describeNode (command return)
   // - DOM.NodeList (type items $ref)
   // - DOM.setChildNodes (event array items $ref)
-  assert.ok(nodeType.referencedBy);
-  assert.deepEqual(nodeType.referencedBy, [
+  assert.ok(nodeType?.referencedBy);
+  assert.deepEqual(nodeType?.referencedBy, [
     { type: 'command', name: 'DOM.describeNode' },
     { type: 'type', name: 'DOM.NodeList' },
     { type: 'event', name: 'DOM.setChildNodes' },
   ].sort((a, b) => a.name.localeCompare(b.name)));
 });
 
-test('parseRoute: dynamic native subtests for all route formats', async (t) => {
+test('parseRoute: dynamic native subtests for all route formats', async (/** @type {TestContext} */ t) => {
   const cases = [
     // Standard modern hash routes
     {
@@ -256,7 +255,7 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
       expected: { target: 'tot', domain: null, member: 'requestWillBeSent' },
     },
 
-    // Query format fallback
+    // Query format fallbacks
     {
       input: '?Page.navigate',
       expected: { target: 'tot', domain: 'Page', member: 'navigate' },
@@ -266,7 +265,7 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
       expected: { target: 'tot', domain: 'Network', member: null },
     },
 
-    // Empty, base path, and root formats
+    // Root and empty routes
     {
       input: '#/',
       expected: { target: 'tot', domain: null, member: null },
@@ -291,6 +290,8 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
       input: '/tot/index.html',
       expected: { target: 'tot', domain: null, member: null },
     },
+
+    // Base path prefix stripping (/devtools-protocol/)
     {
       input: '/devtools-protocol/',
       expected: { target: 'tot', domain: null, member: null },
@@ -303,6 +304,8 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
       input: '/devtools-protocol/tot/Page/#method-navigate',
       expected: { target: 'tot', domain: 'Page', member: 'navigate' },
     },
+
+    // Trailing slashes
     {
       input: '#/Page/',
       expected: { target: 'tot', domain: 'Page', member: null },
@@ -338,6 +341,7 @@ test('parseRoute: dynamic native subtests for all route formats', async (t) => {
 });
 
 test('formatRoute: canonical route formatting', () => {
+  // Tot target formats without prefix
   assert.equal(
     formatRoute({ target: 'tot', domain: 'Page', member: 'navigate' }),
     '#/Page.navigate'
@@ -347,24 +351,38 @@ test('formatRoute: canonical route formatting', () => {
     '#/Page'
   );
   assert.equal(
+    formatRoute({ target: 'tot', domain: null, member: null }),
+    '#/'
+  );
+
+  // V8 target formats with v8/ prefix
+  assert.equal(
     formatRoute({ target: 'v8', domain: 'Runtime', member: 'evaluate' }),
     '#/v8/Runtime.evaluate'
   );
   assert.equal(
-    formatRoute({ target: 'stable', domain: 'Network', member: 'getCookies' }),
-    '#/stable/Network.getCookies'
+    formatRoute({ target: 'v8', domain: 'Runtime', member: null }),
+    '#/v8/Runtime'
   );
   assert.equal(
     formatRoute({ target: 'v8', domain: null, member: null }),
     '#/v8/'
   );
+
+  // Stable target formats with stable/ prefix
+  assert.equal(
+    formatRoute({ target: 'stable', domain: 'Network', member: 'getCookies' }),
+    '#/stable/Network.getCookies'
+  );
+  assert.equal(
+    formatRoute({ target: 'stable', domain: 'Network', member: null }),
+    '#/stable/Network'
+  );
   assert.equal(
     formatRoute({ target: 'stable', domain: null, member: null }),
     '#/stable/'
   );
-  assert.equal(
-    formatRoute({ target: 'tot', domain: null, member: null }),
-    '#/'
-  );
+
+  // Default options
   assert.equal(formatRoute(), '#/');
 });

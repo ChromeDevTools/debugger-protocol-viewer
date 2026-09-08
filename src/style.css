@@ -520,6 +520,7 @@ figure.screenshot img {
   line-height: 1.4;
   box-sizing: border-box;
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  margin-right: 8px;
 }
 
 .toc-link a {

@@ -3,6 +3,9 @@
  * Browser-agnostic, zero-DOM ES module.
  */
 
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from './types.d.ts' */
+
+/** @type {Map<string, TargetKind>} */
 const TARGET_MAP = new Map([
   ['tot', 'tot'],
   ['stable', 'stable'],
@@ -14,7 +17,7 @@ const TARGET_MAP = new Map([
 /**
  * Normalizes a target string to one of: 'tot', 'stable', 'v8'.
  * @param {string|null|undefined} target
- * @returns {'tot'|'stable'|'v8'}
+ * @returns {TargetKind}
  */
 export function normalizeTarget(target) {
   if (!target) return 'tot';
@@ -49,7 +52,7 @@ function nameProperty(collectionName) {
  * 2. Required before optional.
  * 3. Alphabetical by entity name.
  *
- * @param {Array<Object>} items
+ * @param {Array<any>} items
  * @param {string|null} prop
  */
 function sortCollection(items, prop) {
@@ -58,27 +61,32 @@ function sortCollection(items, prop) {
     // 1. Standard (0) before Experimental (1) before Deprecated (2)
     const aRank = a.deprecated ? 2 : (a.experimental ? 1 : 0);
     const bRank = b.deprecated ? 2 : (b.experimental ? 1 : 0);
-    if (aRank !== bRank) return aRank - bRank;
+    if (aRank !== bRank) {
+      return aRank - bRank;
+    }
 
     // 2. Required before optional
     const aOpt = a.optional ? 1 : 0;
     const bOpt = b.optional ? 1 : 0;
-    if (aOpt !== bOpt) return aOpt - bOpt;
+    if (aOpt !== bOpt) {
+      return aOpt - bOpt;
+    }
 
-    // 3. Alphabetical by entity name
-    if (!a[prop] || !b[prop]) return 0;
-    return a[prop].localeCompare(b[prop]);
+    // 3. Alphabetical by entity name/id
+    const aName = String(a[prop] || '');
+    const bName = String(b[prop] || '');
+    return aName.localeCompare(bName);
   });
 }
 
 /**
- * Recursive normalization helper creating a fresh object without mutating input.
- * @param {*} object
+ * Recursively normalizes an arbitrary CDP node without mutating original input.
+ * @param {any} object
  * @param {boolean} alreadyExperimental
- * @returns {*}
+ * @returns {any}
  */
 function normalizeNode(object, alreadyExperimental) {
-  if (typeof object !== 'object' || object === null) {
+  if (!object || typeof object !== 'object') {
     return object;
   }
 
@@ -86,7 +94,7 @@ function normalizeNode(object, alreadyExperimental) {
     return object.map(item => normalizeNode(item, alreadyExperimental));
   }
 
-  const result = {};
+  const result = /** @type {Record<string, any>} */ ({});
   const isSelfExperimental = Boolean(object.experimental);
   const childAlreadyExperimental = alreadyExperimental || isSelfExperimental;
 
@@ -111,8 +119,8 @@ function normalizeNode(object, alreadyExperimental) {
  * Normalizes protocol data by establishing empty array defaults and deterministic sorting.
  * Pure function: does NOT mutate input protocol object.
  *
- * @param {Object} protocol
- * @returns {Object} Normalized protocol clone
+ * @param {ProtocolRoot | { domains?: any[] }} protocol
+ * @returns {NormalizedProtocolRoot} Normalized protocol clone
  */
 export function normalizeProtocol(protocol) {
   if (!protocol || typeof protocol !== 'object') {
@@ -142,7 +150,7 @@ export function normalizeProtocol(protocol) {
     }
   }
 
-  return normalized;
+  return /** @type {NormalizedProtocolRoot} */ (normalized);
 }
 
 /**
@@ -159,23 +167,23 @@ export function stabilize(node) {
   }
 
   if (Array.isArray(node)) {
-    return node
+    return /** @type {any} */ (node
       .filter(item => !(item && typeof item === 'object' && item.experimental === true))
-      .map(item => stabilize(item));
+      .map(item => stabilize(item)));
   }
 
-  const result = {};
+  const result = /** @type {Record<string, any>} */ ({});
   for (const [key, value] of Object.entries(node)) {
     result[key] = stabilize(value);
   }
 
-  return result;
+  return /** @type {T} */ (result);
 }
 
 /**
  * Helper to extract referenced type id from parameter/property object.
  * @param {string} domainName
- * @param {Object} parameter
+ * @param {any} parameter
  * @returns {string|null}
  */
 function getReferencedType(domainName, parameter) {
@@ -196,8 +204,9 @@ function getReferencedType(domainName, parameter) {
  * events, and types (properties and array items $ref).
  * Deduplicates and sorts references.
  *
- * @param {Array<Object>} domains
- * @returns {Array<Object>} The domains array with type.referencedBy populated
+ * @template {ProtocolDomain} D
+ * @param {Array<D>} domains
+ * @returns {Array<D>} The domains array with type.referencedBy populated
  */
 export function computeBackReferences(domains) {
   if (!Array.isArray(domains)) return [];
@@ -228,7 +237,7 @@ export function computeBackReferences(domains) {
     }
 
     for (const event of domain.events || []) {
-      const args = [...(event.parameters || []), ...(event.returns || [])];
+      const args = [...(event.parameters || [])];
       for (const arg of args) {
         const typeId = getReferencedType(domainName, arg);
         const referencedType = typeidToType.get(typeId);
@@ -273,7 +282,7 @@ export function computeBackReferences(domains) {
       map.set(reference.name, reference);
     }
     type.referencedBy = Array.from(map.values());
-    type.referencedBy.sort((a, b) => a.name.localeCompare(b.name));
+    type.referencedBy.sort((/** @type {{name: string}} */ a, /** @type {{name: string}} */ b) => a.name.localeCompare(b.name));
   }
 
   return domains;
@@ -284,7 +293,7 @@ export function computeBackReferences(domains) {
  * Supports modern hash routes, composite legacy paths, isolated legacy anchors, and query fallbacks.
  *
  * @param {string|null|undefined} routeString
- * @returns {{ target: 'tot'|'stable'|'v8', domain: string|null, member: string|null }}
+ * @returns {RouteInfo}
  */
 export function parseRoute(routeString) {
   if (!routeString || typeof routeString !== 'string') {
@@ -331,6 +340,7 @@ export function parseRoute(routeString) {
 
   // Composite legacy URLs: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
   if (pathSegments.length > 0) {
+    /** @type {TargetKind} */
     let target = 'tot';
     let domain = null;
 
@@ -356,6 +366,7 @@ export function parseRoute(routeString) {
     return { target: 'tot', domain: null, member: null };
   }
 
+  /** @type {TargetKind} */
   let target = 'tot';
   let targetAndRest = cleanHash;
 

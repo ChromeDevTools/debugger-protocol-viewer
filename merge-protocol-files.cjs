@@ -8,10 +8,10 @@ const fs = require('fs');
 
 const args = process.argv.slice(2);
 
-const protocol1Text = fs.readFileSync(args[0]);
+const protocol1Text = fs.readFileSync(args[0], 'utf8');
 const protocol1 = JSON.parse(protocol1Text);
 
-const protocol2Text = fs.readFileSync(args[1]);
+const protocol2Text = fs.readFileSync(args[1], 'utf8');
 const protocol2 = JSON.parse(protocol2Text);
 
 var mergedDomains = [];
