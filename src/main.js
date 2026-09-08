@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @property {HTMLElement} drawerBackdrop
  */
 
-class App {
+export class App {
   /**
    * @param {AppElements} elements
    */

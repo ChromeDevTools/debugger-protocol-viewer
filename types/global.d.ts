@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    app?: any;
+    app?: import('../src/main.js').App;
   }
 
   interface Element {
