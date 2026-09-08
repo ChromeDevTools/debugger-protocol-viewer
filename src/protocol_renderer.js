@@ -29,7 +29,6 @@ export class ProtocolRenderer {
     if (domain.deprecated) {
       main.classList.add('domain-deprecated');
     }
-    ProtocolRenderer.applyBackground(domain, main);
     const domainPadding = document.createElement('div');
     domainPadding.className = 'domain-padding';
     domainPadding.textContent = '\u2606';
@@ -105,8 +104,7 @@ export class ProtocolRenderer {
   static renderDomainType(domain, type) {
     const main = document.createElement('div');
     main.className = 'type';
-    ProtocolRenderer.applyBackground(type, main);
-    ProtocolRenderer.applyBackground(domain, main);
+    if (type.deprecated) main.classList.add('deprecated-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -342,8 +340,7 @@ export class ProtocolRenderer {
   static renderEventOrMethod(domain, method, isEvent) {
     const main = document.createElement('div');
     main.className = 'method';
-    ProtocolRenderer.applyBackground(method, main);
-    ProtocolRenderer.applyBackground(domain, main);
+    if (method.deprecated) main.classList.add('deprecated-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
