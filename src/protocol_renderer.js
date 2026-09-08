@@ -19,7 +19,7 @@ class ProtocolRenderer {
       let description = header.el('p');
       description.textContent = domain.description || '';
       ProtocolRenderer.applyMarks(domain, title);
-      ProtocolRenderer.renderTableOfContents(domain, header)
+      ProtocolRenderer.renderTableOfContents(domain, header);
     }
 
     if (domain.commands.length) {
@@ -116,7 +116,8 @@ class ProtocolRenderer {
     heading.text(domainName + '.', 'method-domain');
     heading.text(title, 'method-name');
     ProtocolRenderer.applyMarks(item, heading);
-    heading.a('?' + id, '#').classList.add('title-link');
+    let href = (window.app && window.app.formatRef) ? window.app.formatRef(id) : '#/' + id;
+    heading.a(href, '#').classList.add('title-link');
     return heading;
   }
 
@@ -250,7 +251,7 @@ class ProtocolRenderer {
 
   static renderRef($ref) {
     let a = E.el('a', 'parameter-type');
-    a.href = '?' + $ref;
+    a.href = (window.app && window.app.formatRef) ? window.app.formatRef($ref) : '#/' + $ref;
     a.textContent = $ref;
     return a;
   }

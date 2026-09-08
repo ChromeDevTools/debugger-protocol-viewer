@@ -1,72 +1,115 @@
-<title>DevTools Protocol Viewer</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DevTools Protocol Viewer</title>
 
-<!-- FAVICONS -->
-<link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
-<link rel="manifest" href="./favicons/site.webmanifest">
-<link rel="shortcut icon" href="./favicons/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="./favicons/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
+  <!-- FAVICONS -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+  <link rel="manifest" href="./favicons/site.webmanifest">
+  <link rel="shortcut icon" href="./favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-config" content="./favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="./style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="search.js"></script>
-<script src="utilities.js"></script>
-<script src="fuzzy_search.js"></script>
-<script src="protocol_renderer.js"></script>
-<script src="main.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-138239427-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <link rel="stylesheet" href="./style.css">
 
-  gtag('config', 'UA-138239427-1');
-</script>
+  <script src="utilities.js"></script>
+  <script src="fuzzy_search.js"></script>
+  <script src="protocol_renderer.js"></script>
+  <script src="search.js"></script>
+  <script type="module" src="main.js"></script>
 
-<section id='content'>
-</section>
-<section id='sresults'></section>
-<section id='search'>
-  <input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Start typing to search..."></input>
-  <span id='experimental'>
-    <img id='experimental-on' src='ic_check_box_black_24px.svg'/>
-    <img id='experimental-off' src='ic_check_box_outline_blank_black_24px.svg'/>
-      Experimental</span>
-  <a href="https://github.com/aslushnikov/vanilla-protocol-viewer/">
-    <img class='toolbar-button github' src='github.png'></img>
-  </a>
-  <img class='toolbar-button home' src='home.svg'></img>
-</section>
-<section id='sidebar'></section>
-<template id='landing'>
-  <div class='box box-content'>
-    <h1>Vanilla Protocol Viewer</h1>
-    <p>
-    The <strong>Chrome DevTools Protocol</strong> allows for tools to
-    instrument, inspect, debug and profile Chromium, Chrome and other
-    Blink-based browsers. Many existing projects <a href='https://developer.chrome.com/devtools/docs/debugging-clients'>currently use</a> the protocol.
-    The <a href='https://developers.google.com/web/tools/chrome-devtools/'>Chrome DevTools</a> uses this protocol and the team maintains its API.
-    </p>
-    <p>
-    Instrumentation is divided into a number of domains (DOM, Debugger, Network
-    etc.). Each domain defines a number of commands it supports and events it
-    generates. Both commands and events are serialized JSON objects of a fixed
-    structure. You can either <a href='https://developer.chrome.com/devtools/docs/debugger-protocol'>debug over the wire</a> using the raw messages as
-    they are described in the corresponding domain documentation, or use
-    <a href='https://developer.chrome.com/devtools/docs/debugger-protocol#extension'>extension JavaScript API</a>.
-    </p>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138239427-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-138239427-1');
+  </script>
+</head>
+<body>
+  <header id="toolbar" class="toolbar-header">
+    <div class="header-left">
+      <button id="drawer-toggle" class="drawer-toggle" type="button" aria-label="Toggle navigation">☰</button>
+      <a href="#/" class="brand-link home" title="DevTools Protocol Home">
+        <img class="brand-logo" src="home.svg" alt="DevTools Protocol Logo" width="20" height="20" />
+        <span class="brand-title">DevTools Protocol</span>
+      </a>
+      <span id="experimental" class="experimental-pill" role="button" tabindex="0" title="Toggle experimental domains and features">
+        <img id="experimental-on" src="ic_check_box_black_24px.svg" alt="Enabled" width="16" height="16" />
+        <img id="experimental-off" src="ic_check_box_outline_blank_black_24px.svg" alt="Disabled" width="16" height="16" />
+        <span class="exp-label">⚡ Exp</span>
+      </span>
+    </div>
 
+    <div class="header-center">
+      <div id="search" class="search-box">
+        <input type="search" id="search-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search protocol..." aria-label="Search protocol" />
+        <kbd class="search-kbd">/</kbd>
+      </div>
+    </div>
 
-    <h3>Viewer Features</h3>
-    <ul>
-      <li><code>Blazingly fast</code> There are no roundtrips to the server to perform search or to render a page.
-      <li><code>Instant Search</code> Start typing anywhere to initiate <strong>fuzzy-searching</strong>.
-      <li><code>No Buildsteps</code> Written in vanilla JavaScript / HTML / CSS. Self-contained with zero dependencies.
-    </ul>
-    Inspired by <a href='https://chromedevtools.github.io/devtools-protocol/'>Chrome DevTools Protocol Viewer</a>.
-  </div>
-</template>
+    <div class="header-right">
+      <a href="https://chromedevtools.github.io/devtools-protocol/" class="toolbar-link" title="CDP Documentation" target="_blank" rel="noopener">
+        <svg class="toolbar-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      </a>
+      <a href="https://github.com/ChromeDevTools/devtools-protocol" class="toolbar-link" title="GitHub Repository" target="_blank" rel="noopener">
+        <img class="toolbar-icon github" src="github.png" alt="GitHub" width="20" height="20" />
+      </a>
+    </div>
+  </header>
+
+  <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+
+  <section id="sidebar">
+    <div class="sidebar-header">
+      <input type="search" id="domain-filter" class="domain-filter" placeholder="Filter domains..." autocomplete="off" spellcheck="false" aria-label="Filter domains" />
+    </div>
+    <nav id="domain-list" class="domain-list"></nav>
+    <div class="sidebar-footer">
+      <select id="target-selector" class="target-selector" aria-label="Select protocol version">
+        <option value="tot">Tip-of-Tree (latest)</option>
+        <option value="stable">Stable (1.3)</option>
+        <option value="v8">V8 Inspector (Node.js)</option>
+      </select>
+    </div>
+  </section>
+
+  <section id="content" tabindex="-1"></section>
+  <section id="sresults"></section>
+
+  <template id="landing">
+    <div class="box box-content">
+      <h1>Chrome DevTools Protocol</h1>
+      <p>
+        The <strong>Chrome DevTools Protocol</strong> allows for tools to
+        instrument, inspect, debug and profile Chromium, Chrome and other
+        Blink-based browsers. Many existing projects <a href="https://developer.chrome.com/docs/devtools/">currently use</a> the protocol.
+        The <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a> team maintains its API.
+      </p>
+      <p>
+        Instrumentation is divided into a number of domains (DOM, Debugger, Network,
+        etc.). Each domain defines commands it supports and events it
+        generates. Both commands and events are serialized JSON objects of a fixed
+        structure.
+      </p>
+
+      <h3>Viewer Features</h3>
+      <ul>
+        <li><code>Blazingly Fast</code> Instant client-side navigation with zero-latency rendering.</li>
+        <li><code>Instant Search</code> Press <kbd class="inline-kbd">/</kbd> anywhere or start typing to initiate <strong>fuzzy search</strong>.</li>
+        <li><code>Cross-References</code> View reverse dependencies ("Used by") for all protocol types.</li>
+        <li><code>Multi-Target</code> Switch between Tip-of-Tree, Stable (1.3), and V8 Inspector protocols.</li>
+      </ul>
+      <p class="landing-footer-note">
+        Powered by <a href="https://github.com/aslushnikov/vanilla-protocol-viewer">vanilla-protocol-viewer</a>.
+      </p>
+    </div>
+  </template>
+</body>
+</html>

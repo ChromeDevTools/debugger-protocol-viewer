@@ -13,12 +13,16 @@ class Search {
     /** @type {!Set<string>} */
     this._domainNames = new Set();
     this._selectedElement = null;
+    this._defaultValue = '';
     this._searchInput.addEventListener('input', this._onInput.bind(this), false);
     this._searchInput.addEventListener('keydown', this._onKeyDown.bind(this), false);
     this._resultsElement = resultsElement;
 
-    // Activate search on any keypress
+    // Activate search on any keypress (unless user is in an input field)
     document.addEventListener('keypress', event => {
+      const target = /** @type {HTMLElement} */ (event.target);
+      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+        return;
       if (this._searchInput === document.activeElement)
         return;
       if (/\S/.test(event.key)) {
@@ -27,19 +31,34 @@ class Search {
         this._searchInput.focus();
       }
     });
-    // Activate search on backspace
+
+    // Activate search on backspace, delete, '/', or Cmd+K
     document.addEventListener('keydown', event => {
+      const target = /** @type {HTMLElement} */ (event.target);
+      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+        return;
       if (this._searchInput === document.activeElement)
         return;
+      if (event.key === '/' || ((event.metaKey || event.ctrlKey) && event.key === 'k')) {
+        event.preventDefault();
+        this._searchInput.focus();
+        this._searchInput.select();
+        return;
+      }
       if (event.keyCode === 8 || event.keyCode === 46)
         this._searchInput.focus();
     });
+
     // Activate on paste
     document.addEventListener('paste', event => {
+      const target = /** @type {HTMLElement} */ (event.target);
+      if (target && target.matches && target.matches('input, textarea, select, [contenteditable="true"]'))
+        return;
       if (this._searchInput === document.activeElement)
         return;
       this._searchInput.focus();
     });
+
     document.addEventListener('click', event => {
       if (this._searchInput.contains(event.target))
         return;
@@ -47,7 +66,8 @@ class Search {
       if (searchItem) {
         event.consume();
         this.cancelSearch();
-        app.navigate(searchItem.__route);
+        if (window.app && window.app.navigate)
+          window.app.navigate(searchItem.__route);
         return;
       }
     });
@@ -86,7 +106,8 @@ class Search {
     this._searchInput.blur();
     this._resultsElement.style.setProperty('display', 'none');
     this._searchInput.value = this._defaultValue;
-    app.focusContent();
+    if (window.app && window.app.focusContent)
+      window.app.focusContent();
   }
 
   setDefaultValue(value) {
@@ -118,7 +139,7 @@ class Search {
     let main = this._resultsElement.hbox('search-item', `Navigate Home`);
     main.classList.add('custom-search-result');
     main.classList.add('monospace');
-    main.__route = '?';
+    main.__route = (window.app && window.app.formatRef) ? window.app.formatRef('') : '#/';
     return main;
   }
 
@@ -192,9 +213,9 @@ class Search {
       this._selectNext(event);
     } else if (event.key === 'ArrowUp') {
       this._selectPrevious(event);
-    } else if (event.key === 'Enter' || event.key === ' ') {
+    } else if (event.key === 'Enter') {
       event.consume();
-      if (this._selectedElement);
+      if (this._selectedElement)
         this._selectedElement.click();
     }
   }
@@ -254,7 +275,7 @@ function renderSearchResult(searchResult) {
     let domainElement = p1.span('search-item-title-domain');
     domainElement.appendChild(renderTextWithMatches(item.title, searchResult.matches, 0, item.domainName.length + 1));
     p1.appendChild(renderTextWithMatches(item.title, searchResult.matches, item.domainName.length + 1, item.title.length));
-    let p2 = container.el('div',  'search-item-description');
+    let p2 = container.el('div', 'search-item-description');
     p2.textContent = item.description;
   }
   main.__route = item.route;
@@ -265,7 +286,7 @@ function renderSearchResult(searchResult) {
  * @param {string} text
  * @param {!Array<number>} matches
  * @param {number} fromIndex
- * @param {number} fromIndex
+ * @param {number} toIndex
  * @return {!Element}
  */
 function renderTextWithMatches(text, matches, fromIndex, toIndex) {
@@ -313,7 +334,6 @@ Search.Item = class {
    * @param {string} domainEntry
    * @param {!Search.ItemType} itemType
    * @param {string} description
-   * @param {string} route
    */
   constructor(domainName, domainEntry, itemType, description) {
     this.domainName = domainName;
@@ -321,7 +341,7 @@ Search.Item = class {
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
-    this.route = `?${domainName}.${domainEntry}`
+    this.route = (window.app && window.app.formatRef) ? window.app.formatRef(this.title) : '#/' + this.title;
   }
 }
 
@@ -337,4 +357,3 @@ Search.SearchResult = class {
     this.matches = matches;
   }
 }
-
