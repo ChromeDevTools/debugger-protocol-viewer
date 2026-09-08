@@ -40,7 +40,6 @@ body {
   margin: 0;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 p {
@@ -58,6 +57,7 @@ h5 {
   color: var(--color-text);
   margin-top: 0;
   line-height: 1.3;
+  text-wrap: balance;
 }
 
 h1 {
@@ -404,7 +404,6 @@ figure.screenshot img {
   bottom: 0;
   right: 0;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   outline: none;
 }
 
@@ -641,7 +640,7 @@ figure.screenshot img {
 .parameter-name {
   text-align: right;
   color: #202124;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   padding: 4px 10px 4px 0;
   font-weight: 500;
   font-size: 13.5px;
@@ -844,7 +843,6 @@ h2 span.deprecated,
   right: 0;
   overflow-y: auto;
   border-top: 2px solid rgba(51, 51, 51, 0.52);
-  -webkit-overflow-scrolling: touch;
   z-index: 90;
 }
 

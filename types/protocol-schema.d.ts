@@ -1,4 +1,4 @@
-/**  Definition for protocol.json types */
+/**  Definition for protocol.json types.  Vendored from https://github.com/ChromeDevTools/devtools-protocol/blob/master/scripts/protocol-schema.d.ts */
 export interface IProtocol {
   version: Protocol.Version;
   domains: Protocol.Domain[];

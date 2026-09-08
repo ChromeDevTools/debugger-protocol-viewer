@@ -31,8 +31,7 @@ class SearchItem {
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
-    const refFormatter =
-      formatRef || (typeof window !== 'undefined' && /** @type {any} */ (window).app?.formatRef);
+    const refFormatter = formatRef || (typeof window !== 'undefined' && window.app?.formatRef);
     this.route = refFormatter ? refFormatter(this.title) : '#/' + this.title;
   }
 }
@@ -51,6 +50,13 @@ class SearchResult {
 }
 
 export class Search {
+  /** @type {typeof SearchItemType} */
+  static ItemType;
+  /** @type {typeof SearchItem} */
+  static Item;
+  /** @type {typeof SearchResult} */
+  static SearchResult;
+
   /**
    * @param {Element} searchHeader
    * @param {Element} resultsElement
@@ -74,23 +80,7 @@ export class Search {
     this._searchInput.addEventListener('keydown', this._onKeyDown.bind(this), false);
     this._resultsElement = resultsElement;
 
-    // Activate search on any keypress (unless user is in an input field)
-    document.addEventListener('keypress', (event) => {
-      const target = /** @type {HTMLElement|null} */ (event.target);
-      if (
-        target &&
-        target.matches &&
-        target.matches('input, textarea, select, [contenteditable="true"]')
-      )
-        return;
-      if (this._searchInput === document.activeElement) return;
-      if (/\S/.test(event.key)) {
-        if (event.key !== '.') this._searchInput.value = '';
-        this._searchInput.focus();
-      }
-    });
-
-    // Activate search on backspace, delete, '/', or Cmd+K
+    // Activate search on '/', Cmd+K, Backspace, Delete, or typing any printable character
     document.addEventListener('keydown', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
       if (
@@ -106,7 +96,20 @@ export class Search {
         this._searchInput.select();
         return;
       }
-      if (event.keyCode === 8 || event.keyCode === 46) this._searchInput.focus();
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        this._searchInput.focus();
+        return;
+      }
+      if (
+        event.key.length === 1 &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey &&
+        /\S/.test(event.key)
+      ) {
+        if (event.key !== '.') this._searchInput.value = '';
+        this._searchInput.focus();
+      }
     });
 
     // Activate on paste
@@ -125,16 +128,14 @@ export class Search {
     document.addEventListener('click', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
       if (!target || this._searchInput.contains(target)) return;
-      const searchItem = /** @type {HTMLElement & { __route?: string } | null} */ (
-        target.closest('.search-item')
-      );
+      const searchItem = /** @type {HTMLElement|null} */ (target.closest('.search-item'));
       if (searchItem) {
         event.preventDefault();
         event.stopPropagation();
         this.cancelSearch();
         const navigate =
           this._app?.navigate || (typeof window !== 'undefined' && window.app?.navigate);
-        if (navigate && searchItem.__route) navigate(searchItem.__route);
+        if (navigate && searchItem.dataset.route) navigate(searchItem.dataset.route);
         return;
       }
     });
@@ -220,7 +221,7 @@ export class Search {
     let main = document.createElement('div');
     main.className = 'hbox search-item custom-search-result';
     main.textContent = 'Navigate Home';
-    /** @type {any} */ (main).__route = '#/';
+    main.dataset.route = '#/';
     this._resultsElement.appendChild(main);
   }
 
@@ -399,7 +400,7 @@ function renderSearchResult(searchResult) {
     p2.textContent = item.description;
     container.appendChild(p2);
   }
-  /** @type {any} */ (main).__route = item.route;
+  main.dataset.route = item.route;
   return main;
 }
 
@@ -446,6 +447,6 @@ function renderTextWithMatches(text, matches, fromIndex, toIndex) {
 }
 
 // Expose on Search class for backward compatibility and window
-/** @type {any} */ (Search).ItemType = SearchItemType;
-/** @type {any} */ (Search).Item = SearchItem;
-/** @type {any} */ (Search).SearchResult = SearchResult;
+Search.ItemType = SearchItemType;
+Search.Item = SearchItem;
+Search.SearchResult = SearchResult;

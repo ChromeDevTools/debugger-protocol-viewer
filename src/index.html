@@ -27,6 +27,8 @@
           class="drawer-toggle"
           type="button"
           aria-label="Toggle navigation"
+          aria-expanded="false"
+          aria-controls="sidebar"
         >
           ☰
         </button>
@@ -72,8 +74,8 @@
 
     <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
 
-    <section id="sidebar">
-      <nav id="domain-list" class="domain-list"></nav>
+    <nav id="sidebar" aria-label="Protocol Domains">
+      <div id="domain-list" class="domain-list"></div>
       <div class="sidebar-footer">
         <select id="target-selector" class="target-selector" aria-label="Select protocol version">
           <option value="tot">Tip-of-Tree (latest)</option>
@@ -81,9 +83,9 @@
           <option value="v8">V8 Inspector (Node.js)</option>
         </select>
       </div>
-    </section>
+    </nav>
 
-    <section id="content" tabindex="-1"></section>
+    <main id="content" tabindex="-1"></main>
     <section id="sresults"></section>
 
     <template id="landing">

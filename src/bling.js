@@ -71,6 +71,6 @@ if (typeof Element !== 'undefined') {
 }
 
 if (typeof window !== 'undefined') {
-  /** @type {any} */ (window).$ = $;
-  /** @type {any} */ (window).$$ = $$;
+  window.$ = $;
+  window.$$ = $$;
 }

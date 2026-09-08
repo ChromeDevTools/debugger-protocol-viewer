@@ -278,10 +278,11 @@ export class ProtocolRenderer {
   }
 
   /**
+   * @template {ProtocolCommand | ProtocolEvent | ProtocolType} T
    * @param {string} sectionName
    * @param {string} sectionType
-   * @param {Array<any>} entries
-   * @param {(item: any, container: HTMLElement) => HTMLElement} renderer
+   * @param {Array<T>} entries
+   * @param {(item: T, container: HTMLElement) => HTMLElement} renderer
    * @param {HTMLElement} container
    * @param {boolean} [isDomainExp]
    * @returns {HTMLElement}
@@ -485,7 +486,7 @@ export class ProtocolRenderer {
   }
 
   /**
-   * @param {any} item
+   * @param {ProtocolDomain | ProtocolType | ProtocolCommand | ProtocolEvent | ProtocolParameter | null | undefined} item
    * @param {HTMLElement} element
    */
   static applyBackground(item, element) {
@@ -495,7 +496,7 @@ export class ProtocolRenderer {
   }
 
   /**
-   * @param {any} item
+   * @param {ProtocolDomain | ProtocolType | ProtocolCommand | ProtocolEvent | ProtocolParameter | null | undefined} item
    * @param {HTMLElement} element
    * @param {boolean} [isParentDomainExperimental]
    */

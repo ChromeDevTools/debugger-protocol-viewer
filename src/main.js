@@ -244,11 +244,23 @@ export class App {
   }
 
   _toggleDrawer() {
-    document.body.classList.toggle('drawer-open');
+    const isOpen = document.body.classList.toggle('drawer-open');
+    if (this._drawerToggle) {
+      this._drawerToggle.setAttribute('aria-expanded', String(isOpen));
+    }
+    if (this._contentElement) {
+      this._contentElement.inert = isOpen;
+    }
   }
 
   _closeDrawer() {
     document.body.classList.remove('drawer-open');
+    if (this._drawerToggle) {
+      this._drawerToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (this._contentElement) {
+      this._contentElement.inert = false;
+    }
   }
 
   _setupSidebarEvents() {
@@ -433,7 +445,7 @@ export class App {
 
     const template = /** @type {HTMLTemplateElement|null} */ (document.querySelector('#landing'));
     if (template) {
-      const clone = document.importNode(template.content, true);
+      const clone = template.content.cloneNode(true);
       this._contentElement.appendChild(clone);
     }
   }

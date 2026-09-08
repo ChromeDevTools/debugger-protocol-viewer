@@ -49,6 +49,10 @@ export function $<T extends string>(query: T, context?: ParentNode): ParseSelect
 export function $$<T extends string>(query: T, context?: ParentNode): ParseSelector<T>[];
 
 declare global {
+  interface Window {
+    $<T extends string>(query: T, context?: ParentNode): ParseSelector<T>;
+    $$<T extends string>(query: T, context?: ParentNode): ParseSelector<T>[];
+  }
   interface ParentNode {
     $<T extends string>(query: T): ParseSelector<T>;
     $$<T extends string>(query: T): ParseSelector<T>[];
