@@ -362,27 +362,40 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       assert.strictEqual(isFocused, true, 'Expected document.activeElement to be document.getElementById("search")');
     });
 
-    await t.test('5. In-domain quick jump pills (#/Page)', async () => {
+    await t.test('5. Table of contents badges and backtick code rendering (#/Page)', async () => {
       await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page` }, sessionId);
 
-      const pillTexts = await cdp.pollEvaluate(
-        'Array.from(document.querySelectorAll(".section-jump-pill")).map(el => el.textContent.trim())',
+      const tocHeadings = await cdp.pollEvaluate(
+        'Array.from(document.querySelectorAll(".toc-section-heading")).map(el => el.textContent.trim())',
         (arr) => Array.isArray(arr) && arr.length >= 3,
         sessionId
       );
 
       assert.ok(
-        pillTexts.some((text) => text.includes('Methods')),
-        `Expected pills to include "Methods", got: ${JSON.stringify(pillTexts)}`
+        tocHeadings.some((text) => text.includes('Methods')),
+        `Expected TOC headings to include "Methods", got: ${JSON.stringify(tocHeadings)}`
       );
       assert.ok(
-        pillTexts.some((text) => text.includes('Events')),
-        `Expected pills to include "Events", got: ${JSON.stringify(pillTexts)}`
+        tocHeadings.some((text) => text.includes('Events')),
+        `Expected TOC headings to include "Events", got: ${JSON.stringify(tocHeadings)}`
       );
       assert.ok(
-        pillTexts.some((text) => text.includes('Types')),
-        `Expected pills to include "Types", got: ${JSON.stringify(pillTexts)}`
+        tocHeadings.some((text) => text.includes('Types')),
+        `Expected TOC headings to include "Types", got: ${JSON.stringify(tocHeadings)}`
       );
+
+      const methodBadgeText = await cdp.evaluate(
+        'document.querySelector(".toc-section-heading .entity-icon-method")?.textContent?.trim()',
+        sessionId
+      );
+      assert.strictEqual(methodBadgeText, 'method', 'Expected method badge in TOC heading');
+
+      const hasCodeInDescription = await cdp.pollEvaluate(
+        'document.querySelectorAll("#content .box-content p code, #content .parameter-description code").length > 0',
+        (val) => val === true,
+        sessionId
+      );
+      assert.strictEqual(hasCodeInDescription, true, 'Expected backticks to be rendered as <code> elements');
     });
 
     await t.test('6. Type cross-references (#/DOM.NodeId)', async () => {

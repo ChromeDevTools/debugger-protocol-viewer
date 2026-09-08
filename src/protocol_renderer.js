@@ -21,48 +21,10 @@ class ProtocolRenderer {
 
       let title = header.el('h2');
       title.textContent = domain.domain;
-
-      let description = header.el('p');
-      description.textContent = domain.description || '';
       ProtocolRenderer.applyMarks(domain, title, false);
 
-      if (domain.commands.length || domain.events.length || domain.types.length) {
-        let jumpBar = header.div('section-jump-bar');
-        const scrollToSection = (sectionId) => {
-          let target = result.querySelector('#' + sectionId) || document.getElementById(sectionId);
-          if (target) {
-            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-          }
-        };
-
-        if (domain.commands.length) {
-          let pill = jumpBar.a('#methods', `Methods (${domain.commands.length})`);
-          pill.className = 'section-jump-pill';
-          pill.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            scrollToSection('methods');
-          });
-        }
-        if (domain.events.length) {
-          let pill = jumpBar.a('#events', `Events (${domain.events.length})`);
-          pill.className = 'section-jump-pill';
-          pill.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            scrollToSection('events');
-          });
-        }
-        if (domain.types.length) {
-          let pill = jumpBar.a('#types', `Types (${domain.types.length})`);
-          pill.className = 'section-jump-pill';
-          pill.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            scrollToSection('types');
-          });
-        }
+      if (domain.description) {
+        ProtocolRenderer.renderDescription(domain.description, header);
       }
 
       ProtocolRenderer.renderTableOfContents(domain, header);
@@ -110,10 +72,8 @@ class ProtocolRenderer {
       main.el('p', '', 'Type: ')
         .text(type.type, 'parameter-type');
     }
-    {
-      // Render description.
-      let p = main.el('p');
-      p.textContent = type.description || '';
+    if (type.description) {
+      ProtocolRenderer.renderDescription(type.description, main);
     }
     if (type.properties && type.properties.length) {
       // Render parameters.
@@ -178,17 +138,29 @@ class ProtocolRenderer {
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, type.id, container);
 
     if (domain.commands.length)
-      ProtocolRenderer.renderTableOfContentsSection("Methods", domain.commands, renderEventOrMethodEntry, container, isDomainExp);
+      ProtocolRenderer.renderTableOfContentsSection("Methods", "method", domain.commands, renderEventOrMethodEntry, container, isDomainExp);
     if (domain.events.length)
-      ProtocolRenderer.renderTableOfContentsSection("Events", domain.events, renderEventOrMethodEntry, container, isDomainExp);
+      ProtocolRenderer.renderTableOfContentsSection("Events", "event", domain.events, renderEventOrMethodEntry, container, isDomainExp);
     if (domain.types.length)
-      ProtocolRenderer.renderTableOfContentsSection("Types", domain.types, renderTypeEntry, container, isDomainExp);
+      ProtocolRenderer.renderTableOfContentsSection("Types", "type", domain.types, renderTypeEntry, container, isDomainExp);
   }
 
-  static renderTableOfContentsSection(sectionName, entries, renderer, container, isDomainExp = false) {
-    let title = container.el('h4');
-    title.textContent = sectionName;
-    let section = container.div('div');
+  static renderTableOfContentsSection(sectionName, sectionType, entries, renderer, container, isDomainExp = false) {
+    let title = container.el('h4', 'toc-section-heading');
+    let badge = title.span(`entity-icon entity-icon-${sectionType}`);
+    badge.textContent = sectionType;
+    let link = title.a(`#${sectionName.toLowerCase()}`, `${sectionName} (${entries.length})`);
+    link.className = 'toc-section-link';
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = document.getElementById(sectionName.toLowerCase());
+      if (target) {
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      }
+    });
+
+    let section = container.div('toc-entries');
     for (let entry of entries) {
       let row = renderer(entry, section);
       ProtocolRenderer.applyMarks(entry, row, isDomainExp);
@@ -197,7 +169,7 @@ class ProtocolRenderer {
   }
 
   static renderTableOfContentsEntry(domainName, name, container) {
-    let row = container.div('div');
+    let row = container.div('toc-link');
     let id = `${domainName}.${name}`;
     let link = ProtocolRenderer.renderRef(id);
     link.classList.add('monospace');
@@ -210,10 +182,8 @@ class ProtocolRenderer {
     ProtocolRenderer.applyBackground(method, main);
     ProtocolRenderer.applyBackground(domain, main);
     main.appendChild(ProtocolRenderer.renderTitle(domain.domain, method.name, method, isEvent ? 'event' : 'method', Boolean(domain.experimental)));
-    {
-      // Render description.
-      let p = main.el('p');
-      p.textContent = method.description || '';
+    if (method.description) {
+      ProtocolRenderer.renderDescription(method.description, main);
     }
     if (method.parameters.length) {
       // Render parameters.
@@ -253,7 +223,7 @@ class ProtocolRenderer {
       let descriptions = [];
       if (parameter.description)
         descriptions.push(parameter.description);
-      description.textContent = descriptions.join(' ');
+      ProtocolRenderer.renderTextWithCode(descriptions.join(' '), description);
       if (parameter.enum) {
         description.append(' Allowed values: ');
         parameter.enum.forEach((value, index) => {
@@ -350,6 +320,34 @@ class ProtocolRenderer {
     icon.title = 'Event';
     icon.classList.add('entity-icon-event');
     return icon;
+  }
+
+  static renderTextWithCode(text, container) {
+    if (!text) return;
+    const clean = text.replace(/^LINT\..*$\n?/gm, '');
+    const parts = clean.split(/`([^`]+)`/g);
+    for (let i = 0; i < parts.length; i++) {
+      if (!parts[i]) continue;
+      if (i % 2 === 1) {
+        const code = document.createElement('code');
+        code.textContent = parts[i];
+        container.appendChild(code);
+      } else {
+        container.appendChild(document.createTextNode(parts[i]));
+      }
+    }
+  }
+
+  static renderDescription(text, parentElement) {
+    if (!text) return;
+    const clean = text.replace(/^LINT\..*$\n?/gm, '').trim();
+    if (!clean) return;
+    const paragraphs = clean.split(/\n\s*\n/);
+    for (const para of paragraphs) {
+      const p = document.createElement('p');
+      ProtocolRenderer.renderTextWithCode(para, p);
+      parentElement.appendChild(p);
+    }
   }
 };
 

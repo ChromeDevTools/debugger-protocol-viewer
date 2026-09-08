@@ -436,35 +436,35 @@ figure.screenshot img {
   justify-content: center;
 }
 
-/* In-Domain Section Quick Jump Bar */
-.section-jump-bar {
+/* Table of Contents */
+.toc-section-heading {
+  margin-top: 20px;
+  margin-bottom: 8px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  margin: 12px 0 16px 0;
+  font-size: 14px;
 }
 
-.section-jump-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #3f51b5;
-  background-color: #f5f5f5;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  cursor: pointer;
+.toc-section-heading .entity-icon {
+  margin-right: 8px;
 }
 
-.section-jump-pill:hover {
-  background-color: rgba(63, 81, 181, 0.08);
-  border-color: #3f51b5;
+.toc-section-link {
+  color: var(--color-text);
   text-decoration: none;
+}
+
+.toc-section-link:hover {
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+
+.toc-entries {
+  margin-bottom: 12px;
+}
+
+.toc-link {
+  line-height: 1.6;
 }
 
 #methods, #events, #types {
