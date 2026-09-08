@@ -450,9 +450,9 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         sessionId,
       );
 
-      assert.strictEqual(methodBadgeText, 'Method');
-      assert.strictEqual(eventBadgeText, 'Event');
-      assert.strictEqual(typeBadgeText, 'Type');
+      assert.strictEqual(methodBadgeText, 'Methods');
+      assert.strictEqual(eventBadgeText, 'Events');
+      assert.strictEqual(typeBadgeText, 'Types');
 
       // Verify inline code tags were parsed and rendered from backticks in descriptions
       const hasCodeTags = await client.pollEvaluate(

@@ -81,7 +81,10 @@ export function generateStubs({
     throw new Error(`Invalid protocol JSON at ${protocolPath}: missing domains array.`);
   }
 
-  // Ensure output directory exists
+  // Clean and ensure output directory exists
+  if (fs.existsSync(outputDir)) {
+    fs.rmSync(outputDir, { recursive: true, force: true });
+  }
   fs.mkdirSync(outputDir, { recursive: true });
 
   // Copy all assets from src/ to outputDir/

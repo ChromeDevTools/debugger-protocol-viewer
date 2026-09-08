@@ -303,22 +303,8 @@ export class ProtocolRenderer {
     sectionWrapper.appendChild(title);
     const badge = document.createElement('span');
     badge.className = `entity-icon entity-icon-${sectionType}`;
-    badge.textContent = sectionType.charAt(0).toUpperCase() + sectionType.slice(1);
+    badge.textContent = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 's';
     title.appendChild(badge);
-    const link = document.createElement('a');
-    link.href = `#${sectionName.toLowerCase()}`;
-    link.textContent = `${sectionName} (${entries.length})`;
-    link.className = 'toc-section-link';
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const target = document.getElementById(sectionName.toLowerCase());
-      if (target) {
-        const prefersReducedMotion =
-          window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-      }
-    });
-    title.appendChild(link);
 
     const section = document.createElement('div');
     section.className = 'toc-entries';

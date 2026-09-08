@@ -9,11 +9,14 @@
         var search = window.location.search || '';
         var hash = window.location.hash || '';
 
-        // Determine base prefix (e.g. /devtools-protocol/)
+        // Determine base prefix (e.g. /devtools-protocol/ or /debugger-protocol-viewer/)
         var basePrefix = '';
         if (pathname.startsWith('/devtools-protocol')) {
           basePrefix = '/devtools-protocol';
           pathname = pathname.slice('/devtools-protocol'.length);
+        } else if (pathname.startsWith('/debugger-protocol-viewer')) {
+          basePrefix = '/debugger-protocol-viewer';
+          pathname = pathname.slice('/debugger-protocol-viewer'.length);
         }
         if (!pathname.startsWith('/')) {
           pathname = '/' + pathname;
