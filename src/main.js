@@ -84,11 +84,11 @@ export class App {
     /** @type {Map<string, NormalizedProtocolDomain>} */
     this._activeDomains = new Map();
 
-    /** @type {Record<TargetKind, { all: Map<string, NormalizedProtocolDomain>, stable: Map<string, NormalizedProtocolDomain> }>} */
+    /** @type {Record<TargetKind, Map<string, NormalizedProtocolDomain>>} */
     this._targetStore = {
-      tot: { all: new Map(), stable: new Map() },
-      stable: { all: new Map(), stable: new Map() },
-      v8: { all: new Map(), stable: new Map() },
+      tot: new Map(),
+      stable: new Map(),
+      v8: new Map(),
     };
 
     this.formatRef = this.formatRef.bind(this);
@@ -107,10 +107,7 @@ export class App {
    * @returns {string}
    */
   formatRef(ref) {
-    if (this._currentTarget === 'tot') {
-      return `#/${ref}`;
-    }
-    return `#/${this._currentTarget}/${ref}`;
+    return formatRoute({ target: this._currentTarget, domain: ref });
   }
 
   focusContent() {
@@ -121,17 +118,9 @@ export class App {
    * @param {string} route
    */
   navigate(route) {
-    let cleanRoute = route;
-    if (cleanRoute.startsWith('/tot/')) {
-      cleanRoute = cleanRoute.replace('/tot/', '#/');
-    } else if (cleanRoute.startsWith('/v8/')) {
-      cleanRoute = cleanRoute.replace('/v8/', '#/v8/');
-    } else if (cleanRoute.startsWith('/1-3/') || cleanRoute.startsWith('/1-2/')) {
-      cleanRoute = cleanRoute.replace(/^\/(?:1-3|1-2)\//, '#/stable/');
-    }
-
+    const cleanRoute = formatRoute(parseRoute(route));
     if (window.location.hash !== cleanRoute) {
-      window.location.hash = cleanRoute.startsWith('#') ? cleanRoute : '#' + cleanRoute;
+      window.location.hash = cleanRoute;
     } else {
       this._onRoute();
     }
@@ -183,49 +172,25 @@ export class App {
    */
   _prepareDatasets(browserProto, jsProto) {
     // 1. Tip-of-Tree (Tot)
-    const combinedTotDomains = [
-      ...structuredClone(browserProto.domains || []),
-      ...structuredClone(jsProto.domains || []),
-    ];
-    const normalizedTot = normalizeProtocol({ domains: combinedTotDomains });
-    const totDomains = normalizedTot.domains;
-    const stableTotDomains = totDomains
-      .filter((/** @type {NormalizedProtocolDomain} */ domain) => !domain.experimental)
-      .map((/** @type {NormalizedProtocolDomain} */ domain) => stabilize(domain));
-
+    const combinedTotDomains = [...(browserProto.domains || []), ...(jsProto.domains || [])];
+    const totDomains = normalizeProtocol({ domains: combinedTotDomains }).domains;
     computeBackReferences(totDomains);
-    computeBackReferences(stableTotDomains);
-
     for (const d of totDomains) {
-      this._targetStore.tot.all.set(d.domain, d);
-    }
-    for (const d of stableTotDomains) {
-      this._targetStore.tot.stable.set(d.domain, d);
+      this._targetStore.tot.set(d.domain, d);
     }
 
-    // 2. Stable Protocol (1.3)
-    // Stable target is the stabilized Tip-of-Tree protocol (strictly no experimental domains/items)
+    // 2. Stable Protocol
+    const stableTotDomains = stabilize(totDomains.filter((d) => !d.experimental));
+    computeBackReferences(stableTotDomains);
     for (const d of stableTotDomains) {
-      this._targetStore.stable.all.set(d.domain, d);
-      this._targetStore.stable.stable.set(d.domain, d);
+      this._targetStore.stable.set(d.domain, d);
     }
 
     // 3. V8 Inspector
-    const v8Domains = normalizeProtocol({
-      domains: structuredClone(jsProto.domains || []),
-    }).domains;
-    const stableV8Domains = v8Domains
-      .filter((/** @type {NormalizedProtocolDomain} */ domain) => !domain.experimental)
-      .map((/** @type {NormalizedProtocolDomain} */ domain) => stabilize(domain));
-
+    const v8Domains = normalizeProtocol({ domains: jsProto.domains || [] }).domains;
     computeBackReferences(v8Domains);
-    computeBackReferences(stableV8Domains);
-
     for (const d of v8Domains) {
-      this._targetStore.v8.all.set(d.domain, d);
-    }
-    for (const d of stableV8Domains) {
-      this._targetStore.v8.stable.set(d.domain, d);
+      this._targetStore.v8.set(d.domain, d);
     }
   }
 
@@ -272,8 +237,7 @@ export class App {
 
         this._currentTarget = nextTarget;
         const targetStore = this._targetStore[this._currentTarget] || this._targetStore.tot;
-        const domainExistsInTarget =
-          this._currentDomain && targetStore.all.has(this._currentDomain);
+        const domainExistsInTarget = this._currentDomain && targetStore.has(this._currentDomain);
         const domain = domainExistsInTarget ? this._currentDomain : null;
 
         const newRoute = formatRoute({
@@ -322,8 +286,7 @@ export class App {
   }
 
   _updateActiveDomains() {
-    const store = this._targetStore[this._currentTarget] || this._targetStore.tot;
-    this._activeDomains = store.all;
+    this._activeDomains = this._targetStore[this._currentTarget] || this._targetStore.tot;
 
     this._search.setDomains(Array.from(this._activeDomains.values()));
     this._renderSidebar(this._activeDomains);
@@ -338,8 +301,8 @@ export class App {
     }
 
     const route = parseRoute(rawRoute);
+    const prevTarget = this._currentTarget;
 
-    // Sync target
     if (route.target !== this._currentTarget) {
       this._currentTarget = route.target;
     }
@@ -347,7 +310,9 @@ export class App {
       this._targetSelector.value = this._currentTarget;
     }
 
-    this._updateActiveDomains();
+    if (route.target !== prevTarget || this._activeDomains.size === 0) {
+      this._updateActiveDomains();
+    }
 
     const domain = route.domain;
     const member = route.member;
@@ -443,7 +408,7 @@ export class App {
       active.classList.remove('active-link');
     }
 
-    const template = /** @type {HTMLTemplateElement|null} */ (document.querySelector('#landing'));
+    const template = /** @type {HTMLTemplateElement|null} */ ($('#landing'));
     if (template) {
       const clone = template.content.cloneNode(true);
       this._contentElement.appendChild(clone);
@@ -455,10 +420,8 @@ export class App {
    */
   _renderSidebar(domains) {
     this._domainListElement.textContent = '';
-    const domainNames = Array.from(domains.keys());
 
-    for (const name of domainNames) {
-      const domain = domains.get(name);
+    for (const [name, domain] of domains) {
       const link = document.createElement('a');
       link.href = this.formatRef(name);
       link.className = 'domain-link';

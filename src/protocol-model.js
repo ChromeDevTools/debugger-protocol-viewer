@@ -137,7 +137,6 @@ export function normalizeProtocol(protocol) {
 
     for (const event of domain.events) {
       event.parameters = event.parameters || [];
-      event.returns = event.returns || [];
     }
     for (const command of domain.commands) {
       command.parameters = command.parameters || [];
@@ -221,59 +220,42 @@ export function computeBackReferences(domains) {
     }
   }
 
+  /**
+   * @param {string} domainName
+   * @param {any} arg
+   * @param {'command' | 'event' | 'type'} type
+   * @param {string} name
+   */
+  const addRef = (domainName, arg, type, name) => {
+    const typeId = getReferencedType(domainName, arg);
+    const referencedType = typeidToType.get(typeId);
+    if (referencedType) {
+      referencedType.referencedBy.push({ type, name });
+    }
+  };
+
   for (const domain of domains) {
     const domainName = domain.domain;
 
     for (const command of domain.commands || []) {
       const args = [...(command.parameters || []), ...(command.returns || [])];
       for (const arg of args) {
-        const typeId = getReferencedType(domainName, arg);
-        const referencedType = typeidToType.get(typeId);
-        if (referencedType) {
-          referencedType.referencedBy.push({
-            type: 'command',
-            name: `${domainName}.${command.name}`,
-          });
-        }
+        addRef(domainName, arg, 'command', `${domainName}.${command.name}`);
       }
     }
 
     for (const event of domain.events || []) {
-      const args = [...(event.parameters || [])];
-      for (const arg of args) {
-        const typeId = getReferencedType(domainName, arg);
-        const referencedType = typeidToType.get(typeId);
-        if (referencedType) {
-          referencedType.referencedBy.push({
-            type: 'event',
-            name: `${domainName}.${event.name}`,
-          });
-        }
+      for (const arg of event.parameters || []) {
+        addRef(domainName, arg, 'event', `${domainName}.${event.name}`);
       }
     }
 
     for (const type of domain.types || []) {
-      if (type.properties) {
-        for (const prop of type.properties) {
-          const typeId = getReferencedType(domainName, prop);
-          const referencedType = typeidToType.get(typeId);
-          if (referencedType) {
-            referencedType.referencedBy.push({
-              type: 'type',
-              name: `${domainName}.${type.id}`,
-            });
-          }
-        }
+      for (const prop of type.properties || []) {
+        addRef(domainName, prop, 'type', `${domainName}.${type.id}`);
       }
       if (type.items) {
-        const typeId = getReferencedType(domainName, type.items);
-        const referencedType = typeidToType.get(typeId);
-        if (referencedType) {
-          referencedType.referencedBy.push({
-            type: 'type',
-            name: `${domainName}.${type.id}`,
-          });
-        }
+        addRef(domainName, type.items, 'type', `${domainName}.${type.id}`);
       }
     }
   }
@@ -292,11 +274,41 @@ export function computeBackReferences(domains) {
   return domains;
 }
 
+const ROUTE_BASE_URL = 'https://cdp.internal';
+
+const legacyAnchorPattern = new URLPattern({ hash: ':prefix(method|type|event)-:member' });
+
+const legacyPathPattern = new URLPattern({
+  pathname:
+    '{/:repo(devtools-protocol|debugger-protocol-viewer)}?/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
+  baseURL: ROUTE_BASE_URL,
+});
+
+const hashTargetMemberPattern = new URLPattern({
+  hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain.:member',
+});
+const hashTargetDomainPattern = new URLPattern({
+  hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
+});
+const hashTargetOnlyPattern = new URLPattern({ hash: '#/:target(tot|v8|1-3|1-2|stable){/}*' });
+
+const hashMemberPattern = new URLPattern({ hash: '#/:domain.:member' });
+const hashDomainPattern = new URLPattern({ hash: '#/:domain{/}*' });
+
+const queryMemberPattern = new URLPattern({ search: '?:domain.:member' });
+const queryDomainPattern = new URLPattern({ search: '?:domain' });
+
 /**
- * Parses raw route string into canonical target, domain, and member components.
- * Supports modern hash routes, composite legacy paths, isolated legacy anchors, and query fallbacks.
+ * Parses any incoming route variant into a canonical RouteInfo object using standard URLPattern.
  *
- * @param {string|null|undefined} routeString
+ * Supported route structures:
+ * - Modern hash routes: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network.getCookies
+ * - Legacy paths: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
+ * - Base-path prefixed: /devtools-protocol/tot/Page/#method-navigate, /debugger-protocol-viewer/tot/Page/#method-navigate
+ * - Isolated legacy anchors: #method-navigate, #type-Node, #event-requestWillBeSent
+ * - Query format: ?Page.navigate, ?Network
+ *
+ * @param {string|null} [routeString]
  * @returns {RouteInfo}
  */
 export function parseRoute(routeString) {
@@ -309,101 +321,94 @@ export function parseRoute(routeString) {
     return { target: 'tot', domain: null, member: null };
   }
 
-  // Handle isolated legacy anchors: #method-foo, #event-bar, #type-baz
-  const isolatedLegacyMatch = trimmed.match(/^#(?:method|type|event)-([\w-]+)$/);
-  if (isolatedLegacyMatch) {
-    return { target: 'tot', domain: null, member: isolatedLegacyMatch[1] };
-  }
+  const url =
+    trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
+      ? new URL(trimmed, ROUTE_BASE_URL)
+      : new URL('/' + trimmed, ROUTE_BASE_URL);
 
-  const hashIndex = trimmed.indexOf('#');
-  let pathPart = '';
-  let hashPart = '';
+  const legacyAnchorMatch = legacyAnchorPattern.exec(url);
+  const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;
 
-  if (hashIndex !== -1) {
-    pathPart = trimmed.slice(0, hashIndex);
-    hashPart = trimmed.slice(hashIndex + 1);
-  } else if (trimmed.startsWith('?')) {
-    hashPart = trimmed.slice(1);
-  } else {
-    pathPart = trimmed;
-  }
-
-  // Check if hashPart is a legacy anchor like method-navigate
-  const legacyHashMatch = hashPart.match(/^(?:method|type|event)-([\w-]+)$/);
-  const legacyMember = legacyHashMatch ? legacyHashMatch[1] : null;
-
-  const pathSegments = pathPart
-    .split('/')
-    .map((s) => s.trim())
-    .filter((s) => Boolean(s) && !s.endsWith('.html'));
-
-  // Filter out leading repository base path if present (e.g. /devtools-protocol/ or /debugger-protocol-viewer/)
+  const legacyPathMatch = legacyPathPattern.exec(url);
   if (
-    pathSegments.length > 0 &&
-    (pathSegments[0] === 'devtools-protocol' || pathSegments[0] === 'debugger-protocol-viewer')
+    legacyPathMatch?.pathname.groups.domain &&
+    !legacyPathMatch.pathname.groups.domain.endsWith('.html')
   ) {
-    pathSegments.shift();
+    return {
+      target: normalizeTarget(legacyPathMatch.pathname.groups.target),
+      domain: legacyPathMatch.pathname.groups.domain,
+      member: legacyMember,
+    };
   }
 
-  // Composite legacy URLs: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
-  if (pathSegments.length > 0) {
-    /** @type {TargetKind} */
-    let target = 'tot';
-    let domain = null;
-
-    const targetIndex = pathSegments.findIndex((s) => TARGET_MAP.has(s.toLowerCase()));
-    if (targetIndex !== -1) {
-      target = normalizeTarget(pathSegments[targetIndex]);
-      if (pathSegments.length > targetIndex + 1) {
-        domain = pathSegments[targetIndex + 1];
-      }
-    } else {
-      domain = pathSegments[0];
-    }
-
-    return { target, domain, member: legacyMember };
+  if (legacyMember) {
+    return { target: 'tot', domain: null, member: legacyMember };
   }
 
-  // Modern hash route or query format: e.g. /Page.navigate, /v8/Runtime.evaluate, Page.navigate, Page
-  let cleanHash = hashPart;
-  if (cleanHash.startsWith('/')) {
-    cleanHash = cleanHash.slice(1);
-  }
-  if (!cleanHash) {
-    return { target: 'tot', domain: null, member: null };
-  }
-
-  /** @type {TargetKind} */
-  let target = 'tot';
-  let targetAndRest = cleanHash;
-
-  const slashIndex = cleanHash.indexOf('/');
-  if (slashIndex !== -1) {
-    const potentialTarget = cleanHash.slice(0, slashIndex).toLowerCase();
-    if (TARGET_MAP.has(potentialTarget)) {
-      target = normalizeTarget(potentialTarget);
-      targetAndRest = cleanHash.slice(slashIndex + 1);
-    }
-  } else if (TARGET_MAP.has(cleanHash.toLowerCase())) {
-    target = normalizeTarget(cleanHash);
-    targetAndRest = '';
+  const htm = hashTargetMemberPattern.exec(url);
+  if (htm?.hash.groups.domain && htm.hash.groups.member) {
+    return {
+      target: normalizeTarget(htm.hash.groups.target),
+      domain: htm.hash.groups.domain,
+      member: htm.hash.groups.member,
+    };
   }
 
-  // Strip trailing slashes from domain/member (e.g. #/Page/ -> Page)
-  targetAndRest = targetAndRest.replace(/\/+$/, '');
-
-  if (!targetAndRest) {
-    return { target, domain: null, member: null };
+  const htd = hashTargetDomainPattern.exec(url);
+  if (htd?.hash.groups.domain) {
+    return {
+      target: normalizeTarget(htd.hash.groups.target),
+      domain: htd.hash.groups.domain,
+      member: null,
+    };
   }
 
-  const dotIndex = targetAndRest.indexOf('.');
-  if (dotIndex !== -1) {
-    const domain = targetAndRest.slice(0, dotIndex);
-    const member = targetAndRest.slice(dotIndex + 1);
-    return { target, domain, member: member || null };
+  const hto = hashTargetOnlyPattern.exec(url);
+  if (hto?.hash.groups.target) {
+    return {
+      target: normalizeTarget(hto.hash.groups.target),
+      domain: null,
+      member: null,
+    };
   }
 
-  return { target, domain: targetAndRest, member: null };
+  const hm = hashMemberPattern.exec(url);
+  if (hm?.hash.groups.domain && hm.hash.groups.member) {
+    return {
+      target: 'tot',
+      domain: hm.hash.groups.domain,
+      member: hm.hash.groups.member,
+    };
+  }
+
+  const hd = hashDomainPattern.exec(url);
+  if (hd?.hash.groups.domain) {
+    return {
+      target: 'tot',
+      domain: hd.hash.groups.domain,
+      member: null,
+    };
+  }
+
+  const qm = queryMemberPattern.exec(url);
+  if (qm?.search.groups.domain && qm.search.groups.member) {
+    return {
+      target: 'tot',
+      domain: qm.search.groups.domain,
+      member: qm.search.groups.member,
+    };
+  }
+
+  const qd = queryDomainPattern.exec(url);
+  if (qd?.search.groups.domain) {
+    return {
+      target: 'tot',
+      domain: qd.search.groups.domain,
+      member: null,
+    };
+  }
+
+  return { target: 'tot', domain: null, member: null };
 }
 
 /**

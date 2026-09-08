@@ -10,18 +10,35 @@ import { ProtocolRenderer } from './protocol_renderer.js';
 // Number of search results to render immediately.
 const SEARCH_RENDER_COUNT = 50;
 
-/** @enum {symbol} */
+/** @typedef {'method' | 'event' | 'type'} SearchItemKind */
+
 const SearchItemType = {
-  Method: Symbol('Method'),
-  Type: Symbol('Type'),
-  Event: Symbol('Event'),
+  Method: 'method',
+  Type: 'type',
+  Event: 'event',
 };
+
+/**
+ * @param {HTMLElement|null} target
+ * @param {HTMLInputElement} searchInput
+ * @returns {boolean}
+ */
+function isEditableOrActive(target, searchInput) {
+  if (
+    target &&
+    target.matches &&
+    target.matches('input, textarea, select, [contenteditable="true"]')
+  ) {
+    return true;
+  }
+  return searchInput === document.activeElement;
+}
 
 class SearchItem {
   /**
    * @param {string} domainName
    * @param {string} domainEntry
-   * @param {symbol} itemType
+   * @param {SearchItemKind} itemType
    * @param {string} [description]
    * @param {(ref: string) => string} [formatRef]
    */
@@ -71,8 +88,6 @@ export class Search {
     this._searchInput = /** @type {HTMLInputElement} */ (input);
     /** @type {Array<SearchItem>} */
     this._items = [];
-    /** @type {Set<string>} */
-    this._domainNames = new Set();
     /** @type {Element|null} */
     this._selectedElement = null;
     this._defaultValue = '';
@@ -80,16 +95,9 @@ export class Search {
     this._searchInput.addEventListener('keydown', this._onKeyDown.bind(this), false);
     this._resultsElement = resultsElement;
 
-    // Activate search on '/', Cmd+K, Backspace, Delete, or typing any printable character
     document.addEventListener('keydown', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (
-        target &&
-        target.matches &&
-        target.matches('input, textarea, select, [contenteditable="true"]')
-      )
-        return;
-      if (this._searchInput === document.activeElement) return;
+      if (isEditableOrActive(target, this._searchInput)) return;
       if (event.key === '/' || ((event.metaKey || event.ctrlKey) && event.key === 'k')) {
         event.preventDefault();
         this._searchInput.focus();
@@ -112,16 +120,9 @@ export class Search {
       }
     });
 
-    // Activate on paste
     document.addEventListener('paste', (event) => {
       const target = /** @type {HTMLElement|null} */ (event.target);
-      if (
-        target &&
-        target.matches &&
-        target.matches('input, textarea, select, [contenteditable="true"]')
-      )
-        return;
-      if (this._searchInput === document.activeElement) return;
+      if (isEditableOrActive(target, this._searchInput)) return;
       this._searchInput.focus();
     });
 
@@ -145,40 +146,23 @@ export class Search {
    * @param {Array<ProtocolDomain>} domains
    */
   setDomains(domains) {
-    this._domainNames.clear();
     this._items = [];
     const formatRef = this._app?.formatRef;
-    for (var domain of domains) {
-      this._domainNames.add(domain.domain.toLowerCase());
-      for (var command of domain.commands || []) {
-        let item = new SearchItem(
-          domain.domain,
-          command.name,
-          SearchItemType.Method,
-          command.description,
-          formatRef,
+    for (const domain of domains) {
+      for (const command of domain.commands || []) {
+        this._items.push(
+          new SearchItem(domain.domain, command.name, 'method', command.description, formatRef),
         );
-        this._items.push(item);
       }
-      for (var event of domain.events || []) {
-        let item = new SearchItem(
-          domain.domain,
-          event.name,
-          SearchItemType.Event,
-          event.description,
-          formatRef,
+      for (const event of domain.events || []) {
+        this._items.push(
+          new SearchItem(domain.domain, event.name, 'event', event.description, formatRef),
         );
-        this._items.push(item);
       }
-      for (var type of domain.types || []) {
-        let item = new SearchItem(
-          domain.domain,
-          type.id,
-          SearchItemType.Type,
-          type.description,
-          formatRef,
+      for (const type of domain.types || []) {
+        this._items.push(
+          new SearchItem(domain.domain, type.id, 'type', type.description, formatRef),
         );
-        this._items.push(item);
       }
     }
   }
@@ -365,16 +349,8 @@ function renderSearchResult(searchResult) {
   let icon = document.createElement('span');
   icon.className = 'search-item-icon';
   main.appendChild(icon);
-  // Render icon
-  if (item.type === SearchItemType.Method) {
-    icon.appendChild(ProtocolRenderer.renderMethodIcon());
-  } else if (item.type === SearchItemType.Type) {
-    icon.appendChild(ProtocolRenderer.renderTypeIcon());
-  } else if (item.type === SearchItemType.Event) {
-    icon.appendChild(ProtocolRenderer.renderEventIcon());
-  }
+  icon.appendChild(ProtocolRenderer.renderEntityIcon(item.type));
   {
-    // Render Name and Description
     let container = document.createElement('div');
     container.className = 'search-item-main';
     main.appendChild(container);
