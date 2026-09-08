@@ -6,6 +6,12 @@ class ProtocolRenderer {
   static renderDomain(domain) {
     let result = E.div();
     let main = result.div('domain');
+    if (domain.experimental) {
+      main.classList.add('domain-experimental');
+    }
+    if (domain.deprecated) {
+      main.classList.add('domain-deprecated');
+    }
     ProtocolRenderer.applyBackground(domain, main);
     let padding = result.div('domain-padding', '\u2606');
     {
@@ -18,7 +24,7 @@ class ProtocolRenderer {
 
       let description = header.el('p');
       description.textContent = domain.description || '';
-      ProtocolRenderer.applyMarks(domain, title);
+      ProtocolRenderer.applyMarks(domain, title, false);
 
       if (domain.commands.length || domain.events.length || domain.types.length) {
         let jumpBar = header.div('section-jump-bar');
@@ -99,7 +105,7 @@ class ProtocolRenderer {
     let main = E.div('type');
     ProtocolRenderer.applyBackground(type, main);
     ProtocolRenderer.applyBackground(domain, main);
-    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, type.id, type, 'type'));
+    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, type.id, type, 'type', Boolean(domain.experimental)));
     if (type.type) {
       main.el('p', '', 'Type: ')
         .text(type.type, 'parameter-type');
@@ -143,7 +149,7 @@ class ProtocolRenderer {
     return main;
   }
 
-  static renderTitle(domainName, title, item, titleType) {
+  static renderTitle(domainName, title, item, titleType, isParentDomainExperimental = false) {
     // Render heading.
     let heading = E.el('h4', 'monospace text-overflow');
 
@@ -158,33 +164,34 @@ class ProtocolRenderer {
     heading.setAttribute('id', ProtocolRenderer.titleId(domainName, title));
     heading.text(domainName + '.', 'method-domain');
     heading.text(title, 'method-name');
-    ProtocolRenderer.applyMarks(item, heading);
+    ProtocolRenderer.applyMarks(item, heading, isParentDomainExperimental);
     let href = (window.app && window.app.formatRef) ? window.app.formatRef(id) : '#/' + id;
     heading.a(href, '#').classList.add('title-link');
     return heading;
   }
 
   static renderTableOfContents(domain, container) {
+    const isDomainExp = Boolean(domain.experimental);
     let renderEventOrMethodEntry = (method, container) =>
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
     let renderTypeEntry = (type, container) =>
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, type.id, container);
 
     if (domain.commands.length)
-      ProtocolRenderer.renderTableOfContentsSection("Methods", domain.commands, renderEventOrMethodEntry, container);
+      ProtocolRenderer.renderTableOfContentsSection("Methods", domain.commands, renderEventOrMethodEntry, container, isDomainExp);
     if (domain.events.length)
-      ProtocolRenderer.renderTableOfContentsSection("Events", domain.events, renderEventOrMethodEntry, container);
+      ProtocolRenderer.renderTableOfContentsSection("Events", domain.events, renderEventOrMethodEntry, container, isDomainExp);
     if (domain.types.length)
-      ProtocolRenderer.renderTableOfContentsSection("Types", domain.types, renderTypeEntry, container);
+      ProtocolRenderer.renderTableOfContentsSection("Types", domain.types, renderTypeEntry, container, isDomainExp);
   }
 
-  static renderTableOfContentsSection(sectionName, entries, renderer, container) {
+  static renderTableOfContentsSection(sectionName, entries, renderer, container, isDomainExp = false) {
     let title = container.el('h4');
     title.textContent = sectionName;
     let section = container.div('div');
     for (let entry of entries) {
       let row = renderer(entry, section);
-      ProtocolRenderer.applyMarks(entry, row);
+      ProtocolRenderer.applyMarks(entry, row, isDomainExp);
     }
     return section;
   }
@@ -202,7 +209,7 @@ class ProtocolRenderer {
     let main = E.div('method');
     ProtocolRenderer.applyBackground(method, main);
     ProtocolRenderer.applyBackground(domain, main);
-    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, method.name, method, isEvent ? 'event' : 'method'));
+    main.appendChild(ProtocolRenderer.renderTitle(domain.domain, method.name, method, isEvent ? 'event' : 'method', Boolean(domain.experimental)));
     {
       // Render description.
       let p = main.el('p');
@@ -259,7 +266,7 @@ class ProtocolRenderer {
             description.append('.');
         });
       }
-      ProtocolRenderer.applyMarks(parameter, description);
+      ProtocolRenderer.applyMarks(parameter, description, Boolean(domain.experimental));
     }
     return main;
   }
@@ -306,8 +313,11 @@ class ProtocolRenderer {
       element.classList.add('deprecated-bg');
   }
 
-  static applyMarks(item, element) {
+  static applyMarks(item, element, isParentDomainExperimental = false) {
     if (item.experimental) {
+      if (isParentDomainExperimental) {
+        return;
+      }
       let e = element.span('experimental', 'experimental');
       e.title = 'This may be changed, moved or removed';
       element.appendChild(e);

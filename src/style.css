@@ -22,8 +22,8 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 14.5px;
+  line-height: 1.55;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -38,17 +38,37 @@ h1, h2, h3, h4, h5 {
   margin-top: 0;
 }
 
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+h2 {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 24px 0 10px 0;
+}
+
 h4 {
-  padding-top: 1.2em;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding-top: 1em;
 }
 
 h5 {
   color: var(--color-text-secondary);
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 11px;
-  margin: 1rem 0 0.5rem;
+  margin: 1.2rem 0 0.5rem;
 }
 
 a {
@@ -340,19 +360,20 @@ code {
 
 .box {
   width: 96%;
-  max-width: 1100px;
-  border-radius: 4px;
+  max-width: 1000px;
+  border-radius: 6px;
   border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12);
   margin: 16px auto 24px auto;
   background-color: var(--color-surface);
 }
 
 .box-content, .method, .type {
-  padding: 16px 24px;
+  padding: 18px 26px;
 }
 
 .domain {
-  padding: 16px 24px;
+  padding: 20px 24px;
 }
 
 .domain-padding {
@@ -499,20 +520,44 @@ h4:hover .title-link {
 span.experimental, span.deprecated {
   font-size: 10px;
   text-transform: uppercase;
-  background-color: #ea8600;
-  padding: 1px 4px;
+  background-color: #fef7e0;
+  color: #b06000;
+  border: 1px solid #fdd663;
+  padding: 1px 5px;
   border-radius: 3px;
   cursor: help;
-  color: white;
   vertical-align: middle;
   font-weight: 600;
   font-family: var(--font-sans);
   margin-left: 1ex;
   user-select: none;
+  letter-spacing: 0.3px;
 }
 
 span.deprecated {
-  background-color: #d93025;
+  background-color: #fce8e6;
+  color: #c5221f;
+  border: 1px solid #fad2cf;
+}
+
+/* Domain-level badging: if the whole domain is experimental or deprecated,
+   badge the top card heading and suppress redundant per-item badges inside */
+.domain-experimental span.experimental {
+  display: none;
+}
+
+.domain-experimental h2 span.experimental,
+.domain-experimental .domain-title-heading span.experimental {
+  display: inline-block;
+}
+
+.domain-deprecated span.deprecated {
+  display: none;
+}
+
+.domain-deprecated h2 span.deprecated,
+.domain-deprecated .domain-title-heading span.deprecated {
+  display: inline-block;
 }
 
 .entity-icon {
@@ -530,16 +575,19 @@ span.deprecated {
 .entity-icon-method {
   background-color: #e8f0fe;
   color: #1a73e8;
+  border: 1px solid #d2e3fc;
 }
 
 .entity-icon-event {
   background-color: #e6f4ea;
   color: #137333;
+  border: 1px solid #ceead6;
 }
 
 .entity-icon-type {
-  background-color: #fef7e0;
-  color: #b06000;
+  background-color: #f3e8fd;
+  color: #7b1fa2;
+  border: 1px solid #e9d2fd;
 }
 
 .method:not(:last-child), .type:not(:last-child) {
