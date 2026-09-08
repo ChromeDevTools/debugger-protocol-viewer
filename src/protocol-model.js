@@ -276,30 +276,43 @@ export function computeBackReferences(domains) {
 
 const ROUTE_BASE_URL = 'https://cdp.internal';
 
-const legacyAnchorPattern = new URLPattern({ hash: ':prefix(method|type|event)-:member' });
+const hasURLPattern = typeof URLPattern !== 'undefined';
 
-const legacyPathPattern = new URLPattern({
-  pathname:
-    '{/:repo(devtools-protocol|debugger-protocol-viewer)}?/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-  baseURL: ROUTE_BASE_URL,
-});
+const legacyAnchorPattern = hasURLPattern
+  ? new URLPattern({ hash: ':prefix(method|type|event)-:member' })
+  : null;
 
-const hashTargetMemberPattern = new URLPattern({
-  hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain.:member',
-});
-const hashTargetDomainPattern = new URLPattern({
-  hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-});
-const hashTargetOnlyPattern = new URLPattern({ hash: '#/:target(tot|v8|1-3|1-2|stable){/}*' });
+const legacyPathPattern = hasURLPattern
+  ? new URLPattern({
+      pathname:
+        '{/:repo(devtools-protocol|debugger-protocol-viewer)}?/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
+      baseURL: ROUTE_BASE_URL,
+    })
+  : null;
 
-const hashMemberPattern = new URLPattern({ hash: '#/:domain.:member' });
-const hashDomainPattern = new URLPattern({ hash: '#/:domain{/}*' });
+const hashTargetMemberPattern = hasURLPattern
+  ? new URLPattern({
+      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain.:member',
+    })
+  : null;
+const hashTargetDomainPattern = hasURLPattern
+  ? new URLPattern({
+      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
+    })
+  : null;
+const hashTargetOnlyPattern = hasURLPattern
+  ? new URLPattern({ hash: '#/:target(tot|v8|1-3|1-2|stable){/}*' })
+  : null;
 
-const queryMemberPattern = new URLPattern({ search: '?:domain.:member' });
-const queryDomainPattern = new URLPattern({ search: '?:domain' });
+const hashMemberPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain.:member' }) : null;
+const hashDomainPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain{/}*' }) : null;
+
+const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:member' }) : null;
+const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
 
 /**
- * Parses any incoming route variant into a canonical RouteInfo object using standard URLPattern.
+ * Parses any incoming route variant into a canonical RouteInfo object.
+ * Uses standard URLPattern when available, with a regex/string fallback.
  *
  * Supported route structures:
  * - Modern hash routes: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network.getCookies
@@ -321,94 +334,182 @@ export function parseRoute(routeString) {
     return { target: 'tot', domain: null, member: null };
   }
 
-  const url =
-    trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
-      ? new URL(trimmed, ROUTE_BASE_URL)
-      : new URL('/' + trimmed, ROUTE_BASE_URL);
+  if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
+    const url =
+      trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
+        ? new URL(trimmed, ROUTE_BASE_URL)
+        : new URL('/' + trimmed, ROUTE_BASE_URL);
 
-  const legacyAnchorMatch = legacyAnchorPattern.exec(url);
-  const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;
+    const legacyAnchorMatch = legacyAnchorPattern.exec(url);
+    const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;
 
-  const legacyPathMatch = legacyPathPattern.exec(url);
+    const legacyPathMatch = legacyPathPattern.exec(url);
+    if (
+      legacyPathMatch?.pathname.groups.domain &&
+      !legacyPathMatch.pathname.groups.domain.endsWith('.html')
+    ) {
+      return {
+        target: normalizeTarget(legacyPathMatch.pathname.groups.target),
+        domain: legacyPathMatch.pathname.groups.domain,
+        member: legacyMember,
+      };
+    }
+
+    if (legacyMember) {
+      return { target: 'tot', domain: null, member: legacyMember };
+    }
+
+    const htm = hashTargetMemberPattern?.exec(url);
+    if (htm?.hash.groups.domain && htm.hash.groups.member) {
+      return {
+        target: normalizeTarget(htm.hash.groups.target),
+        domain: htm.hash.groups.domain,
+        member: htm.hash.groups.member,
+      };
+    }
+
+    const htd = hashTargetDomainPattern?.exec(url);
+    if (htd?.hash.groups.domain) {
+      return {
+        target: normalizeTarget(htd.hash.groups.target),
+        domain: htd.hash.groups.domain,
+        member: null,
+      };
+    }
+
+    const hto = hashTargetOnlyPattern?.exec(url);
+    if (hto?.hash.groups.target) {
+      return {
+        target: normalizeTarget(hto.hash.groups.target),
+        domain: null,
+        member: null,
+      };
+    }
+
+    const hm = hashMemberPattern?.exec(url);
+    if (hm?.hash.groups.domain && hm.hash.groups.member) {
+      return {
+        target: 'tot',
+        domain: hm.hash.groups.domain,
+        member: hm.hash.groups.member,
+      };
+    }
+
+    const hd = hashDomainPattern?.exec(url);
+    if (hd?.hash.groups.domain) {
+      return {
+        target: 'tot',
+        domain: hd.hash.groups.domain,
+        member: null,
+      };
+    }
+
+    const qm = queryMemberPattern?.exec(url);
+    if (qm?.search.groups.domain && qm.search.groups.member) {
+      return {
+        target: 'tot',
+        domain: qm.search.groups.domain,
+        member: qm.search.groups.member,
+      };
+    }
+
+    const qd = queryDomainPattern?.exec(url);
+    if (qd?.search.groups.domain) {
+      return {
+        target: 'tot',
+        domain: qd.search.groups.domain,
+        member: null,
+      };
+    }
+
+    return { target: 'tot', domain: null, member: null };
+  }
+
+  // Fallback string/regex parser for environments without URLPattern
+  const isolatedLegacyMatch = trimmed.match(/^#(?:method|type|event)-([\w-]+)$/);
+  if (isolatedLegacyMatch) {
+    return { target: 'tot', domain: null, member: isolatedLegacyMatch[1] };
+  }
+
+  const hashIndex = trimmed.indexOf('#');
+  let pathPart = '';
+  let hashPart = '';
+
+  if (hashIndex !== -1) {
+    pathPart = trimmed.slice(0, hashIndex);
+    hashPart = trimmed.slice(hashIndex + 1);
+  } else if (trimmed.startsWith('?')) {
+    hashPart = trimmed.slice(1);
+  } else {
+    pathPart = trimmed;
+  }
+
+  const legacyHashMatch = hashPart.match(/^(?:method|type|event)-([\w-]+)$/);
+  const legacyMember = legacyHashMatch ? legacyHashMatch[1] : null;
+
+  const pathSegments = pathPart
+    .split('/')
+    .map((s) => s.trim())
+    .filter((s) => Boolean(s) && !s.endsWith('.html'));
+
   if (
-    legacyPathMatch?.pathname.groups.domain &&
-    !legacyPathMatch.pathname.groups.domain.endsWith('.html')
+    pathSegments.length > 0 &&
+    (pathSegments[0] === 'devtools-protocol' || pathSegments[0] === 'debugger-protocol-viewer')
   ) {
+    pathSegments.shift();
+  }
+
+  if (pathSegments.length > 0) {
+    /** @type {TargetKind} */
+    let target = 'tot';
+    let domain = null;
+
+    const targetIndex = pathSegments.findIndex((s) => TARGET_MAP.has(s.toLowerCase()));
+    if (targetIndex !== -1) {
+      target = normalizeTarget(pathSegments[targetIndex]);
+      if (pathSegments.length > targetIndex + 1) {
+        domain = pathSegments[targetIndex + 1];
+      }
+    } else {
+      domain = pathSegments[0];
+    }
+
+    return { target, domain, member: legacyMember };
+  }
+
+  let cleanHash = hashPart;
+  if (cleanHash.startsWith('/')) cleanHash = cleanHash.slice(1);
+  if (!cleanHash) return { target: 'tot', domain: null, member: null };
+
+  /** @type {TargetKind} */
+  let target = 'tot';
+  let targetAndRest = cleanHash;
+
+  const slashIndex = cleanHash.indexOf('/');
+  if (slashIndex !== -1) {
+    const potentialTarget = cleanHash.slice(0, slashIndex).toLowerCase();
+    if (TARGET_MAP.has(potentialTarget)) {
+      target = normalizeTarget(potentialTarget);
+      targetAndRest = cleanHash.slice(slashIndex + 1);
+    }
+  } else if (TARGET_MAP.has(cleanHash.toLowerCase())) {
+    target = normalizeTarget(cleanHash);
+    targetAndRest = '';
+  }
+
+  targetAndRest = targetAndRest.replace(/\/+$/, '');
+  if (!targetAndRest) return { target, domain: null, member: null };
+
+  const dotIndex = targetAndRest.indexOf('.');
+  if (dotIndex !== -1) {
     return {
-      target: normalizeTarget(legacyPathMatch.pathname.groups.target),
-      domain: legacyPathMatch.pathname.groups.domain,
-      member: legacyMember,
+      target,
+      domain: targetAndRest.slice(0, dotIndex),
+      member: targetAndRest.slice(dotIndex + 1) || null,
     };
   }
 
-  if (legacyMember) {
-    return { target: 'tot', domain: null, member: legacyMember };
-  }
-
-  const htm = hashTargetMemberPattern.exec(url);
-  if (htm?.hash.groups.domain && htm.hash.groups.member) {
-    return {
-      target: normalizeTarget(htm.hash.groups.target),
-      domain: htm.hash.groups.domain,
-      member: htm.hash.groups.member,
-    };
-  }
-
-  const htd = hashTargetDomainPattern.exec(url);
-  if (htd?.hash.groups.domain) {
-    return {
-      target: normalizeTarget(htd.hash.groups.target),
-      domain: htd.hash.groups.domain,
-      member: null,
-    };
-  }
-
-  const hto = hashTargetOnlyPattern.exec(url);
-  if (hto?.hash.groups.target) {
-    return {
-      target: normalizeTarget(hto.hash.groups.target),
-      domain: null,
-      member: null,
-    };
-  }
-
-  const hm = hashMemberPattern.exec(url);
-  if (hm?.hash.groups.domain && hm.hash.groups.member) {
-    return {
-      target: 'tot',
-      domain: hm.hash.groups.domain,
-      member: hm.hash.groups.member,
-    };
-  }
-
-  const hd = hashDomainPattern.exec(url);
-  if (hd?.hash.groups.domain) {
-    return {
-      target: 'tot',
-      domain: hd.hash.groups.domain,
-      member: null,
-    };
-  }
-
-  const qm = queryMemberPattern.exec(url);
-  if (qm?.search.groups.domain && qm.search.groups.member) {
-    return {
-      target: 'tot',
-      domain: qm.search.groups.domain,
-      member: qm.search.groups.member,
-    };
-  }
-
-  const qd = queryDomainPattern.exec(url);
-  if (qd?.search.groups.domain) {
-    return {
-      target: 'tot',
-      domain: qd.search.groups.domain,
-      member: null,
-    };
-  }
-
-  return { target: 'tot', domain: null, member: null };
+  return { target, domain: targetAndRest, member: null };
 }
 
 /**
