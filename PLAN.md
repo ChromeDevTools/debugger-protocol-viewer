@@ -1,137 +1,148 @@
-# Plan: Adopt Vanilla Protocol Viewer & Retire Legacy SSG Stack
+# Plan: Adopt Vanilla Protocol Viewer & Modernize CDP Viewer
 
 ## 1. Executive Summary & Goals
 
-This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.github.io/devtools-protocol`](https://chromedevtools.github.io/devtools-protocol/)) from its legacy static site generator (11ty + Handlebars + Rollup + Lit-HTML) to a zero-dependency client-side viewer based on Andrey Lushnikov's [vanilla-protocol-viewer](https://github.com/aslushnikov/vanilla-protocol-viewer) ([`vanilla.aslushnikov.com`](https://vanilla.aslushnikov.com/)).
+This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.github.io/devtools-protocol`](https://chromedevtools.github.io/devtools-protocol/)) from its legacy static site generator (11ty + Handlebars + Rollup + Lit-HTML) to a zero-dependency, ultra-fast client-side viewer based on Andrey Lushnikov's [vanilla-protocol-viewer](https://github.com/aslushnikov/vanilla-protocol-viewer) ([`vanilla.aslushnikov.com`](https://vanilla.aslushnikov.com/)).
 
 ### Core Objectives
-1. **Eliminate Domain Maintenance**: Protocol domains, methods, events, and types are rendered dynamically from protocol JSON at runtime. No manual updates to navigation templates (e.g. [`shell.hbs`](./pages/_includes/shell.hbs)) required when new domains land in Chromium.
-2. **Native Type Cross-References**: Resolve [#183](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/183) by providing dynamic reverse-dependency listings ("Used by: ...") for all protocol types.
-3. **Instant Search**: Replace precomputed index lookups with instant client-side fuzzy searching on keypress.
+1. **Eliminate Maintenance Overhead**: Protocol domains, methods, events, and types are rendered dynamically from protocol JSON at runtime. No manual edits to navigation templates (e.g. [`shell.hbs`](./pages/_includes/shell.hbs)) required when new domains land in Chromium.
+2. **Native Type Cross-References**: Resolve [#183](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/183) by generating dynamic reverse-dependency listings ("Used by: ...") for all protocol types.
+3. **Instant Search & High Information Density**: Instant client-side fuzzy searching on keypress or `/`, paired with DevTools-inspired UI ergonomics.
 4. **Preserve External Permalinks (Zero Broken Links)**: Ensure 100% backward compatibility for millions of existing links across StackOverflow, Chromium bugs, and developer docs using a dual-layer strategy:
-   - **Static Stubs (`/tot/<Domain>/index.html`)**: Return HTTP 200 OK for search engine crawlers and preserve legacy hash fragments (`#method-foo`, `#type-bar`).
+   - **Static Stubs (`/tot/<Domain>/index.html`)**: Return HTTP 200 OK for crawlers and preserve legacy hash fragments (`#method-foo`, `#type-bar`).
    - **Wildcard Fallback (`/404.html`)**: Catches older version paths (`/1-3/*`, `/1-2/*`, `/v8/*`) and unexpected deep links.
-5. **Protocol Fetching**: Per decision, protocol JSON fetching will continue to use jsdelivr (`https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/...`) for now.
-6. **Continuous Autonomous Verification**: Implement automated test suites (build invariant checks + headless browser end-to-end tests) to validate routing, rendering, search, and URL compatibility autonomously.
+5. **Preserve `stable` & `v8` Targets ("Buried but Accessible")**: Keep `stable` (1.3 release) and `v8` (Node inspector domains) functional via a clean header dropdown without cluttering the primary tip-of-tree workflow.
+6. **Responsive Mobile Navigation**: Implement an off-canvas slide-out domain drawer on mobile (`< 800px`) rather than hiding the sidebar entirely.
+7. **Isomorphic Core & Autonomous Validation**: Isolate protocol indexing and routing into an isomorphic module (`protocol-model.js`) unit-tested in `node:test` in **<50ms**, complemented by automated headless browser end-to-end tests.
 
 ---
 
-## 2. Architecture & Legacy URL Compatibility Strategy
+## 2. Information Architecture & Routing
 
-### URL Mapping Specification
+### URL Scheme Specification
 
-| Source Legacy URL Pattern | Target Destination | Handling Mechanism | HTTP Status |
+| Target View | Canonical Route | Legacy Input URL | Mapping Mechanism |
 | :--- | :--- | :--- | :--- |
-| `.../tot/Page/#method-navigate` | `.../?Page.navigate` | Pre-generated `tot/Page/index.html` stub | **200 OK** |
-| `.../tot/Page/` | `.../?Page` | Pre-generated `tot/Page/index.html` stub | **200 OK** |
-| `.../tot/DOM/#type-Node` | `.../?DOM.Node` | Pre-generated `tot/DOM/index.html` stub | **200 OK** |
-| `.../tot/Network/#event-requestWillBeSent` | `.../?Network.requestWillBeSent` | Pre-generated `tot/Network/index.html` stub | **200 OK** |
-| `.../1-3/Page/#method-navigate` | `.../?Page.navigate` | Catch-all `404.html` | **404 -> Client Redirect** |
-| `.../?Page.navigate` | Native SPA route | Client-side Router in `main.js` | **200 OK** |
-
-### Stub Generation Mechanism
-During the build step (`npm run build`), a lightweight Node script reads the protocol domains and generates static directory stubs under `devtools-protocol/tot/<Domain>/index.html`. 
-
-Each stub runs an inline client script that reads `window.location.hash`, parses target elements (`#method-xyz`, `#type-abc`, `#event-def`), and redirects seamlessly via `location.replace(...)` to the canonical query format, preserving browser history semantics.
+| **Domain View** | `#/Page` | `/tot/Page/` | `tot/Page/index.html` stub ➔ `location.replace('#/Page')` |
+| **Command / Method** | `#/Page.navigate` | `/tot/Page/#method-navigate` | `tot/Page/index.html` stub reads `#method-navigate` ➔ `location.replace('#/Page.navigate')` |
+| **Event** | `#/Network.requestWillBeSent` | `/tot/Network/#event-requestWillBeSent` | `tot/Network/index.html` stub reads hash ➔ `location.replace('#/Network.requestWillBeSent')` |
+| **Type** | `#/DOM.Node` | `/tot/DOM/#type-Node` | `tot/DOM/index.html` stub reads hash ➔ `location.replace('#/DOM.Node')` |
+| **V8 Inspector** | `#/v8/Runtime.evaluate` | `/v8/Runtime/` | `404.html` catch-all ➔ `location.replace('#/v8/Runtime')` |
+| **Stable Protocol** | `#/stable/Page.navigate` | `/1-3/Page/#method-navigate` | `404.html` catch-all ➔ `location.replace('#/stable/Page.navigate')` |
 
 ---
 
-## 3. Autonomous Validation Techniques
+## 3. UI & UX Design Specifications
 
-To validate the viewer autonomously without manual browser verification, we define three complementary testing tiers:
+### 3.1 Header (44px DevTools Utility Bar)
+```text
++---------------------------------------------------------------------------------------------------------+
+| [⚙] DevTools Protocol  [tot ▾] [⚡Exp] |       [ 🔍 Search protocol...                 / ]       | [📖] [🐙] |
++---------------------------------------------------------------------------------------------------------+
+```
+- **Brand & Target**: Logo + title (`#/` home).
+- **Version Selector (`tot ▾`)**:
+  - `● tot (tip-of-tree)` *(Default)*
+  - `○ stable (1.3)`
+  - `○ v8 inspector`
+- **Experimental Toggle (`[⚡Exp]`)**: Checkbox pill visible in `tot` mode to toggle experimental APIs.
+- **Global Search**:
+  - Auto-focused by typing *any* character anywhere on the page, or pressing `/` or `Cmd+K`.
+  - Trailing `<kbd>/</kbd>` shortcut indicator.
+  - Interactive fuzzy search dropdown with keyboard navigation (`↑`/`↓`/`Enter`/`Esc`).
+- **External Links**: Crisp icon links for CDP Overview Docs and GitHub repository.
 
-### Tier 1: Build Output & Contract Invariant Tests (Fast Node.js Native Runner)
-Executed via `node --test`:
-- **Directory Structure Verification**: Ensures `devtools-protocol/` contains `index.html`, `404.html`, and `tot/<Domain>/index.html` stubs for every active protocol domain.
-- **Stub Integrity**: Confirms each stub contains valid redirect logic and does not leak undefined hashes.
-- **Asset Integrity**: Confirms critical client assets (`main.js`, `search.js`, `protocol_renderer.js`, `style.css`) exist, are non-empty, and contain no broken import references.
+### 3.2 Leftnav Sidebar & Mobile Drawer
+- **In-Sidebar Domain Filter**: Sticky 24px filter input (`Filter domains...`) at the top of the sidebar for quickly narrowing down the ~50 domains.
+- **Visual Badges**: Muted amber `[EXP]` badge for experimental domains.
+- **Mobile Responsive Drawer (`< 800px`)**:
+  - Hamburger icon `[☰]` in the header.
+  - Smooth off-canvas slide-out drawer (`transform: translateX(-100%)`) with backdrop overlay.
+  - Selecting any domain automatically closes the drawer and navigates to the target.
+
+### 3.3 Domain View & Sticky Sub-Navigation
+- **Sticky Domain Sub-Header**:
+  - Pinned directly below the main header during scroll:
+    `[ Methods (34) ]  [ Events (18) ]  [ Types (12) ]`
+  - Instant one-click smooth scrolling to section anchors.
+- **Cross-References ("Used by")**:
+  - Rendered beneath protocol types, listing every command, event, and type that references it (resolves #183).
+
+---
+
+## 4. Autonomous Validation Strategy
+
+### Tier 1: Isomorphic Core & Build Invariant Tests (`node:test`)
+- **Protocol Model Tests (`test/protocol-model.test.js`)**:
+  - Normalization of protocol JSON.
+  - Back-reference index generation ("Used by" correctness).
+  - Stabilization filter (stripping experimental items when toggled off).
+  - Route parser: parsing `#/Page.navigate`, `#/v8/Runtime`, and legacy hash strings into target actions.
+- **Stub Generator Tests (`test/stubs.test.js`)**:
+  - Verify every active protocol domain generates a `tot/<Domain>/index.html` stub.
+  - Verify stub redirect logic and hash parameter extraction.
+  - Verify `404.html` catch-all script syntax and routing rules.
 
 ### Tier 2: Headless Browser E2E Tests (Playwright / Puppeteer)
-Runs against a local static web server serving `devtools-protocol/`:
-- **Test Case 1: Legacy Hash Navigation**:
-  - Load `http://localhost:PORT/devtools-protocol/tot/Page/#method-navigate`
-  - Assert URL updates or resolves to `Page.navigate`.
-  - Assert the DOM contains the `#Page-navigate` section and that it is visible/focused in viewport.
-- **Test Case 2: Legacy Type Deep Link**:
-  - Load `http://localhost:PORT/devtools-protocol/tot/DOM/#type-Node`
-  - Assert DOM contains `DOM.Node` definition.
-- **Test Case 3: 404 Fallback for Historical Versions**:
-  - Load `http://localhost:PORT/devtools-protocol/1-3/Network/`
-  - Assert navigation resolves to the `Network` domain view via `404.html`.
-- **Test Case 4: Back-References / Cross-References ([#183](https://github.com/ChromeDevTools/debugger-protocol-viewer/issues/183))**:
-  - Navigate to `http://localhost:PORT/devtools-protocol/?Debugger.CallFrame`
-  - Assert presence of the `.references` or "Used by" list.
-  - Verify links within "Used by" point to dependent protocol types or methods.
-- **Test Case 5: Instant Search**:
-  - Load base viewer `http://localhost:PORT/devtools-protocol/`.
-  - Type `captureScreenshot` on the page.
-  - Assert search dropdown/overlay opens with `Page.captureScreenshot`.
-  - Trigger selection (click or Enter); assert route changes to `?Page.captureScreenshot`.
-- **Test Case 6: Experimental Domain Toggle**:
-  - Verify domains marked `experimental: true` toggle display when toggling the experimental setting.
-- **Test Case 7: Zero Uncaught Exceptions**:
-  - Monitor `page.on('pageerror')` and `page.on('console', msg => msg.type() === 'error')` across all test runs.
+- **Legacy URL Redirection**:
+  - Request `/tot/Page/#method-navigate` ➔ assert HTTP 200, URL becomes `#/Page.navigate`, `#Page-navigate` section visible.
+  - Request `/tot/DOM/#type-Node` ➔ assert HTTP 200, URL becomes `#/DOM.Node`, type definition rendered.
+  - Request `/1-3/Network/` ➔ assert 404 handler routes to `#/stable/Network`.
+- **Search Interactions**:
+  - Typing `captureScreenshot` from anywhere opens search overlay.
+  - Pressing `Enter` navigates to `#/Page.captureScreenshot`.
+- **Type Back-References**:
+  - Navigate to `#/Debugger.CallFrame` ➔ assert "Used by" section exists with clickable links.
+- **Experimental Toggle**:
+  - Toggling `[⚡Exp]` updates domain list and method visibility.
+- **Console & Network Health**:
+  - Zero uncaught page exceptions or console errors.
 
-### Tier 3: Upstream CI Contract Compatibility Check
-Simulate the deployment step executed by [`ChromeDevTools/devtools-protocol/.github/workflows/update.yml`](https://github.com/ChromeDevTools/devtools-protocol/blob/master/.github/workflows/update.yml):
-- Run `npm install && npm run prep && npm run build`
-- Validate that `devtools-protocol/` contains a valid deployable bundle matching GitHub Pages publishing requirements.
+### Tier 3: Upstream CI Pipeline Verification
+- Simulate [`ChromeDevTools/devtools-protocol/.github/workflows/update.yml`](https://github.com/ChromeDevTools/devtools-protocol/blob/master/.github/workflows/update.yml):
+  `npm install && npm run prep && npm run build && npm test`
+- Validate that `devtools-protocol/` contains the complete deployable bundle with `.nojekyll`.
 
 ---
 
-## 4. Phased Implementation Checklist
+## 5. Phased Implementation Checklist
 
-### Phase 1: Core Vanilla Viewer Integration
-- [ ] Initialize clean directory structure for the new client code (`src/` or top-level web assets).
-- [ ] Vendor core viewer assets from [`aslushnikov/vanilla-protocol-viewer`](https://github.com/aslushnikov/vanilla-protocol-viewer):
-  - `index.html`
-  - `main.js`
-  - `protocol_renderer.js`
-  - `search.js`
-  - `utilities.js`
-  - `style.css`
-  - SVG icons (`home.svg`, checkbox icons)
-- [ ] Configure protocol endpoints in `main.js` to load from jsdelivr (`ChromeDevTools/devtools-protocol@master`).
-- [ ] Test base viewer rendering locally with static file server.
+### Phase 1: Isomorphic Core & Base Viewer Adaptation
+- [ ] Create `src/protocol-model.js` isolating data normalization, back-reference computation, stabilization, and route parsing.
+- [ ] Add `test/protocol-model.test.js` using `node:test` to validate core logic in Node (<50ms).
+- [ ] Vendor and adapt core UI files from `vanilla-protocol-viewer`:
+  - `src/index.html`
+  - `src/main.js`
+  - `src/protocol_renderer.js`
+  - `src/search.js`
+  - `src/utilities.js`
+  - `src/style.css`
+  - SVG icons
+- [ ] Update `main.js` to use `#/Domain.member` hash routing and connect `protocol-model.js`.
+- [ ] Implement DevTools toolbar header with centered search, `<kbd>/</kbd>` shortcut, and external links.
 
-### Phase 2: URL Routing & Legacy Compatibility
-- [ ] Extend `Router` in `main.js` to handle:
-  - Query format: `?Domain` and `?Domain.member`
-  - Path format: `/tot/:domain`
-  - Anchor format: `#method-member`, `#type-member`, `#event-member`
-- [ ] Implement `scripts/generate-stubs.js`:
-  - Fetch or read protocol domains.
-  - Generate `tot/<Domain>/index.html` stubs with client redirect and hash retention.
-- [ ] Create `404.html` catch-all script:
-  - Parse `window.location.pathname` and `window.location.hash`.
-  - Extract domain and target; redirect via `location.replace(...)`.
-- [ ] Verify local redirect behavior across all legacy URL formats.
+### Phase 2: Multi-Target (tot, stable, v8) & UX Enhancements
+- [ ] Add version selector dropdown (`tot`, `stable`, `v8`).
+- [ ] Implement V8 Inspector view (loading `js_protocol.json` only).
+- [ ] Implement stable protocol view (stabilized `tot`).
+- [ ] Add in-sidebar domain filter (`Filter domains...`).
+- [ ] Add sticky in-domain sub-header (`Methods (N)`, `Events (N)`, `Types (N)`).
+- [ ] Implement responsive mobile drawer with hamburger button and overlay for `< 800px`.
 
-### Phase 3: Autonomous Testing Suite
-- [ ] Install test dependencies (e.g. lightweight headless browser runner).
-- [ ] Add `test/invariants.test.js`:
-  - Validate stub generation completeness.
-  - Validate HTML and redirect syntax.
-- [ ] Add `test/e2e.test.js`:
-  - Implement Headless Browser test cases (Legacy URLs, Search, Cross-references, Experimental toggle, Console errors).
-- [ ] Wire test suite into `npm test` script in [`package.json`](./package.json).
+### Phase 3: Legacy URL Preservation & Build Pipeline
+- [ ] Create `scripts/generate-stubs.js` to output `tot/<Domain>/index.html` stubs.
+- [ ] Create `src/404.html` wildcard redirect handler.
+- [ ] Configure `npm run build` to assemble the full site into `devtools-protocol/`.
+- [ ] Update `npm run prep` to remain compatible with upstream CI.
+- [ ] Ensure `.nojekyll` is copied to `devtools-protocol/`.
 
-### Phase 4: Build & Deployment Workflow Integration
-- [ ] Update `npm run build` script in [`package.json`](./package.json) to output to `devtools-protocol/`.
-- [ ] Update or simplify `npm run prep` if needed while maintaining CLI signature expected by [devtools-protocol update.yml](https://github.com/ChromeDevTools/devtools-protocol/blob/master/.github/workflows/update.yml).
-- [ ] Test the exact CI build sequence locally: `npm install && npm run prep && npm run build && npm test`.
-- [ ] Ensure `.nojekyll` is preserved in `devtools-protocol/` output to prevent GitHub Pages from ignoring files.
+### Phase 4: Autonomous Testing Suite
+- [ ] Add `test/stubs.test.js` to assert build output and stub integrity.
+- [ ] Add `test/e2e.test.js` (headless browser) covering legacy redirect, search, cross-references, and mobile drawer.
+- [ ] Wire test scripts into `npm test` (`node --test test/*.test.js`).
 
 ### Phase 5: Cleanup & Deprecation
-- [ ] Remove obsolete SSG dependencies from [`package.json`](./package.json):
-  - `@11ty/eleventy`
-  - `@11ty/eleventy-plugin-handlebars`
-  - `marked`
-  - `liquidjs`
-  - `rollup` and plugins (if bundling is unnecessary for vanilla JS)
-- [ ] Remove deprecated scripts and templates:
-  - [`generate-sidenav-html.cjs`](./generate-sidenav-html.cjs)
-  - [`make-stable-protocol.cjs`](./make-stable-protocol.cjs)
-  - [`create-search-index.cjs`](./create-search-index.cjs)
-  - [`pages/`](./pages/) directory (once legacy SSG is fully decommissioned)
-- [ ] Update [`readme.md`](./readme.md) documentation to reflect the modern vanilla viewer architecture and local dev workflow.
+- [ ] Remove obsolete SSG dependencies (`@11ty/eleventy`, `marked`, `rollup`, `liquidjs`, etc.).
+- [ ] Delete dead scripts (`generate-sidenav-html.cjs`, `make-stable-protocol.cjs`, `create-search-index.cjs`).
+- [ ] Remove `pages/` directory.
+- [ ] Update `readme.md` with modern setup instructions and local development guide.
