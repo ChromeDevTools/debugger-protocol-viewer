@@ -137,16 +137,20 @@ class ProtocolRenderer {
     let renderTypeEntry = (type, container) =>
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, type.id, container);
 
-    if (domain.commands.length)
-      ProtocolRenderer.renderTableOfContentsSection("Methods", "method", domain.commands, renderEventOrMethodEntry, container, isDomainExp);
-    if (domain.events.length)
-      ProtocolRenderer.renderTableOfContentsSection("Events", "event", domain.events, renderEventOrMethodEntry, container, isDomainExp);
-    if (domain.types.length)
-      ProtocolRenderer.renderTableOfContentsSection("Types", "type", domain.types, renderTypeEntry, container, isDomainExp);
+    if (domain.commands.length || domain.events.length || domain.types.length) {
+      let toc = container.div('domain-toc');
+      if (domain.commands.length)
+        ProtocolRenderer.renderTableOfContentsSection("Methods", "method", domain.commands, renderEventOrMethodEntry, toc, isDomainExp);
+      if (domain.events.length)
+        ProtocolRenderer.renderTableOfContentsSection("Events", "event", domain.events, renderEventOrMethodEntry, toc, isDomainExp);
+      if (domain.types.length)
+        ProtocolRenderer.renderTableOfContentsSection("Types", "type", domain.types, renderTypeEntry, toc, isDomainExp);
+    }
   }
 
   static renderTableOfContentsSection(sectionName, sectionType, entries, renderer, container, isDomainExp = false) {
-    let title = container.el('h4', 'toc-section-heading');
+    let sectionWrapper = container.div('toc-section');
+    let title = sectionWrapper.el('h4', 'toc-section-heading');
     let badge = title.span(`entity-icon entity-icon-${sectionType}`);
     badge.textContent = sectionType;
     let link = title.a(`#${sectionName.toLowerCase()}`, `${sectionName} (${entries.length})`);
@@ -160,7 +164,7 @@ class ProtocolRenderer {
       }
     });
 
-    let section = container.div('toc-entries');
+    let section = sectionWrapper.div('toc-entries');
     for (let entry of entries) {
       let row = renderer(entry, section);
       ProtocolRenderer.applyMarks(entry, row, isDomainExp);
