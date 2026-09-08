@@ -289,6 +289,9 @@ class App {
       if (anchor.hostname && anchor.hostname !== window.location.hostname) return;
 
       const href = anchor.getAttribute('href');
+      if (anchor.classList.contains('section-jump-pill') || href === '#methods' || href === '#events' || href === '#types') {
+        return;
+      }
       if (href && (href.startsWith('#') || href.startsWith('?'))) {
         event.preventDefault();
         this._closeDrawer();

@@ -19,12 +19,53 @@ class ProtocolRenderer {
       let description = header.el('p');
       description.textContent = domain.description || '';
       ProtocolRenderer.applyMarks(domain, title);
+
+      if (domain.commands.length || domain.events.length || domain.types.length) {
+        let jumpBar = header.div('section-jump-bar');
+        const scrollToSection = (sectionId) => {
+          let target = result.querySelector('#' + sectionId) || document.getElementById(sectionId);
+          if (target) {
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+          }
+        };
+
+        if (domain.commands.length) {
+          let pill = jumpBar.a('#methods', `Methods (${domain.commands.length})`);
+          pill.className = 'section-jump-pill';
+          pill.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            scrollToSection('methods');
+          });
+        }
+        if (domain.events.length) {
+          let pill = jumpBar.a('#events', `Events (${domain.events.length})`);
+          pill.className = 'section-jump-pill';
+          pill.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            scrollToSection('events');
+          });
+        }
+        if (domain.types.length) {
+          let pill = jumpBar.a('#types', `Types (${domain.types.length})`);
+          pill.className = 'section-jump-pill';
+          pill.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            scrollToSection('types');
+          });
+        }
+      }
+
       ProtocolRenderer.renderTableOfContents(domain, header);
     }
 
     if (domain.commands.length) {
       // Render methods.
       let title = main.el('h3');
+      title.id = 'methods';
       title.textContent = 'Methods';
       let container = main.box('box');
       for (let method of domain.commands)
@@ -34,6 +75,7 @@ class ProtocolRenderer {
     if (domain.events.length) {
       // Render events.
       let title = main.el('h3');
+      title.id = 'events';
       title.textContent = 'Events';
       let container = main.box('box');
       for (let event of domain.events)
@@ -43,6 +85,7 @@ class ProtocolRenderer {
     if (domain.types.length) {
       // Render types.
       let title = main.el('h3');
+      title.id = 'types';
       title.textContent = 'Types';
       let container = main.box('box');
       for (let type of domain.types)

@@ -400,6 +400,42 @@ code {
   justify-content: center;
 }
 
+/* In-Domain Section Quick Jump Bar */
+.section-jump-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 16px 0;
+}
+
+.section-jump-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+}
+
+.section-jump-pill:hover {
+  background-color: var(--color-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+#methods, #events, #types {
+  scroll-margin-top: calc(var(--header-height) + 16px);
+}
+
 .method-domain {
   color: var(--color-text-secondary);
 }
