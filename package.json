@@ -21,12 +21,11 @@
     "test:e2e": "node --test test/e2e.test.js",
     "preflight": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm test",
     "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 .",
-    "deploy": "pnpm run build && gh-pages -d devtools-protocol --dotfiles -m 'deploy: update gh-pages to modern viewer'"
+    "deploy": "pnpm run build && node scripts/deploy-gh-pages.js"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
     "devtools-protocol": "^0.0.1693794",
-    "gh-pages": "^6.3.0",
     "oxfmt": "^0.67.0",
     "oxlint": "^1.82.0",
     "statikk": "^3.1.0",
