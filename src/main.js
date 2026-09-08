@@ -11,10 +11,11 @@ import {
   formatRoute,
   normalizeTarget,
 } from './protocol-model.js';
-import { $, $$ } from './bling.js';
+import { $ } from './bling.js';
 
 const PROTOCOL_URLS = {
-  browser: 'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/browser_protocol.json',
+  browser:
+    'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/browser_protocol.json',
   js: 'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/js_protocol.json',
 };
 
@@ -150,7 +151,8 @@ class App {
         localFallback = 'data/v8.json';
       }
       const localRes = await fetch(localFallback);
-      if (!localRes.ok) throw new Error(`Fallback failed (${localFallback}): HTTP ${localRes.status}`);
+      if (!localRes.ok)
+        throw new Error(`Fallback failed (${localFallback}): HTTP ${localRes.status}`);
       return await localRes.json();
     }
   }
@@ -231,7 +233,7 @@ class App {
     if (this._drawerBackdrop) {
       this._drawerBackdrop.addEventListener('click', () => this._closeDrawer());
     }
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && document.body.classList.contains('drawer-open')) {
         this._closeDrawer();
       }
@@ -255,7 +257,8 @@ class App {
 
         this._currentTarget = nextTarget;
         const targetStore = this._targetStore[this._currentTarget] || this._targetStore.tot;
-        const domainExistsInTarget = this._currentDomain && targetStore.all.has(this._currentDomain);
+        const domainExistsInTarget =
+          this._currentDomain && targetStore.all.has(this._currentDomain);
         const domain = domainExistsInTarget ? this._currentDomain : null;
 
         const newRoute = formatRoute({
@@ -269,24 +272,33 @@ class App {
   }
 
   _setupLinkInterception() {
-    document.body.addEventListener('click', event => {
-      const target = /** @type {HTMLElement|null} */ (event.target);
-      if (!target) return;
-      const anchor = target.closest('a');
-      if (!anchor) return;
-      if (anchor.target === '_blank') return;
-      if (anchor.hostname && anchor.hostname !== window.location.hostname) return;
+    document.body.addEventListener(
+      'click',
+      (event) => {
+        const target = /** @type {HTMLElement|null} */ (event.target);
+        if (!target) return;
+        const anchor = target.closest('a');
+        if (!anchor) return;
+        if (anchor.target === '_blank') return;
+        if (anchor.hostname && anchor.hostname !== window.location.hostname) return;
 
-      const href = anchor.getAttribute('href');
-      if (anchor.classList.contains('section-jump-pill') || href === '#methods' || href === '#events' || href === '#types') {
-        return;
-      }
-      if (href && (href.startsWith('#') || href.startsWith('?'))) {
-        event.preventDefault();
-        this._closeDrawer();
-        this.navigate(href);
-      }
-    }, false);
+        const href = anchor.getAttribute('href');
+        if (
+          anchor.classList.contains('section-jump-pill') ||
+          href === '#methods' ||
+          href === '#events' ||
+          href === '#types'
+        ) {
+          return;
+        }
+        if (href && (href.startsWith('#') || href.startsWith('?'))) {
+          event.preventDefault();
+          this._closeDrawer();
+          this.navigate(href);
+        }
+      },
+      false,
+    );
   }
 
   _setupRoutingEvents() {
@@ -370,13 +382,13 @@ class App {
     }
 
     if (!this._activeDomains.has(domain)) {
-      this._contentElement.appendChild(
-        renderError(`Unknown domain: ${domain}.`)
-      );
+      this._contentElement.appendChild(renderError(`Unknown domain: ${domain}.`));
       return;
     }
 
-    const currentLink = /** @type {HTMLElement|null} */ (this._domainListElement.querySelector(`[data-domain='${domain}']`));
+    const currentLink = /** @type {HTMLElement|null} */ (
+      this._domainListElement.querySelector(`[data-domain='${domain}']`)
+    );
     if (currentLink) {
       currentLink.classList.add('active-link');
       if (typeof currentLink.scrollIntoViewIfNeeded === 'function') {

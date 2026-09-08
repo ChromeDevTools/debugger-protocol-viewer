@@ -1,27 +1,39 @@
 {
   "name": "debugger-protocol-viewer",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com/chromedevtools/debugger-protocol-viewer.git",
-  "author": "Google Inc.",
-  "license": "Apache2",
   "private": true,
+  "license": "Apache2",
+  "author": "Google Inc.",
+  "repository": "git@github.com/chromedevtools/debugger-protocol-viewer.git",
   "type": "module",
-  "devDependencies": {
-    "@types/node": "^26.5.0",
-    "devtools-protocol": "^0.0.1693794",
-    "rimraf": "^6.0.1",
-    "statikk": "^2.2.2",
-    "typescript": "^7.0.2"
-  },
+  "main": "index.js",
   "scripts": {
     "build": "node scripts/generate-stubs.js",
     "prep": "bash prep-tot-protocol-files.sh",
     "typecheck": "tsc --noEmit",
-    "test": "npm run typecheck && node --test test/*.test.js",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "test": "pnpm run typecheck && pnpm run test:node",
+    "test:node": "node --test test/**/*.test.js",
     "test:unit": "node --test test/protocol-model.test.js",
     "test:stubs": "node --test test/stubs.test.js",
     "test:e2e": "node --test test/e2e.test.js",
+    "preflight": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm test",
     "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 ."
-  }
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.0",
+    "devtools-protocol": "^0.0.1693794",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "rimraf": "^6.0.1",
+    "statikk": "^2.2.2",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@10.30.3"
 }

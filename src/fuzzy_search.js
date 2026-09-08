@@ -59,8 +59,7 @@ class FuzzySearch {
    * @return {number}
    */
   score(data, matchIndexes) {
-    if (!data || !this._query || !this._filterRegex.test(data))
-      return 0;
+    if (!data || !this._query || !this._filterRegex.test(data)) return 0;
     var n = this._query.length;
     var m = data.length;
     if (!this._score || this._score.length < n * m) {
@@ -78,15 +77,14 @@ class FuzzySearch {
         var pickCharScore = this._match(this._query, data, i, j, consecutiveMatch);
         if (pickCharScore && prevCharScore + pickCharScore >= skipCharScore) {
           sequence[i * m + j] = consecutiveMatch + 1;
-          score[i * m + j] = (prevCharScore + pickCharScore);
+          score[i * m + j] = prevCharScore + pickCharScore;
         } else {
           sequence[i * m + j] = 0;
           score[i * m + j] = skipCharScore;
         }
       }
     }
-    if (matchIndexes)
-      this._restoreMatchIndexes(sequence, n, m, matchIndexes);
+    if (matchIndexes) this._restoreMatchIndexes(sequence, n, m, matchIndexes);
     return score[n * m - 1];
   }
 
@@ -97,7 +95,8 @@ class FuzzySearch {
    * @param {!Array<number>} out
    */
   _restoreMatchIndexes(sequence, n, m, out) {
-    var i = n - 1, j = m - 1;
+    var i = n - 1,
+      j = m - 1;
     while (i >= 0 && j >= 0) {
       switch (sequence[i * m + j]) {
         case 0:
@@ -122,13 +121,11 @@ class FuzzySearch {
    * @return {number}
    */
   _match(query, data, i, j, consecutiveMatch) {
-    if (this._queryUpperCase[i] !== this._dataUpperCase[j])
-      return 0;
+    if (this._queryUpperCase[i] !== this._dataUpperCase[j]) return 0;
 
     var isCapsMatch = query[i] === data[j] && query[i] === this._queryUpperCase[i];
     var score = 10;
-    if (isCapsMatch)
-      score += 6;
+    if (isCapsMatch) score += 6;
     score += consecutiveMatch * 4;
     return score;
   }
@@ -142,13 +139,14 @@ class FuzzySearch {
     let regexString = '';
     for (let i = 0; i < query.length; ++i) {
       let c = query.charAt(i);
-      if (toEscape.indexOf(c) !== -1)
-        c = '\\' + c;
-      if (i)
-        regexString += '[^\\0' + c + ']*';
+      if (toEscape.indexOf(c) !== -1) c = '\\' + c;
+      if (i) regexString += '[^\\0' + c + ']*';
       regexString += c;
     }
     return new RegExp(regexString, 'i');
   }
-};
+}
 
+if (typeof window !== 'undefined') {
+  /** @type {any} */ (window).FuzzySearch = FuzzySearch;
+}
