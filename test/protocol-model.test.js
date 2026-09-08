@@ -273,6 +273,24 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       expected: { target: 'tot', domain: 'Network', member: null },
     },
 
+    // Deep links and landing anchors
+    {
+      input: '#/endpoints',
+      expected: { target: 'tot', domain: 'endpoints', member: null },
+    },
+    {
+      input: '#endpoints',
+      expected: { target: 'tot', domain: 'endpoints', member: null },
+    },
+    {
+      input: '#/faq',
+      expected: { target: 'tot', domain: 'faq', member: null },
+    },
+    {
+      input: '#faq',
+      expected: { target: 'tot', domain: 'faq', member: null },
+    },
+
     // Root and empty routes
     {
       input: '#/',

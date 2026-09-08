@@ -394,6 +394,30 @@ figure.screenshot img {
   border-left-color: #ffcc8099;
 }
 
+.sidebar-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 6px 0;
+}
+
+#sidebar .domain-link.sidebar-meta-link {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  border-left-width: 0;
+  padding: 0 16px;
+  min-height: 34px;
+}
+
+#sidebar .domain-link.sidebar-meta-link:hover {
+  color: var(--color-text);
+}
+
+#sidebar .domain-link.sidebar-meta-link.active-link {
+  color: #1a237e;
+  font-weight: 600;
+  background-color: rgb(225, 245, 254);
+}
+
 /* ==========================================================================
    Main Content Area & Material Elevation Cards
    ========================================================================== */

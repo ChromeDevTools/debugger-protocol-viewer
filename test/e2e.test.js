@@ -572,6 +572,33 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         `Expected h4 scroll-margin-top to be 66px, got "${h4ScrollMarginTop}"`,
       );
     });
+
+    await t.test('11. HTTP Endpoints deep linking (#/endpoints) and sidebar link', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
+
+      const hasSidebarLink = await client.pollEvaluate(
+        'Boolean(document.querySelector(".domain-link.sidebar-meta-link[data-domain=\'endpoints\']"))',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(hasSidebarLink, true, 'Expected HTTP Endpoints link in sidebar');
+
+      await page.Page.navigate({ url: `${baseUrl}/#/endpoints` });
+
+      const hasEndpointsHeading = await client.pollEvaluate(
+        'Boolean(document.getElementById("endpoints"))',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(hasEndpointsHeading, true, 'Expected #endpoints heading in DOM');
+
+      const isEndpointsActive = await client.pollEvaluate(
+        'document.querySelector(".domain-link.sidebar-meta-link[data-domain=\'endpoints\']")?.classList.contains("active-link")',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(isEndpointsActive, true, 'Expected HTTP Endpoints link to be active');
+    });
   } finally {
     if (targetId && browserApi) {
       try {

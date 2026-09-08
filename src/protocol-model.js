@@ -306,6 +306,7 @@ const hashTargetOnlyPattern = hasURLPattern
 
 const hashMemberPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain.:member' }) : null;
 const hashDomainPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain{/}*' }) : null;
+const hashDirectPattern = hasURLPattern ? new URLPattern({ hash: '#:domain' }) : null;
 
 const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:member' }) : null;
 const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
@@ -400,6 +401,15 @@ export function parseRoute(routeString) {
       return {
         target: 'tot',
         domain: hd.hash.groups.domain,
+        member: null,
+      };
+    }
+
+    const hdir = hashDirectPattern?.exec(url);
+    if (hdir?.hash.groups.domain) {
+      return {
+        target: 'tot',
+        domain: hdir.hash.groups.domain,
         member: null,
       };
     }

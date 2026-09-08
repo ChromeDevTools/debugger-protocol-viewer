@@ -362,6 +362,13 @@ export class App {
     }
 
     if (!this._activeDomains.has(domain)) {
+      const landingId = domain === 'http-endpoints' ? 'endpoints' : domain;
+      const landingTemplate = /** @type {HTMLTemplateElement|null} */ ($('#landing'));
+      if (landingTemplate && landingTemplate.content.querySelector('#' + landingId)) {
+        this._currentDomain = domain;
+        this._onNavigateHome(landingId);
+        return;
+      }
       this._contentElement.appendChild(renderError(`Unknown domain: ${domain}.`));
       return;
     }
@@ -397,7 +404,10 @@ export class App {
     this.focusContent();
   }
 
-  _onNavigateHome() {
+  /**
+   * @param {string|null} [anchorId]
+   */
+  _onNavigateHome(anchorId = null) {
     document.title = 'DevTools Protocol Viewer';
     this._search.setDefaultValue('');
     this._search.cancelSearch();
@@ -412,7 +422,28 @@ export class App {
     if (template) {
       const clone = template.content.cloneNode(true);
       this._contentElement.appendChild(clone);
+
+      if (anchorId) {
+        const targetId = anchorId === 'http-endpoints' ? 'endpoints' : anchorId;
+        const targetElem = this._contentElement.querySelector('#' + targetId);
+        if (targetElem) {
+          targetElem.scrollIntoView();
+          const activeLink = /** @type {HTMLElement|null} */ (
+            this._domainListElement.querySelector(
+              `[data-domain='${anchorId}'], [data-domain='${targetId}']`,
+            )
+          );
+          if (activeLink) {
+            activeLink.classList.add('active-link');
+            if (typeof activeLink.scrollIntoViewIfNeeded === 'function') {
+              activeLink.scrollIntoViewIfNeeded(false);
+            }
+          }
+        }
+      }
     }
+
+    this.focusContent();
   }
 
   /**
@@ -432,6 +463,20 @@ export class App {
 
       this._domainListElement.appendChild(link);
     }
+
+    const divider = document.createElement('div');
+    divider.className = 'sidebar-divider';
+    this._domainListElement.appendChild(divider);
+
+    const endpointsLink = document.createElement('a');
+    endpointsLink.href = '#/endpoints';
+    endpointsLink.className = 'domain-link sidebar-meta-link';
+    endpointsLink.dataset.domain = 'endpoints';
+    endpointsLink.textContent = 'HTTP Endpoints';
+    if (this._currentDomain === 'endpoints' || this._currentDomain === 'http-endpoints') {
+      endpointsLink.classList.add('active-link');
+    }
+    this._domainListElement.appendChild(endpointsLink);
   }
 }
 
