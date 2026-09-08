@@ -9,15 +9,7 @@
     "browser": true,
     "builtin": true
   },
-  "globals": {
-    "E": "readonly",
-    "FuzzySearch": "readonly",
-    "Search": "readonly",
-    "ProtocolRenderer": "readonly",
-    "app": "readonly",
-    "$": "readonly",
-    "$$": "readonly"
-  },
+
   "ignorePatterns": ["data/**", "devtools-protocol/**", "node_modules/**"],
   "rules": {
     "no-unused-vars": [

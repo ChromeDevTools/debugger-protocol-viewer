@@ -85,7 +85,6 @@ test('generateStubs: end-to-end stub generation in temporary directory', async (
         'protocol_renderer.js',
         'search.js',
         'fuzzy_search.js',
-        'utilities.js',
         'style.css',
         'favicons',
         'images',

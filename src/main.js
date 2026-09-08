@@ -12,6 +12,8 @@ import {
   normalizeTarget,
 } from './protocol-model.js';
 import { $ } from './bling.js';
+import { ProtocolRenderer } from './protocol_renderer.js';
+import { Search } from './search.js';
 
 const PROTOCOL_URLS = {
   browser:
@@ -89,7 +91,8 @@ class App {
       v8: { all: new Map(), stable: new Map() },
     };
 
-    this._search = new Search(searchElement, searchResultsElement);
+    this.formatRef = this.formatRef.bind(this);
+    this._search = new Search(searchElement, searchResultsElement, this);
 
     this._setupDrawerEvents();
     this._setupSidebarEvents();
@@ -397,6 +400,7 @@ class App {
     }
 
     const domainObject = this._activeDomains.get(domain);
+    if (!domainObject) return;
     const rendered = ProtocolRenderer.renderDomain(domainObject);
     if (rendered) {
       this._contentElement.appendChild(rendered);
@@ -461,9 +465,15 @@ class App {
  * @returns {Element}
  */
 function renderError(error) {
-  const main = E.box();
-  const box = main.div('box-content');
-  box.el('h2', '', 'Error');
-  box.p('', error);
+  const main = document.createElement('div');
+  main.className = 'box';
+  const box = document.createElement('div');
+  box.className = 'box-content';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'Error';
+  const p = document.createElement('p');
+  p.textContent = error;
+  box.append(h2, p);
+  main.appendChild(box);
   return main;
 }

@@ -33,7 +33,7 @@ const REGEX_SPECIAL_CHARACTERS = '^[]{}()\\.^$*+?|-,';
 /**
  * @unrestricted
  */
-class FuzzySearch {
+export class FuzzySearch {
   /**
    * @param {string} query
    */
@@ -145,8 +145,4 @@ class FuzzySearch {
     }
     return new RegExp(regexString, 'i');
   }
-}
-
-if (typeof window !== 'undefined') {
-  /** @type {any} */ (window).FuzzySearch = FuzzySearch;
 }

@@ -4,7 +4,49 @@
 
 /** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolType, ProtocolCommand, ProtocolEvent, ProtocolParameter, ProtocolBackReference } from './types.d.ts' */
 
-class ProtocolRenderer {
+/**
+ * @param {string} tag
+ * @param {string} [className]
+ * @param {string} [textContent]
+ * @returns {HTMLElement}
+ */
+function el(tag, className = '', textContent = '') {
+  const elem = document.createElement(tag);
+  if (className) elem.className = className;
+  if (textContent) elem.textContent = textContent;
+  return elem;
+}
+
+/**
+ * @param {string} [className]
+ * @param {string} [textContent]
+ * @returns {HTMLDivElement}
+ */
+function div(className = '', textContent = '') {
+  return /** @type {HTMLDivElement} */ (el('div', className, textContent));
+}
+
+/**
+ * @param {string} [className]
+ * @param {string} [textContent]
+ * @returns {HTMLSpanElement}
+ */
+function span(className = '', textContent = '') {
+  return /** @type {HTMLSpanElement} */ (el('span', className, textContent));
+}
+
+/**
+ * @param {string} href
+ * @param {string} [text]
+ * @returns {HTMLAnchorElement}
+ */
+function a(href, text = '') {
+  const link = /** @type {HTMLAnchorElement} */ (el('a', '', text || href));
+  link.href = href;
+  return link;
+}
+
+export class ProtocolRenderer {
   /**
    * @param {string} domainName
    * @param {string} domainEntry
@@ -19,8 +61,9 @@ class ProtocolRenderer {
    * @returns {HTMLElement}
    */
   static renderDomain(domain) {
-    let result = E.div();
-    let main = result.div('domain');
+    let result = div();
+    let main = div('domain');
+    result.appendChild(main);
     if (domain.experimental) {
       main.classList.add('domain-experimental');
     }
@@ -28,13 +71,16 @@ class ProtocolRenderer {
       main.classList.add('domain-deprecated');
     }
     ProtocolRenderer.applyBackground(domain, main);
-    result.div('domain-padding', '\u2606');
+    result.appendChild(div('domain-padding', '\u2606'));
     {
       // Render domain main description.
-      let container = main.div('box');
-      let header = container.div('box-content');
+      let container = div('box');
+      main.appendChild(container);
+      let header = div('box-content');
+      container.appendChild(header);
 
-      let title = header.el('h2');
+      let title = el('h2');
+      header.appendChild(title);
       title.textContent = domain.domain;
       ProtocolRenderer.applyMarks(domain, title, false);
 
@@ -47,30 +93,36 @@ class ProtocolRenderer {
 
     if (domain.commands && domain.commands.length) {
       // Render methods.
-      let title = main.el('h3');
+      let title = el('h3');
       title.id = 'methods';
       title.textContent = 'Methods';
-      let container = main.box('box');
+      main.appendChild(title);
+      let container = div('box');
+      main.appendChild(container);
       for (let method of domain.commands)
         container.appendChild(ProtocolRenderer.renderEventOrMethod(domain, method, false));
     }
 
     if (domain.events && domain.events.length) {
       // Render events.
-      let title = main.el('h3');
+      let title = el('h3');
       title.id = 'events';
       title.textContent = 'Events';
-      let container = main.box('box');
+      main.appendChild(title);
+      let container = div('box');
+      main.appendChild(container);
       for (let event of domain.events)
         container.appendChild(ProtocolRenderer.renderEventOrMethod(domain, event, true));
     }
 
     if (domain.types && domain.types.length) {
       // Render types.
-      let title = main.el('h3');
+      let title = el('h3');
       title.id = 'types';
       title.textContent = 'Types';
-      let container = main.box('box');
+      main.appendChild(title);
+      let container = div('box');
+      main.appendChild(container);
       for (let type of domain.types)
         container.appendChild(ProtocolRenderer.renderDomainType(domain, type));
     }
@@ -84,7 +136,7 @@ class ProtocolRenderer {
    * @returns {HTMLElement}
    */
   static renderDomainType(domain, type) {
-    let main = E.div('type');
+    let main = div('type');
     ProtocolRenderer.applyBackground(type, main);
     ProtocolRenderer.applyBackground(domain, main);
     main.appendChild(
@@ -97,24 +149,27 @@ class ProtocolRenderer {
       ),
     );
     if (type.type) {
-      const p = main.el('p', '', 'Type: ');
-      const span = p.span('parameter-type');
-      span.textContent = type.type;
+      const p = el('p', '', 'Type: ');
+      const spanEl = span('parameter-type', type.type);
+      p.appendChild(spanEl);
+      main.appendChild(p);
     }
     if (type.description) {
       ProtocolRenderer.renderDescription(type.description, main);
     }
     if (type.properties && type.properties.length) {
       // Render parameters.
-      let title = main.el('h5');
-      title.textContent = 'Properties';
-      let container = main.el('dl', 'parameter-list');
+      let title = el('h5', '', 'Properties');
+      main.appendChild(title);
+      let container = el('dl', 'parameter-list');
+      main.appendChild(container);
       for (let parameter of type.properties)
         container.appendChild(ProtocolRenderer.renderParameter(domain, parameter));
     }
     if (type.enum) {
-      main.el('h5', '', 'Allowed values');
-      const p = main.el('p', 'enum-values');
+      main.appendChild(el('h5', '', 'Allowed values'));
+      const p = el('p', 'enum-values');
+      main.appendChild(p);
       type.enum.forEach((value, index) => {
         const code = document.createElement('code');
         code.textContent = value;
@@ -126,12 +181,15 @@ class ProtocolRenderer {
     }
     if (type.referencedBy && type.referencedBy.length) {
       // Render back references.
-      let title = main.el('h5');
-      title.textContent = 'Referenced By';
-      let container = main.el('ul', 'references-list');
+      let title = el('h5', '', 'Referenced By');
+      main.appendChild(title);
+      let container = el('ul', 'references-list');
+      main.appendChild(container);
       for (let reference of type.referencedBy) {
-        const li = container.el('li');
-        const referenceIcon = li.span('reference-icon');
+        const li = el('li');
+        container.appendChild(li);
+        const referenceIcon = span('reference-icon');
+        li.appendChild(referenceIcon);
         if (reference.type === 'command')
           referenceIcon.appendChild(ProtocolRenderer.renderMethodIcon());
         else if (reference.type === 'event')
@@ -156,7 +214,7 @@ class ProtocolRenderer {
    */
   static renderTitle(domainName, title, item, titleType, isParentDomainExperimental = false) {
     // Render heading.
-    let heading = E.el('h4', 'monospace text-overflow');
+    let heading = el('h4', 'monospace text-overflow');
 
     if (titleType === 'type') heading.appendChild(ProtocolRenderer.renderTypeIcon());
     else if (titleType === 'event') heading.appendChild(ProtocolRenderer.renderEventIcon());
@@ -164,13 +222,13 @@ class ProtocolRenderer {
 
     let id = `${domainName}.${title}`;
     heading.setAttribute('id', ProtocolRenderer.titleId(domainName, title));
-    const domainSpan = heading.span('method-domain');
-    domainSpan.textContent = domainName + '.';
-    const nameSpan = heading.span('method-name');
-    nameSpan.textContent = title;
+    const domainSpan = span('method-domain', domainName + '.');
+    heading.appendChild(domainSpan);
+    const nameSpan = span('method-name', title);
+    heading.appendChild(nameSpan);
     ProtocolRenderer.applyMarks(item, heading, isParentDomainExperimental);
     let href = window.app && window.app.formatRef ? window.app.formatRef(id) : '#/' + id;
-    const link = E.a(href, '#');
+    const link = a(href, '#');
     link.classList.add('title-link');
     heading.appendChild(link);
     return heading;
@@ -200,7 +258,8 @@ class ProtocolRenderer {
       (domain.events && domain.events.length) ||
       (domain.types && domain.types.length)
     ) {
-      let toc = container.div('domain-toc');
+      let toc = div('domain-toc');
+      container.appendChild(toc);
       if (domain.commands && domain.commands.length)
         ProtocolRenderer.renderTableOfContentsSection(
           'Methods',
@@ -248,11 +307,16 @@ class ProtocolRenderer {
     container,
     isDomainExp = false,
   ) {
-    let sectionWrapper = container.div('toc-section');
-    let title = sectionWrapper.el('h4', 'toc-section-heading');
-    let badge = title.span(`entity-icon entity-icon-${sectionType}`);
-    badge.textContent = sectionType.charAt(0).toUpperCase() + sectionType.slice(1);
-    let link = E.a(`#${sectionName.toLowerCase()}`, `${sectionName} (${entries.length})`);
+    let sectionWrapper = div('toc-section');
+    container.appendChild(sectionWrapper);
+    let title = el('h4', 'toc-section-heading');
+    sectionWrapper.appendChild(title);
+    let badge = span(
+      `entity-icon entity-icon-${sectionType}`,
+      sectionType.charAt(0).toUpperCase() + sectionType.slice(1),
+    );
+    title.appendChild(badge);
+    let link = a(`#${sectionName.toLowerCase()}`, `${sectionName} (${entries.length})`);
     link.className = 'toc-section-link';
     link.addEventListener('click', (event) => {
       event.preventDefault();
@@ -265,7 +329,8 @@ class ProtocolRenderer {
     });
     title.appendChild(link);
 
-    let section = sectionWrapper.div('toc-entries');
+    let section = div('toc-entries');
+    sectionWrapper.appendChild(section);
     for (let entry of entries) {
       let row = renderer(entry, section);
       ProtocolRenderer.applyMarks(entry, row, isDomainExp);
@@ -280,7 +345,8 @@ class ProtocolRenderer {
    * @returns {HTMLElement}
    */
   static renderTableOfContentsEntry(domainName, name, container) {
-    let row = container.div('toc-link');
+    let row = div('toc-link');
+    container.appendChild(row);
     let id = `${domainName}.${name}`;
     let link = ProtocolRenderer.renderRef(id);
     link.classList.add('monospace');
@@ -295,7 +361,7 @@ class ProtocolRenderer {
    * @returns {HTMLElement}
    */
   static renderEventOrMethod(domain, method, isEvent) {
-    let main = E.div('method');
+    let main = div('method');
     ProtocolRenderer.applyBackground(method, main);
     ProtocolRenderer.applyBackground(domain, main);
     main.appendChild(
@@ -312,18 +378,20 @@ class ProtocolRenderer {
     }
     if (method.parameters && method.parameters.length) {
       // Render parameters.
-      let title = main.el('h5');
-      title.textContent = 'Parameters';
-      let container = main.el('dl', 'parameter-list');
+      let title = el('h5', '', 'Parameters');
+      main.appendChild(title);
+      let container = el('dl', 'parameter-list');
+      main.appendChild(container);
       for (let parameter of method.parameters)
         container.appendChild(ProtocolRenderer.renderParameter(domain, parameter));
     }
     const command = /** @type {ProtocolCommand} */ (method);
     if (command.returns && command.returns.length) {
       // Render return values.
-      let title = main.el('h5');
-      title.textContent = 'RETURN OBJECT';
-      let container = main.el('dl', 'parameter-list');
+      let title = el('h5', '', 'RETURN OBJECT');
+      main.appendChild(title);
+      let container = el('dl', 'parameter-list');
+      main.appendChild(container);
       for (let parameter of command.returns)
         container.appendChild(ProtocolRenderer.renderParameter(domain, parameter));
     }
@@ -339,17 +407,20 @@ class ProtocolRenderer {
     let main = document.createDocumentFragment();
     {
       // Render parameter name.
-      let name = main.div('parameter-name monospace');
+      let name = div('parameter-name monospace');
+      main.appendChild(name);
       ProtocolRenderer.applyBackground(parameter, name);
       if (parameter.optional) name.classList.add('optional');
       name.textContent = parameter.name || '';
     }
     {
       // Render parameter value.
-      let container = main.vbox('parameter-value');
+      let container = div('vbox parameter-value');
+      main.appendChild(container);
       ProtocolRenderer.applyBackground(parameter, container);
       container.appendChild(ProtocolRenderer.renderTypeLink(domain, parameter));
-      let description = container.span('parameter-description');
+      let description = span('parameter-description');
+      container.appendChild(description);
       let descriptions = [];
       if (parameter.description) descriptions.push(parameter.description);
       ProtocolRenderer.renderTextWithCode(descriptions.join(' '), description);
@@ -377,20 +448,20 @@ class ProtocolRenderer {
     const primitiveTypes = new Set(['string', 'integer', 'boolean', 'number', 'object', 'any']);
 
     if (parameter.type && primitiveTypes.has(parameter.type))
-      return E.span('parameter-type', parameter.type);
+      return span('parameter-type', parameter.type);
     if (parameter.$ref) {
       let $ref = parameter.$ref;
       if (!$ref.includes('.')) $ref = domain.domain + '.' + parameter.$ref;
       return ProtocolRenderer.renderRef($ref);
     }
     if (parameter.type === 'array' && parameter.items) {
-      let generic = E.span('parameter-type');
+      let generic = span('parameter-type');
       generic.appendChild(document.createTextNode('array [ '));
       generic.appendChild(ProtocolRenderer.renderTypeLink(domain, parameter.items));
       generic.appendChild(document.createTextNode(' ]'));
       return generic;
     }
-    return E.el('span', 'parameter-type', '<TYPE>');
+    return el('span', 'parameter-type', '<TYPE>');
   }
 
   /**
@@ -398,12 +469,12 @@ class ProtocolRenderer {
    * @returns {HTMLAnchorElement}
    */
   static renderRef($ref) {
-    let a = E.a(
+    let aLink = a(
       window.app && window.app.formatRef ? window.app.formatRef($ref) : '#/' + $ref,
       $ref,
     );
-    a.className = 'parameter-type';
-    return a;
+    aLink.className = 'parameter-type';
+    return aLink;
   }
 
   /**
@@ -427,18 +498,18 @@ class ProtocolRenderer {
       if (isParentDomainExperimental) {
         return;
       }
-      let e = element.span('experimental', 'exp');
+      let e = span('experimental', 'exp');
       e.title = 'Experimental';
       element.appendChild(e);
     } else if (item.deprecated) {
-      let e = element.span('deprecated', 'deprecated');
+      let e = span('deprecated', 'deprecated');
       e.title = 'Deprecated, will be removed';
       element.appendChild(e);
     }
   }
 
   static renderMethodIcon() {
-    let icon = E.span('entity-icon');
+    let icon = span('entity-icon');
     icon.textContent = 'Method';
     icon.title = 'Method';
     icon.classList.add('entity-icon-method');
@@ -446,7 +517,7 @@ class ProtocolRenderer {
   }
 
   static renderTypeIcon() {
-    let icon = E.span('entity-icon');
+    let icon = span('entity-icon');
     icon.textContent = 'Type';
     icon.title = 'Type';
     icon.classList.add('entity-icon-type');
@@ -454,7 +525,7 @@ class ProtocolRenderer {
   }
 
   static renderEventIcon() {
-    let icon = E.span('entity-icon');
+    let icon = span('entity-icon');
     icon.textContent = 'Event';
     icon.title = 'Event';
     icon.classList.add('entity-icon-event');
@@ -496,8 +567,4 @@ class ProtocolRenderer {
       parentElement.appendChild(p);
     }
   }
-}
-
-if (typeof window !== 'undefined') {
-  /** @type {any} */ (window).ProtocolRenderer = ProtocolRenderer;
 }

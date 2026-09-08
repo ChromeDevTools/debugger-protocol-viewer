@@ -4,6 +4,9 @@
 
 /** @import { ProtocolDomain } from './types.d.ts' */
 
+import { FuzzySearch } from './fuzzy_search.js';
+import { ProtocolRenderer } from './protocol_renderer.js';
+
 // Number of search results to render immediately.
 const SEARCH_RENDER_COUNT = 50;
 
@@ -20,15 +23,17 @@ class SearchItem {
    * @param {string} domainEntry
    * @param {symbol} itemType
    * @param {string} [description]
+   * @param {(ref: string) => string} [formatRef]
    */
-  constructor(domainName, domainEntry, itemType, description) {
+  constructor(domainName, domainEntry, itemType, description, formatRef) {
     this.domainName = domainName;
     this.domainEntry = domainEntry;
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
-    this.route =
-      window.app && window.app.formatRef ? window.app.formatRef(this.title) : '#/' + this.title;
+    const refFormatter =
+      formatRef || (typeof window !== 'undefined' && /** @type {any} */ (window).app?.formatRef);
+    this.route = refFormatter ? refFormatter(this.title) : '#/' + this.title;
   }
 }
 
@@ -45,12 +50,14 @@ class SearchResult {
   }
 }
 
-class Search {
+export class Search {
   /**
    * @param {Element} searchHeader
    * @param {Element} resultsElement
+   * @param {{ navigate?: (route: string) => void, formatRef?: (ref: string) => string, focusContent?: () => void }} [app]
    */
-  constructor(searchHeader, resultsElement) {
+  constructor(searchHeader, resultsElement, app) {
+    this._app = app;
     const input =
       searchHeader.tagName === 'INPUT'
         ? searchHeader
@@ -125,8 +132,9 @@ class Search {
         event.preventDefault();
         event.stopPropagation();
         this.cancelSearch();
-        if (window.app && window.app.navigate && searchItem.__route)
-          window.app.navigate(searchItem.__route);
+        const navigate =
+          this._app?.navigate || (typeof window !== 'undefined' && window.app?.navigate);
+        if (navigate && searchItem.__route) navigate(searchItem.__route);
         return;
       }
     });
@@ -138,6 +146,7 @@ class Search {
   setDomains(domains) {
     this._domainNames.clear();
     this._items = [];
+    const formatRef = this._app?.formatRef;
     for (var domain of domains) {
       this._domainNames.add(domain.domain.toLowerCase());
       for (var command of domain.commands || []) {
@@ -146,6 +155,7 @@ class Search {
           command.name,
           SearchItemType.Method,
           command.description,
+          formatRef,
         );
         this._items.push(item);
       }
@@ -155,11 +165,18 @@ class Search {
           event.name,
           SearchItemType.Event,
           event.description,
+          formatRef,
         );
         this._items.push(item);
       }
       for (var type of domain.types || []) {
-        let item = new SearchItem(domain.domain, type.id, SearchItemType.Type, type.description);
+        let item = new SearchItem(
+          domain.domain,
+          type.id,
+          SearchItemType.Type,
+          type.description,
+          formatRef,
+        );
         this._items.push(item);
       }
     }
@@ -169,7 +186,8 @@ class Search {
     this._searchInput.blur();
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'none');
     this._searchInput.value = this._defaultValue;
-    if (window.app && window.app.focusContent) window.app.focusContent();
+    if (this._app?.focusContent) this._app.focusContent();
+    else if (typeof window !== 'undefined' && window.app?.focusContent) window.app.focusContent();
   }
 
   /**
@@ -199,8 +217,9 @@ class Search {
   }
 
   _addNavigateHomeItem() {
-    let main = E.hbox('search-item', 'Navigate Home');
-    main.classList.add('custom-search-result');
+    let main = document.createElement('div');
+    main.className = 'hbox search-item custom-search-result';
+    main.textContent = 'Navigate Home';
     /** @type {any} */ (main).__route = '#/';
     this._resultsElement.appendChild(main);
   }
@@ -212,9 +231,9 @@ class Search {
   _addAllResultsButtonIfNeeded(results) {
     let remainingResults = results.length - SEARCH_RENDER_COUNT;
     if (remainingResults <= 0) return;
-    let main = E.hbox('search-item', `Show Remaining ${remainingResults} Results...`);
-    main.classList.add('custom-search-result');
-    main.classList.add('monospace');
+    let main = document.createElement('div');
+    main.className = 'hbox search-item custom-search-result monospace';
+    main.textContent = `Show Remaining ${remainingResults} Results...`;
     main.addEventListener(
       'click',
       (event) => {
@@ -238,8 +257,12 @@ class Search {
    */
   _renderMessage(text) {
     this._resultsElement.textContent = '';
-    const box = this._resultsElement.box('search-results-message');
-    box.el('h4', '', text);
+    const box = document.createElement('div');
+    box.className = 'box search-results-message';
+    const h4 = document.createElement('h4');
+    h4.textContent = text;
+    box.appendChild(h4);
+    this._resultsElement.appendChild(box);
   }
 
   /**
@@ -336,9 +359,11 @@ class Search {
  */
 function renderSearchResult(searchResult) {
   let item = searchResult.item;
-  let main = E.hbox('search-item');
-  let icon = main.el('span');
-  icon.classList.add('search-item-icon');
+  let main = document.createElement('div');
+  main.className = 'hbox search-item';
+  let icon = document.createElement('span');
+  icon.className = 'search-item-icon';
+  main.appendChild(icon);
   // Render icon
   if (item.type === SearchItemType.Method) {
     icon.appendChild(ProtocolRenderer.renderMethodIcon());
@@ -349,9 +374,15 @@ function renderSearchResult(searchResult) {
   }
   {
     // Render Name and Description
-    let container = main.div('search-item-main');
-    let p1 = container.el('div', 'search-item-title monospace');
-    let domainElement = p1.span('search-item-title-domain');
+    let container = document.createElement('div');
+    container.className = 'search-item-main';
+    main.appendChild(container);
+    let p1 = document.createElement('div');
+    p1.className = 'search-item-title monospace';
+    container.appendChild(p1);
+    let domainElement = document.createElement('span');
+    domainElement.className = 'search-item-title-domain';
+    p1.appendChild(domainElement);
     domainElement.appendChild(
       renderTextWithMatches(item.title, searchResult.matches, 0, item.domainName.length + 1),
     );
@@ -363,8 +394,10 @@ function renderSearchResult(searchResult) {
         item.title.length,
       ),
     );
-    let p2 = container.el('div', 'search-item-description');
+    let p2 = document.createElement('div');
+    p2.className = 'search-item-description';
     p2.textContent = item.description;
+    container.appendChild(p2);
   }
   /** @type {any} */ (main).__route = item.route;
   return main;
@@ -378,7 +411,7 @@ function renderSearchResult(searchResult) {
  * @returns {Node}
  */
 function renderTextWithMatches(text, matches, fromIndex, toIndex) {
-  if (!matches.length) return E.textNode(text.substring(fromIndex, toIndex));
+  if (!matches.length) return document.createTextNode(text.substring(fromIndex, toIndex));
   let result = document.createDocumentFragment();
   let insideMatch = false;
   let currentIndex = fromIndex;
@@ -400,11 +433,14 @@ function renderTextWithMatches(text, matches, fromIndex, toIndex) {
    */
   function add(from, to, isHighlight) {
     if (to === from) return;
+    const chunk = text.substring(from, to);
     if (isHighlight) {
-      const span = result.span('search-highlight');
-      span.textContent = text.substring(from, to);
+      const span = document.createElement('span');
+      span.className = 'search-highlight';
+      span.textContent = chunk;
+      result.appendChild(span);
     } else {
-      result.appendChild(E.textNode(text.substring(from, to)));
+      result.appendChild(document.createTextNode(chunk));
     }
   }
 }
@@ -413,7 +449,3 @@ function renderTextWithMatches(text, matches, fromIndex, toIndex) {
 /** @type {any} */ (Search).ItemType = SearchItemType;
 /** @type {any} */ (Search).Item = SearchItem;
 /** @type {any} */ (Search).SearchResult = SearchResult;
-
-if (typeof window !== 'undefined') {
-  /** @type {any} */ (window).Search = Search;
-}

@@ -1,5 +1,17 @@
 export type { Protocol } from 'devtools-protocol';
+import type { IProtocol, Protocol as ProtocolSchema } from './protocol-schema.d.ts';
 
+export type { IProtocol } from './protocol-schema.d.ts';
+
+export type ProtocolCommand = ProtocolSchema.Command;
+export type ProtocolEvent = ProtocolSchema.Event;
+
+export interface ProtocolBackReference {
+  type: 'command' | 'event' | 'type';
+  name: string;
+}
+
+/** Flattened protocol parameter / property for viewer traversal */
 export interface ProtocolParameter {
   name?: string;
   type?: string;
@@ -10,31 +22,10 @@ export interface ProtocolParameter {
   deprecated?: boolean;
   items?: ProtocolParameter;
   enum?: string[];
+  properties?: ProtocolParameter[];
 }
 
-export interface ProtocolCommand {
-  name: string;
-  description?: string;
-  experimental?: boolean;
-  deprecated?: boolean;
-  parameters?: ProtocolParameter[];
-  returns?: ProtocolParameter[];
-  redirect?: string;
-}
-
-export interface ProtocolEvent {
-  name: string;
-  description?: string;
-  experimental?: boolean;
-  deprecated?: boolean;
-  parameters?: ProtocolParameter[];
-}
-
-export interface ProtocolBackReference {
-  type: 'command' | 'event' | 'type';
-  name: string;
-}
-
+/** Flattened domain type representation including runtime back-references */
 export interface ProtocolType {
   id: string;
   type?: string;
@@ -65,12 +56,12 @@ export interface NormalizedProtocolDomain extends ProtocolDomain {
 }
 
 export interface ProtocolRoot {
-  version?: { major: string; minor: string };
+  version?: ProtocolSchema.Version;
   domains: ProtocolDomain[];
 }
 
 export interface NormalizedProtocolRoot {
-  version?: { major: string; minor: string };
+  version?: ProtocolSchema.Version;
   domains: NormalizedProtocolDomain[];
 }
 
@@ -80,18 +71,4 @@ export interface RouteInfo {
   target: TargetKind;
   domain: string | null;
   member: string | null;
-}
-
-export interface EHelper {
-  el(name: string, className?: string, textContent?: string): HTMLElement;
-  textNode(text: string): Text;
-  div(className?: string, textContent?: string): HTMLDivElement;
-  span(className?: string, textContent?: string): HTMLSpanElement;
-  p(className?: string, textContent?: string): HTMLParagraphElement;
-  box(className?: string, textContent?: string): HTMLDivElement;
-  hbox(className?: string, textContent?: string): HTMLDivElement;
-  vbox(className?: string, textContent?: string): HTMLDivElement;
-  strong(text: string): HTMLElement;
-  code(text: string): HTMLElement;
-  a(href: string, text?: string): HTMLAnchorElement;
 }
