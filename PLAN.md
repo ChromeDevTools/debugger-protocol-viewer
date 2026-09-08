@@ -112,9 +112,9 @@ This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.g
 ## 5. Phased Implementation Checklist
 
 ### Phase 1: Isomorphic Core & Base Viewer Adaptation
-- [ ] Create `src/protocol-model.js` isolating data normalization, back-reference computation, stabilization, and route parsing.
-- [ ] Add `test/protocol-model.test.js` using `node:test` to validate core logic in Node (<50ms).
-- [ ] Vendor and adapt core UI files from `vanilla-protocol-viewer`:
+- [x] Create `src/protocol-model.js` isolating data normalization, back-reference computation, stabilization, and route parsing.
+- [x] Add `test/protocol-model.test.js` using `node:test` to validate core logic in Node (<50ms).
+- [x] Vendor and adapt core UI files from `vanilla-protocol-viewer`:
   - `src/index.html`
   - `src/main.js`
   - `src/protocol_renderer.js`
@@ -122,31 +122,31 @@ This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.g
   - `src/utilities.js`
   - `src/style.css`
   - SVG icons
-- [ ] Update `main.js` to use `#/Domain.member` hash routing and connect `protocol-model.js`.
-- [ ] Implement DevTools toolbar header with centered search, `<kbd>/</kbd>` shortcut, and external links.
+- [x] Update `main.js` to use `#/Domain.member` hash routing and connect `protocol-model.js`.
+- [x] Implement DevTools toolbar header with centered search, `<kbd>/</kbd>` shortcut, and external links.
 
 ### Phase 2: Multi-Target (tot, stable, v8) & UX Enhancements
-- [ ] Add version selector dropdown (`tot`, `stable`, `v8`).
-- [ ] Implement V8 Inspector view (loading `js_protocol.json` only).
-- [ ] Implement stable protocol view (stabilized `tot`).
-- [ ] Add in-sidebar domain filter (`Filter domains...`).
-- [ ] Add sticky in-domain sub-header (`Methods (N)`, `Events (N)`, `Types (N)`).
-- [ ] Implement responsive mobile drawer with hamburger button and overlay for `< 800px`.
+- [x] Add version selector dropdown (`tot`, `stable`, `v8`).
+- [x] Implement V8 Inspector view (loading `js_protocol.json` only).
+- [x] Implement stable protocol view (stabilized `tot`).
+- [x] Add in-sidebar domain filter (`Filter domains...`).
+- [x] Add sticky in-domain sub-header (`Methods (N)`, `Events (N)`, `Types (N)`).
+- [x] Implement responsive mobile drawer with hamburger button and overlay for `< 800px`.
 
 ### Phase 3: Legacy URL Preservation & Build Pipeline
-- [ ] Create `scripts/generate-stubs.js` to output `tot/<Domain>/index.html` stubs.
-- [ ] Create `src/404.html` wildcard redirect handler.
-- [ ] Configure `npm run build` to assemble the full site into `devtools-protocol/`.
-- [ ] Update `npm run prep` to remain compatible with upstream CI.
-- [ ] Ensure `.nojekyll` is copied to `devtools-protocol/`.
+- [x] Create `scripts/generate-stubs.js` to output `tot/<Domain>/index.html` stubs.
+- [x] Create `src/404.html` wildcard redirect handler.
+- [x] Configure `npm run build` to assemble the full site into `devtools-protocol/`.
+- [x] Update `npm run prep` to remain compatible with upstream CI.
+- [x] Ensure `.nojekyll` is copied to `devtools-protocol/`.
 
 ### Phase 4: Autonomous Testing Suite
-- [ ] Add `test/stubs.test.js` to assert build output and stub integrity.
-- [ ] Add `test/e2e.test.js` (headless browser) covering legacy redirect, search, cross-references, and mobile drawer.
-- [ ] Wire test scripts into `npm test` (`node --test test/*.test.js`).
+- [x] Add `test/stubs.test.js` to assert build output and stub integrity.
+- [x] Add `test/e2e.test.js` (headless browser) covering legacy redirect, search, cross-references, and mobile drawer.
+- [x] Wire test scripts into `npm test` (`node --test test/*.test.js`).
 
 ### Phase 5: Cleanup & Deprecation
-- [ ] Remove obsolete SSG dependencies (`@11ty/eleventy`, `marked`, `rollup`, `liquidjs`, etc.).
-- [ ] Delete dead scripts (`generate-sidenav-html.cjs`, `make-stable-protocol.cjs`, `create-search-index.cjs`).
-- [ ] Remove `pages/` directory.
-- [ ] Update `readme.md` with modern setup instructions and local development guide.
+- [x] Remove obsolete SSG dependencies (`@11ty/eleventy`, `marked`, `rollup`, `liquidjs`, etc.).
+- [x] Deprecate dead manual scripts (`generate-sidenav-html.cjs`) and retain protocol prep files for CI.
+- [x] Maintain protocol data input files for offline/stub generation compatibility.
+- [x] Update `readme.md` with modern setup instructions and local development guide.

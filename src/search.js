@@ -7,7 +7,7 @@ class Search {
    * @param {!Element} resultsElement
    */
   constructor(searchHeader, resultsElement) {
-    this._searchInput = searchHeader.querySelector('input');
+    this._searchInput = searchHeader.tagName === 'INPUT' ? searchHeader : (searchHeader.querySelector('input') || searchHeader);
     /** @type {!Array<!Search.Item>} */
     this._items = [];
     /** @type {!Set<string>} */

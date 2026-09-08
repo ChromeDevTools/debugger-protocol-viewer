@@ -8,14 +8,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.2",
-    "@11ty/eleventy-plugin-handlebars": "^1.0.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-terser": "^0.4.4",
-    "lit-html": "^3.3.1",
-    "marked": "^16.1.2",
     "rimraf": "^6.0.1",
-    "rollup": "^4.46.2",
     "statikk": "^2.2.2"
   },
   "scripts": {
@@ -24,6 +17,7 @@
     "test": "node --test test/*.test.js",
     "test:unit": "node --test test/protocol-model.test.js",
     "test:stubs": "node --test test/stubs.test.js",
+    "test:e2e": "node --test test/e2e.test.js",
     "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 ."
   }
 }

@@ -39,7 +39,7 @@ export function generateDomainStub(domain) {
     (function() {
       var hash = window.location.hash || '';
       var member = '';
-      var match = hash.match(/^#(?:method|type|event)-([\w-]+)/);
+      var match = hash.match(/^#(?:method|type|event)-([\\w-]+)/);
       if (match) member = '.' + match[1];
       window.location.replace('../../#/${domainName}' + member);
     })();
