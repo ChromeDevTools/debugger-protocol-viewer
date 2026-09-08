@@ -292,8 +292,8 @@ class ProtocolRenderer {
       if (isParentDomainExperimental) {
         return;
       }
-      let e = element.span('experimental', 'experimental');
-      e.title = 'This may be changed, moved or removed';
+      let e = element.span('experimental', 'exp');
+      e.title = 'Experimental';
       element.appendChild(e);
     } else if (item.deprecated) {
       let e = element.span('deprecated', 'deprecated');
