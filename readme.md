@@ -28,7 +28,7 @@ This viewer is a **zero-dependency vanilla client-side application** built with 
 ### 1. Install Dependencies
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### 2. Build the Site
@@ -36,7 +36,7 @@ npm install
 Builds the production distribution in `devtools-protocol/` and generates backward-compatible static redirect stubs:
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 ### 3. Serve Locally
@@ -44,7 +44,7 @@ npm run build
 Start a local HTTP server to view the built site:
 
 ```sh
-npm run serve
+pnpm run serve
 ```
 
 Open [http://localhost:8696/devtools-protocol/](http://localhost:8696/devtools-protocol/) in your browser.
@@ -56,17 +56,20 @@ Open [http://localhost:8696/devtools-protocol/](http://localhost:8696/devtools-p
 The project uses Node's native test runner (`node:test`) for unit, stub integrity, and end-to-end testing:
 
 ```sh
-# Run the entire test suite (unit + stubs + autonomous headless Chrome CDP E2E)
-npm test
+# Run the entire preflight suite (typecheck, lint, format check, and tests)
+pnpm run preflight
+
+# Run the test suite
+pnpm test
 
 # Run isomorphic core unit tests (<50ms)
-npm run test:unit
+pnpm run test:unit
 
 # Run stub generator integrity tests
-npm run test:stubs
+pnpm run test:stubs
 
 # Run headless Chrome E2E browser tests via CDP
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 The E2E tests launch headless Chrome with `--remote-debugging-port=0` and communicate directly over native WebSockets via Chrome DevTools Protocol to validate route navigation, legacy hash redirects, target switching, search shortcuts, and in-domain quick jump pills.

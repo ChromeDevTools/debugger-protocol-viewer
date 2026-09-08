@@ -6,7 +6,6 @@
   "author": "Google Inc.",
   "repository": "git@github.com/chromedevtools/debugger-protocol-viewer.git",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "build": "node scripts/generate-stubs.js",
     "prep": "bash prep-tot-protocol-files.sh",
@@ -28,7 +27,6 @@
     "devtools-protocol": "^0.0.1693794",
     "oxfmt": "^0.67.0",
     "oxlint": "^1.82.0",
-    "rimraf": "^6.1.3",
     "statikk": "^3.1.0",
     "typescript": "^7.0.2"
   },

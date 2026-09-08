@@ -26,5 +26,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
 
-      - name: test
-        run: pnpm test
+      - name: preflight
+        run: pnpm run preflight
