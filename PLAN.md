@@ -37,15 +37,11 @@ This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.g
 ### 3.1 Header (44px DevTools Utility Bar)
 ```text
 +---------------------------------------------------------------------------------------------------------+
-| [⚙] DevTools Protocol  [tot ▾] [⚡Exp] |       [ 🔍 Search protocol...                 / ]       | [📖] [🐙] |
+| [⚙] DevTools Protocol  [⚡Exp]        |       [ 🔍 Search protocol...                 / ]       | [📖] [🐙] |
 +---------------------------------------------------------------------------------------------------------+
 ```
-- **Brand & Target**: Logo + title (`#/` home).
-- **Version Selector (`tot ▾`)**:
-  - `● tot (tip-of-tree)` *(Default)*
-  - `○ stable (1.3)`
-  - `○ v8 inspector`
-- **Experimental Toggle (`[⚡Exp]`)**: Checkbox pill visible in `tot` mode to toggle experimental APIs.
+- **Brand**: Logo + title (`#/` home).
+- **Experimental Toggle (`[⚡Exp]`)**: Checkbox pill to toggle experimental APIs on/off.
 - **Global Search**:
   - Auto-focused by typing *any* character anywhere on the page, or pressing `/` or `Cmd+K`.
   - Trailing `<kbd>/</kbd>` shortcut indicator.
@@ -55,6 +51,14 @@ This project transitions the Chrome DevTools Protocol Viewer ([`chromedevtools.g
 ### 3.2 Leftnav Sidebar & Mobile Drawer
 - **In-Sidebar Domain Filter**: Sticky 24px filter input (`Filter domains...`) at the top of the sidebar for quickly narrowing down the ~50 domains.
 - **Visual Badges**: Muted amber `[EXP]` badge for experimental domains.
+- **Target / Version Switcher (Bottom Pinned Footer)**:
+  - Positioned discretely at the bottom of the leftnav domain list:
+    `[ Protocol: Tip-of-Tree ▾ ]`
+  - Opens select/menu for:
+    - `● Tip-of-Tree (latest)` *(Default)*
+    - `○ Stable (1.3)`
+    - `○ V8 Inspector (Node.js)`
+  - Keeps legacy/specialized versions available without cluttering the top header.
 - **Mobile Responsive Drawer (`< 800px`)**:
   - Hamburger icon `[☰]` in the header.
   - Smooth off-canvas slide-out drawer (`transform: translateX(-100%)`) with backdrop overlay.
