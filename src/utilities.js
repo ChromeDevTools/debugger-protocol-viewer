@@ -1,4 +1,15 @@
+/**
+ * @fileoverview DOM Construction Helpers.
+ */
+
+/** @type {import('./types.d.ts').EHelper} */
 const E = {
+  /**
+   * @param {string} name
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLElement}
+   */
   el: function(name, className, textContent) {
     let e = document.createElement(name);
     if (className)
@@ -8,88 +19,122 @@ const E = {
     return e;
   },
 
+  /**
+   * @param {string} text
+   * @returns {Text}
+   */
   textNode: function(text) {
     return document.createTextNode(text);
   },
 
-  text: function(text, className, tagName = 'span') {
-    let e = E.el(tagName, className);
-    e.textContent = text;
-    return e;
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLDivElement}
+   */
+  div: function(className, textContent) {
+    return /** @type {HTMLDivElement} */ (E.el('div', className, textContent));
   },
 
-  div: function(...args) {
-    return E.el('div', ...args);
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLSpanElement}
+   */
+  span: function(className, textContent) {
+    return /** @type {HTMLSpanElement} */ (E.el('span', className, textContent));
   },
 
-  span: function(...args) {
-    return E.el('span', ...args);
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLParagraphElement}
+   */
+  p: function(className, textContent) {
+    return /** @type {HTMLParagraphElement} */ (E.el('p', className, textContent));
   },
 
-  p: function(...args) {
-    return E.el('p', ...args);
-  },
-
-  box: function(...args) {
-    let e = E.el('div', ...args);
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLDivElement}
+   */
+  box: function(className, textContent) {
+    let e = E.div(className, textContent);
     e.classList.add('box');
     return e;
   },
 
-  hbox: function(...args) {
-    let e = E.div(...args);
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLDivElement}
+   */
+  hbox: function(className, textContent) {
+    let e = E.div(className, textContent);
     e.classList.add('hbox');
     return e;
   },
 
-  vbox: function(...args) {
-    let e = E.div(...args);
+  /**
+   * @param {string} [className]
+   * @param {string} [textContent]
+   * @returns {HTMLDivElement}
+   */
+  vbox: function(className, textContent) {
+    let e = E.div(className, textContent);
     e.classList.add('vbox');
     return e;
   },
 
+  /**
+   * @param {string} text
+   * @returns {HTMLElement}
+   */
   strong: function(text) {
     return E.el('strong', '', text);
   },
 
+  /**
+   * @param {string} text
+   * @returns {HTMLElement}
+   */
   code: function(text) {
     return E.el('code', '', text);
   },
 
+  /**
+   * @param {string} href
+   * @param {string} [text]
+   * @returns {HTMLAnchorElement}
+   */
   a: function(href, text) {
-    let link = E.el('a', '', text || href);
+    let link = /** @type {HTMLAnchorElement} */ (E.el('a', '', text || href));
     link.href = href;
     return link;
   },
 };
 
-// Install helpers on Node.prototype
-for (let helper in E) {
-  Node.prototype[helper] = function(...args) {
-    let element = E[helper].apply(null, args);
-    this.appendChild(element);
-    return element;
-  };
+// Install element creation helpers on Node.prototype so chained calls work seamlessly
+for (const [helperName, fn] of Object.entries(E)) {
+  if (helperName === 'a') continue; // Do not collide with HTMLAnchorElement.prototype.text or custom a
+  Object.defineProperty(Node.prototype, helperName, {
+    /**
+     * @this {Node}
+     * @param {...any} args
+     * @returns {any}
+     */
+    value: function(...args) {
+      const element = /** @type {any} */ (fn)(...args);
+      this.appendChild(element);
+      return element;
+    },
+    writable: true,
+    configurable: true,
+    enumerable: false,
+  });
 }
 
-Event.prototype.consume = function() {
-    this.preventDefault();
-    this.stopPropagation();
-}
-
-Array.prototype.last = function() {
-  return this.length ? this[this.length - 1] : undefined;
-}
-
-Set.prototype.first = function() {
-  if (!this.size)
-    return null;
-  return this.values().next().value;
-}
-
-Element.prototype.selfOrParentWithClass = function(className) {
-  let node = this;
-  while (node && !node.classList.contains(className))
-    node = node.parentElement;
-  return node;
+if (typeof window !== 'undefined') {
+  /** @type {any} */ (window).E = E;
 }

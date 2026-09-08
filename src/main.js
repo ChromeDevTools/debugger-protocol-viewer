@@ -2,6 +2,7 @@
  * @fileoverview Main Application Controller for Chrome DevTools Protocol Viewer.
  */
 
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, TargetKind, RouteInfo } from './types.d.ts' */
 import {
   normalizeProtocol,
   stabilize,
@@ -10,6 +11,7 @@ import {
   formatRoute,
   normalizeTarget,
 } from './protocol-model.js';
+import { $, $$ } from './bling.js';
 
 const PROTOCOL_URLS = {
   browser: 'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/browser_protocol.json',
@@ -17,14 +19,14 @@ const PROTOCOL_URLS = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const sidebarElement = document.getElementById('sidebar');
-  const domainListElement = document.getElementById('domain-list');
-  const contentElement = document.getElementById('content');
-  const searchElement = document.getElementById('search');
-  const searchResultsElement = document.getElementById('sresults');
-  const targetSelector = document.getElementById('target-selector');
-  const drawerToggle = document.getElementById('drawer-toggle');
-  const drawerBackdrop = document.getElementById('drawer-backdrop');
+  const sidebarElement = $('#sidebar');
+  const domainListElement = $('#domain-list');
+  const contentElement = $('#content');
+  const searchElement = $('#search');
+  const searchResultsElement = $('#sresults');
+  const targetSelector = /** @type {HTMLSelectElement} */ ($('#target-selector'));
+  const drawerToggle = $('#drawer-toggle');
+  const drawerBackdrop = $('#drawer-backdrop');
 
   window.app = new App({
     sidebarElement,
@@ -38,9 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/**
+ * @typedef {Object} AppElements
+ * @property {HTMLElement} sidebarElement
+ * @property {HTMLElement} domainListElement
+ * @property {HTMLElement} contentElement
+ * @property {HTMLElement} searchElement
+ * @property {HTMLElement} searchResultsElement
+ * @property {HTMLSelectElement} targetSelector
+ * @property {HTMLElement} drawerToggle
+ * @property {HTMLElement} drawerBackdrop
+ */
+
 class App {
   /**
-   * @param {Object} elements
+   * @param {AppElements} elements
    */
   constructor({
     sidebarElement,
@@ -59,15 +73,15 @@ class App {
     this._drawerToggle = drawerToggle;
     this._drawerBackdrop = drawerBackdrop;
 
-    /** @type {'tot'|'stable'|'v8'} */
+    /** @type {TargetKind} */
     this._currentTarget = 'tot';
     /** @type {string|null} */
     this._currentDomain = null;
 
-    /** @type {Map<string, Object>} */
+    /** @type {Map<string, NormalizedProtocolDomain>} */
     this._activeDomains = new Map();
 
-    /** @type {Record<'tot'|'stable'|'v8', { all: Map<string, Object>, stable: Map<string, Object> }>} */
+    /** @type {Record<TargetKind, { all: Map<string, NormalizedProtocolDomain>, stable: Map<string, NormalizedProtocolDomain> }>} */
     this._targetStore = {
       tot: { all: new Map(), stable: new Map() },
       stable: { all: new Map(), stable: new Map() },
@@ -81,7 +95,18 @@ class App {
     this._setupLinkInterception();
     this._setupRoutingEvents();
 
-    this._initialize();
+    this.init();
+  }
+
+  /**
+   * @param {string} ref
+   * @returns {string}
+   */
+  formatRef(ref) {
+    if (this._currentTarget === 'tot') {
+      return `#/${ref}`;
+    }
+    return `#/${this._currentTarget}/${ref}`;
   }
 
   focusContent() {
@@ -89,52 +114,48 @@ class App {
   }
 
   /**
-   * Navigates to given route.
    * @param {string} route
    */
   navigate(route) {
-    if (window.location.hash !== route) {
-      window.location.hash = route;
+    let cleanRoute = route;
+    if (cleanRoute.startsWith('/tot/')) {
+      cleanRoute = cleanRoute.replace('/tot/', '#/');
+    } else if (cleanRoute.startsWith('/v8/')) {
+      cleanRoute = cleanRoute.replace('/v8/', '#/v8/');
+    } else if (cleanRoute.startsWith('/1-3/') || cleanRoute.startsWith('/1-2/')) {
+      cleanRoute = cleanRoute.replace(/^\/(?:1-3|1-2)\//, '#/stable/');
+    }
+
+    if (window.location.hash !== cleanRoute) {
+      window.location.hash = cleanRoute.startsWith('#') ? cleanRoute : '#' + cleanRoute;
     } else {
       this._onRoute();
     }
   }
 
   /**
-   * Formats a canonical route string given an entity ref (e.g. 'Page.navigate' or 'DOM').
-   * @param {string} ref
-   * @returns {string}
-   */
-  formatRef(ref) {
-    if (!ref) {
-      return formatRoute({ target: this._currentTarget, domain: null, member: null });
-    }
-    const dotIndex = ref.indexOf('.');
-    if (dotIndex !== -1) {
-      const domain = ref.slice(0, dotIndex);
-      const member = ref.slice(dotIndex + 1);
-      return formatRoute({ target: this._currentTarget, domain, member });
-    }
-    return formatRoute({ target: this._currentTarget, domain: ref, member: null });
-  }
-
-  /**
-   * Fetches a JSON file and fails fast if response is not ok.
+   * Fetches JSON protocol specification with fallback.
    * @param {string} url
-   * @returns {Promise<Object>}
+   * @returns {Promise<ProtocolRoot>}
    */
   async _fetchProtocolJson(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to load protocol from ${url}: ${response.status} ${response.statusText}`);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      return await res.json();
+    } catch (e) {
+      // Fallback: local protocol files served by the app
+      let localFallback = 'data/tot.json';
+      if (url.includes('js_protocol')) {
+        localFallback = 'data/v8.json';
+      }
+      const localRes = await fetch(localFallback);
+      if (!localRes.ok) throw new Error(`Fallback failed (${localFallback}): HTTP ${localRes.status}`);
+      return await localRes.json();
     }
-    return response.json();
   }
 
-  /**
-   * Loads protocols and prepares tot, stable, and v8 target datasets.
-   */
-  async _initialize() {
+  async init() {
     try {
       const [browserProto, jsProto] = await Promise.all([
         this._fetchProtocolJson(PROTOCOL_URLS.browser),
@@ -145,14 +166,15 @@ class App {
       this._onRoute();
     } catch (error) {
       this._contentElement.textContent = '';
-      this._contentElement.appendChild(renderError(`Initialization failed: ${error.message}`));
+      const message = error instanceof Error ? error.message : String(error);
+      this._contentElement.appendChild(renderError(`Initialization failed: ${message}`));
     }
   }
 
   /**
    * Prepares protocol datasets for tot, stable, and v8.
-   * @param {Object} browserProto
-   * @param {Object} jsProto
+   * @param {ProtocolRoot} browserProto
+   * @param {ProtocolRoot} jsProto
    */
   _prepareDatasets(browserProto, jsProto) {
     // 1. Tip-of-Tree (Tot)
@@ -163,8 +185,8 @@ class App {
     const normalizedTot = normalizeProtocol({ domains: combinedTotDomains });
     const totDomains = normalizedTot.domains;
     const stableTotDomains = totDomains
-      .filter(domain => !domain.experimental)
-      .map(domain => stabilize(domain));
+      .filter((/** @type {NormalizedProtocolDomain} */ domain) => !domain.experimental)
+      .map((/** @type {NormalizedProtocolDomain} */ domain) => stabilize(domain));
 
     computeBackReferences(totDomains);
     computeBackReferences(stableTotDomains);
@@ -188,8 +210,8 @@ class App {
       domains: structuredClone(jsProto.domains || []),
     }).domains;
     const stableV8Domains = v8Domains
-      .filter(domain => !domain.experimental)
-      .map(domain => stabilize(domain));
+      .filter((/** @type {NormalizedProtocolDomain} */ domain) => !domain.experimental)
+      .map((/** @type {NormalizedProtocolDomain} */ domain) => stabilize(domain));
 
     computeBackReferences(v8Domains);
     computeBackReferences(stableV8Domains);
@@ -248,7 +270,9 @@ class App {
 
   _setupLinkInterception() {
     document.body.addEventListener('click', event => {
-      const anchor = event.target.closest('a');
+      const target = /** @type {HTMLElement|null} */ (event.target);
+      if (!target) return;
+      const anchor = target.closest('a');
       if (!anchor) return;
       if (anchor.target === '_blank') return;
       if (anchor.hostname && anchor.hostname !== window.location.hostname) return;
@@ -298,13 +322,8 @@ class App {
 
     this._updateActiveDomains();
 
-    let domain = route.domain;
+    const domain = route.domain;
     const member = route.member;
-
-    // If domain is null but member exists (isolated legacy anchor), resolve to current domain
-    if (!domain && member && this._currentDomain) {
-      domain = this._currentDomain;
-    }
 
     if (!domain) {
       this._currentDomain = null;
@@ -357,7 +376,7 @@ class App {
       return;
     }
 
-    const currentLink = this._domainListElement.querySelector(`[data-domain='${domain}']`);
+    const currentLink = /** @type {HTMLElement|null} */ (this._domainListElement.querySelector(`[data-domain='${domain}']`));
     if (currentLink) {
       currentLink.classList.add('active-link');
       if (typeof currentLink.scrollIntoViewIfNeeded === 'function') {
@@ -396,7 +415,7 @@ class App {
       active.classList.remove('active-link');
     }
 
-    const template = document.querySelector('#landing');
+    const template = /** @type {HTMLTemplateElement|null} */ (document.querySelector('#landing'));
     if (template) {
       const clone = document.importNode(template.content, true);
       this._contentElement.appendChild(clone);
@@ -404,7 +423,7 @@ class App {
   }
 
   /**
-   * @param {Map<string, Object>} domains
+   * @param {Map<string, NormalizedProtocolDomain>} domains
    */
   _renderSidebar(domains) {
     this._domainListElement.textContent = '';
