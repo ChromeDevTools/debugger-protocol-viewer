@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn, execSync } from 'node:child_process';
+import statikk from 'statikk';
 import { generateStubs } from '../scripts/generate-stubs.js';
 
 /**
@@ -34,82 +34,6 @@ function findChromeBinary() {
   }
 
   return null;
-}
-
-/**
- * Creates a native node:http static server serving rootDirectory.
- * @param {string} rootDirectory
- * @returns {http.Server}
- */
-function createStaticServer(rootDirectory) {
-  /** @type {Record<string, string>} */
-  const MIME_TYPES = {
-    '.html': 'text/html; charset=utf-8',
-    '.js': 'application/javascript; charset=utf-8',
-    '.css': 'text/css; charset=utf-8',
-    '.json': 'application/json; charset=utf-8',
-    '.svg': 'image/svg+xml',
-    '.png': 'image/png',
-    '.ico': 'image/x-icon',
-    '.woff2': 'font/woff2',
-    '.webmanifest': 'application/manifest+json',
-    '.xml': 'application/xml',
-  };
-
-  return http.createServer(async (req, res) => {
-    try {
-      const parsedUrl = new URL(req.url || '/', 'http://127.0.0.1');
-      let relativePath = decodeURIComponent(parsedUrl.pathname);
-      if (relativePath.endsWith('/')) {
-        relativePath += 'index.html';
-      }
-
-      let filePath = path.resolve(rootDirectory, '.' + relativePath);
-      if (!filePath.startsWith(rootDirectory)) {
-        res.writeHead(403, { 'Content-Type': 'text/plain' });
-        res.end('Forbidden');
-        return;
-      }
-
-      try {
-        const stat = await fs.promises.stat(filePath);
-        if (stat.isDirectory()) {
-          filePath = path.join(filePath, 'index.html');
-        }
-      } catch {
-        // Not a directory or does not exist
-      }
-
-      try {
-        const data = await fs.promises.readFile(filePath);
-        const ext = path.extname(filePath).toLowerCase();
-        const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-        res.writeHead(200, {
-          'Content-Type': contentType,
-          'Access-Control-Allow-Origin': '*',
-        });
-        res.end(data);
-      } catch {
-        // Fallback to 404.html if available
-        const fallback404 = path.join(rootDirectory, '404.html');
-        try {
-          const notFoundData = await fs.promises.readFile(fallback404);
-          res.writeHead(404, {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Access-Control-Allow-Origin': '*',
-          });
-          res.end(notFoundData);
-        } catch {
-          res.writeHead(404, { 'Content-Type': 'text/plain' });
-          res.end('Not Found');
-        }
-      }
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      const msg = err instanceof Error ? err.message : String(err);
-      res.end(`Internal Server Error: ${msg}`);
-    }
-  });
 }
 
 /** @import { Protocol } from 'devtools-protocol' */
@@ -256,11 +180,28 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
   const staticDir = path.resolve('devtools-protocol');
   generateStubs({ outputDir: staticDir });
 
-  // 1. Start native static HTTP server on ephemeral port
-  const server = createStaticServer(staticDir);
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(undefined)));
-  const addr = /** @type {import('node:net').AddressInfo} */ (server.address());
-  const baseUrl = `http://127.0.0.1:${addr.port}`;
+  // 1. Start static HTTP server with statikk on an ephemeral port
+  const { app, server, url: baseUrl } = await statikk({ root: staticDir, port: 0, cors: true });
+  // Fallback to 404.html to mirror GitHub Pages behavior for unmatched routes
+  app.use(
+    /**
+     * @param {import('node:http').IncomingMessage} _req
+     * @param {import('node:http').ServerResponse} res
+     */
+    async (_req, res) => {
+      try {
+        const notFoundData = await fs.promises.readFile(path.join(staticDir, '404.html'));
+        res.writeHead(404, {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Access-Control-Allow-Origin': '*',
+        });
+        res.end(notFoundData);
+      } catch {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
+      }
+    },
+  );
 
   // 2. Launch headless Chrome
   const tmpUserDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-viewer-e2e-'));
