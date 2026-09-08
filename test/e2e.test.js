@@ -112,7 +112,7 @@ function createStaticServer(rootDirectory) {
   });
 }
 
-/** @import Protocol from 'devtools-protocol' */
+/** @import { Protocol } from 'devtools-protocol' */
 /** @import { ProtocolMapping } from 'devtools-protocol/types/protocol-mapping.js' */
 
 /**
@@ -164,12 +164,26 @@ class CdpClient {
   }
 
   /**
+   * Returns a typed ProtocolApi interface for a given sessionId (or browser-level if omitted).
+   * @param {string|null} [sessionId]
+   * @returns {import('devtools-protocol/types/protocol-proxy-api.js').ProtocolProxyApi.ProtocolApi}
+   */
+  createApi(sessionId = null) {
+    return /** @type {any} */ (new Proxy({}, {
+      get: (_, domain) => new Proxy({}, {
+        get: (_, method) => (/** @type {any} */ params = {}) =>
+          this.send(/** @type {any} */ (`${String(domain)}.${String(method)}`), params, sessionId)
+      })
+    }));
+  }
+
+  /**
    * Evaluates a JavaScript expression in the target page.
    * @param {string} expression
-   * @param {string|null} [sessionId]
+   * @param {Protocol.Target.SessionID|null} [sessionId]
    * @returns {Promise<any>}
    */
-  async evaluate(expression, sessionId) {
+  async evaluate(expression, sessionId = null) {
     const res = await this.send('Runtime.evaluate', {
       expression,
       returnByValue: true,
@@ -188,12 +202,12 @@ class CdpClient {
    * Repeatedly evaluates an expression until predicate returns truthy or times out.
    * @param {string} expression
    * @param {(val: any) => boolean} predicate
-   * @param {string|null} [sessionId]
+   * @param {Protocol.Target.SessionID|null} [sessionId]
    * @param {number} [timeoutMs]
    * @param {number} [intervalMs]
    * @returns {Promise<any>}
    */
-  async pollEvaluate(expression, predicate, sessionId, timeoutMs = 15000, intervalMs = 100) {
+  async pollEvaluate(expression, predicate, sessionId = null, timeoutMs = 15000, intervalMs = 100) {
     const start = Date.now();
     let lastVal;
     while (Date.now() - start < timeoutMs) {
@@ -248,10 +262,16 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
 
   /** @type {WebSocket|null} */
   let browserWs = null;
-  /** @type {any} */
+  /** @type {CdpClient|null} */
   let cdp = null;
-  /** @type {string|null} */
+  /** @type {Protocol.Target.TargetID|null} */
+  let targetId = null;
+  /** @type {Protocol.Target.SessionID|null} */
   let sessionId = null;
+  /** @type {import('devtools-protocol/types/protocol-proxy-api.js').ProtocolProxyApi.ProtocolApi|null} */
+  let browserApi = null;
+  /** @type {import('devtools-protocol/types/protocol-proxy-api.js').ProtocolProxyApi.ProtocolApi|null} */
+  let pageApi = null;
 
   try {
     // 3. Parse WebSocket URL from Chrome stderr
@@ -284,25 +304,35 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     cdp = new CdpClient(browserWs);
+    browserApi = cdp.createApi();
 
     // 4. Create and attach to target page
-    const { targetId } = await cdp.send('Target.createTarget', { url: 'about:blank' });
-    const attachResult = await cdp.send('Target.attachToTarget', { targetId, flatten: true });
+    const createTargetResult = await browserApi.Target.createTarget({ url: 'about:blank' });
+    targetId = createTargetResult.targetId;
+    const attachResult = await browserApi.Target.attachToTarget({ targetId, flatten: true });
     sessionId = attachResult.sessionId;
+    pageApi = cdp.createApi(sessionId);
 
-    await cdp.send('Page.enable', {}, sessionId);
-    await cdp.send('Runtime.enable', {}, sessionId);
+    assert.ok(cdp);
+    assert.ok(browserApi);
+    assert.ok(pageApi);
+
+    await pageApi.Page.enable({});
+    await pageApi.Runtime.enable();
+
+    const client = cdp;
+    const page = pageApi;
 
     // Dynamic native subtests
     await t.test('1. Direct route navigation (#/Page.navigate)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page.navigate` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/Page.navigate` });
 
-      const title = await cdp.pollEvaluate(
+      const title = await client.pollEvaluate(
         'document.title',
         (/** @type {any} */ val) => typeof val === 'string' && val.includes('Page.navigate'),
         sessionId
       );
-      const hasElement = await cdp.pollEvaluate(
+      const hasElement = await client.pollEvaluate(
         'Boolean(document.getElementById("Page_navigate"))',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -313,9 +343,9 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('2. Legacy URL redirection (/tot/Page/#method-navigate)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/tot/Page/#method-navigate` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/tot/Page/#method-navigate` });
 
-      const hash = await cdp.pollEvaluate(
+      const hash = await client.pollEvaluate(
         'window.location.hash',
         (/** @type {any} */ val) => val === '#/Page.navigate',
         sessionId
@@ -325,14 +355,14 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('3. Target selector routing (#/v8/Runtime.evaluate)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/v8/Runtime.evaluate` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/v8/Runtime.evaluate` });
 
-      const targetValue = await cdp.pollEvaluate(
+      const targetValue = await client.pollEvaluate(
         'document.getElementById("target-selector") ? document.getElementById("target-selector").value : null',
         (/** @type {any} */ val) => val === 'v8',
         sessionId
       );
-      const hasRuntimeEvaluate = await cdp.pollEvaluate(
+      const hasRuntimeEvaluate = await client.pollEvaluate(
         'Boolean(document.getElementById("Runtime_evaluate"))',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -343,17 +373,17 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('3b. Target selector user interaction: switching dropdown from tot to v8', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page.navigate` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/Page.navigate` });
 
       // Wait for page ready
-      await cdp.pollEvaluate(
+      await client.pollEvaluate(
         'Boolean(document.getElementById("target-selector"))',
         (/** @type {any} */ v) => Boolean(v),
         sessionId
       );
 
       // Change select element value and dispatch change event
-      await cdp.evaluate(`
+      await client.evaluate(`
         (function() {
           const select = document.getElementById('target-selector');
           select.value = 'v8';
@@ -362,7 +392,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       `, sessionId);
 
       // Assert hash changed to v8
-      const newHash = await cdp.pollEvaluate(
+      const newHash = await client.pollEvaluate(
         'window.location.hash',
         (/** @type {any} */ val) => val.startsWith('#/v8'),
         sessionId
@@ -372,35 +402,35 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('4. Search keyboard shortcut (/)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
 
       // Ensure page is ready
-      await cdp.pollEvaluate(
+      await client.pollEvaluate(
         'Boolean(document.getElementById("search"))',
         (/** @type {any} */ v) => Boolean(v),
         sessionId
       );
-      await cdp.pollEvaluate(
+      await client.pollEvaluate(
         'window.app && window.app._search && window.app._search._items.length > 0',
         (/** @type {any} */ v) => Boolean(v),
         sessionId
       );
 
       // Press '/' via Input.dispatchKeyEvent
-      await cdp.send('Input.dispatchKeyEvent', {
+      await page.Input.dispatchKeyEvent({
         type: 'rawKeyDown',
         key: '/',
         code: 'Slash',
         windowsVirtualKeyCode: 191,
-      }, sessionId);
-      await cdp.send('Input.dispatchKeyEvent', {
+      });
+      await page.Input.dispatchKeyEvent({
         type: 'keyUp',
         key: '/',
         code: 'Slash',
         windowsVirtualKeyCode: 191,
-      }, sessionId);
+      });
 
-      const isFocused = await cdp.pollEvaluate(
+      const isFocused = await client.pollEvaluate(
         'document.activeElement === document.getElementById("search")',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -410,26 +440,26 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('5. Table of contents badges and backtick code rendering (#/Page)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
 
       // Wait for domain content to render
-      await cdp.pollEvaluate(
+      await client.pollEvaluate(
         'Boolean(document.querySelector(".domain-toc"))',
         (/** @type {any} */ arr) => Boolean(arr),
         sessionId
       );
 
       // Verify TOC items contain badges
-      const methodBadgeText = await cdp.evaluate('document.querySelector(".entity-icon-method") ? document.querySelector(".entity-icon-method").textContent : null', sessionId);
-      const eventBadgeText = await cdp.evaluate('document.querySelector(".entity-icon-event") ? document.querySelector(".entity-icon-event").textContent : null', sessionId);
-      const typeBadgeText = await cdp.evaluate('document.querySelector(".entity-icon-type") ? document.querySelector(".entity-icon-type").textContent : null', sessionId);
+      const methodBadgeText = await client.evaluate('document.querySelector(".entity-icon-method") ? document.querySelector(".entity-icon-method").textContent : null', sessionId);
+      const eventBadgeText = await client.evaluate('document.querySelector(".entity-icon-event") ? document.querySelector(".entity-icon-event").textContent : null', sessionId);
+      const typeBadgeText = await client.evaluate('document.querySelector(".entity-icon-type") ? document.querySelector(".entity-icon-type").textContent : null', sessionId);
 
       assert.strictEqual(methodBadgeText, 'Method');
       assert.strictEqual(eventBadgeText, 'Event');
       assert.strictEqual(typeBadgeText, 'Type');
 
       // Verify inline code tags were parsed and rendered from backticks in descriptions
-      const hasCodeTags = await cdp.pollEvaluate(
+      const hasCodeTags = await client.pollEvaluate(
         'document.querySelectorAll(".parameter-description code").length > 0',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -438,10 +468,10 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('6. Type cross-references (#/DOM.NodeId)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/DOM.NodeId` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/DOM.NodeId` });
 
       // Wait for references list to render
-      const refCount = await cdp.pollEvaluate(
+      const refCount = await client.pollEvaluate(
         'document.querySelectorAll(".references-list li").length',
         (/** @type {any} */ val) => typeof val === 'number' && val > 0,
         sessionId
@@ -451,17 +481,17 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('7. Mobile responsive drawer (#drawer-toggle & backdrop)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/Page` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
 
-      await cdp.pollEvaluate(
+      await client.pollEvaluate(
         'Boolean(document.getElementById("drawer-toggle"))',
         (/** @type {any} */ v) => Boolean(v),
         sessionId
       );
 
       // Click drawer toggle
-      await cdp.evaluate('document.getElementById("drawer-toggle").click()', sessionId);
-      const drawerOpen = await cdp.pollEvaluate(
+      await client.evaluate('document.getElementById("drawer-toggle").click()', sessionId);
+      const drawerOpen = await client.pollEvaluate(
         'document.body.classList.contains("drawer-open")',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -469,8 +499,8 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       assert.strictEqual(drawerOpen, true, 'Expected body to have "drawer-open" class after toggle click');
 
       // Click backdrop to close
-      await cdp.evaluate('document.getElementById("drawer-backdrop").click()', sessionId);
-      const drawerClosed = await cdp.pollEvaluate(
+      await client.evaluate('document.getElementById("drawer-backdrop").click()', sessionId);
+      const drawerClosed = await client.pollEvaluate(
         '!document.body.classList.contains("drawer-open")',
         (/** @type {any} */ val) => val === true,
         sessionId
@@ -479,9 +509,9 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('8. Wildcard 404 redirection (/1-3/Page/#method-navigate)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/1-3/Page/#method-navigate` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/1-3/Page/#method-navigate` });
 
-      const hash = await cdp.pollEvaluate(
+      const hash = await client.pollEvaluate(
         'window.location.hash',
         (/** @type {any} */ val) => val.includes('Page.navigate'),
         sessionId
@@ -491,23 +521,23 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
     });
 
     await t.test('9. Root landing page rendering and rich content (#/)', async () => {
-      await cdp.send('Page.navigate', { url: `${baseUrl}/#/` }, sessionId);
+      await page.Page.navigate({ url: `${baseUrl}/#/` });
 
-      const hasLandingContent = await cdp.pollEvaluate(
+      const hasLandingContent = await client.pollEvaluate(
         'Boolean(document.querySelector(".landing-hero") || document.querySelector(".box-content"))',
         (/** @type {any} */ val) => val === true,
         sessionId
       );
-      const title = await cdp.evaluate('document.title', sessionId);
+      const title = await client.evaluate('document.title', sessionId);
 
       assert.strictEqual(hasLandingContent, true, 'Expected landing content to be rendered at root hash route');
       assert.strictEqual(title, 'DevTools Protocol Viewer', `Expected root page title, got "${title}"`);
     });
 
   } finally {
-    if (sessionId && cdp) {
+    if (targetId && browserApi) {
       try {
-        await cdp.send('Target.closeTarget', { targetId: sessionId });
+        await browserApi.Target.closeTarget({ targetId });
       } catch {}
     }
     if (browserWs) {

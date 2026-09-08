@@ -1,5 +1,4 @@
-import type Protocol from 'devtools-protocol';
-export type { Protocol };
+export type { Protocol } from 'devtools-protocol';
 
 export interface ProtocolParameter {
   name?: string;
