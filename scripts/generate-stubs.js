@@ -82,16 +82,6 @@ export function generateStubs({
   // Copy all assets from src/ to outputDir/
   fs.cpSync(srcDir, outputDir, { recursive: true });
 
-  // Copy search_index if present
-  const searchIndexDir = path.resolve('search_index');
-  try {
-    const stat = fs.statSync(searchIndexDir);
-    if (stat.isDirectory()) {
-      fs.cpSync(searchIndexDir, path.join(outputDir, 'search_index'), { recursive: true });
-    }
-  } catch {
-    // Ignore if search_index not present
-  }
 
   // Create .nojekyll in output directory
   fs.writeFileSync(path.join(outputDir, '.nojekyll'), '');

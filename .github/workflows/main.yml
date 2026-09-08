@@ -26,12 +26,3 @@ jobs:
       - name: primitive test
         run: npm run test
 
-      - name: install lhci
-        run: npm install @lhci/cli@latest
-
-#       - name: run lhci
-#         run: |
-#           npx lhci autorun \
-#             --collect.url=http://localhost:8696/devtools-protocol/ \
-#             --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
-#             --upload.target=temporary-public-storage

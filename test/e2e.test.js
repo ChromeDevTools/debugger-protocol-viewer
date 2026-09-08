@@ -232,6 +232,8 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       '--remote-debugging-port=0',
       '--disable-gpu',
       '--no-first-run',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
       `--user-data-dir=${tmpUserDataDir}`,
       'about:blank',
     ],
