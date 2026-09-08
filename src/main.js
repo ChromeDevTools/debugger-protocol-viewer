@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchElement = document.getElementById('search');
   const searchResultsElement = document.getElementById('sresults');
   const targetSelector = document.getElementById('target-selector');
-  const domainFilterInput = document.getElementById('domain-filter');
   const drawerToggle = document.getElementById('drawer-toggle');
   const drawerBackdrop = document.getElementById('drawer-backdrop');
 
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     searchElement,
     searchResultsElement,
     targetSelector,
-    domainFilterInput,
     drawerToggle,
     drawerBackdrop,
   });
@@ -51,7 +49,6 @@ class App {
     searchElement,
     searchResultsElement,
     targetSelector,
-    domainFilterInput,
     drawerToggle,
     drawerBackdrop,
   }) {
@@ -59,7 +56,6 @@ class App {
     this._domainListElement = domainListElement;
     this._contentElement = contentElement;
     this._targetSelector = targetSelector;
-    this._domainFilterInput = domainFilterInput;
     this._drawerToggle = drawerToggle;
     this._drawerBackdrop = drawerBackdrop;
 
@@ -229,13 +225,6 @@ class App {
   }
 
   _setupSidebarEvents() {
-    // In-sidebar domain filter
-    if (this._domainFilterInput) {
-      this._domainFilterInput.addEventListener('input', () => {
-        this._applyDomainFilter();
-      });
-    }
-
     // Target selector dropdown
     if (this._targetSelector) {
       this._targetSelector.addEventListener('change', () => {
@@ -254,16 +243,6 @@ class App {
         });
         this.navigate(newRoute);
       });
-    }
-  }
-
-  _applyDomainFilter() {
-    if (!this._domainFilterInput || !this._domainListElement) return;
-    const query = this._domainFilterInput.value.trim().toLowerCase();
-    const links = this._domainListElement.querySelectorAll('.domain-link');
-    for (const link of links) {
-      const name = link.dataset.domain ? link.dataset.domain.toLowerCase() : link.textContent.toLowerCase();
-      link.style.display = name.includes(query) ? '' : 'none';
     }
   }
 
@@ -443,8 +422,6 @@ class App {
 
       this._domainListElement.appendChild(link);
     }
-
-    this._applyDomainFilter();
   }
 }
 
