@@ -324,51 +324,442 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
 
         <h3 id="endpoints">HTTP Endpoints</h3>
         <p>
-          If started with a remote-debugging-port, these HTTP endpoints are available on the same
-          port.
+          When Chromium or Chrome is launched with
+          <code>--remote-debugging-port=&lt;port&gt;</code> (for example,
+          <code>--remote-debugging-port=9222</code>), it starts an internal HTTP server that exposes
+          REST endpoints and WebSocket connections for target discovery, browser lifecycle
+          management, and DevTools Protocol communication.
         </p>
 
-        <h4 id="get-jsonversion">GET <code>/json/version</code></h4>
-        <p>Browser version metadata</p>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>/json/version</code></td>
+                <td><span class="http-method http-method-get">GET</span></td>
+                <td>Browser version metadata and browser-level WebSocket URL</td>
+              </tr>
+              <tr>
+                <td><code>/json</code> or <code>/json/list</code></td>
+                <td><span class="http-method http-method-get">GET</span></td>
+                <td>List of inspectable targets (pages, workers, tabs)</td>
+              </tr>
+              <tr>
+                <td><code>/json/new?{url}</code></td>
+                <td><span class="http-method http-method-put">PUT</span></td>
+                <td>Create a new page or tab target (strictly requires PUT)</td>
+              </tr>
+              <tr>
+                <td><code>/json/activate/{targetId}</code></td>
+                <td><span class="http-method http-method-get">GET</span></td>
+                <td>Bring a target page or tab to the foreground</td>
+              </tr>
+              <tr>
+                <td><code>/json/close/{targetId}</code></td>
+                <td><span class="http-method http-method-get">GET</span></td>
+                <td>Close the specified target</td>
+              </tr>
+              <tr>
+                <td><code>/json/protocol</code></td>
+                <td><span class="http-method http-method-get">GET</span></td>
+                <td>Full DevTools Protocol JSON schema</td>
+              </tr>
+              <tr>
+                <td><code>/devtools/browser/{guid}</code></td>
+                <td><span class="http-method http-method-ws">WS</span></td>
+                <td>Root browser-level WebSocket connection</td>
+              </tr>
+              <tr>
+                <td><code>/devtools/page/{targetId}</code></td>
+                <td><span class="http-method http-method-ws">WS</span></td>
+                <td>Target-specific WebSocket connection</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 id="get-jsonversion">
+          <span class="http-method http-method-get">GET</span> <code>/json/version</code>
+        </h4>
+        <p>
+          Returns browser version metadata, engine versions, and the browser-level WebSocket
+          debugging URL.
+        </p>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Browser</code></td>
+                <td>string</td>
+                <td>
+                  Product name and version (e.g. <code>Chrome/135.0.7012.0</code> or
+                  <code>HeadlessChrome/...</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>Protocol-Version</code></td>
+                <td>string</td>
+                <td>Current supported protocol version (e.g. <code>1.3</code>)</td>
+              </tr>
+              <tr>
+                <td><code>User-Agent</code></td>
+                <td>string</td>
+                <td>Default browser User-Agent header string</td>
+              </tr>
+              <tr>
+                <td><code>V8-Version</code></td>
+                <td>string</td>
+                <td>V8 JavaScript engine version</td>
+              </tr>
+              <tr>
+                <td><code>WebKit-Version</code></td>
+                <td>string</td>
+                <td>WebKit / Blink version and Git revision hash</td>
+              </tr>
+              <tr>
+                <td><code>webSocketDebuggerUrl</code></td>
+                <td>string</td>
+                <td>
+                  WebSocket URL to attach to the root browser target (contains an unguessable UUID
+                  on desktop)
+                </td>
+              </tr>
+              <tr>
+                <td><code>Android-Package</code></td>
+                <td>string</td>
+                <td>Host Android package ID (present on Android only)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <pre>
 {
-    "Browser": "Chrome/124.0.6367.60",
-    "Protocol-Version": "1.3",
-    "User-Agent": "Mozilla/5.0 ...",
-    "V8-Version": "12.4.254.12",
-    "WebKit-Version": "537.36 ...",
-    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/browser/..."
+  "Browser": "Chrome/135.0.7012.0",
+  "Protocol-Version": "1.3",
+  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+  "V8-Version": "13.5.100",
+  "WebKit-Version": "537.36 (@a1b2c3d4e5f60718293a4b5c6d7e8f9012345678)",
+  "webSocketDebuggerUrl": "ws://localhost:9222/devtools/browser/6b539824-7489-4a9c-9c02-4ec4dc1373ea"
 }</pre>
 
-        <h4 id="get-json-or-jsonlist">GET <code>/json</code> or <code>/json/list</code></h4>
-        <p>A list of all available websocket targets.</p>
+        <h4 id="get-json-or-jsonlist">
+          <span class="http-method http-method-get">GET</span> <code>/json</code> or
+          <code>/json/list</code>
+        </h4>
+        <p>
+          Returns an array of target descriptors for all inspectable contexts (pages, background
+          pages, service workers, shared workers). Targets are sorted in descending order by last
+          activity time.
+        </p>
+
+        <p><strong>Query Parameters:</strong></p>
+        <ul>
+          <li>
+            <code>for_tab</code> (optional flag): When present (e.g.
+            <code>/json/list?for_tab</code>), targets of type <code>tab</code> are included in the
+            results. When omitted, only frame targets are returned, and <code>tab</code> targets are
+            filtered out.
+          </li>
+        </ul>
+
         <pre>
-[ {
-  "description": "",
-  "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/...",
-  "id": "...",
-  "title": "...",
-  "type": "page",
-  "url": "https://...",
-  "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/..."
-} ]</pre>
+[
+  {
+    "description": "",
+    "devtoolsFrontendUrl": "https://chrome-devtools-frontend.appspot.com/serve_rev/@a1b2c3d4/inspector.html?ws=localhost:9222/devtools/page/D598C123456789ABCDEF0123456789AB",
+    "faviconUrl": "https://example.com/favicon.ico",
+    "id": "D598C123456789ABCDEF0123456789AB",
+    "title": "Example Domain",
+    "type": "page",
+    "url": "https://example.com/",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/D598C123456789ABCDEF0123456789AB"
+  }
+]</pre>
 
-        <h4 id="get-jsonprotocol">GET <code>/json/protocol/</code></h4>
-        <p>The current devtools protocol, as JSON.</p>
+        <h4 id="get-jsonnewurl">
+          <span class="http-method http-method-put">PUT</span> <code>/json/new</code> or
+          <code>PUT /json/new?{url}</code>
+        </h4>
+        <p>
+          Creates a new browsing context (page or tab) navigated to the specified URL and returns
+          its target descriptor.
+        </p>
+        <p>
+          <strong>Method Requirement:</strong> This endpoint
+          <strong>strictly requires the <code>PUT</code> method</strong>. Calling it with
+          <code>GET</code>, <code>POST</code>, or any other verb fails with
+          <code>405 Method Not Allowed</code> (<code
+            >"Using unsafe HTTP verb GET to invoke /json/new. This action supports only PUT
+            verb."</code
+          >).
+        </p>
+        <p><strong>Query Parameters:</strong></p>
+        <ul>
+          <li>
+            The query component before any <code>&amp;</code> is parsed and URL-unescaped as the
+            initial navigation URL (e.g. <code>PUT /json/new?https%3A%2F%2Fexample.com</code>). If
+            omitted or invalid, it defaults to <code>about:blank</code>.
+          </li>
+          <li>
+            Supports the <code>&amp;for_tab</code> flag to create a tab target instead of an
+            isolated frame.
+          </li>
+        </ul>
 
-        <h4 id="get-jsonnewurl">PUT <code>/json/new?{url}</code></h4>
-        <p>Opens a new tab. Responds with the websocket target data for the new tab.</p>
+        <h4 id="get-jsonactivatetargetid">
+          <span class="http-method http-method-get">GET</span>
+          <code>/json/activate/{targetId}</code>
+        </h4>
+        <p>Brings the specified target tab or window to the foreground.</p>
+        <ul>
+          <li><code>200 OK</code>: <code>"Target activated"</code></li>
+          <li><code>404 Not Found</code>: <code>"No such target id: {targetId}"</code></li>
+          <li>
+            <code>500 Internal Server Error</code>:
+            <code>"Could not activate target id: {targetId}"</code>
+          </li>
+        </ul>
 
-        <h4 id="get-jsonactivatetargetid">GET <code>/json/activate/{targetId}</code></h4>
-        <p>Brings a page into the foreground (activate a tab).</p>
+        <h4 id="get-jsonclosetargetid">
+          <span class="http-method http-method-get">GET</span> <code>/json/close/{targetId}</code>
+        </h4>
+        <p>Closes the specified target page.</p>
+        <ul>
+          <li><code>200 OK</code>: <code>"Target is closing"</code></li>
+          <li><code>404 Not Found</code>: <code>"No such target id: {targetId}"</code></li>
+          <li>
+            <code>500 Internal Server Error</code>:
+            <code>"Could not close target id: {targetId}"</code>
+          </li>
+        </ul>
 
-        <h4 id="get-jsonclosetargetid">GET <code>/json/close/{targetId}</code></h4>
-        <p>Closes the target page identified by <code>targetId</code>.</p>
+        <h4 id="get-jsonprotocol">
+          <span class="http-method http-method-get">GET</span> <code>/json/protocol</code>
+        </h4>
+        <p>
+          Returns the complete Chrome DevTools Protocol JSON schema containing all domains, methods,
+          events, and type definitions.
+        </p>
+
+        <h4 id="target-descriptor-schema">Target Descriptor Object</h4>
+        <p>
+          The JSON object structure returned in target lists (<code>/json/list</code>) and new
+          target creation (<code>/json/new</code>):
+        </p>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Presence</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Unique target identifier (UUIDv4)</td>
+              </tr>
+              <tr>
+                <td><code>parentId</code></td>
+                <td>string</td>
+                <td>Optional</td>
+                <td>Target ID of the parent context (omitted for top-level pages)</td>
+              </tr>
+              <tr>
+                <td><code>type</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Target classification string (see table below)</td>
+              </tr>
+              <tr>
+                <td><code>title</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Document title or worker label (HTML-escaped)</td>
+              </tr>
+              <tr>
+                <td><code>description</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Human-readable target description (may be empty string)</td>
+              </tr>
+              <tr>
+                <td><code>url</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Current URL loaded in the target</td>
+              </tr>
+              <tr>
+                <td><code>faviconUrl</code></td>
+                <td>string</td>
+                <td>Optional</td>
+                <td>Favicon URL (omitted if not present or invalid)</td>
+              </tr>
+              <tr>
+                <td><code>webSocketDebuggerUrl</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>WebSocket URL for CDP clients to attach to this target</td>
+              </tr>
+              <tr>
+                <td><code>devtoolsFrontendUrl</code></td>
+                <td>string</td>
+                <td>Required</td>
+                <td>Complete URL to launch the hosted DevTools web inspector for this target</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 id="target-types">Target Types</h4>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th><code>type</code> Value</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>"page"</code></td>
+                <td>Primary top-level web page or tab frame</td>
+              </tr>
+              <tr>
+                <td><code>"tab"</code></td>
+                <td>
+                  Tab target container (parent of all subframes and prerendered pages in a
+                  WebContents)
+                </td>
+              </tr>
+              <tr>
+                <td><code>"iframe"</code></td>
+                <td>Out-of-process subframe or iframe</td>
+              </tr>
+              <tr>
+                <td><code>"worker"</code></td>
+                <td>Dedicated Web Worker (<code>new Worker()</code>)</td>
+              </tr>
+              <tr>
+                <td><code>"shared_worker"</code></td>
+                <td>Shared Web Worker (<code>new SharedWorker()</code>)</td>
+              </tr>
+              <tr>
+                <td><code>"service_worker"</code></td>
+                <td>Service Worker registration execution context</td>
+              </tr>
+              <tr>
+                <td><code>"worklet"</code></td>
+                <td>Generic Worklet (Paint, Audio, Layout)</td>
+              </tr>
+              <tr>
+                <td><code>"auction_worklet"</code></td>
+                <td>Protected Audience (FLEDGE) Auction Worklet</td>
+              </tr>
+              <tr>
+                <td><code>"browser"</code></td>
+                <td>Browser-wide process target</td>
+              </tr>
+              <tr>
+                <td><code>"webview"</code></td>
+                <td>Guest view or <code>&lt;webview&gt;</code> content</td>
+              </tr>
+              <tr>
+                <td><code>"background_page"</code></td>
+                <td>Chrome Extension background page or offscreen document</td>
+              </tr>
+              <tr>
+                <td><code>"app"</code></td>
+                <td>Packaged app, platform app, or Isolated Web App (IWA)</td>
+              </tr>
+              <tr>
+                <td><code>"browser_ui"</code></td>
+                <td>Internal Chrome WebUI window or contents</td>
+              </tr>
+              <tr>
+                <td><code>"other"</code></td>
+                <td>Fallback classification for other inspectable targets</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <h4 id="websocket-devtoolspagetargetid">
-          WebSocket <code>/devtools/page/{targetId}</code>
+          <span class="http-method http-method-ws">WebSocket</span>
+          <code>/devtools/page/{targetId}</code> &amp; <code>/devtools/browser/{guid}</code>
         </h4>
-        <p>The WebSocket endpoint for the protocol.</p>
+        <p>
+          Clients communicate with the DevTools Protocol over full-duplex WebSocket connections.
+        </p>
+        <ul>
+          <li>
+            <strong>Page WebSocket (<code>/devtools/page/{targetId}</code>):</strong> Attaches
+            directly to a single target session. If the target crashes or is closed, the server
+            emits an unprompted CDP notification before closing the socket:
+            <code>{"method":"Inspector.detached","params":{"reason":"target_closed"}}</code>
+          </li>
+          <li>
+            <strong>Browser WebSocket (<code>/devtools/browser/{guid}</code>):</strong> Attaches to
+            the root browser session, enabling target auto-discovery, multi-target attachment via
+            <code>Target.attachToTarget</code>, and browser-wide management. On desktop Chrome, the
+            path contains an unguessable UUIDv4 written to the <code>DevToolsActivePort</code> file
+            in the user data profile directory.
+          </li>
+        </ul>
+
+        <h4 id="security-restrictions">Security &amp; Origin Restrictions</h4>
+        <ul>
+          <li>
+            <strong>Host Header Validation:</strong> To mitigate DNS rebinding attacks, the server
+            validates the incoming HTTP <code>Host</code> header. It must either be an IP address
+            (e.g. <code>127.0.0.1</code>, <code>[::1]</code>) or <code>localhost</code>. Other
+            hostnames trigger an immediate <code>500 Internal Server Error</code> (<code
+              >"Host header is specified and is not an IP address or localhost."</code
+            >).
+          </li>
+          <li>
+            <strong>WebSocket Origin Verification (<code>--remote-allow-origins</code>):</strong>
+            When a WebSocket handshake includes an <code>Origin</code> header (such as from a web
+            page), the origin must match the origins specified via
+            <code>--remote-allow-origins=&lt;origin&gt;</code> (or
+            <code>--remote-allow-origins=*</code>). Non-matching origins receive
+            <code>403 Forbidden</code>. Requests without an <code>Origin</code> header (such as CLI
+            tools, Puppeteer, Node.js) are allowed by default.
+          </li>
+          <li>
+            <strong>No CORS:</strong> The server never emits
+            <code>Access-Control-Allow-Origin</code> response headers, ensuring the browser
+            Same-Origin Policy prevents arbitrary websites from reading target lists or metadata via
+            <code>fetch()</code> or <code>XMLHttpRequest</code>.
+          </li>
+          <li>
+            <strong>Clickjacking &amp; Framing Protection:</strong> All
+            <code>/json/*</code> endpoints emit
+            <code>Content-Security-Policy: frame-ancestors 'none'</code>, and the discovery page
+            (<code>/</code>) emits <code>X-Frame-Options: DENY</code>.
+          </li>
+        </ul>
       </div>
     </template>
   </body>

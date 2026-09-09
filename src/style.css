@@ -163,6 +163,67 @@ figure.screenshot img {
   box-shadow: var(--elevation-shadow);
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 14px 0 22px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+th,
+td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--color-text);
+  border-top: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+tr:hover td {
+  background-color: #fcfdfe;
+}
+
+.http-method {
+  display: inline-block;
+  padding: 1.5px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.http-method-get {
+  background-color: #e8f0fe;
+  color: #1967d2;
+}
+
+.http-method-put {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+.http-method-ws {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
 /* ==========================================================================
    Toolbar Header (50px) - Indigo Theme
    ========================================================================== */
