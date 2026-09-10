@@ -312,6 +312,27 @@ const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:m
 const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
 
 /**
+ * Creates canonical RouteInfo, mapping lowercase landing anchors to section.
+ * @param {TargetKind} target
+ * @param {string|null} domain
+ * @param {string|null} member
+ * @param {string|null} [section]
+ * @returns {RouteInfo}
+ */
+function createRouteInfo(target, domain, member, section = null) {
+  if (domain && !member && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
+    const sec = domain === 'http-endpoints' ? 'endpoints' : domain;
+    return { target, domain: null, member: null, section: sec };
+  }
+  /** @type {RouteInfo} */
+  const res = { target, domain, member };
+  if (section) {
+    res.section = section;
+  }
+  return res;
+}
+
+/**
  * Parses any incoming route variant into a canonical RouteInfo object.
  * Uses standard URLPattern when available, with a regex/string fallback.
  *
@@ -327,12 +348,12 @@ const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }
  */
 export function parseRoute(routeString) {
   if (!routeString || typeof routeString !== 'string') {
-    return { target: 'tot', domain: null, member: null };
+    return createRouteInfo('tot', null, null);
   }
 
   const trimmed = routeString.trim();
   if (!trimmed || trimmed === '#' || trimmed === '#/' || trimmed === '/') {
-    return { target: 'tot', domain: null, member: null };
+    return createRouteInfo('tot', null, null);
   }
 
   if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
@@ -349,96 +370,96 @@ export function parseRoute(routeString) {
       legacyPathMatch?.pathname.groups.domain &&
       !legacyPathMatch.pathname.groups.domain.endsWith('.html')
     ) {
-      return {
-        target: normalizeTarget(legacyPathMatch.pathname.groups.target),
-        domain: legacyPathMatch.pathname.groups.domain,
-        member: legacyMember,
-      };
+      return createRouteInfo(
+        normalizeTarget(legacyPathMatch.pathname.groups.target),
+        legacyPathMatch.pathname.groups.domain,
+        legacyMember,
+      );
     }
 
     if (legacyMember) {
-      return { target: 'tot', domain: null, member: legacyMember };
+      return createRouteInfo('tot', null, legacyMember);
     }
 
     const htm = hashTargetMemberPattern?.exec(url);
     if (htm?.hash.groups.domain && htm.hash.groups.member) {
-      return {
-        target: normalizeTarget(htm.hash.groups.target),
-        domain: htm.hash.groups.domain,
-        member: htm.hash.groups.member,
-      };
+      return createRouteInfo(
+        normalizeTarget(htm.hash.groups.target),
+        htm.hash.groups.domain,
+        htm.hash.groups.member,
+      );
     }
 
     const htd = hashTargetDomainPattern?.exec(url);
     if (htd?.hash.groups.domain) {
-      return {
-        target: normalizeTarget(htd.hash.groups.target),
-        domain: htd.hash.groups.domain,
-        member: null,
-      };
+      return createRouteInfo(
+        normalizeTarget(htd.hash.groups.target),
+        htd.hash.groups.domain,
+        null,
+      );
     }
 
     const hto = hashTargetOnlyPattern?.exec(url);
     if (hto?.hash.groups.target) {
-      return {
-        target: normalizeTarget(hto.hash.groups.target),
-        domain: null,
-        member: null,
-      };
+      return createRouteInfo(
+        normalizeTarget(hto.hash.groups.target),
+        null,
+        null,
+      );
     }
 
     const hm = hashMemberPattern?.exec(url);
     if (hm?.hash.groups.domain && hm.hash.groups.member) {
-      return {
-        target: 'tot',
-        domain: hm.hash.groups.domain,
-        member: hm.hash.groups.member,
-      };
+      return createRouteInfo(
+        'tot',
+        hm.hash.groups.domain,
+        hm.hash.groups.member,
+      );
     }
 
     const hd = hashDomainPattern?.exec(url);
     if (hd?.hash.groups.domain) {
-      return {
-        target: 'tot',
-        domain: hd.hash.groups.domain,
-        member: null,
-      };
+      return createRouteInfo(
+        'tot',
+        hd.hash.groups.domain,
+        null,
+      );
     }
 
     const hdir = hashDirectPattern?.exec(url);
     if (hdir?.hash.groups.domain) {
-      return {
-        target: 'tot',
-        domain: hdir.hash.groups.domain,
-        member: null,
-      };
+      return createRouteInfo(
+        'tot',
+        hdir.hash.groups.domain,
+        null,
+      );
     }
 
     const qm = queryMemberPattern?.exec(url);
     if (qm?.search.groups.domain && qm.search.groups.member) {
-      return {
-        target: 'tot',
-        domain: qm.search.groups.domain,
-        member: qm.search.groups.member,
-      };
+      return createRouteInfo(
+        'tot',
+        qm.search.groups.domain,
+        qm.search.groups.member,
+      );
     }
 
     const qd = queryDomainPattern?.exec(url);
     if (qd?.search.groups.domain) {
-      return {
-        target: 'tot',
-        domain: qd.search.groups.domain,
-        member: null,
-      };
+      return createRouteInfo(
+        'tot',
+        qd.search.groups.domain,
+        null,
+      );
     }
 
-    return { target: 'tot', domain: null, member: null };
+    return createRouteInfo('tot', null, null);
   }
 
   // Fallback string/regex parser for environments without URLPattern
   const isolatedLegacyMatch = trimmed.match(/^#(?:method|type|event)-([\w-]+)$/);
   if (isolatedLegacyMatch) {
-    return { target: 'tot', domain: null, member: isolatedLegacyMatch[1] };
+    return createRouteInfo('tot', null, isolatedLegacyMatch[1]);
   }
 
   const hashIndex = trimmed.indexOf('#');
@@ -484,12 +505,12 @@ export function parseRoute(routeString) {
       domain = pathSegments[0];
     }
 
-    return { target, domain, member: legacyMember };
+    return createRouteInfo(target, domain, legacyMember);
   }
 
   let cleanHash = hashPart;
   if (cleanHash.startsWith('/')) cleanHash = cleanHash.slice(1);
-  if (!cleanHash) return { target: 'tot', domain: null, member: null };
+  if (!cleanHash) return createRouteInfo('tot', null, null);
 
   /** @type {TargetKind} */
   let target = 'tot';
@@ -508,29 +529,32 @@ export function parseRoute(routeString) {
   }
 
   targetAndRest = targetAndRest.replace(/\/+$/, '');
-  if (!targetAndRest) return { target, domain: null, member: null };
+  if (!targetAndRest) return createRouteInfo(target, null, null);
 
   const dotIndex = targetAndRest.indexOf('.');
   if (dotIndex !== -1) {
-    return {
+    return createRouteInfo(
       target,
-      domain: targetAndRest.slice(0, dotIndex),
-      member: targetAndRest.slice(dotIndex + 1) || null,
-    };
+      targetAndRest.slice(0, dotIndex),
+      targetAndRest.slice(dotIndex + 1) || null,
+    );
   }
 
-  return { target, domain: targetAndRest, member: null };
+  return createRouteInfo(target, targetAndRest, null);
 }
 
 /**
  * Formats canonical hash route from components.
- * @param {{ target?: string|null, domain?: string|null, member?: string|null }} [route]
+ * @param {{ target?: string|null, domain?: string|null, member?: string|null, section?: string|null }} [route]
  * @returns {string} Canonical hash route, e.g. '#/Page.navigate'
  */
-export function formatRoute({ target = 'tot', domain = null, member = null } = {}) {
+export function formatRoute({ target = 'tot', domain = null, member = null, section = null } = {}) {
   const normTarget = normalizeTarget(target);
   const targetPrefix = normTarget === 'tot' ? '' : `${normTarget}/`;
 
+  if (section) {
+    return `#/${targetPrefix}${section}`;
+  }
   if (!domain) {
     return normTarget === 'tot' ? '#/' : `#/${targetPrefix}`;
   }

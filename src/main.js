@@ -316,10 +316,11 @@ export class App {
 
     const domain = route.domain;
     const member = route.member;
+    const section = route.section;
 
     if (!domain) {
-      this._currentDomain = null;
-      this._onNavigateHome();
+      this._currentDomain = section ?? null;
+      this._onNavigateHome(section);
       return;
     }
 
@@ -362,13 +363,6 @@ export class App {
     }
 
     if (!this._activeDomains.has(domain)) {
-      const landingId = domain === 'http-endpoints' ? 'endpoints' : domain;
-      const landingTemplate = /** @type {HTMLTemplateElement|null} */ ($('#landing'));
-      if (landingTemplate && landingTemplate.content.querySelector('#' + landingId)) {
-        this._currentDomain = domain;
-        this._onNavigateHome(landingId);
-        return;
-      }
       this._contentElement.appendChild(renderError(`Unknown domain: ${domain}.`));
       return;
     }
@@ -425,7 +419,7 @@ export class App {
 
       if (anchorId) {
         const targetId = anchorId === 'http-endpoints' ? 'endpoints' : anchorId;
-        const targetElem = this._contentElement.querySelector('#' + targetId);
+        const targetElem = document.getElementById(targetId);
         if (targetElem) {
           targetElem.scrollIntoView();
           const activeLink = /** @type {HTMLElement|null} */ (

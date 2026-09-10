@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn, execSync } from 'node:child_process';
-import statikk from 'statikk';
+import { createStaticServer } from '../scripts/serve.js';
 import { generateStubs } from '../scripts/generate-stubs.js';
 
 /**
@@ -180,28 +180,8 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
   const staticDir = path.resolve('devtools-protocol');
   generateStubs({ outputDir: staticDir });
 
-  // 1. Start static HTTP server with statikk on an ephemeral port
-  const { app, server, url: baseUrl } = await statikk({ root: staticDir, port: 0, cors: true });
-  // Fallback to 404.html to mirror GitHub Pages behavior for unmatched routes
-  app.use(
-    /**
-     * @param {import('node:http').IncomingMessage} _req
-     * @param {import('node:http').ServerResponse} res
-     */
-    async (_req, res) => {
-      try {
-        const notFoundData = await fs.promises.readFile(path.join(staticDir, '404.html'));
-        res.writeHead(404, {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Access-Control-Allow-Origin': '*',
-        });
-        res.end(notFoundData);
-      } catch {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not Found');
-      }
-    },
-  );
+  // 1. Start zero-dependency static HTTP server on an ephemeral port
+  const { server, url: baseUrl, close: closeServer } = await createStaticServer(staticDir, 0);
 
   // 2. Launch headless Chrome
   const tmpUserDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-viewer-e2e-'));

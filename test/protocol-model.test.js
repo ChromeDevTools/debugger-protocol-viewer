@@ -276,19 +276,19 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
     // Deep links and landing anchors
     {
       input: '#/endpoints',
-      expected: { target: 'tot', domain: 'endpoints', member: null },
+      expected: { target: 'tot', domain: null, member: null, section: 'endpoints' },
     },
     {
       input: '#endpoints',
-      expected: { target: 'tot', domain: 'endpoints', member: null },
+      expected: { target: 'tot', domain: null, member: null, section: 'endpoints' },
     },
     {
       input: '#/faq',
-      expected: { target: 'tot', domain: 'faq', member: null },
+      expected: { target: 'tot', domain: null, member: null, section: 'faq' },
     },
     {
       input: '#faq',
-      expected: { target: 'tot', domain: 'faq', member: null },
+      expected: { target: 'tot', domain: null, member: null, section: 'faq' },
     },
 
     // Root and empty routes
@@ -405,6 +405,10 @@ test('formatRoute: canonical route formatting', () => {
     '#/stable/Network',
   );
   assert.equal(formatRoute({ target: 'stable', domain: null, member: null }), '#/stable/');
+
+  // Section routes
+  assert.equal(formatRoute({ section: 'endpoints' }), '#/endpoints');
+  assert.equal(formatRoute({ target: 'v8', section: 'faq' }), '#/v8/faq');
 
   // Default options
   assert.equal(formatRoute(), '#/');

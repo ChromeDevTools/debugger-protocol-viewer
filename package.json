@@ -10,29 +10,21 @@
     "build": "node scripts/generate-stubs.js",
     "prep": "bash prep-tot-protocol-files.sh",
     "typecheck": "tsc --noEmit",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "format": "oxfmt",
-    "format:check": "oxfmt --check",
-    "test": "pnpm run typecheck && pnpm run test:node",
+    "test": "npm run typecheck && npm run test:node",
     "test:node": "node --test test/**/*.test.js",
     "test:unit": "node --test test/protocol-model.test.js",
     "test:stubs": "node --test test/stubs.test.js",
     "test:e2e": "node --test test/e2e.test.js",
-    "preflight": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm test",
-    "serve": "echo 'Open http://localhost:8696/devtools-protocol/ for built site'; statikk --port 8696 .",
-    "deploy": "pnpm run build && node scripts/deploy-gh-pages.js"
+    "preflight": "npm run typecheck && npm test",
+    "serve": "node scripts/serve.js",
+    "deploy": "npm run build && node scripts/deploy-gh-pages.js"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
     "devtools-protocol": "^0.0.1693794",
-    "oxfmt": "^0.67.0",
-    "oxlint": "^1.82.0",
-    "statikk": "^3.1.0",
     "typescript": "^7.0.2"
   },
   "engines": {
     "node": ">=22.0.0"
-  },
-  "packageManager": "pnpm@10.30.3"
+  }
 }

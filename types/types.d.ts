@@ -71,4 +71,5 @@ export interface RouteInfo {
   target: TargetKind;
   domain: string | null;
   member: string | null;
+  section?: string | null;
 }
