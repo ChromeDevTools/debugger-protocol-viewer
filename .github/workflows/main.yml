@@ -4,34 +4,27 @@ on:
   push:
     branches:
       - master
+permissions:
+  contents: read
+
 jobs:
   build_test:
-
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version-file: '.nvmrc'
           cache: npm
 
       - run: npm ci
       - run: npm run build
-      
-      - name: primitive test
-        run: npm run test
 
-      - name: install lhci
-        run: npm install @lhci/cli@latest
-
-#       - name: run lhci
-#         run: |
-#           npx lhci autorun \
-#             --collect.url=http://localhost:8696/devtools-protocol/ \
-#             --collect.url=http://localhost:8696/devtools-protocol/tot/Page/ \
-#             --upload.target=temporary-public-storage
+      - name: preflight
+        run: npm run preflight
