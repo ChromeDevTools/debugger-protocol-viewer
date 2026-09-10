@@ -96,6 +96,13 @@ test('generateStubs: end-to-end stub generation in temporary directory', async (
       }
     });
 
+    await t.test('Protocol JSON data is copied into output directory', () => {
+      const totPath = path.join(tmpDir, 'data', 'tot.json');
+      const v8Path = path.join(tmpDir, 'data', 'v8.json');
+      assert.ok(fs.existsSync(totPath), 'data/tot.json must exist in output');
+      assert.ok(fs.existsSync(v8Path), 'data/v8.json must exist in output');
+    });
+
     await t.test('CLI script execution succeeds', () => {
       const cliTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-cli-'));
       try {

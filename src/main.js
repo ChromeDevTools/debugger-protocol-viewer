@@ -16,9 +16,8 @@ import { ProtocolRenderer } from './protocol_renderer.js';
 import { Search } from './search.js';
 
 const PROTOCOL_URLS = {
-  browser:
-    'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/browser_protocol.json',
-  js: 'https://cdn.jsdelivr.net/gh/ChromeDevTools/devtools-protocol@master/json/js_protocol.json',
+  tot: new URL('./data/tot.json', import.meta.url).href,
+  v8: new URL('./data/v8.json', import.meta.url).href,
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -127,36 +126,24 @@ export class App {
   }
 
   /**
-   * Fetches JSON protocol specification with fallback.
+   * Fetches JSON protocol specification.
    * @param {string} url
    * @returns {Promise<ProtocolRoot>}
    */
   async _fetchProtocolJson(url) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      return await res.json();
-    } catch (e) {
-      // Fallback: local protocol files served by the app
-      let localFallback = 'data/tot.json';
-      if (url.includes('js_protocol')) {
-        localFallback = 'data/v8.json';
-      }
-      const localRes = await fetch(localFallback);
-      if (!localRes.ok)
-        throw new Error(`Fallback failed (${localFallback}): HTTP ${localRes.status}`);
-      return await localRes.json();
-    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText} (${url})`);
+    return await res.json();
   }
 
   async init() {
     try {
-      const [browserProto, jsProto] = await Promise.all([
-        this._fetchProtocolJson(PROTOCOL_URLS.browser),
-        this._fetchProtocolJson(PROTOCOL_URLS.js),
+      const [totProto, v8Proto] = await Promise.all([
+        this._fetchProtocolJson(PROTOCOL_URLS.tot),
+        this._fetchProtocolJson(PROTOCOL_URLS.v8),
       ]);
 
-      this._prepareDatasets(browserProto, jsProto);
+      this._prepareDatasets(totProto, v8Proto);
       this._onRoute();
     } catch (error) {
       this._contentElement.textContent = '';
@@ -167,13 +154,12 @@ export class App {
 
   /**
    * Prepares protocol datasets for tot, stable, and v8.
-   * @param {ProtocolRoot} browserProto
-   * @param {ProtocolRoot} jsProto
+   * @param {ProtocolRoot} totProto
+   * @param {ProtocolRoot} v8Proto
    */
-  _prepareDatasets(browserProto, jsProto) {
+  _prepareDatasets(totProto, v8Proto) {
     // 1. Tip-of-Tree (Tot)
-    const combinedTotDomains = [...(browserProto.domains || []), ...(jsProto.domains || [])];
-    const totDomains = normalizeProtocol({ domains: combinedTotDomains }).domains;
+    const totDomains = normalizeProtocol({ domains: totProto.domains || [] }).domains;
     computeBackReferences(totDomains);
     for (const d of totDomains) {
       this._targetStore.tot.set(d.domain, d);
@@ -187,7 +173,7 @@ export class App {
     }
 
     // 3. V8 Inspector
-    const v8Domains = normalizeProtocol({ domains: jsProto.domains || [] }).domains;
+    const v8Domains = normalizeProtocol({ domains: v8Proto.domains || [] }).domains;
     computeBackReferences(v8Domains);
     for (const d of v8Domains) {
       this._targetStore.v8.set(d.domain, d);

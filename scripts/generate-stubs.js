@@ -62,17 +62,19 @@ export function generateDomainStub(domain) {
 }
 
 /**
- * Generates stubs and copies assets to output directory.
+ * Generates stubs and copies assets and data to output directory.
  * @param {Object} options
  * @param {string} [options.protocolPath] Path to protocol JSON (tot.json)
  * @param {string} [options.outputDir] Output directory path
  * @param {string} [options.srcDir] Source directory path
+ * @param {string} [options.dataDir] Source data directory path
  * @returns {{ domainCount: number, outputDir: string }}
  */
 export function generateStubs({
   protocolPath = path.resolve('data/tot.json'),
   outputDir = path.resolve('devtools-protocol'),
   srcDir = path.resolve('src'),
+  dataDir = path.resolve('data'),
 } = {}) {
   const rawData = fs.readFileSync(protocolPath, 'utf8');
   const protocol = JSON.parse(rawData);
@@ -86,6 +88,15 @@ export function generateStubs({
 
   // Copy all assets from src/ to outputDir/
   fs.cpSync(srcDir, outputDir, { recursive: true });
+
+  // Copy protocol data files to outputDir/data/
+  const targetDataDir = path.join(outputDir, 'data');
+  fs.mkdirSync(targetDataDir, { recursive: true });
+  fs.copyFileSync(protocolPath, path.join(targetDataDir, 'tot.json'));
+  const v8SourcePath = path.join(dataDir, 'v8.json');
+  if (fs.existsSync(v8SourcePath)) {
+    fs.copyFileSync(v8SourcePath, path.join(targetDataDir, 'v8.json'));
+  }
 
   // Create .nojekyll in output directory
   fs.writeFileSync(path.join(outputDir, '.nojekyll'), '');
@@ -104,7 +115,7 @@ export function generateStubs({
   }
 
   console.log(`[generate-stubs] Generated ${protocol.domains.length} domain stubs in ${totDir}`);
-  console.log(`[generate-stubs] Deployed assets and .nojekyll to ${outputDir}`);
+  console.log(`[generate-stubs] Deployed assets, data, and .nojekyll to ${outputDir}`);
 
   return { domainCount: protocol.domains.length, outputDir };
 }
