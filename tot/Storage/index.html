@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting to DevTools Protocol: Storage...</title>
+  <script>
+    (function() {
+      var hash = window.location.hash || '';
+      var member = '';
+      var match = hash.match(/^#(?:method|type|event)-([\w-]+)/);
+      if (match) member = '.' + match[1];
+      window.location.replace('../../#/Storage' + member);
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting to <a href="../../#/Storage">Storage</a>...</p>
+  <noscript>
+    <ul>
+      <!-- Static links to every command, event, and type for SEO, crawling, and grep -->
+        <li><a href="../../#/Storage.getStorageKeyForFrame">Storage.getStorageKeyForFrame</a></li>
+        <li><a href="../../#/Storage.clearDataForOrigin">Storage.clearDataForOrigin</a></li>
+        <li><a href="../../#/Storage.clearDataForStorageKey">Storage.clearDataForStorageKey</a></li>
+        <li><a href="../../#/Storage.getCookies">Storage.getCookies</a></li>
+        <li><a href="../../#/Storage.setCookies">Storage.setCookies</a></li>
+        <li><a href="../../#/Storage.clearCookies">Storage.clearCookies</a></li>
+        <li><a href="../../#/Storage.getUsageAndQuota">Storage.getUsageAndQuota</a></li>
+        <li><a href="../../#/Storage.overrideQuotaForOrigin">Storage.overrideQuotaForOrigin</a></li>
+        <li><a href="../../#/Storage.trackCacheStorageForOrigin">Storage.trackCacheStorageForOrigin</a></li>
+        <li><a href="../../#/Storage.trackCacheStorageForStorageKey">Storage.trackCacheStorageForStorageKey</a></li>
+        <li><a href="../../#/Storage.trackIndexedDBForOrigin">Storage.trackIndexedDBForOrigin</a></li>
+        <li><a href="../../#/Storage.trackIndexedDBForStorageKey">Storage.trackIndexedDBForStorageKey</a></li>
+        <li><a href="../../#/Storage.untrackCacheStorageForOrigin">Storage.untrackCacheStorageForOrigin</a></li>
+        <li><a href="../../#/Storage.untrackCacheStorageForStorageKey">Storage.untrackCacheStorageForStorageKey</a></li>
+        <li><a href="../../#/Storage.untrackIndexedDBForOrigin">Storage.untrackIndexedDBForOrigin</a></li>
+        <li><a href="../../#/Storage.untrackIndexedDBForStorageKey">Storage.untrackIndexedDBForStorageKey</a></li>
+        <li><a href="../../#/Storage.getTrustTokens">Storage.getTrustTokens</a></li>
+        <li><a href="../../#/Storage.clearTrustTokens">Storage.clearTrustTokens</a></li>
+        <li><a href="../../#/Storage.getInterestGroupDetails">Storage.getInterestGroupDetails</a></li>
+        <li><a href="../../#/Storage.setInterestGroupTracking">Storage.setInterestGroupTracking</a></li>
+        <li><a href="../../#/Storage.setInterestGroupAuctionTracking">Storage.setInterestGroupAuctionTracking</a></li>
+        <li><a href="../../#/Storage.getSharedStorageMetadata">Storage.getSharedStorageMetadata</a></li>
+        <li><a href="../../#/Storage.getSharedStorageEntries">Storage.getSharedStorageEntries</a></li>
+        <li><a href="../../#/Storage.setSharedStorageEntry">Storage.setSharedStorageEntry</a></li>
+        <li><a href="../../#/Storage.deleteSharedStorageEntry">Storage.deleteSharedStorageEntry</a></li>
+        <li><a href="../../#/Storage.clearSharedStorageEntries">Storage.clearSharedStorageEntries</a></li>
+        <li><a href="../../#/Storage.resetSharedStorageBudget">Storage.resetSharedStorageBudget</a></li>
+        <li><a href="../../#/Storage.setSharedStorageTracking">Storage.setSharedStorageTracking</a></li>
+        <li><a href="../../#/Storage.setStorageBucketTracking">Storage.setStorageBucketTracking</a></li>
+        <li><a href="../../#/Storage.deleteStorageBucket">Storage.deleteStorageBucket</a></li>
+        <li><a href="../../#/Storage.runBounceTrackingMitigations">Storage.runBounceTrackingMitigations</a></li>
+        <li><a href="../../#/Storage.setAttributionReportingLocalTestingMode">Storage.setAttributionReportingLocalTestingMode</a></li>
+        <li><a href="../../#/Storage.setAttributionReportingTracking">Storage.setAttributionReportingTracking</a></li>
+        <li><a href="../../#/Storage.sendPendingAttributionReports">Storage.sendPendingAttributionReports</a></li>
+        <li><a href="../../#/Storage.getRelatedWebsiteSets">Storage.getRelatedWebsiteSets</a></li>
+        <li><a href="../../#/Storage.getAffectedUrlsForThirdPartyCookieMetadata">Storage.getAffectedUrlsForThirdPartyCookieMetadata</a></li>
+        <li><a href="../../#/Storage.setProtectedAudienceKAnonymity">Storage.setProtectedAudienceKAnonymity</a></li>
+        <li><a href="../../#/Storage.cacheStorageContentUpdated">Storage.cacheStorageContentUpdated</a></li>
+        <li><a href="../../#/Storage.cacheStorageListUpdated">Storage.cacheStorageListUpdated</a></li>
+        <li><a href="../../#/Storage.indexedDBContentUpdated">Storage.indexedDBContentUpdated</a></li>
+        <li><a href="../../#/Storage.indexedDBListUpdated">Storage.indexedDBListUpdated</a></li>
+        <li><a href="../../#/Storage.interestGroupAccessed">Storage.interestGroupAccessed</a></li>
+        <li><a href="../../#/Storage.interestGroupAuctionEventOccurred">Storage.interestGroupAuctionEventOccurred</a></li>
+        <li><a href="../../#/Storage.interestGroupAuctionNetworkRequestCreated">Storage.interestGroupAuctionNetworkRequestCreated</a></li>
+        <li><a href="../../#/Storage.sharedStorageAccessed">Storage.sharedStorageAccessed</a></li>
+        <li><a href="../../#/Storage.sharedStorageWorkletOperationExecutionFinished">Storage.sharedStorageWorkletOperationExecutionFinished</a></li>
+        <li><a href="../../#/Storage.storageBucketCreatedOrUpdated">Storage.storageBucketCreatedOrUpdated</a></li>
+        <li><a href="../../#/Storage.storageBucketDeleted">Storage.storageBucketDeleted</a></li>
+        <li><a href="../../#/Storage.attributionReportingSourceRegistered">Storage.attributionReportingSourceRegistered</a></li>
+        <li><a href="../../#/Storage.attributionReportingTriggerRegistered">Storage.attributionReportingTriggerRegistered</a></li>
+        <li><a href="../../#/Storage.attributionReportingReportSent">Storage.attributionReportingReportSent</a></li>
+        <li><a href="../../#/Storage.attributionReportingVerboseDebugReportSent">Storage.attributionReportingVerboseDebugReportSent</a></li>
+        <li><a href="../../#/Storage.SerializedStorageKey">Storage.SerializedStorageKey</a></li>
+        <li><a href="../../#/Storage.StorageType">Storage.StorageType</a></li>
+        <li><a href="../../#/Storage.UsageForType">Storage.UsageForType</a></li>
+        <li><a href="../../#/Storage.TrustTokens">Storage.TrustTokens</a></li>
+        <li><a href="../../#/Storage.InterestGroupAuctionId">Storage.InterestGroupAuctionId</a></li>
+        <li><a href="../../#/Storage.InterestGroupAccessType">Storage.InterestGroupAccessType</a></li>
+        <li><a href="../../#/Storage.InterestGroupAuctionEventType">Storage.InterestGroupAuctionEventType</a></li>
+        <li><a href="../../#/Storage.InterestGroupAuctionFetchType">Storage.InterestGroupAuctionFetchType</a></li>
+        <li><a href="../../#/Storage.SharedStorageAccessScope">Storage.SharedStorageAccessScope</a></li>
+        <li><a href="../../#/Storage.SharedStorageAccessMethod">Storage.SharedStorageAccessMethod</a></li>
+        <li><a href="../../#/Storage.SharedStorageEntry">Storage.SharedStorageEntry</a></li>
+        <li><a href="../../#/Storage.SharedStorageMetadata">Storage.SharedStorageMetadata</a></li>
+        <li><a href="../../#/Storage.SharedStoragePrivateAggregationConfig">Storage.SharedStoragePrivateAggregationConfig</a></li>
+        <li><a href="../../#/Storage.SharedStorageReportingMetadata">Storage.SharedStorageReportingMetadata</a></li>
+        <li><a href="../../#/Storage.SharedStorageUrlWithMetadata">Storage.SharedStorageUrlWithMetadata</a></li>
+        <li><a href="../../#/Storage.SharedStorageAccessParams">Storage.SharedStorageAccessParams</a></li>
+        <li><a href="../../#/Storage.StorageBucketsDurability">Storage.StorageBucketsDurability</a></li>
+        <li><a href="../../#/Storage.StorageBucket">Storage.StorageBucket</a></li>
+        <li><a href="../../#/Storage.StorageBucketInfo">Storage.StorageBucketInfo</a></li>
+        <li><a href="../../#/Storage.AttributionReportingSourceType">Storage.AttributionReportingSourceType</a></li>
+        <li><a href="../../#/Storage.UnsignedInt64AsBase10">Storage.UnsignedInt64AsBase10</a></li>
+        <li><a href="../../#/Storage.UnsignedInt128AsBase16">Storage.UnsignedInt128AsBase16</a></li>
+        <li><a href="../../#/Storage.SignedInt64AsBase10">Storage.SignedInt64AsBase10</a></li>
+        <li><a href="../../#/Storage.AttributionReportingFilterDataEntry">Storage.AttributionReportingFilterDataEntry</a></li>
+        <li><a href="../../#/Storage.AttributionReportingFilterConfig">Storage.AttributionReportingFilterConfig</a></li>
+        <li><a href="../../#/Storage.AttributionReportingFilterPair">Storage.AttributionReportingFilterPair</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregationKeysEntry">Storage.AttributionReportingAggregationKeysEntry</a></li>
+        <li><a href="../../#/Storage.AttributionReportingEventReportWindows">Storage.AttributionReportingEventReportWindows</a></li>
+        <li><a href="../../#/Storage.AttributionReportingTriggerDataMatching">Storage.AttributionReportingTriggerDataMatching</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableDebugReportingData">Storage.AttributionReportingAggregatableDebugReportingData</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableDebugReportingConfig">Storage.AttributionReportingAggregatableDebugReportingConfig</a></li>
+        <li><a href="../../#/Storage.AttributionScopesData">Storage.AttributionScopesData</a></li>
+        <li><a href="../../#/Storage.AttributionReportingNamedBudgetDef">Storage.AttributionReportingNamedBudgetDef</a></li>
+        <li><a href="../../#/Storage.AttributionReportingSourceRegistration">Storage.AttributionReportingSourceRegistration</a></li>
+        <li><a href="../../#/Storage.AttributionReportingSourceRegistrationResult">Storage.AttributionReportingSourceRegistrationResult</a></li>
+        <li><a href="../../#/Storage.AttributionReportingSourceRegistrationTimeConfig">Storage.AttributionReportingSourceRegistrationTimeConfig</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableValueDictEntry">Storage.AttributionReportingAggregatableValueDictEntry</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableValueEntry">Storage.AttributionReportingAggregatableValueEntry</a></li>
+        <li><a href="../../#/Storage.AttributionReportingEventTriggerData">Storage.AttributionReportingEventTriggerData</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableTriggerData">Storage.AttributionReportingAggregatableTriggerData</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableDedupKey">Storage.AttributionReportingAggregatableDedupKey</a></li>
+        <li><a href="../../#/Storage.AttributionReportingNamedBudgetCandidate">Storage.AttributionReportingNamedBudgetCandidate</a></li>
+        <li><a href="../../#/Storage.AttributionReportingTriggerRegistration">Storage.AttributionReportingTriggerRegistration</a></li>
+        <li><a href="../../#/Storage.AttributionReportingEventLevelResult">Storage.AttributionReportingEventLevelResult</a></li>
+        <li><a href="../../#/Storage.AttributionReportingAggregatableResult">Storage.AttributionReportingAggregatableResult</a></li>
+        <li><a href="../../#/Storage.AttributionReportingReportResult">Storage.AttributionReportingReportResult</a></li>
+        <li><a href="../../#/Storage.RelatedWebsiteSet">Storage.RelatedWebsiteSet</a></li>
+      </ul>
+  </noscript>
+</body>
+</html>
