@@ -7,7 +7,7 @@ import os from 'node:os';
 
 const dir = path.resolve('devtools-protocol');
 if (!fs.existsSync(dir)) {
-  console.error(`Directory ${dir} does not exist. Run "pnpm run build" first.`);
+  console.error(`Directory ${dir} does not exist. Run "npm run build" first.`);
   process.exit(1);
 }
 
