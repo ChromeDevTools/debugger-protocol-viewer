@@ -1,7 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
   "search.exclude": {
-    "devtools-protocol/**": true,
-    "bower_components/**": true
+    "devtools-protocol/**": true
   }
 }

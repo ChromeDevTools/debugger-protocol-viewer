@@ -8,5 +8,4 @@
 
 ### What is the expected result?
 
-
 ### What happens instead of that?
