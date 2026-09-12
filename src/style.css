@@ -78,13 +78,16 @@ h2 {
   flex-wrap: wrap;
 }
 
+:is(h2, h3, h4, h5) {
+  scroll-margin-top: calc(var(--header-height) + 16px);
+}
+
 h3 {
   font-size: 19px;
   font-weight: 500;
   margin: 32px 0 14px 0;
   color: #3c4043;
   letter-spacing: -0.1px;
-  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 h4 {
@@ -92,7 +95,6 @@ h4 {
   font-size: 15.5px;
   font-weight: 600;
   line-height: 1.4;
-  scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
 h5 {
@@ -116,9 +118,9 @@ a:hover {
 
 code {
   font-family: var(--font-mono);
-  color: #7b1fa2;
+  color: var(--color-text);
   font-size: 0.92em;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.05);
   padding: 1.5px 5px;
   border-radius: 3px;
 }
@@ -694,9 +696,9 @@ figure.screenshot img {
 }
 
 .enum-values code {
-  color: #6a1b9a;
-  background-color: #f3e5f5;
-  border: 1px solid rgba(106, 27, 154, 0.15);
+  color: var(--color-text);
+  background-color: #f1f3f4;
+  border: 1px solid #dadce0;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -716,12 +718,63 @@ figure.screenshot img {
   margin-left: 8px;
   display: none;
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: 0.85em;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  text-decoration: none;
+  vertical-align: middle;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: color 0.15s ease, transform 0.1s ease, background-color 0.15s ease;
 }
 
-h4:hover .title-link {
-  display: inline;
+:is(h2, h3, h4, h5):hover .title-link,
+.title-link:focus-visible {
+  display: inline-block;
   user-select: none;
+}
+
+.title-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-hover);
+  text-decoration: none;
+}
+
+.title-link:active {
+  color: var(--color-primary);
+  background-color: var(--color-active);
+  transform: scale(1.15);
+}
+
+/* Anchor Target & Deep-link Highlight Animation */
+@keyframes target-highlight {
+  0% {
+    background-color: oklch(90% 0.08 250 / 0.5);
+    outline: 2px solid oklch(65% 0.15 250 / 0.45);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+  60% {
+    background-color: oklch(94% 0.04 250 / 0.25);
+    outline: 2px solid oklch(65% 0.15 250 / 0.2);
+  }
+  100% {
+    background-color: transparent;
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+  }
+}
+
+:target,
+.target-highlight {
+  animation: target-highlight 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :target,
+  .target-highlight {
+    animation: none;
+  }
 }
 
 /* Badges & Entity Icons */
@@ -821,11 +874,11 @@ h2 span.deprecated,
 
 .references-list {
   list-style-type: none;
-  padding-left: 0;
-  margin: 6px 0;
+  padding-left: 16px;
+  margin: 8px 0 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .references-list li {
@@ -836,13 +889,40 @@ h2 span.deprecated,
 }
 
 .reference-icon {
-  width: 55px;
   display: inline-flex;
-  justify-content: flex-end;
+  align-items: center;
   vertical-align: middle;
-  text-align: right;
-  margin-right: 8px;
+  margin-left: 8px;
   flex-shrink: 0;
+}
+
+/* Subdued secondary badges for backlinks to avoid competing with h4 title badges */
+.references-list .entity-icon {
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-right: 0;
+  letter-spacing: 0.2px;
+}
+
+.references-list .entity-icon-method {
+  background-color: #fef7e0;
+  color: #7a4100;
+  border: 1px solid #f2dd9d;
+}
+
+.references-list .entity-icon-event {
+  background-color: #e6f4ea;
+  color: #137333;
+  border: 1px solid #ceead6;
+}
+
+.references-list .entity-icon-type {
+  background-color: #f3e8fd;
+  color: #681da8;
+  border: 1px solid #e1bee7;
 }
 
 /* ==========================================================================

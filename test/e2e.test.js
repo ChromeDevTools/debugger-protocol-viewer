@@ -461,6 +461,18 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         refCount > 0,
         `Expected DOM.NodeId to have back-references, got count: ${refCount}`,
       );
+
+      const firstRefHasLinkFirst = await client.evaluate(
+        'document.querySelector(".references-list li")?.firstElementChild?.tagName === "A"',
+        sessionId,
+      );
+      assert.strictEqual(firstRefHasLinkFirst, true, 'Expected reference link to precede the badge');
+
+      const firstRefHasBadgeAfter = await client.evaluate(
+        'Boolean(document.querySelector(".references-list li")?.lastElementChild?.classList.contains("reference-icon"))',
+        sessionId,
+      );
+      assert.strictEqual(firstRefHasBadgeAfter, true, 'Expected reference icon to follow the link');
     });
 
     await t.test('7. Mobile responsive drawer (#drawer-toggle & backdrop)', async () => {
@@ -578,6 +590,29 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         sessionId,
       );
       assert.strictEqual(isEndpointsActive, true, 'Expected HTTP Endpoints link to be active');
+    });
+
+    await t.test('12. Target highlight animation and title-link on landing page headings', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/get-jsonversion` });
+
+      const headingHasHighlight = await client.pollEvaluate(
+        'document.getElementById("get-jsonversion")?.classList.contains("target-highlight")',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(headingHasHighlight, true, 'Expected #get-jsonversion to receive target-highlight class');
+
+      const titleLinkHref = await client.evaluate(
+        'document.getElementById("get-jsonversion")?.querySelector(".title-link")?.getAttribute("href")',
+        sessionId,
+      );
+      assert.strictEqual(titleLinkHref, '#get-jsonversion');
+
+      const legacyInspectorExists = await client.evaluate(
+        'Boolean(document.getElementById("get-devtoolsinspector.html")?.querySelector(".title-link"))',
+        sessionId,
+      );
+      assert.strictEqual(legacyInspectorExists, true, 'Expected get-devtoolsinspector.html heading with title-link');
     });
   } finally {
     if (targetId && browserApi) {

@@ -260,14 +260,24 @@ export function computeBackReferences(domains) {
     }
   }
 
+  /** @type {Record<string, number>} */
+  const typeOrder = { command: 1, method: 1, event: 2, type: 3 };
+
   for (const type of typeidToType.values()) {
     const map = new Map();
     for (const reference of type.referencedBy) {
       map.set(reference.name, reference);
     }
     type.referencedBy = Array.from(map.values());
-    type.referencedBy.sort((/** @type {{name: string}} */ a, /** @type {{name: string}} */ b) =>
-      a.name.localeCompare(b.name),
+    type.referencedBy.sort(
+      (/** @type {{type: string, name: string}} */ a, /** @type {{type: string, name: string}} */ b) => {
+        const orderA = typeOrder[a.type] ?? 99;
+        const orderB = typeOrder[b.type] ?? 99;
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+        return a.name.localeCompare(b.name);
+      },
     );
   }
 
@@ -320,8 +330,9 @@ const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }
  * @returns {RouteInfo}
  */
 function createRouteInfo(target, domain, member, section = null) {
-  if (domain && !member && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
-    const sec = domain === 'http-endpoints' ? 'endpoints' : domain;
+  if (domain && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
+    const full = member ? `${domain}.${member}` : domain;
+    const sec = full === 'http-endpoints' ? 'endpoints' : full;
     return { target, domain: null, member: null, section: sec };
   }
   /** @type {RouteInfo} */

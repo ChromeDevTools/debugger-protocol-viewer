@@ -106,7 +106,7 @@
           events are serialized JSON objects of a fixed structure.
         </p>
 
-        <h3>Protocol API Docs</h3>
+        <h3 id="api-docs">Protocol API Docs <a class="title-link" href="#api-docs">#</a></h3>
 
         <p>
           <b><a href="#/Page">The latest (tip-of-tree) protocol</a></b> — It
@@ -134,7 +134,7 @@
           compatibilities.
         </p>
 
-        <h3>Resources</h3>
+        <h3 id="resources">Resources <a class="title-link" href="#resources">#</a></h3>
 
         <p>
           See
@@ -157,7 +157,9 @@
           mailing list.
         </p>
 
-        <h3 id="monitor">Using Protocol Monitor in Chrome DevTools</h3>
+        <h3 id="monitor">
+          Using Protocol Monitor in Chrome DevTools <a class="title-link" href="#monitor">#</a>
+        </h3>
         <p>
           This is especially handy to understand how the DevTools frontend makes use of the
           protocol. You can view all requests/responses and methods as they happen in the Protocol
@@ -228,7 +230,9 @@ await Main.MainImpl.sendOverProtocol('Emulation.setDeviceMetricsOverride', {
 
 const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pre>
 
-        <h3 id="extension">DevTools protocol via Chrome extension</h3>
+        <h3 id="extension">
+          DevTools protocol via Chrome extension <a class="title-link" href="#extension">#</a>
+        </h3>
         <p>
           To allow chrome extensions to interact with the protocol, we introduced
           <a href="https://developer.chrome.com/docs/extensions/reference/api/debugger"
@@ -260,9 +264,14 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           extension.
         </p>
 
-        <h3 id="faq">Frequently Asked Questions</h3>
+        <h3 id="faq">
+          Frequently Asked Questions <a class="title-link" href="#faq">#</a>
+        </h3>
 
-        <h4 id="how-is-the-protocol-defined">How is the protocol defined?</h4>
+        <h4 id="how-is-the-protocol-defined">
+          How is the protocol defined?
+          <a class="title-link" href="#how-is-the-protocol-defined">#</a>
+        </h4>
         <p>
           The canonical protocol definitions live in the Chromium source tree: (<a
             href="https://chromium.googlesource.com/chromium/src/+/HEAD/third_party/blink/public/devtools_protocol/browser_protocol.pdl"
@@ -280,7 +289,10 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           >.
         </p>
 
-        <h4 id="json">Can I get the protocol as JSON?</h4>
+        <h4 id="json">
+          Can I get the protocol as JSON?
+          <a class="title-link" href="#json">#</a>
+        </h4>
 
         <p>
           These canonical .pdl files are mirrored on GitHub
@@ -296,7 +308,10 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           protocol version it speaks is available at <code>localhost:9222/json/protocol</code>.
         </p>
 
-        <h4 id="how-do-i-access-the-browser-target">How do I access the browser target?</h4>
+        <h4 id="how-do-i-access-the-browser-target">
+          How do I access the browser target?
+          <a class="title-link" href="#how-do-i-access-the-browser-target">#</a>
+        </h4>
         <p>
           The endpoint is exposed as <code>webSocketDebuggerUrl</code> in
           <code>/json/version</code>. Note the <code>browser</code> in the URL, rather than
@@ -305,7 +320,10 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           <code>DevToolsActivePort</code> file in browser profile folder.
         </p>
 
-        <h4 id="simultaneous">Does the protocol support multiple simultaneous clients?</h4>
+        <h4 id="simultaneous">
+          Does the protocol support multiple simultaneous clients?
+          <a class="title-link" href="#simultaneous">#</a>
+        </h4>
         <p>
           Chrome 63 introduced support for multiple clients. See
           <a href="https://developer.chrome.com/blog/new-in-devtools-63#multi-client"
@@ -322,13 +340,18 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           button.
         </p>
 
-        <h3 id="endpoints">HTTP Endpoints</h3>
+        <h3 id="endpoints">
+          HTTP Endpoints <a class="title-link" href="#endpoints">#</a>
+        </h3>
         <p>
           If started with a remote-debugging-port, these HTTP endpoints are available on the same
           port.
         </p>
 
-        <h4 id="get-jsonversion">GET <code>/json/version</code></h4>
+        <h4 id="get-jsonversion">
+          GET <code>/json/version</code>
+          <a class="title-link" href="#get-jsonversion">#</a>
+        </h4>
         <p>Browser version metadata</p>
         <pre>
 {
@@ -340,7 +363,10 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
     "webSocketDebuggerUrl": "ws://localhost:9222/devtools/browser/..."
 }</pre>
 
-        <h4 id="get-json-or-jsonlist">GET <code>/json</code> or <code>/json/list</code></h4>
+        <h4 id="get-json-or-jsonlist">
+          GET <code>/json</code> or <code>/json/list</code>
+          <a class="title-link" href="#get-json-or-jsonlist">#</a>
+        </h4>
         <p>A list of all available websocket targets.</p>
         <pre>
 [ {
@@ -353,22 +379,41 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
   "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/..."
 } ]</pre>
 
-        <h4 id="get-jsonprotocol">GET <code>/json/protocol/</code></h4>
+        <h4 id="get-jsonprotocol">
+          GET <code>/json/protocol/</code>
+          <a class="title-link" href="#get-jsonprotocol">#</a>
+        </h4>
         <p>The current devtools protocol, as JSON.</p>
 
-        <h4 id="get-jsonnewurl">PUT <code>/json/new?{url}</code></h4>
+        <h4 id="get-jsonnewurl">
+          PUT <code>/json/new?{url}</code>
+          <a class="title-link" href="#get-jsonnewurl">#</a>
+        </h4>
         <p>Opens a new tab. Responds with the websocket target data for the new tab.</p>
 
-        <h4 id="get-jsonactivatetargetid">GET <code>/json/activate/{targetId}</code></h4>
+        <h4 id="get-jsonactivatetargetid">
+          GET <code>/json/activate/{targetId}</code>
+          <a class="title-link" href="#get-jsonactivatetargetid">#</a>
+        </h4>
         <p>Brings a page into the foreground (activate a tab).</p>
 
-        <h4 id="get-jsonclosetargetid">GET <code>/json/close/{targetId}</code></h4>
+        <h4 id="get-jsonclosetargetid">
+          GET <code>/json/close/{targetId}</code>
+          <a class="title-link" href="#get-jsonclosetargetid">#</a>
+        </h4>
         <p>Closes the target page identified by <code>targetId</code>.</p>
 
         <h4 id="websocket-devtoolspagetargetid">
           WebSocket <code>/devtools/page/{targetId}</code>
+          <a class="title-link" href="#websocket-devtoolspagetargetid">#</a>
         </h4>
         <p>The WebSocket endpoint for the protocol.</p>
+
+        <h4 id="get-devtoolsinspector.html">
+          GET <code>/devtools/inspector.html</code>
+          <a class="title-link" href="#get-devtoolsinspector.html">#</a>
+        </h4>
+        <p>A copy of the DevTools frontend that ships with Chrome.</p>
       </div>
     </template>
   </body>

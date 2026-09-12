@@ -319,6 +319,7 @@ export class App {
       const elem = this._contentElement.querySelector('#' + titleId);
       if (elem) {
         elem.scrollIntoView();
+        highlightTarget(elem);
       }
       this.focusContent();
       return;
@@ -373,6 +374,7 @@ export class App {
         const elem = rendered.querySelector('#' + titleId);
         if (elem) {
           elem.scrollIntoView();
+          highlightTarget(elem);
         } else {
           this._contentElement.scrollTop = 0;
         }
@@ -403,11 +405,24 @@ export class App {
       const clone = template.content.cloneNode(true);
       this._contentElement.appendChild(clone);
 
+      // Ensure all landing headings with an id have a title-link
+      const headings = this._contentElement.querySelectorAll('h2[id], h3[id], h4[id], h5[id]');
+      for (const heading of headings) {
+        if (!heading.querySelector('.title-link')) {
+          const link = document.createElement('a');
+          link.className = 'title-link';
+          link.href = `#${heading.id}`;
+          link.textContent = '#';
+          heading.appendChild(link);
+        }
+      }
+
       if (anchorId) {
         const targetId = anchorId === 'http-endpoints' ? 'endpoints' : anchorId;
         const targetElem = document.getElementById(targetId);
         if (targetElem) {
           targetElem.scrollIntoView();
+          highlightTarget(targetElem);
           const activeLink = /** @type {HTMLElement|null} */ (
             this._domainListElement.querySelector(
               `[data-domain='${anchorId}'], [data-domain='${targetId}']`,
@@ -476,4 +491,15 @@ function renderError(error) {
   box.append(h2, p);
   main.appendChild(box);
   return main;
+}
+
+/**
+ * Triggers a highlight animation on the targeted element.
+ * @param {Element} element
+ */
+function highlightTarget(element) {
+  element.classList.remove('target-highlight');
+  // Trigger reflow so re-navigating to the same anchor replays the animation
+  void /** @type {HTMLElement} */ (element).offsetWidth;
+  element.classList.add('target-highlight');
 }

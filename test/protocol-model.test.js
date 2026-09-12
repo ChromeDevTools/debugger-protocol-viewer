@@ -190,29 +190,23 @@ test('computeBackReferences: computes reverse references with deduplication and 
   // - DOM.setChildNodes (event)
   // - DOM.Node (type)
   assert.ok(nodeIdType?.referencedBy);
-  assert.deepEqual(
-    nodeIdType?.referencedBy,
-    [
-      { type: 'command', name: 'DOM.describeNode' },
-      { type: 'type', name: 'DOM.Node' },
-      { type: 'command', name: 'DOM.pushNodesByBackendIdsToFrontend' },
-      { type: 'event', name: 'DOM.setChildNodes' },
-    ].sort((a, b) => a.name.localeCompare(b.name)),
-  );
+  assert.deepEqual(nodeIdType?.referencedBy, [
+    { type: 'command', name: 'DOM.describeNode' },
+    { type: 'command', name: 'DOM.pushNodesByBackendIdsToFrontend' },
+    { type: 'event', name: 'DOM.setChildNodes' },
+    { type: 'type', name: 'DOM.Node' },
+  ]);
 
   // Node should be referenced by:
   // - DOM.describeNode (command return)
-  // - DOM.NodeList (type items $ref)
   // - DOM.setChildNodes (event array items $ref)
+  // - DOM.NodeList (type items $ref)
   assert.ok(nodeType?.referencedBy);
-  assert.deepEqual(
-    nodeType?.referencedBy,
-    [
-      { type: 'command', name: 'DOM.describeNode' },
-      { type: 'type', name: 'DOM.NodeList' },
-      { type: 'event', name: 'DOM.setChildNodes' },
-    ].sort((a, b) => a.name.localeCompare(b.name)),
-  );
+  assert.deepEqual(nodeType?.referencedBy, [
+    { type: 'command', name: 'DOM.describeNode' },
+    { type: 'event', name: 'DOM.setChildNodes' },
+    { type: 'type', name: 'DOM.NodeList' },
+  ]);
 });
 
 test('parseRoute: dynamic native subtests for all route formats', async (/** @type {TestContext} */ t) => {
@@ -289,6 +283,22 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
     {
       input: '#faq',
       expected: { target: 'tot', domain: null, member: null, section: 'faq' },
+    },
+    {
+      input: '#/get-devtoolsinspector.html',
+      expected: { target: 'tot', domain: null, member: null, section: 'get-devtoolsinspector.html' },
+    },
+    {
+      input: '#get-devtoolsinspector.html',
+      expected: { target: 'tot', domain: null, member: null, section: 'get-devtoolsinspector.html' },
+    },
+    {
+      input: '#/get-jsonversion',
+      expected: { target: 'tot', domain: null, member: null, section: 'get-jsonversion' },
+    },
+    {
+      input: '#get-jsonversion',
+      expected: { target: 'tot', domain: null, member: null, section: 'get-jsonversion' },
     },
 
     // Root and empty routes

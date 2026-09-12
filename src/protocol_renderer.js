@@ -163,11 +163,11 @@ export class ProtocolRenderer {
       for (let reference of type.referencedBy) {
         const li = document.createElement('li');
         container.appendChild(li);
+        li.appendChild(ProtocolRenderer.renderRef(reference.name));
         const referenceIcon = document.createElement('span');
         referenceIcon.className = 'reference-icon';
-        li.appendChild(referenceIcon);
         referenceIcon.appendChild(ProtocolRenderer.renderEntityIcon(reference.type));
-        li.appendChild(ProtocolRenderer.renderRef(reference.name));
+        li.appendChild(referenceIcon);
       }
     }
 
