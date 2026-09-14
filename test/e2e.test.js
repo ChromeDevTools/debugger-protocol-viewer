@@ -214,28 +214,74 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
   let pageApi = null;
 
   try {
-    // 3. Parse WebSocket URL from Chrome stderr
+    // 3. Resolve WebSocket URL from Chrome (via DevToolsActivePort file or stderr)
     const wsUrl = await new Promise((resolve, reject) => {
-      const timeout = setTimeout(
-        () => reject(new Error('Timed out waiting for Chrome WebSocket URL')),
-        10000,
-      );
+      let resolved = false;
       let stderrBuffer = '';
+
+      /**
+       * @param {string} url
+       */
+      const finish = (url) => {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(timeout);
+        clearInterval(activePortInterval);
+        resolve(url);
+      };
+
+      /**
+       * @param {Error} err
+       */
+      const fail = (err) => {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(timeout);
+        clearInterval(activePortInterval);
+        reject(err);
+      };
+
+      const timeout = setTimeout(() => {
+        fail(
+          new Error(
+            `Timed out waiting for Chrome WebSocket URL (waited 30s).\nChrome stderr:\n${stderrBuffer}`,
+          ),
+        );
+      }, 30000);
+
+      // Check DevToolsActivePort file written to user-data-dir
+      const activePortPath = path.join(tmpUserDataDir, 'DevToolsActivePort');
+      const activePortInterval = setInterval(() => {
+        if (fs.existsSync(activePortPath)) {
+          try {
+            const content = fs.readFileSync(activePortPath, 'utf8').trim().split('\n');
+            if (content.length >= 2) {
+              const port = content[0]?.trim();
+              const targetPath = content[1]?.trim();
+              if (port && targetPath) {
+                finish(`ws://127.0.0.1:${port}${targetPath}`);
+              }
+            }
+          } catch {}
+        }
+      }, 50);
+
       chromeProcess.stderr.on('data', (chunk) => {
         stderrBuffer += chunk.toString();
         const match = stderrBuffer.match(/DevTools listening on (ws:\/\/[^\s]+)/);
         if (match) {
-          clearTimeout(timeout);
-          resolve(match[1]);
+          finish(match[1]);
         }
       });
       chromeProcess.on('error', (err) => {
-        clearTimeout(timeout);
-        reject(err);
+        fail(err);
       });
       chromeProcess.on('exit', (code) => {
-        clearTimeout(timeout);
-        reject(new Error(`Chrome exited prematurely with code ${code}`));
+        fail(
+          new Error(
+            `Chrome exited prematurely with code ${code}.\nChrome stderr:\n${stderrBuffer}`,
+          ),
+        );
       });
     });
 
