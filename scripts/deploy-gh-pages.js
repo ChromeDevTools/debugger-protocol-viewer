@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -21,11 +21,11 @@ try {
     env: { ...process.env, GIT_INDEX_FILE: tmpIndex },
     encoding: 'utf8',
   }).trim();
-  const commit = execSync(`git commit-tree ${tree} -m "deploy: update gh-pages to modern viewer"`, {
+  const commit = execFileSync('git', ['commit-tree', tree, '-m', 'deploy: update gh-pages to modern viewer'], {
     encoding: 'utf8',
   }).trim();
   console.log(`Created deployment commit: ${commit}`);
-  execSync(`git push origin ${commit}:refs/heads/gh-pages --force`, {
+  execFileSync('git', ['push', 'origin', `${commit}:refs/heads/gh-pages`, '--force'], {
     stdio: 'inherit',
   });
   console.log('Successfully deployed to gh-pages branch on origin!');
