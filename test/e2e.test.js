@@ -411,6 +411,124 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
           newHash.startsWith('#/v8'),
           `Expected hash to start with "#/v8", got "${newHash}"`,
         );
+
+        // Assert sidebar domain count updated to 6 v8 domains
+        const v8DomainCount = await client.pollEvaluate(
+          'document.querySelectorAll("#domain-list .domain-link:not(.sidebar-meta-link)").length',
+          (/** @type {any} */ count) => count === 6,
+          sessionId,
+        );
+        assert.strictEqual(v8DomainCount, 6, 'Expected exactly 6 domains in sidebar for v8 target');
+      },
+    );
+
+    await t.test(
+      '3c. Target selector user interaction: switching dropdown from tot to stable updates domain list in sidebar',
+      async () => {
+        await page.Page.navigate({ url: `${baseUrl}/#/Page` });
+
+        // Wait for page ready with tot domains (53 domains)
+        const initialCount = await client.pollEvaluate(
+          'document.querySelectorAll("#domain-list .domain-link:not(.sidebar-meta-link)").length',
+          (/** @type {any} */ count) => count === 53,
+          sessionId,
+        );
+        assert.strictEqual(initialCount, 53, 'Expected 53 domains in sidebar for tot target');
+
+        const hasAccessibilityInTot = await client.evaluate(
+          'Boolean(document.querySelector("#domain-list [data-domain=\'Accessibility\']"))',
+          sessionId,
+        );
+        assert.strictEqual(
+          hasAccessibilityInTot,
+          true,
+          'Expected experimental Accessibility domain to exist in tot sidebar',
+        );
+
+        // Switch dropdown to stable
+        await client.evaluate(
+          `
+        (function() {
+          const select = document.getElementById('target-selector');
+          select.value = 'stable';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        })()
+      `,
+          sessionId,
+        );
+
+        // Assert hash changed to #/stable/Page
+        const stableHash = await client.pollEvaluate(
+          'window.location.hash',
+          (/** @type {any} */ val) => val === '#/stable/Page',
+          sessionId,
+        );
+        assert.strictEqual(stableHash, '#/stable/Page', 'Expected hash to be "#/stable/Page"');
+
+        // Assert dropdown value is stable
+        const selectVal = await client.pollEvaluate(
+          'document.getElementById("target-selector")?.value',
+          (/** @type {any} */ val) => val === 'stable',
+          sessionId,
+        );
+        assert.strictEqual(selectVal, 'stable', 'Expected dropdown value to be "stable"');
+
+        // Assert sidebar domain count updated to 19 stable domains
+        const stableCount = await client.pollEvaluate(
+          'document.querySelectorAll("#domain-list .domain-link:not(.sidebar-meta-link)").length',
+          (/** @type {any} */ count) => count === 19,
+          sessionId,
+        );
+        assert.strictEqual(stableCount, 19, 'Expected 19 domains in sidebar for stable target');
+
+        // Assert experimental domain (Accessibility) was removed from sidebar
+        const hasAccessibilityInStable = await client.evaluate(
+          'Boolean(document.querySelector("#domain-list [data-domain=\'Accessibility\']"))',
+          sessionId,
+        );
+        assert.strictEqual(
+          hasAccessibilityInStable,
+          false,
+          'Expected experimental Accessibility domain to NOT exist in stable sidebar',
+        );
+
+        // Switch dropdown back to tot
+        await client.evaluate(
+          `
+        (function() {
+          const select = document.getElementById('target-selector');
+          select.value = 'tot';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        })()
+      `,
+          sessionId,
+        );
+
+        // Assert hash changed back to tot (#/Page)
+        const totHash = await client.pollEvaluate(
+          'window.location.hash',
+          (/** @type {any} */ val) => val === '#/Page',
+          sessionId,
+        );
+        assert.strictEqual(totHash, '#/Page', 'Expected hash to be "#/Page"');
+
+        // Assert sidebar domain count restored to 53
+        const restoredCount = await client.pollEvaluate(
+          'document.querySelectorAll("#domain-list .domain-link:not(.sidebar-meta-link)").length',
+          (/** @type {any} */ count) => count === 53,
+          sessionId,
+        );
+        assert.strictEqual(restoredCount, 53, 'Expected 53 domains restored in tot sidebar');
+
+        const hasAccessibilityRestored = await client.evaluate(
+          'Boolean(document.querySelector("#domain-list [data-domain=\'Accessibility\']"))',
+          sessionId,
+        );
+        assert.strictEqual(
+          hasAccessibilityRestored,
+          true,
+          'Expected experimental Accessibility domain to be restored in tot sidebar',
+        );
       },
     );
 

@@ -77,8 +77,10 @@ export class App {
 
     /** @type {TargetKind} */
     this._currentTarget = 'tot';
+    /** @type {TargetKind|null} */
+    this._renderedTarget = null;
     /** @type {string|null} */
-    this._currentDomain = null;
+    this._renderedDomain = null;
 
     /** @type {Map<string, NormalizedProtocolDomain>} */
     this._activeDomains = new Map();
@@ -215,23 +217,12 @@ export class App {
   }
 
   _setupSidebarEvents() {
-    // Target selector dropdown
     if (this._targetSelector) {
       this._targetSelector.addEventListener('change', () => {
-        const nextTarget = normalizeTarget(this._targetSelector.value);
-        if (nextTarget === this._currentTarget) return;
-
-        this._currentTarget = nextTarget;
-        const targetStore = this._targetStore[this._currentTarget] || this._targetStore.tot;
-        const domainExistsInTarget = this._currentDomain && targetStore.has(this._currentDomain);
-        const domain = domainExistsInTarget ? this._currentDomain : null;
-
-        const newRoute = formatRoute({
-          target: this._currentTarget,
-          domain,
-          member: null,
-        });
-        this.navigate(newRoute);
+        const target = normalizeTarget(this._targetSelector.value);
+        const { domain, section } = parseRoute(window.location.hash);
+        const validDomain = domain && this._targetStore[target]?.has(domain) ? domain : null;
+        this.navigate(formatRoute({ target, domain: validDomain, section }));
       });
     }
   }
@@ -271,13 +262,6 @@ export class App {
     window.addEventListener('popstate', () => this._onRoute());
   }
 
-  _updateActiveDomains() {
-    this._activeDomains = this._targetStore[this._currentTarget] || this._targetStore.tot;
-
-    this._search.setDomains(Array.from(this._activeDomains.values()));
-    this._renderSidebar(this._activeDomains);
-  }
-
   _onRoute() {
     let rawRoute = window.location.hash;
     if (window.location.search && !rawRoute) {
@@ -287,31 +271,29 @@ export class App {
     }
 
     const route = parseRoute(rawRoute);
-    const prevTarget = this._currentTarget;
-
-    if (route.target !== this._currentTarget) {
-      this._currentTarget = route.target;
-    }
-    if (this._targetSelector && this._targetSelector.value !== this._currentTarget) {
-      this._targetSelector.value = this._currentTarget;
+    this._currentTarget = route.target;
+    if (this._targetSelector) {
+      this._targetSelector.value = route.target;
     }
 
-    if (route.target !== prevTarget || this._activeDomains.size === 0) {
-      this._updateActiveDomains();
+    if (this._renderedTarget !== route.target) {
+      this._renderedTarget = route.target;
+      this._renderedDomain = null;
+      this._activeDomains = this._targetStore[route.target] || this._targetStore.tot;
+      this._search.setDomains(Array.from(this._activeDomains.values()));
+      this._renderSidebar(this._activeDomains);
     }
 
-    const domain = route.domain;
-    const member = route.member;
-    const section = route.section;
+    const { domain, member, section } = route;
 
     if (!domain) {
-      this._currentDomain = section ?? null;
+      this._renderedDomain = null;
       this._onNavigateHome(section);
       return;
     }
 
     // In-page navigation: if domain is already rendered, scroll to member without DOM re-render
-    if (this._currentDomain === domain && this._contentElement.firstChild && member) {
+    if (this._renderedDomain === domain && this._contentElement.firstChild && member) {
       const canonicalTitle = `${domain}.${member}`;
       document.title = `${canonicalTitle} - DevTools Protocol`;
       this._search.setDefaultValue(canonicalTitle);
@@ -325,7 +307,7 @@ export class App {
       return;
     }
 
-    this._currentDomain = domain;
+    this._renderedDomain = domain;
     this._onNavigateDomain(domain, member);
   }
 
@@ -464,13 +446,10 @@ export class App {
     this._domainListElement.appendChild(divider);
 
     const endpointsLink = document.createElement('a');
-    endpointsLink.href = '#/endpoints';
+    endpointsLink.href = formatRoute({ target: this._currentTarget, section: 'endpoints' });
     endpointsLink.className = 'domain-link sidebar-meta-link';
     endpointsLink.dataset.domain = 'endpoints';
     endpointsLink.textContent = 'HTTP Endpoints';
-    if (this._currentDomain === 'endpoints' || this._currentDomain === 'http-endpoints') {
-      endpointsLink.classList.add('active-link');
-    }
     this._domainListElement.appendChild(endpointsLink);
   }
 }
