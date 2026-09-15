@@ -16,8 +16,7 @@
     "test:stubs": "node --test test/stubs.test.js",
     "test:e2e": "node --test test/e2e.test.js",
     "preflight": "npm run typecheck && npm test",
-    "serve": "node scripts/serve.js",
-    "deploy": "npm run build && node scripts/deploy-gh-pages.js"
+    "serve": "node scripts/serve.js"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
