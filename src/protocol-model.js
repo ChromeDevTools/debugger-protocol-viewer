@@ -322,14 +322,53 @@ const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:m
 const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
 
 /**
+ * Resolves whether a member in a domain redirects to another domain.
+ * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
+ * @param {string|null|undefined} domainName
+ * @param {string|null|undefined} memberName
+ * @returns {{ targetDomain: string, targetMember: string } | null}
+ */
+export function getRedirect(domains, domainName, memberName) {
+  if (!domainName || !memberName || !domains) return null;
+  /** @type {ProtocolDomain | undefined} */
+  let domain;
+  if (domains instanceof Map) {
+    domain = domains.get(domainName);
+  } else if (Array.isArray(domains)) {
+    domain = domains.find((d) => d.domain === domainName);
+  } else if (typeof domains === 'object') {
+    domain = domains[domainName];
+  }
+  if (!domain) return null;
+
+  const cmd = domain.commands?.find((c) => c.name === memberName);
+  if (cmd?.redirect) {
+    return { targetDomain: cmd.redirect, targetMember: memberName };
+  }
+  const evt = domain.events?.find((e) => e.name === memberName);
+  if (evt?.redirect) {
+    return { targetDomain: evt.redirect, targetMember: memberName };
+  }
+  const typ = domain.types?.find((t) => t.id === memberName);
+  if (typ?.redirect) {
+    return { targetDomain: typ.redirect, targetMember: memberName };
+  }
+  return null;
+}
+
+/**
  * Creates canonical RouteInfo, mapping lowercase landing anchors to section.
  * @param {TargetKind} target
  * @param {string|null} domain
  * @param {string|null} member
  * @param {string|null} [section]
+ * @param {string|null} [query]
  * @returns {RouteInfo}
  */
-function createRouteInfo(target, domain, member, section = null) {
+function createRouteInfo(target, domain, member, section = null, query = null) {
+  if (query) {
+    return { target, domain: null, member: null, query };
+  }
   if (domain && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
     const full = member ? `${domain}.${member}` : domain;
     const sec = full === 'http-endpoints' ? 'endpoints' : full;
@@ -349,6 +388,7 @@ function createRouteInfo(target, domain, member, section = null) {
  *
  * Supported route structures:
  * - Modern hash routes: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network.getCookies
+ * - URL search queries: ?q=foo, ?search=foo, #/v8?q=foo, #q=foo
  * - Legacy paths: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
  * - Base-path prefixed: /devtools-protocol/tot/Page/#method-navigate, /debugger-protocol-viewer/tot/Page/#method-navigate
  * - Isolated legacy anchors: #method-navigate, #type-Node, #event-requestWillBeSent
@@ -365,6 +405,21 @@ export function parseRoute(routeString) {
   const trimmed = routeString.trim();
   if (!trimmed || trimmed === '#' || trimmed === '#/' || trimmed === '/') {
     return createRouteInfo('tot', null, null);
+  }
+
+  // Detect explicit URL-based search query: ?q=foo, ?search=foo, #q=foo, #/target?q=foo, etc.
+  const queryMatch = trimmed.match(/[?&#](?:q|search)=([^&#]*)/i);
+  if (queryMatch) {
+    const rawVal = queryMatch[1] ?? '';
+    const query = decodeURIComponent(rawVal.replace(/\+/g, ' ')).trim();
+    let target = /** @type {TargetKind} */ ('tot');
+    const targetMatch =
+      trimmed.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
+      trimmed.match(/[?&#]target=(tot|v8|1-3|1-2|stable)/i);
+    if (targetMatch) {
+      target = normalizeTarget(targetMatch[1]);
+    }
+    return createRouteInfo(target, null, null, null, query);
   }
 
   if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
@@ -556,13 +611,16 @@ export function parseRoute(routeString) {
 
 /**
  * Formats canonical hash route from components.
- * @param {{ target?: string|null, domain?: string|null, member?: string|null, section?: string|null }} [route]
+ * @param {{ target?: string|null, domain?: string|null, member?: string|null, section?: string|null, query?: string|null }} [route]
  * @returns {string} Canonical hash route, e.g. '#/Page.navigate'
  */
-export function formatRoute({ target = 'tot', domain = null, member = null, section = null } = {}) {
+export function formatRoute({ target = 'tot', domain = null, member = null, section = null, query = null } = {}) {
   const normTarget = normalizeTarget(target);
   const targetPrefix = normTarget === 'tot' ? '' : `${normTarget}/`;
 
+  if (query) {
+    return `#/${targetPrefix}?q=${encodeURIComponent(query)}`;
+  }
   if (section) {
     return `#/${targetPrefix}${section}`;
   }

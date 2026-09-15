@@ -217,7 +217,12 @@ export class ProtocolRenderer {
      * @param {HTMLElement} container
      */
     let renderEventOrMethodEntry = (method, container) =>
-      ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
+      ProtocolRenderer.renderTableOfContentsEntry(
+        domain.domain,
+        method.name,
+        container,
+        /** @type {any} */ (method).redirect ?? null,
+      );
     /**
      * @param {ProtocolType} type
      * @param {HTMLElement} container
@@ -306,15 +311,26 @@ export class ProtocolRenderer {
    * @param {string} domainName
    * @param {string} name
    * @param {HTMLElement} container
+   * @param {string|null} [redirectDomain]
    * @returns {HTMLElement}
    */
-  static renderTableOfContentsEntry(domainName, name, container) {
+  static renderTableOfContentsEntry(domainName, name, container, redirectDomain = null) {
     const row = document.createElement('div');
     row.className = 'toc-link';
+    if (redirectDomain) row.classList.add('toc-redirect');
     container.appendChild(row);
-    let id = `${domainName}.${name}`;
-    let link = ProtocolRenderer.renderRef(id);
+    const targetRef = redirectDomain ? `${redirectDomain}.${name}` : `${domainName}.${name}`;
+    let link = ProtocolRenderer.renderRef(targetRef);
     link.classList.add('monospace');
+    if (redirectDomain) {
+      link.textContent = name;
+      const arrow = document.createElement('span');
+      arrow.className = 'toc-redirect-hint';
+      arrow.textContent = ` ➔ ${redirectDomain}`;
+      row.appendChild(link);
+      row.appendChild(arrow);
+      return row;
+    }
     row.appendChild(link);
     return row;
   }
@@ -329,6 +345,7 @@ export class ProtocolRenderer {
     const main = document.createElement('div');
     main.className = 'method';
     if (method.deprecated) main.classList.add('deprecated-bg');
+    if (/** @type {any} */ (method).redirect) main.classList.add('redirect-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -338,6 +355,19 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
+    const redirectDomain = /** @type {any} */ (method).redirect;
+    if (redirectDomain) {
+      const p = document.createElement('p');
+      p.className = 'redirect-notice';
+      p.textContent = 'This method has moved. Redirects to ';
+      const link = document.createElement('a');
+      link.href = ProtocolRenderer.formatRef(`${redirectDomain}.${method.name}`);
+      link.textContent = `${redirectDomain}.${method.name}`;
+      p.appendChild(link);
+      p.append('.');
+      main.appendChild(p);
+      return main;
+    }
     if (method.description) {
       ProtocolRenderer.renderDescription(method.description, main);
     }
@@ -461,7 +491,13 @@ export class ProtocolRenderer {
    */
   static applyMarks(item, element, isParentDomainExperimental = false) {
     if (!item) return;
-    if (item.experimental) {
+    if (/** @type {any} */ (item).redirect) {
+      const redSpan = document.createElement('span');
+      redSpan.className = 'redirect-badge';
+      redSpan.textContent = `redirect: ${/** @type {any} */ (item).redirect}`;
+      redSpan.title = `Redirects to ${/** @type {any} */ (item).redirect}`;
+      element.appendChild(redSpan);
+    } else if (item.experimental) {
       if (isParentDomainExperimental) {
         return;
       }

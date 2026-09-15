@@ -7,6 +7,7 @@ import {
   parseRoute,
   formatRoute,
   normalizeTarget,
+  getRedirect,
 } from '../src/protocol-model.js';
 
 /** @import { TestContext } from 'node:test' */
@@ -378,6 +379,28 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       input: '#/stable/',
       expected: { target: 'stable', domain: null, member: null },
     },
+
+    // URL-based search queries
+    {
+      input: '?q=evaluate',
+      expected: { target: 'tot', domain: null, member: null, query: 'evaluate' },
+    },
+    {
+      input: '?search=Runtime.evaluate',
+      expected: { target: 'tot', domain: null, member: null, query: 'Runtime.evaluate' },
+    },
+    {
+      input: '#q=Network.enable',
+      expected: { target: 'tot', domain: null, member: null, query: 'Network.enable' },
+    },
+    {
+      input: '#/v8?q=evaluate',
+      expected: { target: 'v8', domain: null, member: null, query: 'evaluate' },
+    },
+    {
+      input: '#/stable?q=getCookies',
+      expected: { target: 'stable', domain: null, member: null, query: 'getCookies' },
+    },
   ];
 
   for (const { input, expected } of cases) {
@@ -420,6 +443,79 @@ test('formatRoute: canonical route formatting', () => {
   assert.equal(formatRoute({ section: 'endpoints' }), '#/endpoints');
   assert.equal(formatRoute({ target: 'v8', section: 'faq' }), '#/v8/faq');
 
+  // Query routes
+  assert.equal(formatRoute({ query: 'evaluate' }), '#/?q=evaluate');
+  assert.equal(formatRoute({ target: 'v8', query: 'evaluate' }), '#/v8/?q=evaluate');
+
   // Default options
   assert.equal(formatRoute(), '#/');
 });
+
+test('getRedirect: resolves redirected commands, events, and types', () => {
+  const domains = [
+    {
+      domain: 'DOM',
+      commands: [
+        { name: 'highlightNode', redirect: 'Overlay' },
+        { name: 'getDocument' },
+      ],
+      events: [
+        { name: 'inspectNodeRequested' },
+      ],
+      types: [],
+    },
+    {
+      domain: 'Page',
+      commands: [
+        { name: 'deleteCookie', redirect: 'Network' },
+      ],
+      events: [
+        { name: 'screencastFrame', redirect: 'HeadlessExperimental' },
+      ],
+      types: [
+        { id: 'Cookie', redirect: 'Network' },
+      ],
+    },
+    {
+      domain: 'Overlay',
+      commands: [
+        { name: 'highlightNode' },
+      ],
+    },
+  ];
+
+  // Command redirect
+  assert.deepEqual(getRedirect(domains, 'DOM', 'highlightNode'), {
+    targetDomain: 'Overlay',
+    targetMember: 'highlightNode',
+  });
+
+  // Event redirect
+  assert.deepEqual(getRedirect(domains, 'Page', 'screencastFrame'), {
+    targetDomain: 'HeadlessExperimental',
+    targetMember: 'screencastFrame',
+  });
+
+  // Type redirect
+  assert.deepEqual(getRedirect(domains, 'Page', 'Cookie'), {
+    targetDomain: 'Network',
+    targetMember: 'Cookie',
+  });
+
+  // Non-redirected member
+  assert.equal(getRedirect(domains, 'DOM', 'getDocument'), null);
+
+  // Non-existent domain or member
+  assert.equal(getRedirect(domains, 'NonExistent', 'foo'), null);
+  assert.equal(getRedirect(domains, 'DOM', 'nonExistent'), null);
+  assert.equal(getRedirect(null, 'DOM', 'highlightNode'), null);
+  assert.equal(getRedirect(domains, '', ''), null);
+
+  // Supports Map input
+  const domainMap = new Map(domains.map((d) => [d.domain, d]));
+  assert.deepEqual(getRedirect(domainMap, 'DOM', 'highlightNode'), {
+    targetDomain: 'Overlay',
+    targetMember: 'highlightNode',
+  });
+});
+

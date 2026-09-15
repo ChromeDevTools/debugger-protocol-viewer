@@ -862,6 +862,50 @@ span.deprecated {
   background-color: #e65100;
 }
 
+span.redirect-badge {
+  font-size: 10px;
+  line-height: 12px;
+  text-transform: uppercase;
+  background-color: #f59e0b;
+  padding: 2px 5px;
+  cursor: help;
+  color: #ffffff;
+  vertical-align: middle;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  font-family: var(--font-sans);
+  margin-left: 8px;
+  user-select: none;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.redirect-notice {
+  font-size: 14px;
+  margin: 8px 0;
+  color: var(--color-subtle);
+}
+
+.redirect-notice a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.toc-redirect-hint {
+  font-size: 11px;
+  color: var(--color-subtle);
+  margin-left: 4px;
+  font-family: var(--font-sans);
+}
+
+.search-redirect-badge {
+  font-size: 11px;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin-left: 6px;
+  font-family: var(--font-sans);
+}
+
 /* Domain-level badging: if the whole domain is experimental or deprecated,
    badge the top card heading and suppress redundant per-item badges inside */
 .domain-experimental span.experimental {

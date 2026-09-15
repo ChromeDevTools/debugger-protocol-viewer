@@ -41,15 +41,18 @@ class SearchItem {
    * @param {SearchItemKind} itemType
    * @param {string} [description]
    * @param {(ref: string) => string} [formatRef]
+   * @param {string|null} [redirectDomain]
    */
-  constructor(domainName, domainEntry, itemType, description, formatRef) {
+  constructor(domainName, domainEntry, itemType, description, formatRef, redirectDomain = null) {
     this.domainName = domainName;
     this.domainEntry = domainEntry;
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
+    this.redirectDomain = redirectDomain;
     const refFormatter = formatRef || (typeof window !== 'undefined' && window.app?.formatRef);
-    this.route = refFormatter ? refFormatter(this.title) : '#/' + this.title;
+    const targetRef = redirectDomain ? `${redirectDomain}.${this.domainEntry}` : this.title;
+    this.route = refFormatter ? refFormatter(targetRef) : '#/' + targetRef;
   }
 }
 
@@ -151,7 +154,16 @@ export class Search {
     for (const domain of domains) {
       for (const command of domain.commands || []) {
         this._items.push(
-          new SearchItem(domain.domain, command.name, 'method', command.description, formatRef),
+          new SearchItem(
+            domain.domain,
+            command.name,
+            'method',
+            command.redirect
+              ? `Redirects to ${command.redirect}.${command.name}. ${command.description || ''}`
+              : command.description,
+            formatRef,
+            command.redirect ?? null,
+          ),
         );
       }
       for (const event of domain.events || []) {
@@ -165,6 +177,16 @@ export class Search {
         );
       }
     }
+  }
+
+  /**
+   * Performs an immediate search with the given query, opening the results dropdown.
+   * @param {string} query
+   */
+  search(query) {
+    this._searchInput.value = query;
+    this._searchInput.focus();
+    this._onInput();
   }
 
   cancelSearch() {
@@ -371,6 +393,12 @@ function renderSearchResult(searchResult) {
         item.title.length,
       ),
     );
+    if (item.redirectDomain) {
+      const redirectBadge = document.createElement('span');
+      redirectBadge.className = 'search-redirect-badge';
+      redirectBadge.textContent = ` ➔ ${item.redirectDomain}.${item.domainEntry}`;
+      p1.appendChild(redirectBadge);
+    }
     let p2 = document.createElement('div');
     p2.className = 'search-item-description';
     p2.textContent = item.description;

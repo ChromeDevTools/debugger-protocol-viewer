@@ -10,6 +10,7 @@ import {
   parseRoute,
   formatRoute,
   normalizeTarget,
+  getRedirect,
 } from './protocol-model.js';
 import { $ } from './bling.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
@@ -284,12 +285,35 @@ export class App {
       this._renderSidebar(this._activeDomains);
     }
 
+    // URL-based search query (?q=foo or #q=foo)
+    if (route.query) {
+      this._renderedDomain = null;
+      this._onNavigateHome(null);
+      this._search.search(route.query);
+      return;
+    }
+
     const { domain, member, section } = route;
 
     if (!domain) {
       this._renderedDomain = null;
       this._onNavigateHome(section);
       return;
+    }
+
+    // Auto-redirect if command/event/type has moved to another domain
+    if (member) {
+      const redirect = getRedirect(this._activeDomains, domain, member);
+      if (redirect) {
+        this.navigate(
+          formatRoute({
+            target: route.target,
+            domain: redirect.targetDomain,
+            member: redirect.targetMember,
+          }),
+        );
+        return;
+      }
     }
 
     // In-page navigation: if domain is already rendered, scroll to member without DOM re-render

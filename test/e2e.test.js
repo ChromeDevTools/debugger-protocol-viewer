@@ -778,6 +778,67 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       );
       assert.strictEqual(legacyInspectorExists, true, 'Expected get-devtoolsinspector.html heading with title-link');
     });
+
+    await t.test('13. Auto-redirect moved items (#/DOM.highlightNode -> #/Overlay.highlightNode)', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/DOM.highlightNode` });
+
+      const finalHash = await client.pollEvaluate(
+        'window.location.hash',
+        (/** @type {any} */ hash) => hash === '#/Overlay.highlightNode',
+        sessionId,
+      );
+      assert.strictEqual(finalHash, '#/Overlay.highlightNode', 'Expected hash to auto-redirect to canonical domain');
+
+      const activeDomain = await client.pollEvaluate(
+        'document.querySelector(".domain-link.active-link")?.getAttribute("data-domain")',
+        (/** @type {any} */ domain) => domain === 'Overlay',
+        sessionId,
+      );
+      assert.strictEqual(activeDomain, 'Overlay', 'Expected Overlay domain to be active in sidebar');
+
+      const headingExists = await client.pollEvaluate(
+        'Boolean(document.getElementById("Overlay_highlightNode"))',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(headingExists, true, 'Expected canonical #Overlay_highlightNode heading in DOM');
+    });
+
+    await t.test('14. URL-based search query (?q=evaluate)', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/?q=evaluate` });
+
+      const inputValue = await client.pollEvaluate(
+        'document.getElementById("search")?.value',
+        (/** @type {any} */ val) => val === 'evaluate',
+        sessionId,
+      );
+      assert.strictEqual(inputValue, 'evaluate', 'Expected search input to be populated with query');
+
+      const resultsDisplayed = await client.pollEvaluate(
+        'document.getElementById("sresults")?.style.display',
+        (/** @type {any} */ display) => display === 'block',
+        sessionId,
+      );
+      assert.strictEqual(resultsDisplayed, 'block', 'Expected search results dropdown to be visible');
+
+      const resultCount = await client.pollEvaluate(
+        'document.querySelectorAll("#sresults .search-item").length',
+        (/** @type {any} */ count) => count > 0,
+        sessionId,
+      );
+      assert.ok(resultCount > 0, 'Expected search results to be rendered');
+    });
+
+    await t.test('15. OpenSearch autodiscovery link in index.html', async () => {
+      const openSearchLink = await client.evaluate(
+        'document.querySelector("link[rel=\'search\'][type=\'application/opensearchdescription+xml\']")?.getAttribute("href")',
+        sessionId,
+      );
+      assert.ok(
+        openSearchLink && openSearchLink.includes('opensearch.xml'),
+        `Expected opensearch.xml link tag in head, got ${openSearchLink}`,
+      );
+    });
   } finally {
     if (targetId && browserApi) {
       try {

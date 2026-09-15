@@ -36,6 +36,7 @@ export interface ProtocolType {
   enum?: string[];
   items?: ProtocolParameter;
   referencedBy?: ProtocolBackReference[];
+  redirect?: string;
 }
 
 export interface ProtocolDomain {
@@ -72,4 +73,5 @@ export interface RouteInfo {
   domain: string | null;
   member: string | null;
   section?: string | null;
+  query?: string | null;
 }
