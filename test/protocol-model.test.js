@@ -401,6 +401,22 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       input: '#/stable?q=getCookies',
       expected: { target: 'stable', domain: null, member: null, query: 'getCookies' },
     },
+    {
+      input: '?q=100%',
+      expected: { target: 'tot', domain: null, member: null, query: '100%' },
+    },
+    {
+      input: '?q=tot/DOM',
+      expected: { target: 'tot', domain: null, member: null, query: 'tot/DOM' },
+    },
+    {
+      input: '?q=Runtime/v8',
+      expected: { target: 'tot', domain: null, member: null, query: 'Runtime/v8' },
+    },
+    {
+      input: '#/v8?q=tot/DOM',
+      expected: { target: 'v8', domain: null, member: null, query: 'tot/DOM' },
+    },
   ];
 
   for (const { input, expected } of cases) {

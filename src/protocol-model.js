@@ -411,10 +411,17 @@ export function parseRoute(routeString) {
   const queryMatch = trimmed.match(/[?&#](?:q|search)=([^&#]*)/i);
   if (queryMatch) {
     const rawVal = queryMatch[1] ?? '';
-    const query = decodeURIComponent(rawVal.replace(/\+/g, ' ')).trim();
+    let query = rawVal.replace(/\+/g, ' ').trim();
+    try {
+      query = decodeURIComponent(query);
+    } catch {
+      // Retain raw input when percent-decoding fails
+    }
     let target = /** @type {TargetKind} */ ('tot');
+    const queryIdx = trimmed.search(/[?&#](?:q|search)=/i);
+    const routePrefix = queryIdx !== -1 ? trimmed.slice(0, queryIdx) : trimmed;
     const targetMatch =
-      trimmed.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
+      routePrefix.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
       trimmed.match(/[?&#]target=(tot|v8|1-3|1-2|stable)/i);
     if (targetMatch) {
       target = normalizeTarget(targetMatch[1]);

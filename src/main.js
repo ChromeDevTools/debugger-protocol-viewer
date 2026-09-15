@@ -118,11 +118,16 @@ export class App {
 
   /**
    * @param {string} route
+   * @param {boolean} [replace=false]
    */
-  navigate(route) {
+  navigate(route, replace = false) {
     const cleanRoute = formatRoute(parseRoute(route));
     if (window.location.hash !== cleanRoute) {
-      window.location.hash = cleanRoute;
+      if (replace) {
+        window.location.replace(cleanRoute);
+      } else {
+        window.location.hash = cleanRoute;
+      }
     } else {
       this._onRoute();
     }
@@ -311,6 +316,7 @@ export class App {
             domain: redirect.targetDomain,
             member: redirect.targetMember,
           }),
+          true,
         );
         return;
       }

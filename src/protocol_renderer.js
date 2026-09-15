@@ -221,7 +221,7 @@ export class ProtocolRenderer {
         domain.domain,
         method.name,
         container,
-        /** @type {any} */ (method).redirect ?? null,
+        method.redirect ?? null,
       );
     /**
      * @param {ProtocolType} type
@@ -302,7 +302,9 @@ export class ProtocolRenderer {
     sectionWrapper.appendChild(section);
     for (let entry of entries) {
       let row = renderer(entry, section);
-      ProtocolRenderer.applyMarks(entry, row, isDomainExp);
+      if (!entry.redirect) {
+        ProtocolRenderer.applyMarks(entry, row, isDomainExp);
+      }
     }
     return section;
   }
@@ -345,7 +347,7 @@ export class ProtocolRenderer {
     const main = document.createElement('div');
     main.className = 'method';
     if (method.deprecated) main.classList.add('deprecated-bg');
-    if (/** @type {any} */ (method).redirect) main.classList.add('redirect-bg');
+    if (method.redirect) main.classList.add('redirect-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -355,7 +357,7 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
-    const redirectDomain = /** @type {any} */ (method).redirect;
+    const redirectDomain = method.redirect;
     if (redirectDomain) {
       const p = document.createElement('p');
       p.className = 'redirect-notice';
@@ -491,11 +493,11 @@ export class ProtocolRenderer {
    */
   static applyMarks(item, element, isParentDomainExperimental = false) {
     if (!item) return;
-    if (/** @type {any} */ (item).redirect) {
+    if (item.redirect) {
       const redSpan = document.createElement('span');
       redSpan.className = 'redirect-badge';
-      redSpan.textContent = `redirect: ${/** @type {any} */ (item).redirect}`;
-      redSpan.title = `Redirects to ${/** @type {any} */ (item).redirect}`;
+      redSpan.textContent = `redirect: ${item.redirect}`;
+      redSpan.title = `Redirects to ${item.redirect}`;
       element.appendChild(redSpan);
     } else if (item.experimental) {
       if (isParentDomainExperimental) {

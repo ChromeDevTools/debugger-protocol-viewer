@@ -168,12 +168,30 @@ export class Search {
       }
       for (const event of domain.events || []) {
         this._items.push(
-          new SearchItem(domain.domain, event.name, 'event', event.description, formatRef),
+          new SearchItem(
+            domain.domain,
+            event.name,
+            'event',
+            event.redirect
+              ? `Redirects to ${event.redirect}.${event.name}. ${event.description || ''}`
+              : event.description,
+            formatRef,
+            event.redirect ?? null,
+          ),
         );
       }
       for (const type of domain.types || []) {
         this._items.push(
-          new SearchItem(domain.domain, type.id, 'type', type.description, formatRef),
+          new SearchItem(
+            domain.domain,
+            type.id,
+            'type',
+            type.redirect
+              ? `Redirects to ${type.redirect}.${type.id}. ${type.description || ''}`
+              : type.description,
+            formatRef,
+            type.redirect ?? null,
+          ),
         );
       }
     }
