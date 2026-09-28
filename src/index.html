@@ -92,65 +92,99 @@
       <div class="box box-content landing-hero">
         <h1>Chrome DevTools Protocol</h1>
         <p>
-          The <b>Chrome DevTools Protocol</b> allows for tools to instrument, inspect, debug and
-          profile Chromium, Chrome and other Blink-based browsers. Many existing projects
-          <a href="https://github.com/ChromeDevTools/awesome-chrome-devtools">currently use</a> the
-          protocol. The
-          <a href="https://developers.google.com/web/tools/chrome-devtools/">Chrome DevTools</a>
-          uses this protocol and the team maintains its API.
+          The <b>Chrome DevTools Protocol (CDP)</b> is a JSON-based protocol that connects debug and
+          automation targets (such as browsing contexts and workers) with trusted debug and
+          automation clients. It allows tools to instrument, inspect, debug, and profile Chromium,
+          Chrome, and other Blink-based browsers.
         </p>
 
         <p>
-          Instrumentation is divided into a number of domains (DOM, Debugger, Network, etc.). Each
-          domain defines a number of commands it supports and events it generates. Both commands and
-          events are serialized JSON objects of a fixed structure.
+          Instrumentation is divided into domains (<code>DOM</code>, <code>Debugger</code>,
+          <code>Network</code>, etc.). Each domain defines supported commands and generated events.
+          Both commands and events are serialized JSON objects of a fixed structure.
         </p>
 
-        <h3 id="api-docs">Protocol API Docs <a class="title-link" href="#api-docs">#</a></h3>
+        <h3 id="scope-and-support">
+          Scope and support <a class="title-link" href="#scope-and-support">#</a>
+        </h3>
 
         <p>
-          <b><a href="#/Page">The latest (tip-of-tree) protocol</a></b> — It
+          CDP exposes a wide range of high-privilege capabilities, so protocol clients are assumed
+          to be trusted. CDP is not a public or supported API for Chrome, and it does not guarantee
+          backwards compatibility. Syntax and semantics may change without notice based on
+          Chromium's requirements and Chrome's product needs.
+        </p>
+
+        <p>
+          Direct use of CDP by third-party applications is unsupported. We only support official
+          Chrome products built on CDP:
+        </p>
+
+        <ul>
+          <li>Chrome</li>
+          <li>
+            <a href="https://developer.chrome.com/docs/devtools/">Chrome DevTools frontend</a>
+          </li>
+          <li>
+            <a href="https://developer.chrome.com/docs/devtools/agents"
+              >Chrome DevTools for agents</a
+            >
+          </li>
+          <li><a href="https://developer.chrome.com/docs/lighthouse/">Lighthouse</a></li>
+          <li><a href="https://pptr.dev/">Puppeteer</a></li>
+          <li><a href="https://developer.chrome.com/docs/chromedriver/">ChromeDriver</a></li>
+        </ul>
+
+        <p>
+          Third-party tools that automate Chrome should use supported products such as Chrome
+          DevTools for agents, Puppeteer, or ChromeDriver rather than connecting to CDP directly.
+        </p>
+
+        <h3 id="api-docs">Protocol API docs <a class="title-link" href="#api-docs">#</a></h3>
+
+        <p>
+          <b><a href="#/Page">The latest (tip-of-tree) protocol</a></b> — Tracks the
           <a
-            href="https://chromium.googlesource.com/chromium/src/+log/HEAD/third_party/blink/renderer/core/inspector/browser_protocol.pdl"
-            >changes frequently</a
+            href="https://chromium.googlesource.com/chromium/src/+log/HEAD/third_party/blink/public/devtools_protocol/browser_protocol.pdl"
+            >latest protocol definitions</a
           >
-          and can break at any time. However it captures the full capabilities of the Protocol,
-          whereas the stable release is a subset. There is no backwards compatibility support
-          guaranteed.
+          in Chromium. It captures the full capabilities of the protocol, changes frequently, and
+          can break at any time. Backwards compatibility is not guaranteed.
         </p>
 
         <p>
           <b><a href="#/v8/Runtime">v8-inspector protocol</a></b> — Enables
           <a
             href="https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-7c4a1b95ae27"
-            >debugging &amp; profiling</a
+            >debugging and profiling</a
           >
-          of Node.js apps.
+          of Node.js applications.
         </p>
 
         <p>
-          <b><a href="#/stable/Page">stable protocol</a></b> — The stable release of the protocol,
-          tagged at Chrome 64. It includes a smaller subset of the complete protocol
-          compatibilities.
+          <b><a href="#/stable/Page">stable protocol</a></b> — A historical snapshot tagged at
+          Chrome 64 that includes a smaller subset of protocol capabilities.
         </p>
 
         <h3 id="resources">Resources <a class="title-link" href="#resources">#</a></h3>
 
         <p>
-          See
+          See the
+          <a
+            href="https://chromium.googlesource.com/chromium/src/+/HEAD/third_party/blink/public/devtools_protocol/README.md"
+            >CDP contribution guidelines and backend overview</a
+          >
+          and
           <a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md"
             >Getting Started with CDP</a
-          >. The
-          <a
-            href="https://github.com/ChromeDevTools/awesome-chrome-devtools#chrome-devtools-protocol"
-            >awesome-chrome-devtools</a
-          >
-          page links to many of the tools in the protocol ecosystem, including protocol API
-          libraries in JavaScript, TypeScript, Python, Java, and Go.
+          >. For supported browser automation, use
+          <a href="https://developer.chrome.com/docs/devtools/agents">Chrome DevTools for agents</a
+          >, <a href="https://pptr.dev/">Puppeteer</a>, or
+          <a href="https://developer.chrome.com/docs/chromedriver/">ChromeDriver</a>.
         </p>
 
         <p>
-          Consider subscribing to the
+          For questions and discussions, subscribe to the
           <a href="https://groups.google.com/d/forum/chrome-debugging-protocol"
             >chrome-debugging-protocol</a
           >
@@ -161,9 +195,8 @@
           Using Protocol Monitor in Chrome DevTools <a class="title-link" href="#monitor">#</a>
         </h3>
         <p>
-          This is especially handy to understand how the DevTools frontend makes use of the
-          protocol. You can view all requests/responses and methods as they happen in the Protocol
-          Monitor panel in DevTools.
+          Protocol Monitor helps you understand how the DevTools frontend uses the protocol. You can
+          view all requests, responses, and events as they happen in the Protocol Monitor panel.
         </p>
 
         <figure class="screenshot">
@@ -178,27 +211,25 @@
         </figure>
 
         <p>
-          Click the gear icon in the top-right of the DevTools to open the <i>Settings</i> panel.
-          Select <i>Experiments</i> on the left of settings. Turn on "Protocol Monitor", then close
-          and reopen DevTools. Now click the ⋮ menu icon, choose <i>More Tools</i> and then select
+          Click the gear icon in the top-right of DevTools to open <i>Settings</i>. Select
+          <i>Experiments</i> on the left, turn on "Protocol Monitor", then close and reopen
+          DevTools. Click the ⋮ menu icon, choose <i>More tools</i>, and select
           <i>Protocol monitor</i>.
         </p>
 
         <p>
-          You can also send commands using Protocol Monitor. If the command does not require any
-          parameters, type the command into the prompt at the bottom of the Protocol Monitor panel
-          and press Enter, for example, <code>Page.captureScreenshot</code>. If the command requires
-          parameters, provide them as JSON, for example,
-          <code>{"cmd":"Page.captureScreenshot","args":{"format": "jpeg"}}</code>.
+          You can also send commands from Protocol Monitor. If a command requires no parameters,
+          type it into the prompt at the bottom of the panel and press Enter (for example,
+          <code>Page.captureScreenshot</code>). If a command requires parameters, provide them as
+          JSON (for example, <code>{"cmd":"Page.captureScreenshot","args":{"format": "jpeg"}}</code>
+          ).
         </p>
 
         <p>
-          By clicking on the icon next to the command input (in Chrome 117+), you can open the
-          command editor. After you select a CDP command, the editor creates a structured form based
-          on the protocol definitions that allows you to edit parameters, and view their
-          documentation and types. Send the commands by clicking on the send button or using
-          <code>Ctrl + Enter</code>. Use the context menu in the list of previously sent commands to
-          open one of them in the editor.
+          Click the icon next to the command input to open the command editor. After you select a
+          CDP command, the editor generates a structured form from the protocol definitions so you
+          can edit parameters and inspect their documentation and types. Send the command by
+          clicking the send button or pressing <code>Ctrl + Enter</code>.
         </p>
 
         <figure class="screenshot">
@@ -214,9 +245,8 @@
 
         <p>
           Alternatively, you can execute commands from the DevTools console. First,
-          <a href="https://stackoverflow.com/a/12291163/89484">open devtools-on-devtools</a>, then
-          within the inner DevTools window, use <code>Main.MainImpl.sendOverProtocol()</code> in the
-          console:
+          <a href="https://stackoverflow.com/a/12291163/89484">open DevTools on DevTools</a>, then
+          call <code>Main.MainImpl.sendOverProtocol()</code> in the inner console:
         </p>
 
         <pre>
@@ -234,58 +264,86 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           DevTools protocol via Chrome extension <a class="title-link" href="#extension">#</a>
         </h3>
         <p>
-          To allow chrome extensions to interact with the protocol, we introduced
+          The
           <a href="https://developer.chrome.com/docs/extensions/reference/api/debugger"
-            >chrome.debugger</a
+            ><code>chrome.debugger</code></a
           >
-          extension API that exposes this JSON message transport interface. As a result, you can not
-          only attach to the remotely running Chrome instance, but also instrument it from its own
-          extension.
+          extension API exposes the CDP JSON message transport to Chrome extensions. Extensions must
+          request the
+          <a href="https://developer.chrome.com/docs/extensions/reference/api/debugger#permissions"
+            ><code>"debugger"</code></a
+          >
+          permission in their manifest.
         </p>
 
         <p>
-          Chrome Debugger Extension API provides a higher level API where command domain, name and
-          body are provided explicitly in the <code>sendCommand</code> call. This API hides request
-          ids and handles binding of the request with its response, hence allowing
-          <code>sendCommand</code> to report result in the callback function call. One can also use
-          this API in combination with the other Extension APIs.
+          Chrome supports <code>chrome.debugger</code> only on a best-effort basis for
+          developer-facing debugging extensions. This includes extensions that add a DevTools panel
+          with developer functionality. Non-debugger use cases and extensions aimed at end users
+          rather than developers are unsupported.
         </p>
 
         <p>
-          If you are developing a Web-based IDE, you should implement an extension that exposes
-          debugging capabilities to your page and your IDE will be able to open pages with the
-          target application, set breakpoints there, evaluate expressions in console, live edit
-          JavaScript and CSS, display live DOM, network interaction and any other aspect that
-          Developer Tools is instrumenting today.
-        </p>
-
-        <p>
-          Opening embedded Developer Tools will terminate the remote connection and thus detach the
-          extension.
+          Because CDP exposes high-privilege capabilities, the backend enforces additional access
+          controls on <code>chrome.debugger</code> calls to prevent extensions from accessing the
+          file system or escaping the browser sandbox. As with direct CDP connections, protocol
+          commands and events may change without notice.
         </p>
 
         <h3 id="faq">
-          Frequently Asked Questions <a class="title-link" href="#faq">#</a>
+          Frequently asked questions <a class="title-link" href="#faq">#</a>
         </h3>
+
+        <h4 id="is-cdp-supported">
+          Is CDP a public or supported API for third-party products?
+          <a class="title-link" href="#is-cdp-supported">#</a>
+        </h4>
+        <p>
+          TL;DR: No. CDP is not a public or supported API, and we do not guarantee backwards
+          compatibility.
+        </p>
+        <p>
+          While direct use by third parties has been tolerated, it is unsupported and may break
+          without notice when protocol syntax or semantics change. Third-party tools that automate
+          Chrome should connect indirectly through supported products such as Chrome DevTools for
+          agents, Puppeteer, or ChromeDriver.
+        </p>
+
+        <h4 id="contributions">
+          How are feature requests and open-source contributions handled?
+          <a class="title-link" href="#contributions">#</a>
+        </h4>
+        <p>
+          TL;DR: We only accept changes motivated by our supported products, security improvements,
+          removal of outdated functionality, or Chrome architectural changes.
+        </p>
+        <p>
+          Changes to CDP must be approved by CDP owners, meet high technical design standards, and
+          serve web developer debugging or testing use cases. Only in exceptional cases do we accept
+          additions to automate Chrome's UI. See the
+          <a
+            href="https://chromium.googlesource.com/chromium/src/+/HEAD/third_party/blink/public/devtools_protocol/README.md"
+            >contribution guidelines</a
+          >
+          for details.
+        </p>
 
         <h4 id="how-is-the-protocol-defined">
           How is the protocol defined?
           <a class="title-link" href="#how-is-the-protocol-defined">#</a>
         </h4>
         <p>
-          The canonical protocol definitions live in the Chromium source tree: (<a
+          The canonical protocol definitions live in the Chromium and V8 source trees (<a
             href="https://chromium.googlesource.com/chromium/src/+/HEAD/third_party/blink/public/devtools_protocol/browser_protocol.pdl"
             >browser_protocol.pdl</a
           >
           and
           <a href="https://chromium.googlesource.com/v8/v8/+/HEAD/include/js_protocol.pdl"
             >js_protocol.pdl</a
-          >). They are maintained manually by the DevTools engineering team. The declarative
-          protocol definitions are used across tools; for instance, a binding layer is created
-          within Chromium for the Chrome DevTools to interact with, and separately bindings
-          generated for
+          >) and are maintained by the DevTools team. These declarative definitions generate C++
+          bindings in Chromium for Chrome DevTools and
           <a href="https://chromium.googlesource.com/chromium/src/+/HEAD/headless/README.md"
-            >Chrome Headless’s C++ interface</a
+            >Chrome Headless</a
           >.
         </p>
 
@@ -294,17 +352,16 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
         </h4>
 
         <p>
-          These canonical .pdl files are mirrored on GitHub
-          <a href="https://github.com/ChromeDevTools/devtools-protocol/"
-            >in the devtools-protocol repo</a
-          >
-          where JSON versions, TypeScript definitions and closure typedefs are generated. It's
-          published <a href="https://www.npmjs.com/package/devtools-protocol">regularly to NPM</a>.
+          The canonical <code>.pdl</code> files are mirrored in the
+          <a href="https://github.com/ChromeDevTools/devtools-protocol/">devtools-protocol</a>
+          GitHub repository, which generates JSON schemas, TypeScript definitions, and Closure
+          typedefs and publishes them
+          <a href="https://www.npmjs.com/package/devtools-protocol">to npm</a>.
         </p>
 
         <p>
-          Also, if you've set <code>--remote-debugging-port=9222</code> with Chrome, the complete
-          protocol version it speaks is available at <code>localhost:9222/json/protocol</code>.
+          When Chrome runs with <code>--remote-debugging-port=9222</code>, the protocol schema for
+          that browser build is also served at <code>localhost:9222/json/protocol</code>.
         </p>
 
         <h4 id="how-do-i-access-the-browser-target">
@@ -313,10 +370,10 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
         </h4>
         <p>
           The endpoint is exposed as <code>webSocketDebuggerUrl</code> in
-          <code>/json/version</code>. Note the <code>browser</code> in the URL, rather than
-          <code>page</code>. If Chrome was launched with <code>--remote-debugging-port=0</code> and
-          chose an open port, the browser endpoint is written to both stderr and the
-          <code>DevToolsActivePort</code> file in browser profile folder.
+          <code>/json/version</code>. Note the <code>browser</code> path segment in the URL rather
+          than <code>page</code>. When Chrome launches with <code>--remote-debugging-port=0</code>,
+          it writes the selected port and browser target path to stderr and to the
+          <code>DevToolsActivePort</code> file in the profile directory.
         </p>
 
         <h4 id="simultaneous">
@@ -324,30 +381,27 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           <a class="title-link" href="#simultaneous">#</a>
         </h4>
         <p>
-          Chrome 63 introduced support for multiple clients. See
+          TL;DR: Yes. Chrome 63 introduced support for
           <a href="https://developer.chrome.com/blog/new-in-devtools-63#multi-client"
-            >this article</a
-          >
-          for details.
+            >multiple simultaneous clients</a
+          >.
         </p>
 
         <p>
-          Upon disconnection, the outgoing client will receive a <code>detached</code> event. For
-          example:
-          <code>{"method":"Inspector.detached","params":{"reason":"replaced_with_devtools"}}</code>.
-          After disconnection, some apps have chosen to pause their state and offer a reconnect
-          button.
+          When a session is disconnected, the client receives an
+          <code>Inspector.detached</code> event with the disconnection reason, for example:
+          <code>{"method":"Inspector.detached","params":{"reason":"target_closed"}}</code>.
         </p>
 
         <h3 id="endpoints">
-          HTTP Endpoints <a class="title-link" href="#endpoints">#</a>
+          HTTP endpoints <a class="title-link" href="#endpoints">#</a>
         </h3>
         <p>
-          When Chromium or Chrome is launched with
+          When Chromium or Chrome launches with
           <code>--remote-debugging-port=&lt;port&gt;</code> (for example,
-          <code>--remote-debugging-port=9222</code>), it starts an internal HTTP server that exposes
-          REST endpoints and WebSocket connections for target discovery, browser lifecycle
-          management, and DevTools Protocol communication.
+          <code>--remote-debugging-port=9222</code>), it starts a local HTTP server that exposes
+          REST endpoints and WebSocket connections for target discovery, lifecycle management, and
+          CDP communication.
         </p>
 
         <div class="table-responsive">
@@ -489,7 +543,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           activity time.
         </p>
 
-        <p><strong>Query Parameters:</strong></p>
+        <p><strong>Query parameters:</strong></p>
         <ul>
           <li>
             <code>for_tab</code> (optional flag): When present (e.g.
@@ -523,7 +577,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
           its target descriptor.
         </p>
         <p>
-          <strong>Method Requirement:</strong> This endpoint
+          <strong>Method requirement:</strong> This endpoint
           <strong>strictly requires the <code>PUT</code> method</strong>. Calling it with
           <code>GET</code>, <code>POST</code>, or any other verb fails with
           <code>405 Method Not Allowed</code> (<code
@@ -531,7 +585,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
             verb."</code
           >).
         </p>
-        <p><strong>Query Parameters:</strong></p>
+        <p><strong>Query parameters:</strong></p>
         <ul>
           <li>
             The query component before any <code>&amp;</code> is parsed and URL-unescaped as the
@@ -583,7 +637,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
         </p>
 
         <h4 id="target-descriptor-schema">
-          Target Descriptor Object
+          Target descriptor object
           <a class="title-link" href="#target-descriptor-schema">#</a>
         </h4>
         <p>
@@ -661,7 +715,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
         </div>
 
         <h4 id="target-types">
-          Target Types
+          Target types
           <a class="title-link" href="#target-types">#</a>
         </h4>
         <div class="table-responsive">
@@ -770,20 +824,20 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
         </p>
 
         <h4 id="security-restrictions">
-          Security &amp; Origin Restrictions
+          Security and origin restrictions
           <a class="title-link" href="#security-restrictions">#</a>
         </h4>
         <ul>
           <li>
-            <strong>Host Header Validation:</strong> To mitigate DNS rebinding attacks, the server
+            <strong>Host header validation:</strong> To mitigate DNS rebinding attacks, the server
             validates the incoming HTTP <code>Host</code> header. It must either be an IP address
             (e.g. <code>127.0.0.1</code>, <code>[::1]</code>) or <code>localhost</code>. Other
             hostnames trigger an immediate <code>500 Internal Server Error</code> (<code
-              >"Host header is specified and is not an IP address or localhost."</code
+            >"Host header is specified and is not an IP address or localhost."</code
             >).
           </li>
           <li>
-            <strong>WebSocket Origin Verification (<code>--remote-allow-origins</code>):</strong>
+            <strong>WebSocket origin verification (<code>--remote-allow-origins</code>):</strong>
             When a WebSocket handshake includes an <code>Origin</code> header (such as from a web
             page), the origin must match the origins specified via
             <code>--remote-allow-origins=&lt;origin&gt;</code> (or
@@ -798,7 +852,7 @@ const data = await Main.MainImpl.sendOverProtocol("Page.captureScreenshot");</pr
             <code>fetch()</code> or <code>XMLHttpRequest</code>.
           </li>
           <li>
-            <strong>Clickjacking &amp; Framing Protection:</strong> All
+            <strong>Clickjacking and framing protection:</strong> All
             <code>/json/*</code> endpoints emit
             <code>Content-Security-Policy: frame-ancestors 'none'</code>, and the discovery page
             (<code>/</code>) emits <code>X-Frame-Options: DENY</code>.
