@@ -226,9 +226,9 @@ export class App {
     if (this._targetSelector) {
       this._targetSelector.addEventListener('change', () => {
         const target = normalizeTarget(this._targetSelector.value);
-        const { domain, section } = parseRoute(window.location.hash);
+        const { domain, section, query } = parseRoute(window.location.hash || window.location.search);
         const validDomain = domain && this._targetStore[target]?.has(domain) ? domain : null;
-        this.navigate(formatRoute({ target, domain: validDomain, section }));
+        this.navigate(formatRoute({ target, domain: validDomain, section, query }));
       });
     }
   }
@@ -269,9 +269,13 @@ export class App {
   }
 
   _onRoute() {
-    let rawRoute = window.location.hash;
-    if (window.location.search && !rawRoute) {
-      rawRoute = window.location.search;
+    const hash = window.location.hash || '';
+    const search = window.location.search || '';
+    let rawRoute = hash;
+    if (search) {
+      rawRoute = !hash || hash === '#' || hash === '#/'
+        ? search
+        : `${hash}${hash.includes('?') ? '&' : '?'}${search.slice(1)}`;
     } else if (!rawRoute || /^#(?:method|type|event)-/.test(rawRoute)) {
       rawRoute = window.location.pathname + (rawRoute || '');
     }

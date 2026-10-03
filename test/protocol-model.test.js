@@ -417,6 +417,18 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       input: '#/v8?q=tot/DOM',
       expected: { target: 'v8', domain: null, member: null, query: 'tot/DOM' },
     },
+    {
+      input: '?target=v8',
+      expected: { target: 'v8', domain: null, member: null },
+    },
+    {
+      input: '?target=v8&q=evaluate',
+      expected: { target: 'v8', domain: null, member: null, query: 'evaluate' },
+    },
+    {
+      input: '?q=evaluate&target=stable',
+      expected: { target: 'stable', domain: null, member: null, query: 'evaluate' },
+    },
   ];
 
   for (const { input, expected } of cases) {
@@ -498,12 +510,33 @@ test('getRedirect: resolves redirected commands, events, and types', () => {
         { name: 'highlightNode' },
       ],
     },
+    {
+      domain: 'Network',
+      commands: [
+        { name: 'deleteCookies' },
+      ],
+      types: [
+        { id: 'Cookie' },
+      ],
+    },
+    {
+      domain: 'HeadlessExperimental',
+      events: [
+        { name: 'screencastFrame' },
+      ],
+    },
   ];
 
-  // Command redirect
+  // Command redirect (exact match)
   assert.deepEqual(getRedirect(domains, 'DOM', 'highlightNode'), {
     targetDomain: 'Overlay',
     targetMember: 'highlightNode',
+  });
+
+  // Command redirect (pluralized match: deleteCookie -> deleteCookies)
+  assert.deepEqual(getRedirect(domains, 'Page', 'deleteCookie'), {
+    targetDomain: 'Network',
+    targetMember: 'deleteCookies',
   });
 
   // Event redirect

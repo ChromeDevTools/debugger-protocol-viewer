@@ -802,6 +802,22 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         sessionId,
       );
       assert.strictEqual(headingExists, true, 'Expected canonical #Overlay_highlightNode heading in DOM');
+
+      // Test renamed/plural redirect: Page.deleteCookie -> Network.deleteCookies
+      await page.Page.navigate({ url: `${baseUrl}/#/Page.deleteCookie` });
+      const deleteCookiesHash = await client.pollEvaluate(
+        'window.location.hash',
+        (/** @type {any} */ hash) => hash === '#/Network.deleteCookies',
+        sessionId,
+      );
+      assert.strictEqual(deleteCookiesHash, '#/Network.deleteCookies', 'Expected Page.deleteCookie to redirect to plural #/Network.deleteCookies');
+
+      const deleteCookiesHeading = await client.pollEvaluate(
+        'Boolean(document.getElementById("Network_deleteCookies"))',
+        (/** @type {any} */ val) => Boolean(val),
+        sessionId,
+      );
+      assert.strictEqual(deleteCookiesHeading, true, 'Expected #Network_deleteCookies heading in DOM');
     });
 
     await t.test('14. URL-based search query (?q=evaluate)', async () => {
@@ -827,6 +843,15 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         sessionId,
       );
       assert.ok(resultCount > 0, 'Expected search results to be rendered');
+
+      // Target-scoped search: #/v8?q=evaluate synchronizes target-selector
+      await page.Page.navigate({ url: `${baseUrl}/#/v8?q=evaluate` });
+      const v8Target = await client.pollEvaluate(
+        'document.getElementById("target-selector")?.value',
+        (/** @type {any} */ val) => val === 'v8',
+        sessionId,
+      );
+      assert.strictEqual(v8Target, 'v8', 'Expected target selector to switch to v8');
     });
 
     await t.test('15. OpenSearch autodiscovery link in index.html', async () => {

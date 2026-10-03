@@ -322,6 +322,58 @@ const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:m
 const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
 
 /**
+ * Looks up a domain by name in Map, Array, or Record.
+ * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
+ * @param {string} domainName
+ * @returns {ProtocolDomain | undefined}
+ */
+function findDomain(domains, domainName) {
+  if (!domains) return undefined;
+  if (domains instanceof Map) return domains.get(domainName);
+  if (Array.isArray(domains)) return domains.find((d) => d.domain === domainName);
+  if (typeof domains === 'object') return domains[domainName];
+  return undefined;
+}
+
+/**
+ * Resolves canonical member name in target domain (handling plurals like deleteCookie -> deleteCookies).
+ * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
+ * @param {string} targetDomainName
+ * @param {string} memberName
+ * @param {'command' | 'event' | 'type'} kind
+ * @returns {string}
+ */
+function resolveTargetMember(domains, targetDomainName, memberName, kind) {
+  const targetDomain = findDomain(domains, targetDomainName);
+  if (!targetDomain) return memberName;
+
+  /** @type {Array<{ name?: string, id?: string }> | undefined} */
+  let list;
+  if (kind === 'command') list = targetDomain.commands;
+  else if (kind === 'event') list = targetDomain.events;
+  else if (kind === 'type') list = targetDomain.types;
+
+  if (!list || !list.length) return memberName;
+
+  const exact = list.find((m) => (m.name || m.id) === memberName);
+  if (exact) return exact.name || exact.id || memberName;
+
+  const plural = list.find((m) => (m.name || m.id) === memberName + 's');
+  if (plural) return plural.name || plural.id || memberName;
+
+  if (memberName.endsWith('s')) {
+    const singular = list.find((m) => (m.name || m.id) === memberName.slice(0, -1));
+    if (singular) return singular.name || singular.id || memberName;
+  }
+
+  const lower = memberName.toLowerCase();
+  const ci = list.find((m) => (m.name || m.id)?.toLowerCase() === lower);
+  if (ci) return ci.name || ci.id || memberName;
+
+  return memberName;
+}
+
+/**
  * Resolves whether a member in a domain redirects to another domain.
  * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
  * @param {string|null|undefined} domainName
@@ -330,28 +382,23 @@ const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }
  */
 export function getRedirect(domains, domainName, memberName) {
   if (!domainName || !memberName || !domains) return null;
-  /** @type {ProtocolDomain | undefined} */
-  let domain;
-  if (domains instanceof Map) {
-    domain = domains.get(domainName);
-  } else if (Array.isArray(domains)) {
-    domain = domains.find((d) => d.domain === domainName);
-  } else if (typeof domains === 'object') {
-    domain = domains[domainName];
-  }
+  const domain = findDomain(domains, domainName);
   if (!domain) return null;
 
   const cmd = domain.commands?.find((c) => c.name === memberName);
   if (cmd?.redirect) {
-    return { targetDomain: cmd.redirect, targetMember: memberName };
+    const targetMember = resolveTargetMember(domains, cmd.redirect, memberName, 'command');
+    return { targetDomain: cmd.redirect, targetMember };
   }
   const evt = domain.events?.find((e) => e.name === memberName);
   if (evt?.redirect) {
-    return { targetDomain: evt.redirect, targetMember: memberName };
+    const targetMember = resolveTargetMember(domains, evt.redirect, memberName, 'event');
+    return { targetDomain: evt.redirect, targetMember };
   }
   const typ = domain.types?.find((t) => t.id === memberName);
   if (typ?.redirect) {
-    return { targetDomain: typ.redirect, targetMember: memberName };
+    const targetMember = resolveTargetMember(domains, typ.redirect, memberName, 'type');
+    return { targetDomain: typ.redirect, targetMember };
   }
   return null;
 }
@@ -409,6 +456,7 @@ export function parseRoute(routeString) {
 
   // Detect explicit URL-based search query: ?q=foo, ?search=foo, #q=foo, #/target?q=foo, etc.
   const queryMatch = trimmed.match(/[?&#](?:q|search)=([^&#]*)/i);
+  const standaloneTargetMatch = trimmed.match(/[?&#]target=(tot|v8|1-3|1-2|stable)(?:[&#]|$)/i);
   if (queryMatch) {
     const rawVal = queryMatch[1] ?? '';
     let query = rawVal.replace(/\+/g, ' ').trim();
@@ -422,11 +470,15 @@ export function parseRoute(routeString) {
     const routePrefix = queryIdx !== -1 ? trimmed.slice(0, queryIdx) : trimmed;
     const targetMatch =
       routePrefix.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
-      trimmed.match(/[?&#]target=(tot|v8|1-3|1-2|stable)/i);
+      standaloneTargetMatch;
     if (targetMatch) {
       target = normalizeTarget(targetMatch[1]);
     }
     return createRouteInfo(target, null, null, null, query);
+  }
+
+  if (standaloneTargetMatch) {
+    return createRouteInfo(normalizeTarget(standaloneTargetMatch[1]), null, null);
   }
 
   if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {

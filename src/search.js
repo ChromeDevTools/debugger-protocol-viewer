@@ -6,6 +6,7 @@
 
 import { FuzzySearch } from './fuzzy_search.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
+import { getRedirect } from './protocol-model.js';
 
 // Number of search results to render immediately.
 const SEARCH_RENDER_COUNT = 50;
@@ -42,16 +43,19 @@ class SearchItem {
    * @param {string} [description]
    * @param {(ref: string) => string} [formatRef]
    * @param {string|null} [redirectDomain]
+   * @param {string|null} [redirectMember]
    */
-  constructor(domainName, domainEntry, itemType, description, formatRef, redirectDomain = null) {
+  constructor(domainName, domainEntry, itemType, description, formatRef, redirectDomain = null, redirectMember = null) {
     this.domainName = domainName;
     this.domainEntry = domainEntry;
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
     this.redirectDomain = redirectDomain;
+    this.redirectMember = redirectMember;
     const refFormatter = formatRef || (typeof window !== 'undefined' && window.app?.formatRef);
-    const targetRef = redirectDomain ? `${redirectDomain}.${this.domainEntry}` : this.title;
+    const targetMember = redirectMember || this.domainEntry;
+    const targetRef = redirectDomain ? `${redirectDomain}.${targetMember}` : this.title;
     this.route = refFormatter ? refFormatter(targetRef) : '#/' + targetRef;
   }
 }
@@ -153,44 +157,50 @@ export class Search {
     const formatRef = this._app?.formatRef;
     for (const domain of domains) {
       for (const command of domain.commands || []) {
+        const redirect = getRedirect(domains, domain.domain, command.name);
         this._items.push(
           new SearchItem(
             domain.domain,
             command.name,
             'method',
-            command.redirect
-              ? `Redirects to ${command.redirect}.${command.name}. ${command.description || ''}`
+            redirect
+              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${command.description || ''}`
               : command.description,
             formatRef,
-            command.redirect ?? null,
+            redirect?.targetDomain ?? null,
+            redirect?.targetMember ?? null,
           ),
         );
       }
       for (const event of domain.events || []) {
+        const redirect = getRedirect(domains, domain.domain, event.name);
         this._items.push(
           new SearchItem(
             domain.domain,
             event.name,
             'event',
-            event.redirect
-              ? `Redirects to ${event.redirect}.${event.name}. ${event.description || ''}`
+            redirect
+              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${event.description || ''}`
               : event.description,
             formatRef,
-            event.redirect ?? null,
+            redirect?.targetDomain ?? null,
+            redirect?.targetMember ?? null,
           ),
         );
       }
       for (const type of domain.types || []) {
+        const redirect = getRedirect(domains, domain.domain, type.id);
         this._items.push(
           new SearchItem(
             domain.domain,
             type.id,
             'type',
-            type.redirect
-              ? `Redirects to ${type.redirect}.${type.id}. ${type.description || ''}`
+            redirect
+              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${type.description || ''}`
               : type.description,
             formatRef,
-            type.redirect ?? null,
+            redirect?.targetDomain ?? null,
+            redirect?.targetMember ?? null,
           ),
         );
       }
@@ -414,7 +424,8 @@ function renderSearchResult(searchResult) {
     if (item.redirectDomain) {
       const redirectBadge = document.createElement('span');
       redirectBadge.className = 'search-redirect-badge';
-      redirectBadge.textContent = ` ➔ ${item.redirectDomain}.${item.domainEntry}`;
+      const targetMember = item.redirectMember || item.domainEntry;
+      redirectBadge.textContent = ` ➔ ${item.redirectDomain}.${targetMember}`;
       p1.appendChild(redirectBadge);
     }
     let p2 = document.createElement('div');
