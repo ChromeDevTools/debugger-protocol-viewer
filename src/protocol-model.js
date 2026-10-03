@@ -466,10 +466,9 @@ export function parseRoute(routeString) {
       // Retain raw input when percent-decoding fails
     }
     let target = /** @type {TargetKind} */ ('tot');
-    const queryIdx = trimmed.search(/[?&#](?:q|search)=/i);
-    const routePrefix = queryIdx !== -1 ? trimmed.slice(0, queryIdx) : trimmed;
+    const stripped = trimmed.replace(queryMatch[0], '');
     const targetMatch =
-      routePrefix.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
+      stripped.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
       standaloneTargetMatch;
     if (targetMatch) {
       target = normalizeTarget(targetMatch[1]);
