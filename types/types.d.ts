@@ -23,7 +23,6 @@ export interface ProtocolParameter {
   items?: ProtocolParameter;
   enum?: string[];
   properties?: ProtocolParameter[];
-  redirect?: string;
 }
 
 /** Flattened domain type representation including runtime back-references */
@@ -37,7 +36,6 @@ export interface ProtocolType {
   enum?: string[];
   items?: ProtocolParameter;
   referencedBy?: ProtocolBackReference[];
-  redirect?: string;
 }
 
 export interface ProtocolDomain {
@@ -49,7 +47,6 @@ export interface ProtocolDomain {
   types?: ProtocolType[];
   commands?: ProtocolCommand[];
   events?: ProtocolEvent[];
-  redirect?: string;
 }
 
 export interface NormalizedProtocolDomain extends ProtocolDomain {
@@ -75,5 +72,4 @@ export interface RouteInfo {
   domain: string | null;
   member: string | null;
   section?: string | null;
-  query?: string | null;
 }

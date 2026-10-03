@@ -230,44 +230,6 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       expected: { target: 'stable', domain: 'Network', member: 'getCookies' },
     },
 
-    // Composite legacy URLs
-    {
-      input: '/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/1-3/Page/#method-navigate',
-      expected: { target: 'stable', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/1-2/Network/',
-      expected: { target: 'stable', domain: 'Network', member: null },
-    },
-
-    // Isolated legacy anchors
-    {
-      input: '#method-navigate',
-      expected: { target: 'tot', domain: null, member: 'navigate' },
-    },
-    {
-      input: '#type-Node',
-      expected: { target: 'tot', domain: null, member: 'Node' },
-    },
-    {
-      input: '#event-requestWillBeSent',
-      expected: { target: 'tot', domain: null, member: 'requestWillBeSent' },
-    },
-
-    // Query format fallbacks
-    {
-      input: '?Page.navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '?Network',
-      expected: { target: 'tot', domain: 'Network', member: null },
-    },
-
     // Deep links and landing anchors
     {
       input: '#/endpoints',
@@ -315,45 +277,6 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       input: '#',
       expected: { target: 'tot', domain: null, member: null },
     },
-    {
-      input: '/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/tot/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-
-    // Base path prefix stripping (/devtools-protocol/ and /debugger-protocol-viewer/)
-    {
-      input: '/devtools-protocol/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/devtools-protocol/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/devtools-protocol/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/debugger-protocol-viewer/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/debugger-protocol-viewer/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/debugger-protocol-viewer/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-
     // Trailing slashes
     {
       input: '#/Page/',
@@ -378,56 +301,6 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
     {
       input: '#/stable/',
       expected: { target: 'stable', domain: null, member: null },
-    },
-
-    // URL-based search queries
-    {
-      input: '?q=evaluate',
-      expected: { target: 'tot', domain: null, member: null, query: 'evaluate' },
-    },
-    {
-      input: '?search=Runtime.evaluate',
-      expected: { target: 'tot', domain: null, member: null, query: 'Runtime.evaluate' },
-    },
-    {
-      input: '#q=Network.enable',
-      expected: { target: 'tot', domain: null, member: null, query: 'Network.enable' },
-    },
-    {
-      input: '#/v8?q=evaluate',
-      expected: { target: 'v8', domain: null, member: null, query: 'evaluate' },
-    },
-    {
-      input: '#/stable?q=getCookies',
-      expected: { target: 'stable', domain: null, member: null, query: 'getCookies' },
-    },
-    {
-      input: '?q=100%',
-      expected: { target: 'tot', domain: null, member: null, query: '100%' },
-    },
-    {
-      input: '?q=tot/DOM',
-      expected: { target: 'tot', domain: null, member: null, query: 'tot/DOM' },
-    },
-    {
-      input: '?q=Runtime/v8',
-      expected: { target: 'tot', domain: null, member: null, query: 'Runtime/v8' },
-    },
-    {
-      input: '#/v8?q=tot/DOM',
-      expected: { target: 'v8', domain: null, member: null, query: 'tot/DOM' },
-    },
-    {
-      input: '?target=v8',
-      expected: { target: 'v8', domain: null, member: null },
-    },
-    {
-      input: '?target=v8&q=evaluate',
-      expected: { target: 'v8', domain: null, member: null, query: 'evaluate' },
-    },
-    {
-      input: '?q=evaluate&target=stable',
-      expected: { target: 'stable', domain: null, member: null, query: 'evaluate' },
     },
   ];
 
@@ -471,100 +344,30 @@ test('formatRoute: canonical route formatting', () => {
   assert.equal(formatRoute({ section: 'endpoints' }), '#/endpoints');
   assert.equal(formatRoute({ target: 'v8', section: 'faq' }), '#/v8/faq');
 
-  // Query routes
-  assert.equal(formatRoute({ query: 'evaluate' }), '#/?q=evaluate');
-  assert.equal(formatRoute({ target: 'v8', query: 'evaluate' }), '#/v8/?q=evaluate');
-
   // Default options
   assert.equal(formatRoute(), '#/');
 });
 
-test('getRedirect: resolves redirected commands, events, and types', () => {
-  const domains = [
-    {
-      domain: 'DOM',
-      commands: [
-        { name: 'highlightNode', redirect: 'Overlay' },
-        { name: 'getDocument' },
-      ],
-      events: [
-        { name: 'inspectNodeRequested' },
-      ],
-      types: [],
-    },
-    {
-      domain: 'Page',
-      commands: [
-        { name: 'deleteCookie', redirect: 'Network' },
-      ],
-      events: [
-        { name: 'screencastFrame', redirect: 'HeadlessExperimental' },
-      ],
-      types: [
-        { id: 'Cookie', redirect: 'Network' },
-      ],
-    },
-    {
-      domain: 'Overlay',
-      commands: [
-        { name: 'highlightNode' },
-      ],
-    },
-    {
-      domain: 'Network',
-      commands: [
-        { name: 'deleteCookies' },
-      ],
-      types: [
-        { id: 'Cookie' },
-      ],
-    },
-    {
-      domain: 'HeadlessExperimental',
-      events: [
-        { name: 'screencastFrame' },
-      ],
-    },
-  ];
+test('getRedirect: resolves redirected commands', () => {
+  const domains = new Map(
+    [
+      { domain: 'DOM', commands: [{ name: 'highlightNode', redirect: 'Overlay' }, { name: 'getDocument' }] },
+      { domain: 'Page', commands: [{ name: 'deleteCookie', redirect: 'Network' }] },
+      { domain: 'Overlay', commands: [{ name: 'highlightNode' }] },
+      { domain: 'Network', commands: [{ name: 'deleteCookies' }] },
+    ].map((d) => [d.domain, d]),
+  );
 
-  // Command redirect (exact match)
   assert.deepEqual(getRedirect(domains, 'DOM', 'highlightNode'), {
     targetDomain: 'Overlay',
     targetMember: 'highlightNode',
   });
-
-  // Command redirect (pluralized match: deleteCookie -> deleteCookies)
+  // Pluralized destination: deleteCookie -> deleteCookies
   assert.deepEqual(getRedirect(domains, 'Page', 'deleteCookie'), {
     targetDomain: 'Network',
     targetMember: 'deleteCookies',
   });
-
-  // Event redirect
-  assert.deepEqual(getRedirect(domains, 'Page', 'screencastFrame'), {
-    targetDomain: 'HeadlessExperimental',
-    targetMember: 'screencastFrame',
-  });
-
-  // Type redirect
-  assert.deepEqual(getRedirect(domains, 'Page', 'Cookie'), {
-    targetDomain: 'Network',
-    targetMember: 'Cookie',
-  });
-
-  // Non-redirected member
   assert.equal(getRedirect(domains, 'DOM', 'getDocument'), null);
-
-  // Non-existent domain or member
   assert.equal(getRedirect(domains, 'NonExistent', 'foo'), null);
-  assert.equal(getRedirect(domains, 'DOM', 'nonExistent'), null);
-  assert.equal(getRedirect(null, 'DOM', 'highlightNode'), null);
-  assert.equal(getRedirect(domains, '', ''), null);
-
-  // Supports Map input
-  const domainMap = new Map(domains.map((d) => [d.domain, d]));
-  assert.deepEqual(getRedirect(domainMap, 'DOM', 'highlightNode'), {
-    targetDomain: 'Overlay',
-    targetMember: 'highlightNode',
-  });
+  assert.equal(getRedirect(undefined, 'DOM', 'highlightNode'), null);
 });
-

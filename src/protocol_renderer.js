@@ -115,7 +115,6 @@ export class ProtocolRenderer {
     const main = document.createElement('div');
     main.className = 'type';
     if (type.deprecated) main.classList.add('deprecated-bg');
-    if (type.redirect) main.classList.add('redirect-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -125,18 +124,6 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
-    const redirect = getRedirect(window.app?._activeDomains, domain.domain, type.id);
-    if (redirect) {
-      const p = document.createElement('p');
-      p.className = 'redirect-notice';
-      const dest = `${redirect.targetDomain}.${redirect.targetMember}`;
-      const link = document.createElement('a');
-      link.href = ProtocolRenderer.formatRef(dest);
-      link.textContent = dest;
-      p.append('This type has moved. Redirects to ', link, '.');
-      main.appendChild(p);
-      return main;
-    }
     if (type.type) {
       const p = document.createElement('p');
       p.textContent = 'Type: ';
@@ -227,20 +214,26 @@ export class ProtocolRenderer {
   static renderTableOfContents(domain, container) {
     const isDomainExp = Boolean(domain.experimental);
     /**
-     * @param {ProtocolCommand | ProtocolEvent | ProtocolType} entity
+     * @param {ProtocolCommand | ProtocolEvent} method
      * @param {HTMLElement} container
      */
-    const renderEntry = (entity, container) => {
-      const name = 'name' in entity ? entity.name : entity.id;
-      const redirect = getRedirect(window.app?._activeDomains, domain.domain, name);
-      return ProtocolRenderer.renderTableOfContentsEntry(
-        domain.domain,
-        name,
-        container,
-        redirect?.targetDomain ?? null,
-        redirect?.targetMember ?? null,
-      );
+    let renderEventOrMethodEntry = (method, container) => {
+      const row = ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
+      const redirect = getRedirect(window.app?._activeDomains, domain.domain, method.name);
+      if (redirect) {
+        const hint = document.createElement('span');
+        hint.className = 'toc-redirect-hint';
+        hint.textContent = ` ➔ ${redirect.targetDomain}`;
+        row.appendChild(hint);
+      }
+      return row;
     };
+    /**
+     * @param {ProtocolType} type
+     * @param {HTMLElement} container
+     */
+    let renderTypeEntry = (type, container) =>
+      ProtocolRenderer.renderTableOfContentsEntry(domain.domain, type.id, container);
 
     if (
       (domain.commands && domain.commands.length) ||
@@ -255,7 +248,7 @@ export class ProtocolRenderer {
           'Methods',
           'method',
           domain.commands,
-          renderEntry,
+          renderEventOrMethodEntry,
           toc,
           isDomainExp,
         );
@@ -264,7 +257,7 @@ export class ProtocolRenderer {
           'Events',
           'event',
           domain.events,
-          renderEntry,
+          renderEventOrMethodEntry,
           toc,
           isDomainExp,
         );
@@ -273,7 +266,7 @@ export class ProtocolRenderer {
           'Types',
           'type',
           domain.types,
-          renderEntry,
+          renderTypeEntry,
           toc,
           isDomainExp,
         );
@@ -314,9 +307,7 @@ export class ProtocolRenderer {
     sectionWrapper.appendChild(section);
     for (let entry of entries) {
       let row = renderer(entry, section);
-      if (!entry.redirect) {
-        ProtocolRenderer.applyMarks(entry, row, isDomainExp);
-      }
+      ProtocolRenderer.applyMarks(entry, row, isDomainExp);
     }
     return section;
   }
@@ -325,28 +316,15 @@ export class ProtocolRenderer {
    * @param {string} domainName
    * @param {string} name
    * @param {HTMLElement} container
-   * @param {string|null} [redirectDomain]
-   * @param {string|null} [redirectMember]
    * @returns {HTMLElement}
    */
-  static renderTableOfContentsEntry(domainName, name, container, redirectDomain = null, redirectMember = null) {
+  static renderTableOfContentsEntry(domainName, name, container) {
     const row = document.createElement('div');
     row.className = 'toc-link';
-    if (redirectDomain) row.classList.add('toc-redirect');
     container.appendChild(row);
-    const targetMember = redirectMember || name;
-    const targetRef = redirectDomain ? `${redirectDomain}.${targetMember}` : `${domainName}.${name}`;
-    let link = ProtocolRenderer.renderRef(targetRef);
+    let id = `${domainName}.${name}`;
+    let link = ProtocolRenderer.renderRef(id);
     link.classList.add('monospace');
-    if (redirectDomain) {
-      link.textContent = name;
-      const arrow = document.createElement('span');
-      arrow.className = 'toc-redirect-hint';
-      arrow.textContent = ` ➔ ${redirectDomain}${targetMember !== name ? '.' + targetMember : ''}`;
-      row.appendChild(link);
-      row.appendChild(arrow);
-      return row;
-    }
     row.appendChild(link);
     return row;
   }
@@ -361,7 +339,6 @@ export class ProtocolRenderer {
     const main = document.createElement('div');
     main.className = 'method';
     if (method.deprecated) main.classList.add('deprecated-bg');
-    if (method.redirect) main.classList.add('redirect-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -375,11 +352,7 @@ export class ProtocolRenderer {
     if (redirect) {
       const p = document.createElement('p');
       p.className = 'redirect-notice';
-      const dest = `${redirect.targetDomain}.${redirect.targetMember}`;
-      const link = document.createElement('a');
-      link.href = ProtocolRenderer.formatRef(dest);
-      link.textContent = dest;
-      p.append('This method has moved. Redirects to ', link, '.');
+      p.append('Moved to ', ProtocolRenderer.renderRef(`${redirect.targetDomain}.${redirect.targetMember}`), '.');
       main.appendChild(p);
       return main;
     }
@@ -506,13 +479,7 @@ export class ProtocolRenderer {
    */
   static applyMarks(item, element, isParentDomainExperimental = false) {
     if (!item) return;
-    if (item.redirect) {
-      const redSpan = document.createElement('span');
-      redSpan.className = 'redirect-badge';
-      redSpan.textContent = `redirect: ${item.redirect}`;
-      redSpan.title = `Redirects to ${item.redirect}`;
-      element.appendChild(redSpan);
-    } else if (item.experimental) {
+    if (item.experimental) {
       if (isParentDomainExperimental) {
         return;
       }

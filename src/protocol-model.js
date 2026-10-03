@@ -3,7 +3,7 @@
  * Browser-agnostic, zero-DOM ES module.
  */
 
-/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolCommand, ProtocolEvent, ProtocolType, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
 
 /** @type {Map<string, TargetKind>} */
 const TARGET_MAP = new Map([
@@ -284,103 +284,21 @@ export function computeBackReferences(domains) {
   return domains;
 }
 
-const ROUTE_BASE_URL = 'https://cdp.internal';
-
-const hasURLPattern = typeof URLPattern !== 'undefined';
-
-const legacyAnchorPattern = hasURLPattern
-  ? new URLPattern({ hash: ':prefix(method|type|event)-:member' })
-  : null;
-
-const legacyPathPattern = hasURLPattern
-  ? new URLPattern({
-      pathname:
-        '{/:repo(devtools-protocol|debugger-protocol-viewer)}?/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-      baseURL: ROUTE_BASE_URL,
-    })
-  : null;
-
-const hashTargetMemberPattern = hasURLPattern
-  ? new URLPattern({
-      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain.:member',
-    })
-  : null;
-const hashTargetDomainPattern = hasURLPattern
-  ? new URLPattern({
-      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-    })
-  : null;
-const hashTargetOnlyPattern = hasURLPattern
-  ? new URLPattern({ hash: '#/:target(tot|v8|1-3|1-2|stable){/}*' })
-  : null;
-
-const hashMemberPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain.:member' }) : null;
-const hashDomainPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain{/}*' }) : null;
-const hashDirectPattern = hasURLPattern ? new URLPattern({ hash: '#:domain' }) : null;
-
-const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:member' }) : null;
-const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
-
 /**
- * Looks up a domain by name in Map, Array, or Record.
- * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
- * @param {string} name
- * @returns {ProtocolDomain | undefined}
- */
-function findDomain(domains, name) {
-  if (!domains) return undefined;
-  if (domains instanceof Map) return domains.get(name);
-  if (Array.isArray(domains)) return domains.find((d) => d.domain === name);
-  return typeof domains === 'object' ? domains[name] : undefined;
-}
-
-/**
- * Resolves canonical member name in target domain (handling plurals like deleteCookie -> deleteCookies).
- * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
- * @param {string} targetDomainName
+ * Resolves where a redirected command now lives. Only commands carry `redirect` in the protocol.
+ * Matches a pluralized name in the destination (Page.deleteCookie -> Network.deleteCookies).
+ * @param {Map<string, ProtocolDomain> | undefined} domains
+ * @param {string} domainName
  * @param {string} memberName
- * @param {'command' | 'event' | 'type'} kind
- * @returns {string}
- */
-function resolveTargetMember(domains, targetDomainName, memberName, kind) {
-  const targetDomain = findDomain(domains, targetDomainName);
-  const list = targetDomain?.[kind === 'command' ? 'commands' : kind === 'event' ? 'events' : 'types'];
-  if (!list) return memberName;
-  const match = list.find((m) => {
-    const n = 'name' in m ? m.name : m.id;
-    return n === memberName || n === memberName + 's' || (memberName.endsWith('s') && n === memberName.slice(0, -1));
-  });
-  return (match ? ('name' in match ? match.name : match.id) : memberName) || memberName;
-}
-
-/**
- * Resolves whether a member in a domain redirects to another domain.
- * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
- * @param {string|null|undefined} domainName
- * @param {string|null|undefined} memberName
  * @returns {{ targetDomain: string, targetMember: string } | null}
  */
 export function getRedirect(domains, domainName, memberName) {
-  if (!domainName || !memberName || !domains) return null;
-  const domain = findDomain(domains, domainName);
-  if (!domain) return null;
-
-  let kind = /** @type {'command' | 'event' | 'type'} */ ('command');
-  /** @type {ProtocolCommand | ProtocolEvent | ProtocolType | undefined} */
-  let item = domain.commands?.find((c) => c.name === memberName);
-  if (!item) {
-    kind = 'event';
-    item = domain.events?.find((e) => e.name === memberName);
-  }
-  if (!item) {
-    kind = 'type';
-    item = domain.types?.find((t) => t.id === memberName);
-  }
-  if (!item?.redirect) return null;
-  return {
-    targetDomain: item.redirect,
-    targetMember: resolveTargetMember(domains, item.redirect, memberName, kind),
-  };
+  const command = domains?.get(domainName)?.commands?.find((c) => c.name === memberName);
+  if (!command?.redirect) return null;
+  const match = domains
+    ?.get(command.redirect)
+    ?.commands?.find((c) => c.name === memberName || c.name === `${memberName}s`);
+  return { targetDomain: command.redirect, targetMember: match?.name ?? memberName };
 }
 
 /**
@@ -388,273 +306,49 @@ export function getRedirect(domains, domainName, memberName) {
  * @param {TargetKind} target
  * @param {string|null} domain
  * @param {string|null} member
- * @param {string|null} [section]
- * @param {string|null} [query]
  * @returns {RouteInfo}
  */
-function createRouteInfo(target, domain, member, section = null, query = null) {
-  if (query) {
-    return { target, domain: null, member: null, query };
-  }
+function createRouteInfo(target, domain, member) {
   if (domain && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
     const full = member ? `${domain}.${member}` : domain;
-    const sec = full === 'http-endpoints' ? 'endpoints' : full;
-    return { target, domain: null, member: null, section: sec };
+    const section = full === 'http-endpoints' ? 'endpoints' : full;
+    return { target, domain: null, member: null, section };
   }
-  /** @type {RouteInfo} */
-  const res = { target, domain, member };
-  if (section) {
-    res.section = section;
-  }
-  return res;
+  return { target, domain, member };
 }
 
 /**
- * Parses any incoming route variant into a canonical RouteInfo object.
- * Uses standard URLPattern when available, with a regex/string fallback.
+ * Parses a hash route into a canonical RouteInfo object.
+ * Legacy static URLs (/tot/Page/#method-navigate, /1-3/..., /v8/...) are rewritten to hash
+ * routes by the generated domain stubs and 404.html before the app ever sees them.
  *
- * Supported route structures:
- * - Modern hash routes: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network.getCookies
- * - URL search queries: ?q=foo, ?search=foo, #/v8?q=foo, #q=foo
- * - Legacy paths: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
- * - Base-path prefixed: /devtools-protocol/tot/Page/#method-navigate, /debugger-protocol-viewer/tot/Page/#method-navigate
- * - Isolated legacy anchors: #method-navigate, #type-Node, #event-requestWillBeSent
- * - Query format: ?Page.navigate, ?Network
+ * Supported: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network, #/v8/, #faq, #/endpoints
  *
- * @param {string|null} [routeString]
+ * @param {string|null} [hash]
  * @returns {RouteInfo}
  */
-export function parseRoute(routeString) {
-  if (!routeString || typeof routeString !== 'string') {
-    return createRouteInfo('tot', null, null);
-  }
+export function parseRoute(hash) {
+  const path = (hash ?? '').trim().replace(/^#\/?/, '').replace(/\/+$/, '');
+  const [first = '', ...rest] = path.split('/');
+  const hasTarget = TARGET_MAP.has(first.toLowerCase());
+  const target = hasTarget ? normalizeTarget(first) : 'tot';
+  const ref = hasTarget ? rest.join('/') : path;
+  if (!ref) return createRouteInfo(target, null, null);
 
-  const trimmed = routeString.trim();
-  if (!trimmed || trimmed === '#' || trimmed === '#/' || trimmed === '/') {
-    return createRouteInfo('tot', null, null);
-  }
-
-  const url =
-    trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
-      ? new URL(trimmed, ROUTE_BASE_URL)
-      : new URL('/' + trimmed, ROUTE_BASE_URL);
-
-  // Native URLSearchParams query parsing: ?q=foo, ?search=foo, #/target?q=foo, #q=foo, #target=v8&q=foo
-  const hashQ = url.hash.indexOf('?');
-  const hashQueryStr = hashQ !== -1 ? url.hash.slice(hashQ + 1) : (url.hash.includes('=') ? url.hash.replace(/^#\/?/, '') : '');
-  const hashParams = hashQueryStr ? new URLSearchParams(hashQueryStr) : null;
-  const query = url.searchParams.get('q') ?? url.searchParams.get('search') ?? hashParams?.get('q') ?? hashParams?.get('search');
-  const targetParam = url.searchParams.get('target') ?? hashParams?.get('target');
-
-  if (query !== null && query !== undefined) {
-    let target = targetParam ? normalizeTarget(targetParam) : 'tot';
-    if (!targetParam) {
-      const pathPart = hashQ !== -1 ? url.hash.slice(0, hashQ) : (url.pathname !== '/' ? url.pathname : '');
-      const targetMatch = pathPart.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/#]|$)/i);
-      if (targetMatch) target = normalizeTarget(targetMatch[1]);
-    }
-    return createRouteInfo(target, null, null, null, query.trim());
-  }
-
-  if (targetParam && (trimmed.startsWith('?target=') || trimmed.startsWith('&target='))) {
-    return createRouteInfo(normalizeTarget(targetParam), null, null);
-  }
-
-  if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
-
-    const legacyAnchorMatch = legacyAnchorPattern.exec(url);
-    const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;
-
-    const legacyPathMatch = legacyPathPattern.exec(url);
-    if (
-      legacyPathMatch?.pathname.groups.domain &&
-      !legacyPathMatch.pathname.groups.domain.endsWith('.html')
-    ) {
-      return createRouteInfo(
-        normalizeTarget(legacyPathMatch.pathname.groups.target),
-        legacyPathMatch.pathname.groups.domain,
-        legacyMember,
-      );
-    }
-
-    if (legacyMember) {
-      return createRouteInfo('tot', null, legacyMember);
-    }
-
-    const htm = hashTargetMemberPattern?.exec(url);
-    if (htm?.hash.groups.domain && htm.hash.groups.member) {
-      return createRouteInfo(
-        normalizeTarget(htm.hash.groups.target),
-        htm.hash.groups.domain,
-        htm.hash.groups.member,
-      );
-    }
-
-    const htd = hashTargetDomainPattern?.exec(url);
-    if (htd?.hash.groups.domain) {
-      return createRouteInfo(
-        normalizeTarget(htd.hash.groups.target),
-        htd.hash.groups.domain,
-        null,
-      );
-    }
-
-    const hto = hashTargetOnlyPattern?.exec(url);
-    if (hto?.hash.groups.target) {
-      return createRouteInfo(
-        normalizeTarget(hto.hash.groups.target),
-        null,
-        null,
-      );
-    }
-
-    const hm = hashMemberPattern?.exec(url);
-    if (hm?.hash.groups.domain && hm.hash.groups.member) {
-      return createRouteInfo(
-        'tot',
-        hm.hash.groups.domain,
-        hm.hash.groups.member,
-      );
-    }
-
-    const hd = hashDomainPattern?.exec(url);
-    if (hd?.hash.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        hd.hash.groups.domain,
-        null,
-      );
-    }
-
-    const hdir = hashDirectPattern?.exec(url);
-    if (hdir?.hash.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        hdir.hash.groups.domain,
-        null,
-      );
-    }
-
-    const qm = queryMemberPattern?.exec(url);
-    if (qm?.search.groups.domain && qm.search.groups.member) {
-      return createRouteInfo(
-        'tot',
-        qm.search.groups.domain,
-        qm.search.groups.member,
-      );
-    }
-
-    const qd = queryDomainPattern?.exec(url);
-    if (qd?.search.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        qd.search.groups.domain,
-        null,
-      );
-    }
-
-    return createRouteInfo('tot', null, null);
-  }
-
-  // Fallback string/regex parser for environments without URLPattern
-  const isolatedLegacyMatch = trimmed.match(/^#(?:method|type|event)-([\w-]+)$/);
-  if (isolatedLegacyMatch) {
-    return createRouteInfo('tot', null, isolatedLegacyMatch[1]);
-  }
-
-  const hashIndex = trimmed.indexOf('#');
-  let pathPart = '';
-  let hashPart = '';
-
-  if (hashIndex !== -1) {
-    pathPart = trimmed.slice(0, hashIndex);
-    hashPart = trimmed.slice(hashIndex + 1);
-  } else if (trimmed.startsWith('?')) {
-    hashPart = trimmed.slice(1);
-  } else {
-    pathPart = trimmed;
-  }
-
-  const legacyHashMatch = hashPart.match(/^(?:method|type|event)-([\w-]+)$/);
-  const legacyMember = legacyHashMatch ? legacyHashMatch[1] : null;
-
-  const pathSegments = pathPart
-    .split('/')
-    .map((s) => s.trim())
-    .filter((s) => Boolean(s) && !s.endsWith('.html'));
-
-  if (
-    pathSegments.length > 0 &&
-    (pathSegments[0] === 'devtools-protocol' || pathSegments[0] === 'debugger-protocol-viewer')
-  ) {
-    pathSegments.shift();
-  }
-
-  if (pathSegments.length > 0) {
-    /** @type {TargetKind} */
-    let target = 'tot';
-    let domain = null;
-
-    const targetIndex = pathSegments.findIndex((s) => TARGET_MAP.has(s.toLowerCase()));
-    if (targetIndex !== -1) {
-      target = normalizeTarget(pathSegments[targetIndex]);
-      if (pathSegments.length > targetIndex + 1) {
-        domain = pathSegments[targetIndex + 1];
-      }
-    } else {
-      domain = pathSegments[0];
-    }
-
-    return createRouteInfo(target, domain, legacyMember);
-  }
-
-  let cleanHash = hashPart;
-  if (cleanHash.startsWith('/')) cleanHash = cleanHash.slice(1);
-  if (!cleanHash) return createRouteInfo('tot', null, null);
-
-  /** @type {TargetKind} */
-  let target = 'tot';
-  let targetAndRest = cleanHash;
-
-  const slashIndex = cleanHash.indexOf('/');
-  if (slashIndex !== -1) {
-    const potentialTarget = cleanHash.slice(0, slashIndex).toLowerCase();
-    if (TARGET_MAP.has(potentialTarget)) {
-      target = normalizeTarget(potentialTarget);
-      targetAndRest = cleanHash.slice(slashIndex + 1);
-    }
-  } else if (TARGET_MAP.has(cleanHash.toLowerCase())) {
-    target = normalizeTarget(cleanHash);
-    targetAndRest = '';
-  }
-
-  targetAndRest = targetAndRest.replace(/\/+$/, '');
-  if (!targetAndRest) return createRouteInfo(target, null, null);
-
-  const dotIndex = targetAndRest.indexOf('.');
-  if (dotIndex !== -1) {
-    return createRouteInfo(
-      target,
-      targetAndRest.slice(0, dotIndex),
-      targetAndRest.slice(dotIndex + 1) || null,
-    );
-  }
-
-  return createRouteInfo(target, targetAndRest, null);
+  const dot = ref.indexOf('.');
+  if (dot === -1) return createRouteInfo(target, ref, null);
+  return createRouteInfo(target, ref.slice(0, dot), ref.slice(dot + 1) || null);
 }
 
 /**
  * Formats canonical hash route from components.
- * @param {{ target?: string|null, domain?: string|null, member?: string|null, section?: string|null, query?: string|null }} [route]
+ * @param {{ target?: string|null, domain?: string|null, member?: string|null, section?: string|null }} [route]
  * @returns {string} Canonical hash route, e.g. '#/Page.navigate'
  */
-export function formatRoute({ target = 'tot', domain = null, member = null, section = null, query = null } = {}) {
+export function formatRoute({ target = 'tot', domain = null, member = null, section = null } = {}) {
   const normTarget = normalizeTarget(target);
   const targetPrefix = normTarget === 'tot' ? '' : `${normTarget}/`;
 
-  if (query) {
-    return `#/${targetPrefix}?q=${encodeURIComponent(query)}`;
-  }
   if (section) {
     return `#/${targetPrefix}${section}`;
   }

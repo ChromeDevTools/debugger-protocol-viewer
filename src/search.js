@@ -2,7 +2,7 @@
  * @fileoverview Fuzzy search controller and UI rendering for protocol entities.
  */
 
-/** @import { ProtocolDomain, ProtocolCommand, ProtocolEvent, ProtocolType } from '../types/types.d.ts' */
+/** @import { ProtocolDomain } from '../types/types.d.ts' */
 
 import { FuzzySearch } from './fuzzy_search.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
@@ -42,21 +42,15 @@ class SearchItem {
    * @param {SearchItemKind} itemType
    * @param {string} [description]
    * @param {(ref: string) => string} [formatRef]
-   * @param {string|null} [redirectDomain]
-   * @param {string|null} [redirectMember]
    */
-  constructor(domainName, domainEntry, itemType, description, formatRef, redirectDomain = null, redirectMember = null) {
+  constructor(domainName, domainEntry, itemType, description, formatRef) {
     this.domainName = domainName;
     this.domainEntry = domainEntry;
     this.type = itemType;
     this.description = description || '';
     this.title = this.domainName + '.' + this.domainEntry;
-    this.redirectDomain = redirectDomain;
-    this.redirectMember = redirectMember;
     const refFormatter = formatRef || (typeof window !== 'undefined' && window.app?.formatRef);
-    const targetMember = redirectMember || this.domainEntry;
-    const targetRef = redirectDomain ? `${redirectDomain}.${targetMember}` : this.title;
-    this.route = refFormatter ? refFormatter(targetRef) : '#/' + targetRef;
+    this.route = refFormatter ? refFormatter(this.title) : '#/' + this.title;
   }
 }
 
@@ -155,38 +149,32 @@ export class Search {
   setDomains(domains) {
     this._items = [];
     const formatRef = this._app?.formatRef;
+    const byName = new Map(domains.map((d) => [d.domain, d]));
     for (const domain of domains) {
-      /** @type {Array<[ProtocolCommand[] | ProtocolEvent[] | ProtocolType[] | undefined, SearchItemKind]>} */
-      const lists = [
-        [domain.commands, 'method'],
-        [domain.events, 'event'],
-        [domain.types, 'type'],
-      ];
-      for (const [list, type] of lists) {
-        for (const entity of list || []) {
-          const name = 'name' in entity ? entity.name : entity.id;
-          const redirect = getRedirect(domains, domain.domain, name);
-          const desc = redirect
-            ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${entity.description || ''}`
-            : entity.description;
-          this._items.push(
-            new SearchItem(
-              domain.domain,
-              name,
-              type,
-              desc,
-              formatRef,
-              redirect?.targetDomain,
-              redirect?.targetMember,
-            ),
-          );
-        }
+      for (const command of domain.commands || []) {
+        const redirect = getRedirect(byName, domain.domain, command.name);
+        const description = redirect
+          ? `Moved to ${redirect.targetDomain}.${redirect.targetMember}.`
+          : command.description;
+        this._items.push(
+          new SearchItem(domain.domain, command.name, 'method', description, formatRef),
+        );
+      }
+      for (const event of domain.events || []) {
+        this._items.push(
+          new SearchItem(domain.domain, event.name, 'event', event.description, formatRef),
+        );
+      }
+      for (const type of domain.types || []) {
+        this._items.push(
+          new SearchItem(domain.domain, type.id, 'type', type.description, formatRef),
+        );
       }
     }
   }
 
   /**
-   * Performs an immediate search with the given query, opening the results dropdown.
+   * Runs a search for `query` and opens the results dropdown.
    * @param {string} query
    */
   search(query) {
@@ -399,13 +387,6 @@ function renderSearchResult(searchResult) {
         item.title.length,
       ),
     );
-    if (item.redirectDomain) {
-      const redirectBadge = document.createElement('span');
-      redirectBadge.className = 'search-redirect-badge';
-      const targetMember = item.redirectMember || item.domainEntry;
-      redirectBadge.textContent = ` ➔ ${item.redirectDomain}.${targetMember}`;
-      p1.appendChild(redirectBadge);
-    }
     let p2 = document.createElement('div');
     p2.className = 'search-item-description';
     p2.textContent = item.description;

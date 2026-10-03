@@ -840,8 +840,7 @@ tr:hover td {
 
 /* Badges & Entity Icons */
 span.experimental,
-span.deprecated,
-span.redirect-badge {
+span.deprecated {
   font-size: 10px;
   line-height: 12px;
   text-transform: uppercase;
@@ -863,36 +862,13 @@ span.deprecated {
   background-color: #e65100;
 }
 
-span.redirect-badge {
-  background-color: #f59e0b;
-}
-
 .redirect-notice {
-  font-size: 14px;
-  margin: 8px 0;
   color: var(--color-subtle);
-}
-
-.redirect-notice a {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.toc-redirect-hint,
-.search-redirect-badge {
-  font-size: 11px;
-  font-family: var(--font-sans);
-  margin-left: 4px;
 }
 
 .toc-redirect-hint {
+  font-size: 11px;
   color: var(--color-subtle);
-}
-
-.search-redirect-badge {
-  color: var(--color-primary);
-  font-weight: 500;
-  margin-left: 6px;
 }
 
 /* Domain-level badging: if the whole domain is experimental or deprecated,

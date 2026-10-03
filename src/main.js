@@ -21,6 +21,27 @@ const PROTOCOL_URLS = {
   v8: new URL('./data/v8.json', import.meta.url).href,
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+  const sidebarElement = $('#sidebar');
+  const domainListElement = $('#domain-list');
+  const contentElement = $('#content');
+  const searchElement = $('#search');
+  const searchResultsElement = $('#sresults');
+  const targetSelector = /** @type {HTMLSelectElement} */ ($('#target-selector'));
+  const drawerToggle = $('#drawer-toggle');
+  const drawerBackdrop = $('#drawer-backdrop');
+
+  window.app = new App({
+    sidebarElement,
+    domainListElement,
+    contentElement,
+    searchElement,
+    searchResultsElement,
+    targetSelector,
+    drawerToggle,
+    drawerBackdrop,
+  });
+});
 
 /**
  * @typedef {Object} AppElements
@@ -207,9 +228,9 @@ export class App {
     if (this._targetSelector) {
       this._targetSelector.addEventListener('change', () => {
         const target = normalizeTarget(this._targetSelector.value);
-        const { domain, section, query } = parseRoute(window.location.hash || window.location.search);
+        const { domain, section } = parseRoute(window.location.hash);
         const validDomain = domain && this._targetStore[target]?.has(domain) ? domain : null;
-        this.navigate(formatRoute({ target, domain: validDomain, section, query }));
+        this.navigate(formatRoute({ target, domain: validDomain, section }));
       });
     }
   }
@@ -234,7 +255,7 @@ export class App {
         ) {
           return;
         }
-        if (href && (href.startsWith('#') || href.startsWith('?'))) {
+        if (href?.startsWith('#')) {
           event.preventDefault();
           this._closeDrawer();
           this.navigate(href);
@@ -249,18 +270,7 @@ export class App {
   }
 
   _onRoute() {
-    const hash = window.location.hash || '';
-    const search = window.location.search || '';
-    let rawRoute = hash;
-    if (search) {
-      rawRoute = !hash || hash === '#' || hash === '#/'
-        ? search
-        : `${hash}${hash.includes('?') ? '&' : '?'}${search.slice(1)}`;
-    } else if (!rawRoute || /^#(?:method|type|event)-/.test(rawRoute)) {
-      rawRoute = window.location.pathname + (rawRoute || '');
-    }
-
-    const route = parseRoute(rawRoute);
+    const route = parseRoute(window.location.hash);
     this._currentTarget = route.target;
     if (this._targetSelector) {
       this._targetSelector.value = route.target;
@@ -274,11 +284,13 @@ export class App {
       this._renderSidebar(this._activeDomains);
     }
 
-    // URL-based search query (?q=foo or #q=foo)
-    if (route.query) {
+    // OpenSearch entry point: ?q=foo (target via hash, e.g. ?q=foo#/v8). Strip it so it doesn't stick.
+    const query = new URLSearchParams(window.location.search).get('q');
+    if (query) {
+      history.replaceState(null, '', window.location.pathname + window.location.hash);
       this._renderedDomain = null;
       this._onNavigateHome(null);
-      this._search.search(route.query);
+      this._search.search(query);
       return;
     }
 
@@ -470,26 +482,6 @@ export class App {
     this._domainListElement.appendChild(endpointsLink);
   }
 }
-
-const sidebarElement = $('#sidebar');
-const domainListElement = $('#domain-list');
-const contentElement = $('#content');
-const searchElement = $('#search');
-const searchResultsElement = $('#sresults');
-const targetSelector = /** @type {HTMLSelectElement} */ ($('#target-selector'));
-const drawerToggle = $('#drawer-toggle');
-const drawerBackdrop = $('#drawer-backdrop');
-
-window.app = new App({
-  sidebarElement,
-  domainListElement,
-  contentElement,
-  searchElement,
-  searchResultsElement,
-  targetSelector,
-  drawerToggle,
-  drawerBackdrop,
-});
 
 /**
  * @param {string} error

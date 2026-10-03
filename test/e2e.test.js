@@ -779,90 +779,43 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       assert.strictEqual(legacyInspectorExists, true, 'Expected get-devtoolsinspector.html heading with title-link');
     });
 
-    await t.test('13. Auto-redirect moved items (#/DOM.highlightNode -> #/Overlay.highlightNode)', async () => {
-      await page.Page.navigate({ url: `${baseUrl}/#/DOM.highlightNode` });
-
-      const finalHash = await client.pollEvaluate(
-        'window.location.hash',
-        (/** @type {any} */ hash) => hash === '#/Overlay.highlightNode',
-        sessionId,
-      );
-      assert.strictEqual(finalHash, '#/Overlay.highlightNode', 'Expected hash to auto-redirect to canonical domain');
-
-      const activeDomain = await client.pollEvaluate(
-        'document.querySelector(".domain-link.active-link")?.getAttribute("data-domain")',
-        (/** @type {any} */ domain) => domain === 'Overlay',
-        sessionId,
-      );
-      assert.strictEqual(activeDomain, 'Overlay', 'Expected Overlay domain to be active in sidebar');
-
-      const headingExists = await client.pollEvaluate(
-        'Boolean(document.getElementById("Overlay_highlightNode"))',
-        (/** @type {any} */ val) => Boolean(val),
-        sessionId,
-      );
-      assert.strictEqual(headingExists, true, 'Expected canonical #Overlay_highlightNode heading in DOM');
-
-      // Test renamed/plural redirect: Page.deleteCookie -> Network.deleteCookies
-      await page.Page.navigate({ url: `${baseUrl}/#/Page.deleteCookie` });
-      const deleteCookiesHash = await client.pollEvaluate(
-        'window.location.hash',
-        (/** @type {any} */ hash) => hash === '#/Network.deleteCookies',
-        sessionId,
-      );
-      assert.strictEqual(deleteCookiesHash, '#/Network.deleteCookies', 'Expected Page.deleteCookie to redirect to plural #/Network.deleteCookies');
-
-      const deleteCookiesHeading = await client.pollEvaluate(
-        'Boolean(document.getElementById("Network_deleteCookies"))',
-        (/** @type {any} */ val) => Boolean(val),
-        sessionId,
-      );
-      assert.strictEqual(deleteCookiesHeading, true, 'Expected #Network_deleteCookies heading in DOM');
+    await t.test('13. Auto-redirect moved commands', async () => {
+      for (const [from, to, headingId] of [
+        ['#/DOM.highlightNode', '#/Overlay.highlightNode', 'Overlay_highlightNode'],
+        ['#/Page.deleteCookie', '#/Network.deleteCookies', 'Network_deleteCookies'],
+      ]) {
+        await page.Page.navigate({ url: `${baseUrl}/${from}` });
+        const hash = await client.pollEvaluate(
+          'window.location.hash',
+          (/** @type {any} */ h) => h === to,
+          sessionId,
+        );
+        assert.strictEqual(hash, to, `Expected ${from} to redirect to ${to}`);
+        const headingExists = await client.pollEvaluate(
+          `Boolean(document.getElementById(${JSON.stringify(headingId)}))`,
+          (/** @type {any} */ val) => Boolean(val),
+          sessionId,
+        );
+        assert.strictEqual(headingExists, true, `Expected #${headingId} heading in DOM`);
+      }
     });
 
-    await t.test('14. URL-based search query (?q=evaluate)', async () => {
-      await page.Page.navigate({ url: `${baseUrl}/?q=evaluate` });
-
-      const inputValue = await client.pollEvaluate(
-        'document.getElementById("search")?.value',
-        (/** @type {any} */ val) => val === 'evaluate',
+    await t.test('14. OpenSearch query (?q=evaluate#/v8)', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/?q=evaluate#/v8` });
+      const state = await client.pollEvaluate(
+        `({
+          value: document.getElementById('search')?.value,
+          target: document.getElementById('target-selector')?.value,
+          results: document.querySelectorAll('#sresults .search-item').length,
+          search: location.search,
+        })`,
+        (/** @type {any} */ s) => s?.value === 'evaluate' && s.results > 0,
         sessionId,
       );
-      assert.strictEqual(inputValue, 'evaluate', 'Expected search input to be populated with query');
-
-      const resultsDisplayed = await client.pollEvaluate(
-        'document.getElementById("sresults")?.style.display',
-        (/** @type {any} */ display) => display === 'block',
-        sessionId,
-      );
-      assert.strictEqual(resultsDisplayed, 'block', 'Expected search results dropdown to be visible');
-
-      const resultCount = await client.pollEvaluate(
-        'document.querySelectorAll("#sresults .search-item").length',
-        (/** @type {any} */ count) => count > 0,
-        sessionId,
-      );
-      assert.ok(resultCount > 0, 'Expected search results to be rendered');
-
-      // Target-scoped search: #/v8?q=evaluate synchronizes target-selector
-      await page.Page.navigate({ url: `${baseUrl}/#/v8?q=evaluate` });
-      const v8Target = await client.pollEvaluate(
-        'document.getElementById("target-selector")?.value',
-        (/** @type {any} */ val) => val === 'v8',
-        sessionId,
-      );
-      assert.strictEqual(v8Target, 'v8', 'Expected target selector to switch to v8');
-    });
-
-    await t.test('15. OpenSearch autodiscovery link in index.html', async () => {
-      const openSearchLink = await client.evaluate(
-        'document.querySelector("link[rel=\'search\'][type=\'application/opensearchdescription+xml\']")?.getAttribute("href")',
-        sessionId,
-      );
-      assert.ok(
-        openSearchLink && openSearchLink.includes('opensearch.xml'),
-        `Expected opensearch.xml link tag in head, got ${openSearchLink}`,
-      );
+      assert.strictEqual(state.value, 'evaluate', 'Expected search input to be populated with query');
+      assert.strictEqual(state.target, 'v8', 'Expected target from hash');
+      assert.ok(state.results > 0, 'Expected search results to be rendered');
+      assert.strictEqual(state.search, '', 'Expected ?q= to be stripped from the URL');
     });
   } finally {
     if (targetId && browserApi) {
