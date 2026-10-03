@@ -819,22 +819,23 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       const typed = await client.evaluate(
         `(() => {
           const input = document.getElementById('search');
-          input.value = 'getCookies';
+          input.value = 'enable';
           input.dispatchEvent(new Event('input'));
           return location.search;
         })()`,
         sessionId,
       );
-      assert.strictEqual(typed, '?q=getCookies', 'Expected typing to update ?q=');
+      assert.strictEqual(typed, '?q=enable', 'Expected typing to update ?q=');
 
-      // Picking a result / navigating ends the search and clears ?q=
-      await client.evaluate(`location.hash = '#/v8/Runtime'`, sessionId);
-      const cleared = await client.pollEvaluate(
-        'location.search',
-        (/** @type {any} */ s) => s === '',
+      // Picking a result ends the search: clears ?q= and empties the input
+      await client.evaluate(`document.querySelector('#sresults .search-item').click()`, sessionId);
+      const after = await client.pollEvaluate(
+        `({ search: location.search, hash: location.hash, value: document.getElementById('search').value })`,
+        (/** @type {any} */ s) => s?.hash.length > 2,
         sessionId,
       );
-      assert.strictEqual(cleared, '', 'Expected ?q= to be cleared after navigating');
+      assert.strictEqual(after.search, '', 'Expected ?q= to be cleared after picking a result');
+      assert.strictEqual(after.value, '', 'Expected search input to be emptied after picking a result');
     });
 
     await t.test('15. Home is the bare path, with working Back/Forward', async () => {

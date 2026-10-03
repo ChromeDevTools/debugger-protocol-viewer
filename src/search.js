@@ -91,7 +91,6 @@ export class Search {
     this._items = [];
     /** @type {Element|null} */
     this._selectedElement = null;
-    this._defaultValue = '';
     this._searchInput.addEventListener('input', this._onInput.bind(this), false);
     this._searchInput.addEventListener('keydown', this._onKeyDown.bind(this), false);
     this._resultsElement = resultsElement;
@@ -116,7 +115,7 @@ export class Search {
         !event.altKey &&
         /\S/.test(event.key)
       ) {
-        if (event.key !== '.') this._searchInput.value = '';
+        this._searchInput.value = '';
         this._searchInput.focus();
       }
     });
@@ -186,17 +185,10 @@ export class Search {
   cancelSearch() {
     this._searchInput.blur();
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'none');
-    this._searchInput.value = this._defaultValue;
+    this._searchInput.value = '';
     setQueryParam('');
     if (this._app?.focusContent) this._app.focusContent();
     else if (typeof window !== 'undefined' && window.app?.focusContent) window.app.focusContent();
-  }
-
-  /**
-   * @param {string} value
-   */
-  setDefaultValue(value) {
-    this._defaultValue = value;
   }
 
   _onInput() {

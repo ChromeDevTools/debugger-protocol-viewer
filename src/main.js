@@ -321,7 +321,6 @@ export class App {
     if (this._renderedDomain === domain && this._contentElement.firstChild && member) {
       const canonicalTitle = `${domain}.${member}`;
       document.title = `${canonicalTitle} - DevTools Protocol`;
-      this._search.setDefaultValue(canonicalTitle);
       const titleId = ProtocolRenderer.titleId(domain, member);
       const elem = this._contentElement.querySelector('#' + titleId);
       if (elem) {
@@ -344,8 +343,6 @@ export class App {
     const canonicalTitle = member ? `${domain}.${member}` : domain;
     document.title = `${canonicalTitle} - DevTools Protocol`;
 
-    const searchDefault = member ? `${domain}.${member}` : domain;
-    this._search.setDefaultValue(searchDefault);
     this._search.cancelSearch();
 
     this._contentElement.textContent = '';
@@ -398,7 +395,6 @@ export class App {
    */
   _onNavigateHome(anchorId = null) {
     document.title = 'DevTools Protocol Viewer';
-    this._search.setDefaultValue('');
     this._search.cancelSearch();
     this._contentElement.textContent = '';
 
