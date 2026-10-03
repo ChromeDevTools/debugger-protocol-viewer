@@ -800,7 +800,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       }
     });
 
-    await t.test('14. OpenSearch query (?q=evaluate#/v8)', async () => {
+    await t.test('14. Search permalinks (?q=evaluate#/v8)', async () => {
       await page.Page.navigate({ url: `${baseUrl}/?q=evaluate#/v8` });
       const state = await client.pollEvaluate(
         `({
@@ -812,10 +812,29 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
         (/** @type {any} */ s) => s?.value === 'evaluate' && s.results > 0,
         sessionId,
       );
-      assert.strictEqual(state.value, 'evaluate', 'Expected search input to be populated with query');
       assert.strictEqual(state.target, 'v8', 'Expected target from hash');
-      assert.ok(state.results > 0, 'Expected search results to be rendered');
-      assert.strictEqual(state.search, '', 'Expected ?q= to be stripped from the URL');
+      assert.strictEqual(state.search, '?q=evaluate', 'Expected ?q= to stay in the URL while results show');
+
+      // Typing updates the permalink
+      const typed = await client.evaluate(
+        `(() => {
+          const input = document.getElementById('search');
+          input.value = 'getCookies';
+          input.dispatchEvent(new Event('input'));
+          return location.search;
+        })()`,
+        sessionId,
+      );
+      assert.strictEqual(typed, '?q=getCookies', 'Expected typing to update ?q=');
+
+      // Picking a result / navigating ends the search and clears ?q=
+      await client.evaluate(`location.hash = '#/v8/Runtime'`, sessionId);
+      const cleared = await client.pollEvaluate(
+        'location.search',
+        (/** @type {any} */ s) => s === '',
+        sessionId,
+      );
+      assert.strictEqual(cleared, '', 'Expected ?q= to be cleared after navigating');
     });
   } finally {
     if (targetId && browserApi) {

@@ -187,6 +187,7 @@ export class Search {
     this._searchInput.blur();
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'none');
     this._searchInput.value = this._defaultValue;
+    setQueryParam('');
     if (this._app?.focusContent) this._app.focusContent();
     else if (typeof window !== 'undefined' && window.app?.focusContent) window.app.focusContent();
   }
@@ -202,6 +203,7 @@ export class Search {
     this._selectedElement = null;
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'block');
     let query = this._searchInput.value.trim();
+    setQueryParam(query);
     let items = this._items;
     let results = this._doSearch(items, query);
     if (results.length === 0) {
@@ -352,6 +354,16 @@ export class Search {
         this._selectedElement.scrollIntoViewIfNeeded(false);
     }
   }
+}
+
+/**
+ * Mirrors the search query into `?q=` (or removes it) without adding history entries.
+ * @param {string} query
+ */
+function setQueryParam(query) {
+  const search = query ? `?q=${encodeURIComponent(query)}` : '';
+  if (search === location.search) return;
+  history.replaceState(null, '', location.pathname + search + location.hash);
 }
 
 /**

@@ -154,7 +154,10 @@ export class App {
       ]);
 
       this._prepareDatasets(totProto, v8Proto);
+      // ?q=foo permalink / OpenSearch entry. Read before routing, which cancels any search.
+      const query = new URLSearchParams(window.location.search).get('q');
       this._onRoute();
+      if (query) this._search.search(query);
     } catch (error) {
       this._contentElement.textContent = '';
       const message = error instanceof Error ? error.message : String(error);
@@ -282,16 +285,6 @@ export class App {
       this._activeDomains = this._targetStore[route.target] || this._targetStore.tot;
       this._search.setDomains(Array.from(this._activeDomains.values()));
       this._renderSidebar(this._activeDomains);
-    }
-
-    // OpenSearch entry point: ?q=foo (target via hash, e.g. ?q=foo#/v8). Strip it so it doesn't stick.
-    const query = new URLSearchParams(window.location.search).get('q');
-    if (query) {
-      history.replaceState(null, '', window.location.pathname + window.location.hash);
-      this._renderedDomain = null;
-      this._onNavigateHome(null);
-      this._search.search(query);
-      return;
     }
 
     const { domain, member, section } = route;
