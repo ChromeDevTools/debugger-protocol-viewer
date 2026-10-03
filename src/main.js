@@ -124,14 +124,16 @@ export class App {
    */
   navigate(route, replace = false) {
     const cleanRoute = formatRoute(parseRoute(route));
-    if (window.location.hash !== cleanRoute) {
-      if (replace) {
-        window.location.replace(cleanRoute);
-      } else {
-        window.location.hash = cleanRoute;
-      }
-    } else {
+    if (cleanRoute === '#/') {
+      // Home is the bare path (not /#/). Setting location.hash = '' would leave a dangling '#'.
+      if (window.location.hash) history.pushState(null, '', window.location.pathname);
       this._onRoute();
+    } else if (window.location.hash === cleanRoute) {
+      this._onRoute();
+    } else if (replace) {
+      window.location.replace(cleanRoute);
+    } else {
+      window.location.hash = cleanRoute;
     }
   }
 
@@ -269,7 +271,8 @@ export class App {
   }
 
   _setupRoutingEvents() {
-    window.addEventListener('hashchange', () => this._onRoute());
+    // popstate (not hashchange): it also fires when traversing between / and #/..., which differ in more than the fragment.
+    window.addEventListener('popstate', () => this._onRoute());
   }
 
   _onRoute() {

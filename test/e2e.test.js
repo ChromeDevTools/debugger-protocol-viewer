@@ -836,6 +836,47 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       );
       assert.strictEqual(cleared, '', 'Expected ?q= to be cleared after navigating');
     });
+
+    await t.test('15. Home is the bare path, with working Back/Forward', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
+      await client.pollEvaluate('document.title', (/** @type {any} */ v) => v?.startsWith('Page'), sessionId);
+
+      await client.evaluate(`document.querySelector('.brand-link').click()`, sessionId);
+      const home = await client.pollEvaluate(
+        '({ href: location.href, title: document.title })',
+        (/** @type {any} */ s) => s?.title === 'DevTools Protocol Viewer',
+        sessionId,
+      );
+      assert.strictEqual(home.href, `${baseUrl}/`, 'Expected home URL without a hash');
+
+      // Typing on home gives a clean ?q= permalink
+      const typed = await client.evaluate(
+        `(() => {
+          const input = document.getElementById('search');
+          input.value = 'cookie';
+          input.dispatchEvent(new Event('input'));
+          return location.href;
+        })()`,
+        sessionId,
+      );
+      assert.strictEqual(typed, `${baseUrl}/?q=cookie`);
+
+      await client.evaluate('history.back()', sessionId);
+      const back = await client.pollEvaluate(
+        'document.title',
+        (/** @type {any} */ v) => v?.startsWith('Page'),
+        sessionId,
+      );
+      assert.ok(back.startsWith('Page'), 'Expected Back to return to #/Page');
+
+      await client.evaluate('history.forward()', sessionId);
+      const forward = await client.pollEvaluate(
+        'document.title',
+        (/** @type {any} */ v) => v === 'DevTools Protocol Viewer',
+        sessionId,
+      );
+      assert.strictEqual(forward, 'DevTools Protocol Viewer', 'Expected Forward to return home');
+    });
   } finally {
     if (targetId && browserApi) {
       try {
