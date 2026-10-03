@@ -3,7 +3,7 @@
  * Browser-agnostic, zero-DOM ES module.
  */
 
-/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
+/** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolCommand, ProtocolEvent, ProtocolType, ProtocolRoot, NormalizedProtocolRoot, TargetKind, RouteInfo } from '../types/types.d.ts' */
 
 /** @type {Map<string, TargetKind>} */
 const TARGET_MAP = new Map([
@@ -324,15 +324,14 @@ const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }
 /**
  * Looks up a domain by name in Map, Array, or Record.
  * @param {Map<string, ProtocolDomain> | Record<string, ProtocolDomain> | ProtocolDomain[] | null | undefined} domains
- * @param {string} domainName
+ * @param {string} name
  * @returns {ProtocolDomain | undefined}
  */
-function findDomain(domains, domainName) {
+function findDomain(domains, name) {
   if (!domains) return undefined;
-  if (domains instanceof Map) return domains.get(domainName);
-  if (Array.isArray(domains)) return domains.find((d) => d.domain === domainName);
-  if (typeof domains === 'object') return domains[domainName];
-  return undefined;
+  if (domains instanceof Map) return domains.get(name);
+  if (Array.isArray(domains)) return domains.find((d) => d.domain === name);
+  return typeof domains === 'object' ? domains[name] : undefined;
 }
 
 /**
@@ -345,32 +344,13 @@ function findDomain(domains, domainName) {
  */
 function resolveTargetMember(domains, targetDomainName, memberName, kind) {
   const targetDomain = findDomain(domains, targetDomainName);
-  if (!targetDomain) return memberName;
-
-  /** @type {Array<{ name?: string, id?: string }> | undefined} */
-  let list;
-  if (kind === 'command') list = targetDomain.commands;
-  else if (kind === 'event') list = targetDomain.events;
-  else if (kind === 'type') list = targetDomain.types;
-
-  if (!list || !list.length) return memberName;
-
-  const exact = list.find((m) => (m.name || m.id) === memberName);
-  if (exact) return exact.name || exact.id || memberName;
-
-  const plural = list.find((m) => (m.name || m.id) === memberName + 's');
-  if (plural) return plural.name || plural.id || memberName;
-
-  if (memberName.endsWith('s')) {
-    const singular = list.find((m) => (m.name || m.id) === memberName.slice(0, -1));
-    if (singular) return singular.name || singular.id || memberName;
-  }
-
-  const lower = memberName.toLowerCase();
-  const ci = list.find((m) => (m.name || m.id)?.toLowerCase() === lower);
-  if (ci) return ci.name || ci.id || memberName;
-
-  return memberName;
+  const list = targetDomain?.[kind === 'command' ? 'commands' : kind === 'event' ? 'events' : 'types'];
+  if (!list) return memberName;
+  const match = list.find((m) => {
+    const n = 'name' in m ? m.name : m.id;
+    return n === memberName || n === memberName + 's' || (memberName.endsWith('s') && n === memberName.slice(0, -1));
+  });
+  return (match ? ('name' in match ? match.name : match.id) : memberName) || memberName;
 }
 
 /**
@@ -385,22 +365,22 @@ export function getRedirect(domains, domainName, memberName) {
   const domain = findDomain(domains, domainName);
   if (!domain) return null;
 
-  const cmd = domain.commands?.find((c) => c.name === memberName);
-  if (cmd?.redirect) {
-    const targetMember = resolveTargetMember(domains, cmd.redirect, memberName, 'command');
-    return { targetDomain: cmd.redirect, targetMember };
+  let kind = /** @type {'command' | 'event' | 'type'} */ ('command');
+  /** @type {ProtocolCommand | ProtocolEvent | ProtocolType | undefined} */
+  let item = domain.commands?.find((c) => c.name === memberName);
+  if (!item) {
+    kind = 'event';
+    item = domain.events?.find((e) => e.name === memberName);
   }
-  const evt = domain.events?.find((e) => e.name === memberName);
-  if (evt?.redirect) {
-    const targetMember = resolveTargetMember(domains, evt.redirect, memberName, 'event');
-    return { targetDomain: evt.redirect, targetMember };
+  if (!item) {
+    kind = 'type';
+    item = domain.types?.find((t) => t.id === memberName);
   }
-  const typ = domain.types?.find((t) => t.id === memberName);
-  if (typ?.redirect) {
-    const targetMember = resolveTargetMember(domains, typ.redirect, memberName, 'type');
-    return { targetDomain: typ.redirect, targetMember };
-  }
-  return null;
+  if (!item?.redirect) return null;
+  return {
+    targetDomain: item.redirect,
+    targetMember: resolveTargetMember(domains, item.redirect, memberName, kind),
+  };
 }
 
 /**
@@ -454,37 +434,31 @@ export function parseRoute(routeString) {
     return createRouteInfo('tot', null, null);
   }
 
-  // Detect explicit URL-based search query: ?q=foo, ?search=foo, #q=foo, #/target?q=foo, etc.
-  const queryMatch = trimmed.match(/[?&#](?:q|search)=([^&#]*)/i);
-  const standaloneTargetMatch = trimmed.match(/[?&#]target=(tot|v8|1-3|1-2|stable)(?:[&#]|$)/i);
-  if (queryMatch) {
-    const rawVal = queryMatch[1] ?? '';
-    let query = rawVal.replace(/\+/g, ' ').trim();
-    try {
-      query = decodeURIComponent(query);
-    } catch {
-      // Retain raw input when percent-decoding fails
-    }
-    let target = /** @type {TargetKind} */ ('tot');
-    const stripped = trimmed.replace(queryMatch[0], '');
-    const targetMatch =
-      stripped.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/?&#]|$)/i) ||
-      standaloneTargetMatch;
-    if (targetMatch) {
-      target = normalizeTarget(targetMatch[1]);
-    }
-    return createRouteInfo(target, null, null, null, query);
-  }
-
-  if (standaloneTargetMatch) {
-    return createRouteInfo(normalizeTarget(standaloneTargetMatch[1]), null, null);
-  }
-
   if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
     const url =
       trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
         ? new URL(trimmed, ROUTE_BASE_URL)
         : new URL('/' + trimmed, ROUTE_BASE_URL);
+
+    // Native URLSearchParams query parsing: ?q=foo, ?search=foo, #/target?q=foo, #q=foo
+    const hashQ = url.hash.indexOf('?');
+    const hashParams = hashQ !== -1 ? new URLSearchParams(url.hash.slice(hashQ)) : (url.hash.startsWith('#q=') ? new URLSearchParams(url.hash.slice(1)) : null);
+    const query = url.searchParams.get('q') ?? url.searchParams.get('search') ?? hashParams?.get('q') ?? hashParams?.get('search');
+    const targetParam = url.searchParams.get('target') ?? hashParams?.get('target');
+
+    if (query !== null && query !== undefined) {
+      let target = targetParam ? normalizeTarget(targetParam) : 'tot';
+      if (!targetParam) {
+        const pathPart = hashQ !== -1 ? url.hash.slice(0, hashQ) : (url.pathname !== '/' ? url.pathname : '');
+        const targetMatch = pathPart.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/#]|$)/i);
+        if (targetMatch) target = normalizeTarget(targetMatch[1]);
+      }
+      return createRouteInfo(target, null, null, null, query.trim());
+    }
+
+    if (targetParam && (trimmed.startsWith('?target=') || trimmed.startsWith('&target='))) {
+      return createRouteInfo(normalizeTarget(targetParam), null, null);
+    }
 
     const legacyAnchorMatch = legacyAnchorPattern.exec(url);
     const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;

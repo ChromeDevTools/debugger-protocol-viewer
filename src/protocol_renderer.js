@@ -214,28 +214,15 @@ export class ProtocolRenderer {
   static renderTableOfContents(domain, container) {
     const isDomainExp = Boolean(domain.experimental);
     /**
-     * @param {ProtocolCommand | ProtocolEvent} method
+     * @param {ProtocolCommand | ProtocolEvent | ProtocolType} entity
      * @param {HTMLElement} container
      */
-    let renderEventOrMethodEntry = (method, container) => {
-      const redirect = getRedirect(window.app?._activeDomains, domain.domain, method.name);
+    const renderEntry = (entity, container) => {
+      const name = 'name' in entity ? entity.name : entity.id;
+      const redirect = getRedirect(window.app?._activeDomains, domain.domain, name);
       return ProtocolRenderer.renderTableOfContentsEntry(
         domain.domain,
-        method.name,
-        container,
-        redirect?.targetDomain ?? null,
-        redirect?.targetMember ?? null,
-      );
-    };
-    /**
-     * @param {ProtocolType} type
-     * @param {HTMLElement} container
-     */
-    let renderTypeEntry = (type, container) => {
-      const redirect = getRedirect(window.app?._activeDomains, domain.domain, type.id);
-      return ProtocolRenderer.renderTableOfContentsEntry(
-        domain.domain,
-        type.id,
+        name,
         container,
         redirect?.targetDomain ?? null,
         redirect?.targetMember ?? null,
@@ -255,7 +242,7 @@ export class ProtocolRenderer {
           'Methods',
           'method',
           domain.commands,
-          renderEventOrMethodEntry,
+          renderEntry,
           toc,
           isDomainExp,
         );
@@ -264,7 +251,7 @@ export class ProtocolRenderer {
           'Events',
           'event',
           domain.events,
-          renderEventOrMethodEntry,
+          renderEntry,
           toc,
           isDomainExp,
         );
@@ -273,7 +260,7 @@ export class ProtocolRenderer {
           'Types',
           'type',
           domain.types,
-          renderTypeEntry,
+          renderEntry,
           toc,
           isDomainExp,
         );

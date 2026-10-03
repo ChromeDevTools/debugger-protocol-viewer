@@ -2,7 +2,7 @@
  * @fileoverview Fuzzy search controller and UI rendering for protocol entities.
  */
 
-/** @import { ProtocolDomain } from '../types/types.d.ts' */
+/** @import { ProtocolDomain, ProtocolCommand, ProtocolEvent, ProtocolType } from '../types/types.d.ts' */
 
 import { FuzzySearch } from './fuzzy_search.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
@@ -156,53 +156,31 @@ export class Search {
     this._items = [];
     const formatRef = this._app?.formatRef;
     for (const domain of domains) {
-      for (const command of domain.commands || []) {
-        const redirect = getRedirect(domains, domain.domain, command.name);
-        this._items.push(
-          new SearchItem(
-            domain.domain,
-            command.name,
-            'method',
-            redirect
-              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${command.description || ''}`
-              : command.description,
-            formatRef,
-            redirect?.targetDomain ?? null,
-            redirect?.targetMember ?? null,
-          ),
-        );
-      }
-      for (const event of domain.events || []) {
-        const redirect = getRedirect(domains, domain.domain, event.name);
-        this._items.push(
-          new SearchItem(
-            domain.domain,
-            event.name,
-            'event',
-            redirect
-              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${event.description || ''}`
-              : event.description,
-            formatRef,
-            redirect?.targetDomain ?? null,
-            redirect?.targetMember ?? null,
-          ),
-        );
-      }
-      for (const type of domain.types || []) {
-        const redirect = getRedirect(domains, domain.domain, type.id);
-        this._items.push(
-          new SearchItem(
-            domain.domain,
-            type.id,
-            'type',
-            redirect
-              ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${type.description || ''}`
-              : type.description,
-            formatRef,
-            redirect?.targetDomain ?? null,
-            redirect?.targetMember ?? null,
-          ),
-        );
+      /** @type {Array<[ProtocolCommand[] | ProtocolEvent[] | ProtocolType[] | undefined, SearchItemKind]>} */
+      const lists = [
+        [domain.commands, 'method'],
+        [domain.events, 'event'],
+        [domain.types, 'type'],
+      ];
+      for (const [list, type] of lists) {
+        for (const entity of list || []) {
+          const name = 'name' in entity ? entity.name : entity.id;
+          const redirect = getRedirect(domains, domain.domain, name);
+          const desc = redirect
+            ? `Redirects to ${redirect.targetDomain}.${redirect.targetMember}. ${entity.description || ''}`
+            : entity.description;
+          this._items.push(
+            new SearchItem(
+              domain.domain,
+              name,
+              type,
+              desc,
+              formatRef,
+              redirect?.targetDomain,
+              redirect?.targetMember,
+            ),
+          );
+        }
       }
     }
   }
