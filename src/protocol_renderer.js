@@ -115,6 +115,7 @@ export class ProtocolRenderer {
     const main = document.createElement('div');
     main.className = 'type';
     if (type.deprecated) main.classList.add('deprecated-bg');
+    if (type.redirect) main.classList.add('redirect-bg');
     main.appendChild(
       ProtocolRenderer.renderTitle(
         domain.domain,
@@ -124,6 +125,18 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
+    const redirect = getRedirect(window.app?._activeDomains, domain.domain, type.id);
+    if (redirect) {
+      const p = document.createElement('p');
+      p.className = 'redirect-notice';
+      const dest = `${redirect.targetDomain}.${redirect.targetMember}`;
+      const link = document.createElement('a');
+      link.href = ProtocolRenderer.formatRef(dest);
+      link.textContent = dest;
+      p.append('This type has moved. Redirects to ', link, '.');
+      main.appendChild(p);
+      return main;
+    }
     if (type.type) {
       const p = document.createElement('p');
       p.textContent = 'Type: ';

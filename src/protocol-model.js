@@ -434,31 +434,33 @@ export function parseRoute(routeString) {
     return createRouteInfo('tot', null, null);
   }
 
+  const url =
+    trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
+      ? new URL(trimmed, ROUTE_BASE_URL)
+      : new URL('/' + trimmed, ROUTE_BASE_URL);
+
+  // Native URLSearchParams query parsing: ?q=foo, ?search=foo, #/target?q=foo, #q=foo, #target=v8&q=foo
+  const hashQ = url.hash.indexOf('?');
+  const hashQueryStr = hashQ !== -1 ? url.hash.slice(hashQ + 1) : (url.hash.includes('=') ? url.hash.replace(/^#\/?/, '') : '');
+  const hashParams = hashQueryStr ? new URLSearchParams(hashQueryStr) : null;
+  const query = url.searchParams.get('q') ?? url.searchParams.get('search') ?? hashParams?.get('q') ?? hashParams?.get('search');
+  const targetParam = url.searchParams.get('target') ?? hashParams?.get('target');
+
+  if (query !== null && query !== undefined) {
+    let target = targetParam ? normalizeTarget(targetParam) : 'tot';
+    if (!targetParam) {
+      const pathPart = hashQ !== -1 ? url.hash.slice(0, hashQ) : (url.pathname !== '/' ? url.pathname : '');
+      const targetMatch = pathPart.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/#]|$)/i);
+      if (targetMatch) target = normalizeTarget(targetMatch[1]);
+    }
+    return createRouteInfo(target, null, null, null, query.trim());
+  }
+
+  if (targetParam && (trimmed.startsWith('?target=') || trimmed.startsWith('&target='))) {
+    return createRouteInfo(normalizeTarget(targetParam), null, null);
+  }
+
   if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
-    const url =
-      trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
-        ? new URL(trimmed, ROUTE_BASE_URL)
-        : new URL('/' + trimmed, ROUTE_BASE_URL);
-
-    // Native URLSearchParams query parsing: ?q=foo, ?search=foo, #/target?q=foo, #q=foo
-    const hashQ = url.hash.indexOf('?');
-    const hashParams = hashQ !== -1 ? new URLSearchParams(url.hash.slice(hashQ)) : (url.hash.startsWith('#q=') ? new URLSearchParams(url.hash.slice(1)) : null);
-    const query = url.searchParams.get('q') ?? url.searchParams.get('search') ?? hashParams?.get('q') ?? hashParams?.get('search');
-    const targetParam = url.searchParams.get('target') ?? hashParams?.get('target');
-
-    if (query !== null && query !== undefined) {
-      let target = targetParam ? normalizeTarget(targetParam) : 'tot';
-      if (!targetParam) {
-        const pathPart = hashQ !== -1 ? url.hash.slice(0, hashQ) : (url.pathname !== '/' ? url.pathname : '');
-        const targetMatch = pathPart.match(/(?:^|[/#])(tot|v8|1-3|1-2|stable)(?:[/#]|$)/i);
-        if (targetMatch) target = normalizeTarget(targetMatch[1]);
-      }
-      return createRouteInfo(target, null, null, null, query.trim());
-    }
-
-    if (targetParam && (trimmed.startsWith('?target=') || trimmed.startsWith('&target='))) {
-      return createRouteInfo(normalizeTarget(targetParam), null, null);
-    }
 
     const legacyAnchorMatch = legacyAnchorPattern.exec(url);
     const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;

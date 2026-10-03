@@ -21,27 +21,6 @@ const PROTOCOL_URLS = {
   v8: new URL('./data/v8.json', import.meta.url).href,
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  const sidebarElement = $('#sidebar');
-  const domainListElement = $('#domain-list');
-  const contentElement = $('#content');
-  const searchElement = $('#search');
-  const searchResultsElement = $('#sresults');
-  const targetSelector = /** @type {HTMLSelectElement} */ ($('#target-selector'));
-  const drawerToggle = $('#drawer-toggle');
-  const drawerBackdrop = $('#drawer-backdrop');
-
-  window.app = new App({
-    sidebarElement,
-    domainListElement,
-    contentElement,
-    searchElement,
-    searchResultsElement,
-    targetSelector,
-    drawerToggle,
-    drawerBackdrop,
-  });
-});
 
 /**
  * @typedef {Object} AppElements
@@ -267,7 +246,6 @@ export class App {
 
   _setupRoutingEvents() {
     window.addEventListener('hashchange', () => this._onRoute());
-    window.addEventListener('popstate', () => this._onRoute());
   }
 
   _onRoute() {
@@ -492,6 +470,26 @@ export class App {
     this._domainListElement.appendChild(endpointsLink);
   }
 }
+
+const sidebarElement = $('#sidebar');
+const domainListElement = $('#domain-list');
+const contentElement = $('#content');
+const searchElement = $('#search');
+const searchResultsElement = $('#sresults');
+const targetSelector = /** @type {HTMLSelectElement} */ ($('#target-selector'));
+const drawerToggle = $('#drawer-toggle');
+const drawerBackdrop = $('#drawer-backdrop');
+
+window.app = new App({
+  sidebarElement,
+  domainListElement,
+  contentElement,
+  searchElement,
+  searchResultsElement,
+  targetSelector,
+  drawerToggle,
+  drawerBackdrop,
+});
 
 /**
  * @param {string} error
