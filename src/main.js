@@ -109,7 +109,9 @@ export class App {
    * @returns {string}
    */
   formatRef(ref) {
-    return formatRoute({ target: this._currentTarget, domain: ref });
+    const domainName = ref.split('.')[0];
+    const target = this._activeDomains && this._activeDomains.has(domainName) ? this._currentTarget : 'tot';
+    return formatRoute({ target, domain: ref });
   }
 
   focusContent() {
@@ -312,11 +314,14 @@ export class App {
 
     // Auto-redirect if command/event/type has moved to another domain
     if (member) {
-      const redirect = getRedirect(this._activeDomains, domain, member);
+      const redirect =
+        getRedirect(this._activeDomains, domain, member) ||
+        getRedirect(this._targetStore.tot, domain, member);
       if (redirect) {
+        const target = this._activeDomains.has(redirect.targetDomain) ? route.target : 'tot';
         this.navigate(
           formatRoute({
-            target: route.target,
+            target,
             domain: redirect.targetDomain,
             member: redirect.targetMember,
           }),
