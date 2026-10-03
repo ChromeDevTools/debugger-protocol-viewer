@@ -362,12 +362,11 @@ export class ProtocolRenderer {
     if (redirect) {
       const p = document.createElement('p');
       p.className = 'redirect-notice';
-      p.textContent = 'This method has moved. Redirects to ';
+      const dest = `${redirect.targetDomain}.${redirect.targetMember}`;
       const link = document.createElement('a');
-      link.href = ProtocolRenderer.formatRef(`${redirect.targetDomain}.${redirect.targetMember}`);
-      link.textContent = `${redirect.targetDomain}.${redirect.targetMember}`;
-      p.appendChild(link);
-      p.append('.');
+      link.href = ProtocolRenderer.formatRef(dest);
+      link.textContent = dest;
+      p.append('This method has moved. Redirects to ', link, '.');
       main.appendChild(p);
       return main;
     }
