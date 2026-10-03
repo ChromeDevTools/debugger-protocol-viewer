@@ -194,10 +194,14 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       '--no-first-run',
       '--no-sandbox',
       '--disable-dev-shm-usage',
+      // Machine-wide extensions (e.g. Chrome Remote Desktop) spawn native helpers that outlive a
+      // SIGKILLed Chrome and keep its stderr pipe open, which keeps this process alive.
+      '--disable-extensions',
+      '--disable-component-extensions-with-background-pages',
       `--user-data-dir=${tmpUserDataDir}`,
       'about:blank',
     ],
-    { stdio: ['ignore', 'pipe', 'pipe'] },
+    { stdio: ['ignore', 'ignore', 'pipe'] },
   );
 
   /** @type {WebSocket|null} */
@@ -890,6 +894,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       } catch {}
     }
     chromeProcess.kill('SIGKILL');
+    chromeProcess.stderr.destroy();
     server.close();
     try {
       fs.rmSync(tmpUserDataDir, { recursive: true, force: true });
