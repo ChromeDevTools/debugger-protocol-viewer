@@ -228,7 +228,7 @@ export class ProtocolRenderer {
       if (redirect) {
         const hint = document.createElement('span');
         hint.className = 'toc-redirect-hint';
-        hint.textContent = ` ➔ ${redirect.targetDomain}`;
+        hint.textContent = `➔ ${redirect.targetDomain}`;
         row.appendChild(hint);
       }
       return row;

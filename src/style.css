@@ -868,6 +868,7 @@ span.deprecated {
 
 .toc-redirect-hint {
   font-size: 11px;
+  margin-left: 4px;
   color: var(--color-subtle);
 }
 
