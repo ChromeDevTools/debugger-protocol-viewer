@@ -194,10 +194,14 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       '--no-first-run',
       '--no-sandbox',
       '--disable-dev-shm-usage',
+      // Machine-wide extensions (e.g. Chrome Remote Desktop) spawn native helpers that outlive a
+      // SIGKILLed Chrome and keep its stderr pipe open, which keeps this process alive.
+      '--disable-extensions',
+      '--disable-component-extensions-with-background-pages',
       `--user-data-dir=${tmpUserDataDir}`,
       'about:blank',
     ],
-    { stdio: ['ignore', 'pipe', 'pipe'] },
+    { stdio: ['ignore', 'ignore', 'pipe'] },
   );
 
   /** @type {WebSocket|null} */
@@ -778,6 +782,109 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       );
       assert.strictEqual(legacyInspectorExists, true, 'Expected get-devtoolsinspector.html heading with title-link');
     });
+
+    await t.test('13. Auto-redirect moved commands', async (t) => {
+      const cases = [
+        ['#/DOM.highlightNode', '#/Overlay.highlightNode', 'Overlay_highlightNode'],
+        ['#/Page.deleteCookie', '#/Network.deleteCookies', 'Network_deleteCookies'],
+      ];
+      for (const [from, to, headingId] of cases) {
+        await t.test(`${from} -> ${to}`, async () => {
+          await page.Page.navigate({ url: `${baseUrl}/${from}` });
+          const hash = await client.pollEvaluate(
+            'window.location.hash',
+            (/** @type {any} */ h) => h === to,
+            sessionId,
+          );
+          assert.strictEqual(hash, to);
+          const headingExists = await client.pollEvaluate(
+            `Boolean(document.getElementById(${JSON.stringify(headingId)}))`,
+            (/** @type {any} */ val) => Boolean(val),
+            sessionId,
+          );
+          assert.strictEqual(headingExists, true, `Expected #${headingId} heading in DOM`);
+        });
+      }
+    });
+
+    await t.test('14. Search permalinks (?q=evaluate#/v8)', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/?q=evaluate#/v8` });
+      const state = await client.pollEvaluate(
+        `({
+          value: document.getElementById('search')?.value,
+          target: document.getElementById('target-selector')?.value,
+          results: document.querySelectorAll('#sresults .search-item').length,
+          search: location.search,
+        })`,
+        (/** @type {any} */ s) => s?.value === 'evaluate' && s.results > 0,
+        sessionId,
+      );
+      assert.strictEqual(state.target, 'v8', 'Expected target from hash');
+      assert.strictEqual(state.search, '?q=evaluate', 'Expected ?q= to stay in the URL while results show');
+
+      // Typing updates the permalink
+      const typed = await client.evaluate(
+        `(() => {
+          const input = document.getElementById('search');
+          input.value = 'enable';
+          input.dispatchEvent(new Event('input'));
+          return location.search;
+        })()`,
+        sessionId,
+      );
+      assert.strictEqual(typed, '?q=enable', 'Expected typing to update ?q=');
+
+      // Picking a result ends the search: clears ?q= and empties the input
+      await client.evaluate(`document.querySelector('#sresults .search-item').click()`, sessionId);
+      const after = await client.pollEvaluate(
+        `({ search: location.search, hash: location.hash, value: document.getElementById('search').value })`,
+        (/** @type {any} */ s) => s?.hash.length > 2,
+        sessionId,
+      );
+      assert.strictEqual(after.search, '', 'Expected ?q= to be cleared after picking a result');
+      assert.strictEqual(after.value, '', 'Expected search input to be emptied after picking a result');
+    });
+
+    await t.test('15. Home is the bare path, with working Back/Forward', async () => {
+      await page.Page.navigate({ url: `${baseUrl}/#/Page` });
+      await client.pollEvaluate('document.title', (/** @type {any} */ v) => v?.startsWith('Page'), sessionId);
+
+      await client.evaluate(`document.querySelector('.brand-link').click()`, sessionId);
+      const home = await client.pollEvaluate(
+        '({ href: location.href, title: document.title })',
+        (/** @type {any} */ s) => s?.title === 'DevTools Protocol Viewer',
+        sessionId,
+      );
+      assert.strictEqual(home.href, `${baseUrl}/`, 'Expected home URL without a hash');
+
+      // Typing on home gives a clean ?q= permalink
+      const typed = await client.evaluate(
+        `(() => {
+          const input = document.getElementById('search');
+          input.value = 'cookie';
+          input.dispatchEvent(new Event('input'));
+          return location.href;
+        })()`,
+        sessionId,
+      );
+      assert.strictEqual(typed, `${baseUrl}/?q=cookie`);
+
+      await client.evaluate('history.back()', sessionId);
+      const back = await client.pollEvaluate(
+        'document.title',
+        (/** @type {any} */ v) => v?.startsWith('Page'),
+        sessionId,
+      );
+      assert.ok(back.startsWith('Page'), 'Expected Back to return to #/Page');
+
+      await client.evaluate('history.forward()', sessionId);
+      const forward = await client.pollEvaluate(
+        'document.title',
+        (/** @type {any} */ v) => v === 'DevTools Protocol Viewer',
+        sessionId,
+      );
+      assert.strictEqual(forward, 'DevTools Protocol Viewer', 'Expected Forward to return home');
+    });
   } finally {
     if (targetId && browserApi) {
       try {
@@ -790,6 +897,7 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       } catch {}
     }
     chromeProcess.kill('SIGKILL');
+    chromeProcess.stderr.destroy();
     server.close();
     try {
       fs.rmSync(tmpUserDataDir, { recursive: true, force: true });

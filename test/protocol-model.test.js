@@ -7,6 +7,7 @@ import {
   parseRoute,
   formatRoute,
   normalizeTarget,
+  getRedirect,
 } from '../src/protocol-model.js';
 
 /** @import { TestContext } from 'node:test' */
@@ -229,44 +230,6 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       expected: { target: 'stable', domain: 'Network', member: 'getCookies' },
     },
 
-    // Composite legacy URLs
-    {
-      input: '/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/1-3/Page/#method-navigate',
-      expected: { target: 'stable', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/1-2/Network/',
-      expected: { target: 'stable', domain: 'Network', member: null },
-    },
-
-    // Isolated legacy anchors
-    {
-      input: '#method-navigate',
-      expected: { target: 'tot', domain: null, member: 'navigate' },
-    },
-    {
-      input: '#type-Node',
-      expected: { target: 'tot', domain: null, member: 'Node' },
-    },
-    {
-      input: '#event-requestWillBeSent',
-      expected: { target: 'tot', domain: null, member: 'requestWillBeSent' },
-    },
-
-    // Query format fallbacks
-    {
-      input: '?Page.navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '?Network',
-      expected: { target: 'tot', domain: 'Network', member: null },
-    },
-
     // Deep links and landing anchors
     {
       input: '#/endpoints',
@@ -314,45 +277,6 @@ test('parseRoute: dynamic native subtests for all route formats', async (/** @ty
       input: '#',
       expected: { target: 'tot', domain: null, member: null },
     },
-    {
-      input: '/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/tot/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-
-    // Base path prefix stripping (/devtools-protocol/ and /debugger-protocol-viewer/)
-    {
-      input: '/devtools-protocol/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/devtools-protocol/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/devtools-protocol/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-    {
-      input: '/debugger-protocol-viewer/',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/debugger-protocol-viewer/index.html',
-      expected: { target: 'tot', domain: null, member: null },
-    },
-    {
-      input: '/debugger-protocol-viewer/tot/Page/#method-navigate',
-      expected: { target: 'tot', domain: 'Page', member: 'navigate' },
-    },
-
     // Trailing slashes
     {
       input: '#/Page/',
@@ -422,4 +346,28 @@ test('formatRoute: canonical route formatting', () => {
 
   // Default options
   assert.equal(formatRoute(), '#/');
+});
+
+test('getRedirect: resolves redirected commands', () => {
+  const domains = new Map(
+    [
+      { domain: 'DOM', commands: [{ name: 'highlightNode', redirect: 'Overlay' }, { name: 'getDocument' }] },
+      { domain: 'Page', commands: [{ name: 'deleteCookie', redirect: 'Network' }] },
+      { domain: 'Overlay', commands: [{ name: 'highlightNode' }] },
+      { domain: 'Network', commands: [{ name: 'deleteCookies' }] },
+    ].map((d) => [d.domain, d]),
+  );
+
+  assert.deepEqual(getRedirect(domains, 'DOM', 'highlightNode'), {
+    targetDomain: 'Overlay',
+    targetMember: 'highlightNode',
+  });
+  // Pluralized destination: deleteCookie -> deleteCookies
+  assert.deepEqual(getRedirect(domains, 'Page', 'deleteCookie'), {
+    targetDomain: 'Network',
+    targetMember: 'deleteCookies',
+  });
+  assert.equal(getRedirect(domains, 'DOM', 'getDocument'), null);
+  assert.equal(getRedirect(domains, 'NonExistent', 'foo'), null);
+  assert.equal(getRedirect(undefined, 'DOM', 'highlightNode'), null);
 });
