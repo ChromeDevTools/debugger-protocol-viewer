@@ -13,7 +13,6 @@ export namespace Protocol {
   export interface ExtraInformation {
     deprecated?: boolean;
     experimental?: boolean;
-    redirect?: string;
   }
 
   export interface Domain extends ExtraInformation {

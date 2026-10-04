@@ -3,7 +3,6 @@
  */
 
 /** @import { ProtocolDomain, NormalizedProtocolDomain, ProtocolType, ProtocolCommand, ProtocolEvent, ProtocolParameter, ProtocolBackReference } from '../types/types.d.ts' */
-import { getRedirect } from './protocol-model.js';
 
 export class ProtocolRenderer {
   /**
@@ -217,9 +216,15 @@ export class ProtocolRenderer {
      * @param {ProtocolCommand | ProtocolEvent} method
      * @param {HTMLElement} container
      */
-    let renderEventOrMethodEntry = (method, container) => {
-      const row = ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
-      const redirect = getRedirect(window.app?._activeDomains, domain.domain, method.name);
+    let renderEventOrMethodEntry = (method, container) =>
+      ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
+    /**
+     * @param {ProtocolCommand} command
+     * @param {HTMLElement} container
+     */
+    let renderCommandEntry = (command, container) => {
+      const row = renderEventOrMethodEntry(command, container);
+      const redirect = window.app?.redirectFor(domain.domain, command.name);
       if (redirect) {
         const hint = document.createElement('span');
         hint.className = 'toc-redirect-hint';
@@ -248,7 +253,7 @@ export class ProtocolRenderer {
           'Methods',
           'method',
           domain.commands,
-          renderEventOrMethodEntry,
+          renderCommandEntry,
           toc,
           isDomainExp,
         );
@@ -348,7 +353,7 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
-    const redirect = getRedirect(window.app?._activeDomains, domain.domain, method.name);
+    const redirect = !isEvent && window.app?.redirectFor(domain.domain, method.name);
     if (redirect) {
       const p = document.createElement('p');
       p.className = 'redirect-notice';

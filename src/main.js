@@ -114,6 +114,20 @@ export class App {
     return formatRoute({ target, domain: ref });
   }
 
+  /**
+   * Where a moved command now lives. Falls back to tot because experimental commands (and their
+   * redirect annotations) are stripped from stable.
+   * @param {string} domain
+   * @param {string} member
+   * @returns {{ targetDomain: string, targetMember: string } | null}
+   */
+  redirectFor(domain, member) {
+    return (
+      getRedirect(this._activeDomains, domain, member) ??
+      getRedirect(this._targetStore.tot, domain, member)
+    );
+  }
+
   focusContent() {
     this._contentElement.focus();
   }
@@ -128,13 +142,17 @@ export class App {
       // Home is the bare path (not /#/). Setting location.hash = '' would leave a dangling '#'.
       if (window.location.hash) history.pushState(null, '', window.location.pathname);
       this._onRoute();
-    } else if (window.location.hash === cleanRoute) {
-      this._onRoute();
-    } else if (replace) {
-      window.location.replace(cleanRoute);
-    } else {
-      window.location.hash = cleanRoute;
+      return;
     }
+    if (window.location.hash === cleanRoute) {
+      this._onRoute();
+      return;
+    }
+    if (replace) {
+      window.location.replace(cleanRoute);
+      return;
+    }
+    window.location.hash = cleanRoute;
   }
 
   /**
@@ -298,23 +316,11 @@ export class App {
       return;
     }
 
-    // Auto-redirect if command/event/type has moved to another domain
-    if (member) {
-      const redirect =
-        getRedirect(this._activeDomains, domain, member) ||
-        getRedirect(this._targetStore.tot, domain, member);
-      if (redirect) {
-        const target = this._activeDomains.has(redirect.targetDomain) ? route.target : 'tot';
-        this.navigate(
-          formatRoute({
-            target,
-            domain: redirect.targetDomain,
-            member: redirect.targetMember,
-          }),
-          true,
-        );
-        return;
-      }
+    const redirect = member && this.redirectFor(domain, member);
+    if (redirect) {
+      // replace, not push: Back would land on the old URL and bounce forward again.
+      this.navigate(this.formatRef(`${redirect.targetDomain}.${redirect.targetMember}`), true);
+      return;
     }
 
     // In-page navigation: if domain is already rendered, scroll to member without DOM re-render

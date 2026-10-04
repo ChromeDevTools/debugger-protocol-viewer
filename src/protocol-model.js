@@ -330,9 +330,9 @@ function createRouteInfo(target, domain, member) {
 export function parseRoute(hash) {
   const path = (hash ?? '').trim().replace(/^#\/?/, '').replace(/\/+$/, '');
   const [first = '', ...rest] = path.split('/');
-  const hasTarget = TARGET_MAP.has(first.toLowerCase());
-  const target = hasTarget ? normalizeTarget(first) : 'tot';
-  const ref = hasTarget ? rest.join('/') : path;
+  const matchedTarget = TARGET_MAP.get(first.toLowerCase());
+  const target = matchedTarget ?? 'tot';
+  const ref = matchedTarget ? rest.join('/') : path;
   if (!ref) return createRouteInfo(target, null, null);
 
   const dot = ref.indexOf('.');

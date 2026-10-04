@@ -6,7 +6,6 @@
 
 import { FuzzySearch } from './fuzzy_search.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
-import { getRedirect } from './protocol-model.js';
 
 // Number of search results to render immediately.
 const SEARCH_RENDER_COUNT = 50;
@@ -78,7 +77,7 @@ export class Search {
   /**
    * @param {Element} searchHeader
    * @param {Element} resultsElement
-   * @param {{ navigate?: (route: string) => void, formatRef?: (ref: string) => string, focusContent?: () => void }} [app]
+   * @param {{ navigate?: (route: string) => void, formatRef?: (ref: string) => string, focusContent?: () => void, redirectFor?: (domain: string, member: string) => { targetDomain: string, targetMember: string } | null }} [app]
    */
   constructor(searchHeader, resultsElement, app) {
     this._app = app;
@@ -148,10 +147,9 @@ export class Search {
   setDomains(domains) {
     this._items = [];
     const formatRef = this._app?.formatRef;
-    const byName = new Map(domains.map((d) => [d.domain, d]));
     for (const domain of domains) {
       for (const command of domain.commands || []) {
-        const redirect = getRedirect(byName, domain.domain, command.name);
+        const redirect = this._app?.redirectFor?.(domain.domain, command.name);
         const description = redirect
           ? `Moved to ${redirect.targetDomain}.${redirect.targetMember}.`
           : command.description;

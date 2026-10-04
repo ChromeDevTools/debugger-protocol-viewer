@@ -783,24 +783,27 @@ test('Chrome DevTools Protocol Viewer E2E Tests', async (t) => {
       assert.strictEqual(legacyInspectorExists, true, 'Expected get-devtoolsinspector.html heading with title-link');
     });
 
-    await t.test('13. Auto-redirect moved commands', async () => {
-      for (const [from, to, headingId] of [
+    await t.test('13. Auto-redirect moved commands', async (t) => {
+      const cases = [
         ['#/DOM.highlightNode', '#/Overlay.highlightNode', 'Overlay_highlightNode'],
         ['#/Page.deleteCookie', '#/Network.deleteCookies', 'Network_deleteCookies'],
-      ]) {
-        await page.Page.navigate({ url: `${baseUrl}/${from}` });
-        const hash = await client.pollEvaluate(
-          'window.location.hash',
-          (/** @type {any} */ h) => h === to,
-          sessionId,
-        );
-        assert.strictEqual(hash, to, `Expected ${from} to redirect to ${to}`);
-        const headingExists = await client.pollEvaluate(
-          `Boolean(document.getElementById(${JSON.stringify(headingId)}))`,
-          (/** @type {any} */ val) => Boolean(val),
-          sessionId,
-        );
-        assert.strictEqual(headingExists, true, `Expected #${headingId} heading in DOM`);
+      ];
+      for (const [from, to, headingId] of cases) {
+        await t.test(`${from} -> ${to}`, async () => {
+          await page.Page.navigate({ url: `${baseUrl}/${from}` });
+          const hash = await client.pollEvaluate(
+            'window.location.hash',
+            (/** @type {any} */ h) => h === to,
+            sessionId,
+          );
+          assert.strictEqual(hash, to);
+          const headingExists = await client.pollEvaluate(
+            `Boolean(document.getElementById(${JSON.stringify(headingId)}))`,
+            (/** @type {any} */ val) => Boolean(val),
+            sessionId,
+          );
+          assert.strictEqual(headingExists, true, `Expected #${headingId} heading in DOM`);
+        });
       }
     });
 
