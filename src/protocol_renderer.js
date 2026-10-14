@@ -219,6 +219,21 @@ export class ProtocolRenderer {
     let renderEventOrMethodEntry = (method, container) =>
       ProtocolRenderer.renderTableOfContentsEntry(domain.domain, method.name, container);
     /**
+     * @param {ProtocolCommand} command
+     * @param {HTMLElement} container
+     */
+    let renderCommandEntry = (command, container) => {
+      const row = renderEventOrMethodEntry(command, container);
+      const redirect = window.app?.redirectFor(domain.domain, command.name);
+      if (redirect) {
+        const hint = document.createElement('span');
+        hint.className = 'toc-redirect-hint';
+        hint.textContent = `➔ ${redirect.targetDomain}`;
+        row.appendChild(hint);
+      }
+      return row;
+    };
+    /**
      * @param {ProtocolType} type
      * @param {HTMLElement} container
      */
@@ -238,7 +253,7 @@ export class ProtocolRenderer {
           'Methods',
           'method',
           domain.commands,
-          renderEventOrMethodEntry,
+          renderCommandEntry,
           toc,
           isDomainExp,
         );
@@ -338,6 +353,14 @@ export class ProtocolRenderer {
         Boolean(domain.experimental),
       ),
     );
+    const redirect = !isEvent && window.app?.redirectFor(domain.domain, method.name);
+    if (redirect) {
+      const p = document.createElement('p');
+      p.className = 'redirect-notice';
+      p.append('Moved to ', ProtocolRenderer.renderRef(`${redirect.targetDomain}.${redirect.targetMember}`), '.');
+      main.appendChild(p);
+      return main;
+    }
     if (method.description) {
       ProtocolRenderer.renderDescription(method.description, main);
     }

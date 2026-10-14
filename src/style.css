@@ -862,6 +862,16 @@ span.deprecated {
   background-color: #e65100;
 }
 
+.redirect-notice {
+  color: var(--color-subtle);
+}
+
+.toc-redirect-hint {
+  font-size: 11px;
+  margin-left: 4px;
+  color: var(--color-subtle);
+}
+
 /* Domain-level badging: if the whole domain is experimental or deprecated,
    badge the top card heading and suppress redundant per-item badges inside */
 .domain-experimental span.experimental {

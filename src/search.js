@@ -77,7 +77,7 @@ export class Search {
   /**
    * @param {Element} searchHeader
    * @param {Element} resultsElement
-   * @param {{ navigate?: (route: string) => void, formatRef?: (ref: string) => string, focusContent?: () => void }} [app]
+   * @param {{ navigate?: (route: string) => void, formatRef?: (ref: string) => string, focusContent?: () => void, redirectFor?: (domain: string, member: string) => { targetDomain: string, targetMember: string } | null }} [app]
    */
   constructor(searchHeader, resultsElement, app) {
     this._app = app;
@@ -90,7 +90,6 @@ export class Search {
     this._items = [];
     /** @type {Element|null} */
     this._selectedElement = null;
-    this._defaultValue = '';
     this._searchInput.addEventListener('input', this._onInput.bind(this), false);
     this._searchInput.addEventListener('keydown', this._onKeyDown.bind(this), false);
     this._resultsElement = resultsElement;
@@ -115,7 +114,7 @@ export class Search {
         !event.altKey &&
         /\S/.test(event.key)
       ) {
-        if (event.key !== '.') this._searchInput.value = '';
+        this._searchInput.value = '';
         this._searchInput.focus();
       }
     });
@@ -150,8 +149,12 @@ export class Search {
     const formatRef = this._app?.formatRef;
     for (const domain of domains) {
       for (const command of domain.commands || []) {
+        const redirect = this._app?.redirectFor?.(domain.domain, command.name);
+        const description = redirect
+          ? `Moved to ${redirect.targetDomain}.${redirect.targetMember}.`
+          : command.description;
         this._items.push(
-          new SearchItem(domain.domain, command.name, 'method', command.description, formatRef),
+          new SearchItem(domain.domain, command.name, 'method', description, formatRef),
         );
       }
       for (const event of domain.events || []) {
@@ -167,25 +170,30 @@ export class Search {
     }
   }
 
+  /**
+   * Runs a search for `query` and opens the results dropdown.
+   * @param {string} query
+   */
+  search(query) {
+    this._searchInput.value = query;
+    this._searchInput.focus();
+    this._onInput();
+  }
+
   cancelSearch() {
     this._searchInput.blur();
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'none');
-    this._searchInput.value = this._defaultValue;
+    this._searchInput.value = '';
+    setQueryParam('');
     if (this._app?.focusContent) this._app.focusContent();
     else if (typeof window !== 'undefined' && window.app?.focusContent) window.app.focusContent();
-  }
-
-  /**
-   * @param {string} value
-   */
-  setDefaultValue(value) {
-    this._defaultValue = value;
   }
 
   _onInput() {
     this._selectedElement = null;
     /** @type {HTMLElement} */ (this._resultsElement).style.setProperty('display', 'block');
     let query = this._searchInput.value.trim();
+    setQueryParam(query);
     let items = this._items;
     let results = this._doSearch(items, query);
     if (results.length === 0) {
@@ -336,6 +344,16 @@ export class Search {
         this._selectedElement.scrollIntoViewIfNeeded(false);
     }
   }
+}
+
+/**
+ * Mirrors the search query into `?q=` (or removes it) without adding history entries.
+ * @param {string} query
+ */
+function setQueryParam(query) {
+  const search = query ? `?q=${encodeURIComponent(query)}` : '';
+  if (search === location.search) return;
+  history.replaceState(null, '', location.pathname + search + location.hash);
 }
 
 /**

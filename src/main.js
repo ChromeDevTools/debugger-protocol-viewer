@@ -10,6 +10,7 @@ import {
   parseRoute,
   formatRoute,
   normalizeTarget,
+  getRedirect,
 } from './protocol-model.js';
 import { $ } from './bling.js';
 import { ProtocolRenderer } from './protocol_renderer.js';
@@ -108,7 +109,23 @@ export class App {
    * @returns {string}
    */
   formatRef(ref) {
-    return formatRoute({ target: this._currentTarget, domain: ref });
+    const domainName = ref.split('.')[0];
+    const target = this._activeDomains && this._activeDomains.has(domainName) ? this._currentTarget : 'tot';
+    return formatRoute({ target, domain: ref });
+  }
+
+  /**
+   * Where a moved command now lives. Falls back to tot because experimental commands (and their
+   * redirect annotations) are stripped from stable.
+   * @param {string} domain
+   * @param {string} member
+   * @returns {{ targetDomain: string, targetMember: string } | null}
+   */
+  redirectFor(domain, member) {
+    return (
+      getRedirect(this._activeDomains, domain, member) ??
+      getRedirect(this._targetStore.tot, domain, member)
+    );
   }
 
   focusContent() {
@@ -117,14 +134,25 @@ export class App {
 
   /**
    * @param {string} route
+   * @param {boolean} [replace=false]
    */
-  navigate(route) {
+  navigate(route, replace = false) {
     const cleanRoute = formatRoute(parseRoute(route));
-    if (window.location.hash !== cleanRoute) {
-      window.location.hash = cleanRoute;
-    } else {
+    if (cleanRoute === '#/') {
+      // Home is the bare path (not /#/). Setting location.hash = '' would leave a dangling '#'.
+      if (window.location.hash) history.pushState(null, '', window.location.pathname);
       this._onRoute();
+      return;
     }
+    if (window.location.hash === cleanRoute) {
+      this._onRoute();
+      return;
+    }
+    if (replace) {
+      window.location.replace(cleanRoute);
+      return;
+    }
+    window.location.hash = cleanRoute;
   }
 
   /**
@@ -146,7 +174,10 @@ export class App {
       ]);
 
       this._prepareDatasets(totProto, v8Proto);
+      // ?q=foo permalink / OpenSearch entry. Read before routing, which cancels any search.
+      const query = new URLSearchParams(window.location.search).get('q');
       this._onRoute();
+      if (query) this._search.search(query);
     } catch (error) {
       this._contentElement.textContent = '';
       const message = error instanceof Error ? error.message : String(error);
@@ -247,7 +278,7 @@ export class App {
         ) {
           return;
         }
-        if (href && (href.startsWith('#') || href.startsWith('?'))) {
+        if (href?.startsWith('#')) {
           event.preventDefault();
           this._closeDrawer();
           this.navigate(href);
@@ -258,19 +289,12 @@ export class App {
   }
 
   _setupRoutingEvents() {
-    window.addEventListener('hashchange', () => this._onRoute());
+    // popstate (not hashchange): it also fires when traversing between / and #/..., which differ in more than the fragment.
     window.addEventListener('popstate', () => this._onRoute());
   }
 
   _onRoute() {
-    let rawRoute = window.location.hash;
-    if (window.location.search && !rawRoute) {
-      rawRoute = window.location.search;
-    } else if (!rawRoute || /^#(?:method|type|event)-/.test(rawRoute)) {
-      rawRoute = window.location.pathname + (rawRoute || '');
-    }
-
-    const route = parseRoute(rawRoute);
+    const route = parseRoute(window.location.hash);
     this._currentTarget = route.target;
     if (this._targetSelector) {
       this._targetSelector.value = route.target;
@@ -292,11 +316,17 @@ export class App {
       return;
     }
 
+    const redirect = member && this.redirectFor(domain, member);
+    if (redirect) {
+      // replace, not push: Back would land on the old URL and bounce forward again.
+      this.navigate(this.formatRef(`${redirect.targetDomain}.${redirect.targetMember}`), true);
+      return;
+    }
+
     // In-page navigation: if domain is already rendered, scroll to member without DOM re-render
     if (this._renderedDomain === domain && this._contentElement.firstChild && member) {
       const canonicalTitle = `${domain}.${member}`;
       document.title = `${canonicalTitle} - DevTools Protocol`;
-      this._search.setDefaultValue(canonicalTitle);
       const titleId = ProtocolRenderer.titleId(domain, member);
       const elem = this._contentElement.querySelector('#' + titleId);
       if (elem) {
@@ -319,8 +349,6 @@ export class App {
     const canonicalTitle = member ? `${domain}.${member}` : domain;
     document.title = `${canonicalTitle} - DevTools Protocol`;
 
-    const searchDefault = member ? `${domain}.${member}` : domain;
-    this._search.setDefaultValue(searchDefault);
     this._search.cancelSearch();
 
     this._contentElement.textContent = '';
@@ -373,7 +401,6 @@ export class App {
    */
   _onNavigateHome(anchorId = null) {
     document.title = 'DevTools Protocol Viewer';
-    this._search.setDefaultValue('');
     this._search.cancelSearch();
     this._contentElement.textContent = '';
 

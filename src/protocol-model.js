@@ -284,274 +284,60 @@ export function computeBackReferences(domains) {
   return domains;
 }
 
-const ROUTE_BASE_URL = 'https://cdp.internal';
-
-const hasURLPattern = typeof URLPattern !== 'undefined';
-
-const legacyAnchorPattern = hasURLPattern
-  ? new URLPattern({ hash: ':prefix(method|type|event)-:member' })
-  : null;
-
-const legacyPathPattern = hasURLPattern
-  ? new URLPattern({
-      pathname:
-        '{/:repo(devtools-protocol|debugger-protocol-viewer)}?/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-      baseURL: ROUTE_BASE_URL,
-    })
-  : null;
-
-const hashTargetMemberPattern = hasURLPattern
-  ? new URLPattern({
-      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain.:member',
-    })
-  : null;
-const hashTargetDomainPattern = hasURLPattern
-  ? new URLPattern({
-      hash: '#/:target(tot|v8|1-3|1-2|stable)/:domain{/}*',
-    })
-  : null;
-const hashTargetOnlyPattern = hasURLPattern
-  ? new URLPattern({ hash: '#/:target(tot|v8|1-3|1-2|stable){/}*' })
-  : null;
-
-const hashMemberPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain.:member' }) : null;
-const hashDomainPattern = hasURLPattern ? new URLPattern({ hash: '#/:domain{/}*' }) : null;
-const hashDirectPattern = hasURLPattern ? new URLPattern({ hash: '#:domain' }) : null;
-
-const queryMemberPattern = hasURLPattern ? new URLPattern({ search: '?:domain.:member' }) : null;
-const queryDomainPattern = hasURLPattern ? new URLPattern({ search: '?:domain' }) : null;
+/**
+ * Resolves where a redirected command now lives. Only commands carry `redirect` in the protocol.
+ * Matches a pluralized name in the destination (Page.deleteCookie -> Network.deleteCookies).
+ * @param {Map<string, ProtocolDomain> | undefined} domains
+ * @param {string} domainName
+ * @param {string} memberName
+ * @returns {{ targetDomain: string, targetMember: string } | null}
+ */
+export function getRedirect(domains, domainName, memberName) {
+  const command = domains?.get(domainName)?.commands?.find((c) => c.name === memberName);
+  if (!command?.redirect) return null;
+  const match = domains
+    ?.get(command.redirect)
+    ?.commands?.find((c) => c.name === memberName || c.name === `${memberName}s`);
+  return { targetDomain: command.redirect, targetMember: match?.name ?? memberName };
+}
 
 /**
  * Creates canonical RouteInfo, mapping lowercase landing anchors to section.
  * @param {TargetKind} target
  * @param {string|null} domain
  * @param {string|null} member
- * @param {string|null} [section]
  * @returns {RouteInfo}
  */
-function createRouteInfo(target, domain, member, section = null) {
+function createRouteInfo(target, domain, member) {
   if (domain && !/^[A-Z][a-zA-Z0-9]*$/.test(domain)) {
     const full = member ? `${domain}.${member}` : domain;
-    const sec = full === 'http-endpoints' ? 'endpoints' : full;
-    return { target, domain: null, member: null, section: sec };
+    const section = full === 'http-endpoints' ? 'endpoints' : full;
+    return { target, domain: null, member: null, section };
   }
-  /** @type {RouteInfo} */
-  const res = { target, domain, member };
-  if (section) {
-    res.section = section;
-  }
-  return res;
+  return { target, domain, member };
 }
 
 /**
- * Parses any incoming route variant into a canonical RouteInfo object.
- * Uses standard URLPattern when available, with a regex/string fallback.
+ * Parses a hash route into a canonical RouteInfo object.
+ * Legacy static URLs (/tot/Page/#method-navigate, /1-3/..., /v8/...) are rewritten to hash
+ * routes by the generated domain stubs and 404.html before the app ever sees them.
  *
- * Supported route structures:
- * - Modern hash routes: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network.getCookies
- * - Legacy paths: /tot/Page/#method-navigate, /1-3/Page/#method-navigate, /1-2/Network/
- * - Base-path prefixed: /devtools-protocol/tot/Page/#method-navigate, /debugger-protocol-viewer/tot/Page/#method-navigate
- * - Isolated legacy anchors: #method-navigate, #type-Node, #event-requestWillBeSent
- * - Query format: ?Page.navigate, ?Network
+ * Supported: #/Page.navigate, #/Page, #/v8/Runtime.evaluate, #/stable/Network, #/v8/, #faq, #/endpoints
  *
- * @param {string|null} [routeString]
+ * @param {string|null} [hash]
  * @returns {RouteInfo}
  */
-export function parseRoute(routeString) {
-  if (!routeString || typeof routeString !== 'string') {
-    return createRouteInfo('tot', null, null);
-  }
+export function parseRoute(hash) {
+  const path = (hash ?? '').trim().replace(/^#\/?/, '').replace(/\/+$/, '');
+  const [first = '', ...rest] = path.split('/');
+  const matchedTarget = TARGET_MAP.get(first.toLowerCase());
+  const target = matchedTarget ?? 'tot';
+  const ref = matchedTarget ? rest.join('/') : path;
+  if (!ref) return createRouteInfo(target, null, null);
 
-  const trimmed = routeString.trim();
-  if (!trimmed || trimmed === '#' || trimmed === '#/' || trimmed === '/') {
-    return createRouteInfo('tot', null, null);
-  }
-
-  if (hasURLPattern && legacyAnchorPattern && legacyPathPattern) {
-    const url =
-      trimmed.startsWith('#') || trimmed.startsWith('?') || trimmed.startsWith('/')
-        ? new URL(trimmed, ROUTE_BASE_URL)
-        : new URL('/' + trimmed, ROUTE_BASE_URL);
-
-    const legacyAnchorMatch = legacyAnchorPattern.exec(url);
-    const legacyMember = legacyAnchorMatch?.hash.groups.member ?? null;
-
-    const legacyPathMatch = legacyPathPattern.exec(url);
-    if (
-      legacyPathMatch?.pathname.groups.domain &&
-      !legacyPathMatch.pathname.groups.domain.endsWith('.html')
-    ) {
-      return createRouteInfo(
-        normalizeTarget(legacyPathMatch.pathname.groups.target),
-        legacyPathMatch.pathname.groups.domain,
-        legacyMember,
-      );
-    }
-
-    if (legacyMember) {
-      return createRouteInfo('tot', null, legacyMember);
-    }
-
-    const htm = hashTargetMemberPattern?.exec(url);
-    if (htm?.hash.groups.domain && htm.hash.groups.member) {
-      return createRouteInfo(
-        normalizeTarget(htm.hash.groups.target),
-        htm.hash.groups.domain,
-        htm.hash.groups.member,
-      );
-    }
-
-    const htd = hashTargetDomainPattern?.exec(url);
-    if (htd?.hash.groups.domain) {
-      return createRouteInfo(
-        normalizeTarget(htd.hash.groups.target),
-        htd.hash.groups.domain,
-        null,
-      );
-    }
-
-    const hto = hashTargetOnlyPattern?.exec(url);
-    if (hto?.hash.groups.target) {
-      return createRouteInfo(
-        normalizeTarget(hto.hash.groups.target),
-        null,
-        null,
-      );
-    }
-
-    const hm = hashMemberPattern?.exec(url);
-    if (hm?.hash.groups.domain && hm.hash.groups.member) {
-      return createRouteInfo(
-        'tot',
-        hm.hash.groups.domain,
-        hm.hash.groups.member,
-      );
-    }
-
-    const hd = hashDomainPattern?.exec(url);
-    if (hd?.hash.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        hd.hash.groups.domain,
-        null,
-      );
-    }
-
-    const hdir = hashDirectPattern?.exec(url);
-    if (hdir?.hash.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        hdir.hash.groups.domain,
-        null,
-      );
-    }
-
-    const qm = queryMemberPattern?.exec(url);
-    if (qm?.search.groups.domain && qm.search.groups.member) {
-      return createRouteInfo(
-        'tot',
-        qm.search.groups.domain,
-        qm.search.groups.member,
-      );
-    }
-
-    const qd = queryDomainPattern?.exec(url);
-    if (qd?.search.groups.domain) {
-      return createRouteInfo(
-        'tot',
-        qd.search.groups.domain,
-        null,
-      );
-    }
-
-    return createRouteInfo('tot', null, null);
-  }
-
-  // Fallback string/regex parser for environments without URLPattern
-  const isolatedLegacyMatch = trimmed.match(/^#(?:method|type|event)-([\w-]+)$/);
-  if (isolatedLegacyMatch) {
-    return createRouteInfo('tot', null, isolatedLegacyMatch[1]);
-  }
-
-  const hashIndex = trimmed.indexOf('#');
-  let pathPart = '';
-  let hashPart = '';
-
-  if (hashIndex !== -1) {
-    pathPart = trimmed.slice(0, hashIndex);
-    hashPart = trimmed.slice(hashIndex + 1);
-  } else if (trimmed.startsWith('?')) {
-    hashPart = trimmed.slice(1);
-  } else {
-    pathPart = trimmed;
-  }
-
-  const legacyHashMatch = hashPart.match(/^(?:method|type|event)-([\w-]+)$/);
-  const legacyMember = legacyHashMatch ? legacyHashMatch[1] : null;
-
-  const pathSegments = pathPart
-    .split('/')
-    .map((s) => s.trim())
-    .filter((s) => Boolean(s) && !s.endsWith('.html'));
-
-  if (
-    pathSegments.length > 0 &&
-    (pathSegments[0] === 'devtools-protocol' || pathSegments[0] === 'debugger-protocol-viewer')
-  ) {
-    pathSegments.shift();
-  }
-
-  if (pathSegments.length > 0) {
-    /** @type {TargetKind} */
-    let target = 'tot';
-    let domain = null;
-
-    const targetIndex = pathSegments.findIndex((s) => TARGET_MAP.has(s.toLowerCase()));
-    if (targetIndex !== -1) {
-      target = normalizeTarget(pathSegments[targetIndex]);
-      if (pathSegments.length > targetIndex + 1) {
-        domain = pathSegments[targetIndex + 1];
-      }
-    } else {
-      domain = pathSegments[0];
-    }
-
-    return createRouteInfo(target, domain, legacyMember);
-  }
-
-  let cleanHash = hashPart;
-  if (cleanHash.startsWith('/')) cleanHash = cleanHash.slice(1);
-  if (!cleanHash) return createRouteInfo('tot', null, null);
-
-  /** @type {TargetKind} */
-  let target = 'tot';
-  let targetAndRest = cleanHash;
-
-  const slashIndex = cleanHash.indexOf('/');
-  if (slashIndex !== -1) {
-    const potentialTarget = cleanHash.slice(0, slashIndex).toLowerCase();
-    if (TARGET_MAP.has(potentialTarget)) {
-      target = normalizeTarget(potentialTarget);
-      targetAndRest = cleanHash.slice(slashIndex + 1);
-    }
-  } else if (TARGET_MAP.has(cleanHash.toLowerCase())) {
-    target = normalizeTarget(cleanHash);
-    targetAndRest = '';
-  }
-
-  targetAndRest = targetAndRest.replace(/\/+$/, '');
-  if (!targetAndRest) return createRouteInfo(target, null, null);
-
-  const dotIndex = targetAndRest.indexOf('.');
-  if (dotIndex !== -1) {
-    return createRouteInfo(
-      target,
-      targetAndRest.slice(0, dotIndex),
-      targetAndRest.slice(dotIndex + 1) || null,
-    );
-  }
-
-  return createRouteInfo(target, targetAndRest, null);
+  const dot = ref.indexOf('.');
+  if (dot === -1) return createRouteInfo(target, ref, null);
+  return createRouteInfo(target, ref.slice(0, dot), ref.slice(dot + 1) || null);
 }
 
 /**
